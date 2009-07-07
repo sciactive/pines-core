@@ -1,0 +1,7 @@
+A list of things to complete before the initial release of Dandelion.
+
+New templates.
+Views.
+Installer.
+Dependency checker.
+Possibly change structure to dirs (bud (models), grow, travel (views)) to replace single files for MVC.

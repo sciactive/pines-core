@@ -1,0 +1,23 @@
+-Installation Instructions-
+
+These instructions are preliminary and will not apply to future releases of
+Dandelion.
+
+There is a dandelion.sql file with the current state of the database.
+
+There are configure.php files in the root dir and in some component dirs. These
+files contain settings that Dandelion needs to run. You should edit these files
+to suit your server's configuration.
+
+Basically, to install Dandelion, you currently need PHP and MySQL. Set up a
+database for Dandelion and put the settings in
+
+/components/com_mysql/configure.php
+
+Once you install Dandelion, if you use com_user, the administrator's credentials
+are
+
+Username: admin
+Password: password
+
+Good luck. ;)
