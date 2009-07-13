@@ -4,6 +4,9 @@ New templates.
 Views.
 Installer.
 Dependency checker.
+Logging
 Possibly change structure to dirs (bud (models), grow, travel (views)) to replace single files for MVC.
 Dandelion Entity Exchange (com_dex, for easily combining two installation's entities, using hooks, effectively creating a mirror)
 Object Oriented Hooks ( $config->hooks->com_component->event[] = function() )
+
+Group Heirarchy
