@@ -6,10 +6,12 @@ $config->current_template = ( !empty($_REQUEST['template']) && $config->allow_te
 require_once('templates/'.$config->current_template.'/configure.php');
 
 class module {
-	public $title, $class_suffix, $content = '';
+	public $title, $class_suffix, $content, $component, $view = '';
 	public $show_title = true;
 
-	function __construct($position = null, $order = null) {
+	function __construct($component, $view, $position = null, $order = null) {
+        $this->component = $component;
+        $this->view = $view;
 		if ( !is_null($position) ) {
 			global $page;
 			return $page->attach_module($this, $position, $order);
@@ -30,11 +32,20 @@ class module {
 	}
 
 	function render() {
-		$return = "<div class=\"module".$this->class_suffix."\">\n";
-		$return .= (($this->show_title && !empty($this->title)) ? "<div class=\"module_title\">".$this->title."</div>\n" : '');
-		$return .= $this->content;
-		$return .= "\n</div>";
-		return $return;
+        global $config, $page;
+        
+        // Get content from the view.
+        ob_start();
+        require (($this->component != 'system') ? 'components/' : '').$this->component.'/views/'.$config->template->format.'/'.$this->view.'.php';
+        $this->content(ob_get_contents());
+        ob_end_clean();
+
+        // Return the content.
+        ob_start();
+        require 'templates/'.$config->current_template.'/models/module.php';
+        $return = ob_get_contents();
+        ob_end_clean();
+        return $return;
 	}
 }
 

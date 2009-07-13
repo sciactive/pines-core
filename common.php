@@ -65,7 +65,7 @@ if (!function_exists('gatekeeper')) {
 
 if (!function_exists('get_confirmation')) {
 	function get_confirmation($heading, $new_option, $new_action, $file = "") {
-		$module = new module('content');
+		$module = new module('system', 'false', 'content');
 		$module->title = $heading;
 		$module->content("<form method=\"post\" style=\"display: inline;\">\n");
 		$module->content("<input type=\"hidden\" name=\"response\" value=\"yes\" />\n");
@@ -87,7 +87,7 @@ if (!function_exists('get_confirmation')) {
 
 if (!function_exists('get_name')) {
 	function get_name($heading, $new_option, $new_action, $orig_name = "", $default = "") {
-		$module = new module('content');
+		$module = new module('system', 'false', 'content');
 		$module->title = $heading;
 		$module->content("<form method=\"post\">\n");
 		$module->content("<input type=\"text\" name=\"return_name\" value=\"$default\" />\n");
