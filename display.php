@@ -45,14 +45,19 @@ class module {
         // Get content from the view.
         ob_start();
         $format = $config->template->format;
-        do {
+        while(true) {
             $filename = (($this->component != 'system') ? 'components/' : '').$this->component.'/views/'.$format.'/'.$this->view.'.php';
-            if (file_exists($filename)) {
+            if (file_exists($filename) || $format == 'all') {
                 require $filename;
+                break;
             } else {
-                
+                if (strrpos($format, '-') === false) {
+                    $format = 'all';
+                } else {
+                    $format = substr($format, 0, strrpos($format, '-'));
+                }
             }
-        } while (!empty($format));
+        }
         $this->content(ob_get_contents());
         ob_end_clean();
 
