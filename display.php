@@ -7,6 +7,7 @@ require_once('templates/'.$config->current_template.'/configure.php');
 
 class module {
 	public $title, $class_suffix, $content, $component, $view = '';
+    public $position, $order = null;
 	public $show_title = true;
 
 	function __construct($component, $view, $position = null, $order = null) {
@@ -14,14 +15,21 @@ class module {
         $this->view = $view;
 		if ( !is_null($position) ) {
 			global $page;
-			return $page->attach_module($this, $position, $order);
+			return $this->attach($position, $order);
 		}
 	}
 
 	function attach($position, $order = null) {
 		global $page;
-		return $page->attach_module($this, $position, $order);
+        $this->position = $position;
+        $this->order = $page->attach_module($this, $position, $order);
+		return $this->order;
 	}
+
+    function detach() {
+		global $page;
+		return $page->detach_module($this, $this->position, $this->order);
+    }
 
 	function content($add_content) {
 		$this->content .= $add_content;
@@ -122,6 +130,35 @@ class page {
 		}
 		$this->modules[$position][$order] = $module;
 		return $order;
+	}
+
+    /*
+     * Deletes a module from the list of attached modules. Will try the one at
+     * $order or if $order is null then last one in $position, then iterate
+     * through $position searching for the module. It will delete the first
+     * match it finds, then stop and return true. If it finds none, it will
+     * return false.
+     */
+	function detach_module(&$module, $position, $order = null) {
+		if ( is_null($order) ) {
+			if ( isset($this->modules[$position]) ) {
+				$order = count($this->modules[$position]);
+			} else {
+				$order = 0;
+			}
+		}
+		if ($this->modules[$position][$order] == $module) {
+            unset($this->modules[$position][$order]);
+            return true;
+        } else {
+            foreach ($this->modules[$position] as $key => $cur_module) {
+                if ($this->modules[$position][$key] == $module) {
+                    unset($this->modules[$position][$key]);
+                    return true;
+                }
+            }
+            return false;
+        }
 	}
 
 	function footer($add_footer) {
