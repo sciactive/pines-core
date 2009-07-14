@@ -1,4 +1,14 @@
 <?php
+/**
+ * The display controller for Dandelion. Handles ouput.
+ *
+ * @package Dandelion
+ * @subpackage Core
+ * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
+ * @author Hunter Perrin <hunter@sciactive.com>
+ * @copyright Hunter Perrin
+ * @link http://sciactive.com/
+ */
 defined('D_RUN') or die('Direct access prohibited');
 
 $config->current_template = ( !empty($_REQUEST['template']) && $config->allow_template_override ) ?

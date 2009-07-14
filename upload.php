@@ -1,5 +1,16 @@
 <?php
-// TODO: Replace this file with a component. (Use a JSON template for returning JSON.)
+/**
+ * The uploader for Dandelion.
+ *
+ * @package Dandelion
+ * @subpackage Core
+ * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
+ * @author Hunter Perrin <hunter@sciactive.com>
+ * @copyright Hunter Perrin
+ * @link http://sciactive.com/
+ *
+ * @todo Replace this file with a component. (Use a JSON template for returning JSON.)
+ */
 header("content-type: text/html"); // the return type must be text/html
 define('D_RUN', true);
 require('configure.php');

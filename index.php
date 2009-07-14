@@ -1,11 +1,13 @@
 <?php
 /**
- * index.php
- *
+ * The controller for Dandelion's architecture.
+ * 
+ * @package Dandelion
+ * @subpackage Core
+ * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright Hunter Perrin
- * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
- * @package Dandelion
+ * @link http://sciactive.com/
  */
 
 /*
@@ -29,13 +31,29 @@
  *
  */
 
+/**
+ * Constants
+ */
+/**
+ * Declare that the program is running through the index, as it should.
+ */
 define('D_RUN', true);
+/**
+ * The installation's base path.
+ */
 define('D_BASE_PATH', dirname(__FILE__));
+/**
+ * The name of our index file.
+ */
 define('D_INDEX', basename($_SERVER['SCRIPT_FILENAME']));
 
 session_start();
 
 require_once('configure.php');
+/**
+ * An array of the installed components.
+ * @global array $config->components
+ */
 $config->components = array();
 if ( file_exists("components/") ) {
 	$config->components = scandir("components/");

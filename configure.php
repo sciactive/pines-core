@@ -1,55 +1,116 @@
 <?php
+/**
+ * Dandelion's configuration.
+ *
+ * @package Dandelion
+ * @subpackage Core
+ * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
+ * @author Hunter Perrin <hunter@sciactive.com>
+ * @copyright Hunter Perrin
+ * @link http://sciactive.com/
+ */
 defined('D_RUN') or die('Direct access prohibited');
 
+/**
+ * An empty class for arbitrary data.
+ */
 class DynamicConfig { }
+
+/**
+ * The main configuration object for Dandelion. This object is used to hold
+ * everything from Dandelion settings, to component functions. Components should
+ * put their own classes under $config, using their components name. For
+ * example, a component named com_xmlparser should put its class in
+ * $config->com_xmlparser. Though, it is not necessary to do this. $config also
+ * holds Dandelion's standard classes, which include:
+ *
+ * configurator - Manages Dandelion configuration.
+ * entity_manager - Manages entities.
+ * db_manager - Manages database connections.
+ * user_manager - Manages users.
+ * ability_manager - Manages users' abilities.
+ *
+ * @global DynamicConfig $config
+ */
 $config = new DynamicConfig;
 
-// Program Variables: Usually there is no need to edit these.
+/**
+ * Program Variables: Usually there is no need to edit these.
+ */
+    /**
+     * The program's displayed title.
+     */
+    $config->program_title = "Dandelion";
 
-$config->program_title = "Dandelion";
+    /**
+     * The program's displayed version.
+     */
+    $config->program_version = "0.12 Alpha";
 
-$config->program_version = "0.12 Alpha";
+/**
+ * Program Settings
+ */
 
-// Program Settings
-
-// The whole location of Dandelion. (URL)
-// ****End this path with a slash!****
+/**
+ * The whole location of Dandelion. (URL)
+ * End this path with a slash!
+ */
 $config->full_location = "http://localhost/dandelion/trunk/";
 
-// The location of Dandelion relative to your server. (URL)
-// If it is in the root of the server, just put "/".
-// ****End this path with a slash!****
+/**
+ * The location of Dandelion relative to your server. (URL)
+ * If it is in the root of the server, just put "/".
+ * End this path with a slash!
+ */
 $config->rela_location = "/dandelion/trunk/";
 
-// The directory to store uploaded files. (Real Path / URL)
-// This should be the real, relative path and the relative URL.
-// ****End this path with a slash!****
+/**
+ * The directory to store uploaded files. (Real Path / URL)
+ * This should be the real, relative path and the relative URL.
+ * End this path with a slash!
+ */
 $config->setting_upload = "media/";
 
-// Options
+/**
+ * Options
+ */
 
-// The default title at the top of each page.
+/**
+ * The default title at the top of each page.
+ */
 $config->option_title = "Dandelion";
 
-// The copyright notice at the bottom of each page.
+/**
+ * The copyright notice at the bottom of each page.
+ */
 $config->option_copyright_notice = "&copy; 2009 Hunter Perrin. All Rights Reserved. Powered by ".$config->program_title." version ".$config->program_version.".";
 
-// The default template.
+/**
+ * The default template.
+ */
 $config->default_template = "dandelion";
 
-// Allow the template to be overriden by adding ?template=whatever
+/**
+ * Allow the template to be overriden by adding ?template=whatever
+ */
 $config->allow_template_override = true;
 
-// Use url rewriting engine.
+/**
+ * Use url rewriting engine.
+ */
 $config->url_rewriting = true;
 
-// Use Apache .htaccess with mod_rewrite. (Rename htaccess.txt to .htaccess before using.)
-//TODO: Change this to false before any release.
+/**
+ * Use Apache .htaccess with mod_rewrite. (Rename htaccess.txt to .htaccess before using.)
+ * @todo Change this to false before any release.
+ */
 $config->use_htaccess = false;
 
 // You do not need to edit anything below this line.
 
-/*
+/**
+ * Used to provide an abstract way to represent and store data in Dandelion.
+ * 
  * ALWAYS check tags after retrieving an entity.
  *
  * Some notes about saving entities in other entity's variables (sub-entity):
@@ -82,8 +143,6 @@ $config->use_htaccess = false;
  * functionality, and though not as versatile, it is MUCH more efficient. Try to
  * avoid using sub-entities at all cost!
  */
-
-// Entity Class
 class entity {
 	public $guid = null;
 	public $parent = null;
