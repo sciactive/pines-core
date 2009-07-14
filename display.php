@@ -44,7 +44,15 @@ class module {
         
         // Get content from the view.
         ob_start();
-        require (($this->component != 'system') ? 'components/' : '').$this->component.'/views/'.$config->template->format.'/'.$this->view.'.php';
+        $format = $config->template->format;
+        do {
+            $filename = (($this->component != 'system') ? 'components/' : '').$this->component.'/views/'.$format.'/'.$this->view.'.php';
+            if (file_exists($filename)) {
+                require $filename;
+            } else {
+                
+            }
+        } while (!empty($format));
         $this->content(ob_get_contents());
         ob_end_clean();
 
