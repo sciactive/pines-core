@@ -86,10 +86,13 @@ $config->use_htaccess = false;
 // Entity Class
 class entity {
 	public $guid = null;
-	public $name = "untitled";
 	public $parent = null;
 	public $tags = array();
     protected $data = array();
+
+    public function __construct() {
+        $this->parent = $_SESSION['user_id'];
+    }
 
     public function &__get($name) {
         if (array_key_exists($name, $this->data)) {

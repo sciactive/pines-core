@@ -46,7 +46,6 @@ INSERT INTO `ddl_com_entity_data` (`id`, `guid`, `name`, `value`) VALUES
 
 CREATE TABLE IF NOT EXISTS `ddl_com_entity_entities` (
   `guid` bigint(20) NOT NULL auto_increment,
-  `name` text NOT NULL,
   `parent` bigint(20) default NULL,
   `tags` text,
   PRIMARY KEY  (`guid`)
