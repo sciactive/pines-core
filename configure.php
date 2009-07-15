@@ -144,43 +144,98 @@ $config->use_htaccess = false;
  * avoid using sub-entities at all cost!
  */
 class entity {
+    /**
+     * The GUID is not set until the entity is saved. GUIDs must be unique
+     * forever. It's the job of the entity manager to make sure no two entities
+     * ever have the same GUID.
+     *
+     * @var int
+     */
 	public $guid = null;
+    /**
+     * The GUID of the parent entity. You can use this feature to create complex
+     * hierarchies of entities. $parent defaults to the current user ID, if one
+     * is logged in.
+     *
+     * @var int
+     */
 	public $parent = null;
+    /**
+     * Tags are used to classify entities. Though not sctrictly necessary, it is
+     * a VERY good idea to give every entity your component creates a tag
+     * indentical to your component's name. Such as 'com_xmlparser'.
+     *
+     * @var array
+     */
 	public $tags = array();
+    /**
+     * The array used to store each variable assigned to an entity.
+     *
+     * @var array
+     * @internal
+     */
     protected $data = array();
 
+    /**
+     * Sets the entity's parent to the current user.
+     *
+     * @internal
+     */
     public function __construct() {
-        $this->parent = $_SESSION['user_id'];
+        if (isset($_SESSION['user_id']))
+            $this->parent = $_SESSION['user_id'];
     }
 
+    /**
+     * Retrieve a variable.
+     *
+     * @param string $name The name of the variable.
+     * @return mixed The value of the variable or null if it does not exist.
+     * @internal
+     */
     public function &__get($name) {
         if (array_key_exists($name, $this->data)) {
             return $this->data[$name];
         }
-
-        /*$trace = debug_backtrace();
-        trigger_error(
-            'Undefined property via __get(): ' . $name .
-            ' in ' . $trace[0]['file'] .
-            ' on line ' . $trace[0]['line'],
-            E_USER_NOTICE);*/
         return null;
     }
 
+    /**
+     * Checks whether a variable is set.
+     *
+     * @param string $name The name of the variable.
+     * @return bool
+     * @internal
+     */
     public function __isset($name) {
         return isset($this->data[$name]);
     }
 
+    /**
+     * Sets a variable.
+     *
+     * @param string $name The name of the variable.
+     * @param string $value The value of the variable.
+     * @internal
+     */
     public function __set($name, $value) {
         $this->data[$name] = $value;
     }
 
+    /**
+     * Unsets a variable.
+     *
+     * @param string $name The name of the variable.
+     * @internal
+     */
     public function __unset($name) {
         unset($this->data[$name]);
     }
 
-	/*
+	/**
 	 * Add one or more tags.
+     *
+     * @param mixed $tag,... List or array of tags.
 	 */
 	public function add_tag() {
 		if (is_array(func_get_arg(0))) {
@@ -193,21 +248,33 @@ class entity {
 		}
 	}
 
+    /**
+     * Delete the entity from the database. Simply calling delete() will not
+     * unset your entity, so it will still take up memory. Also, calling unset
+     * will not delete your entity from the database.
+     *
+     * @return mixed Returns what the entity manager's delete_entity function returns.
+     */
 	public function delete() {
 		global $config;
 		return $config->entity_manager->delete_entity($this);
 	}
 
-	/*
-	 * Do not use get_data()!!
-	 * It should only be used by entity managers when saving an entity.
+	/**
+	 * Used to retrieve the data array. This should only be used by the entity
+     * manager to save the data array into the database.
+     *
+     * @internal
 	 */
 	public function get_data() {
 		return $this->data;
 	}
 
-	/*
-	 * Check that entity has all of the given tags.
+	/**
+	 * Check that the entity has all of the given tags.
+     *
+     * @param mixed $tag,... List or array of tags.
+     * @return bool
 	 */
 	public function has_tag() {
 		if (is_array(func_get_arg(0))) {
@@ -223,16 +290,21 @@ class entity {
 		return true;
 	}
 
-	/*
-	 * Do not use put_data()!!
-	 * It should only be used by entity managers when initializing an entity.
+	/**
+	 * Used to set the data array. This should only be used by the entity
+     * manager to push the data array from the database.
+     *
+     * @internal
 	 */
 	public function put_data($data) {
 		$this->data = $data;
 	}
 
-	/*
+	/**
 	 * Remove one or more tags.
+     *
+     * @param mixed $tag,... List or array of tags.
+     * @return bool
 	 */
 	public function remove_tag() {
 		if (is_array(func_get_arg(0))) {
@@ -250,13 +322,35 @@ class entity {
 		$this->tags = array_values($this->tags);
 	}
 
+    /**
+     * Save the entity to the database.
+     *
+     * @return mixed Returns what the entity manager's save_entity function returns.
+     */
 	public function save() {
 		global $config;
 		return $config->entity_manager->save_entity($this);
 	}
 }
 
+/**
+ * The template base class. Templates should extend this class.
+ */
 class template {
+    /**
+     * Return a URL in the necessary format to be usable on the current
+     * installation. url() is designed to work with the URL rewriting features
+     * of Dandelion, so it should be called whenever outputting a URL is
+     * required. If url() is called with no parameters, it will return the URL
+     * of the index page.
+     *
+     * @param string $component The component the URL should point to.
+     * @param string $action The action the URL should point to.
+     * @param array $params An array of parameters which should be part of the URL's query string.
+     * @param bool $encode_entities Whether to encode HTML entities, such as the ampersand. Use this if the URL is going to be displayed on an HTML page.
+     * @param bool $full_location Whether to return an absolute URL or a relative URL.
+     * @return string The URL in a format to work with the current configuration of Dandelion.
+     */
 	function url($component = null, $action = null, $params = array(), $encode_entities = true, $full_location = false) {
 		global $config;
 		if ( is_null($params) ) $params = array();

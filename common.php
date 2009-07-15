@@ -15,14 +15,14 @@ defined('D_RUN') or die('Direct access prohibited');
 if ( isset($config->ability_manager) ) {
     /**
      * The system/all ability let's the user perform any action on the system,
-     * regarless of their other abilities.
+     * regardless of their other abilities.
      */
 	$config->ability_manager->add('system', 'all', 'All Abilities', 'Let user do anything, regardless of whether they have the ability.');
 }
 
 /**
  * These are very rudamentary security functions. If you are worried about
- * security, you should consider rewriting them.
+ * security, you should consider replacing them.
  */
 if (!function_exists('clean_checkbox')) {
     /**
