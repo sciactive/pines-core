@@ -1,12 +1,13 @@
 A list of things to complete before the initial release of Dandelion.
 
-Documentation.
+Documentation. - Finish documentation on Components and Template.
 Some sort of "front page" or "dashboard" system.
 New templates.
-Views.
+Views. - Finish views for com_newsletter.
 Installer.
 Dependency checker.
-Logging
+Logging.
+Better default template. - http://matthewjamestaylor.com/blog/ultimate-3-column-holy-grail-pixels.htm
 Possibly change structure to dirs (bud (models), grow, travel (views)) to replace single files for MVC.
 Dandelion Entity Exchange (com_dex, for easily combining two installation's entities, using hooks, effectively creating a mirror)
 Object Oriented Hooks ( $config->hooks->com_component->event[] = function() )
