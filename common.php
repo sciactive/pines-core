@@ -1,7 +1,9 @@
 <?php
 /**
- * Common functions used in Dandelion. These are often overriden by components,
- * which is why this file needs to be parsed after the components' common files.
+ * Common functions used in Dandelion.
+ * 
+ * These are often overriden by components, which is why this file needs to be
+ * parsed after the components' common files.
  *
  * @package Dandelion
  * @subpackage Core
@@ -67,8 +69,10 @@ if (!function_exists('is_clean_filename')) {
 
 if (!function_exists('print_default')) {
     /**
-     * Notifies the user if there is no default component. This behavior will
-     * change and this function will no longer exist in future versions.
+     * Notifies the user if there is no default component.
+     * 
+     * This behavior will change and this function will no longer exist in
+     * future versions.
      *
      * @deprecated
      */
@@ -79,9 +83,11 @@ if (!function_exists('print_default')) {
 
 if (!function_exists('display_error')) {
     /**
-     * Causes the system to report an error to the user. This function should be
-     * used instead of calling $page->error directly, because some admins may
-     * wish to log Dandelion errors, instead of displaying them.
+     * Causes the system to report an error to the user.
+     * 
+     * This function should be used instead of calling $page->error directly,
+     * because some admins may wish to log Dandelion errors, instead of
+     * displaying them.
      *
      * @param string $error_text Information to display to the user.
      */
@@ -93,9 +99,11 @@ if (!function_exists('display_error')) {
 
 if (!function_exists('display_notice')) {
     /**
-     * Causes the system to report a notice to the user. This function should be
-     * used instead of calling $page->notice directly, because some admins may
-     * wish to log Dandelion notices, instead of displaying them.
+     * Causes the system to report a notice to the user.
+     * 
+     * This function should be used instead of calling $page->notice directly,
+     * because some admins may wish to log Dandelion notices, instead of
+     * displaying them.
      *
      * @param string $notice_text Information to display to the user.
      */
@@ -107,10 +115,16 @@ if (!function_exists('display_notice')) {
 
 if (!function_exists('gatekeeper')) {
     /**
+     * Determine whether the user has permission for something.
+     *
      * The gatekeeper function should be defined by whatever component is taking
-     * over user authentication. Standard practice is to return false if the user
-     * is not logged in. If he is, gatekeeper should at least take an "ability"
-     * argument which returns true if the user has the required permissions.
+     * over user authentication. Gatekeeper should return false if the user is
+     * not logged in, true if he is and no arguments were given. If he is,
+     * gatekeeper should take an "ability" argument which returns true if the
+     * user has the required permissions. Gatekeeper should also take a "user"
+     * argument to check whether a different user has an ability. This helps
+     * user managers use a "login" ability, which can be used to disable an
+     * account.
      *
      * @return bool Always true.
      */

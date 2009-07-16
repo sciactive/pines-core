@@ -13,6 +13,7 @@ defined('D_RUN') or die('Direct access prohibited');
 
 /**
  * An empty class for arbitrary data.
+ * @package Dandelion
  */
 class DynamicConfig { }
 
@@ -141,28 +142,34 @@ $config = new DynamicConfig;
  * innefficient. The $entity->parent system was designed to replace this
  * functionality, and though not as versatile, it is MUCH more efficient. Try to
  * avoid using sub-entities at all cost!
+ *
+ * @package Dandelion
  */
 class entity {
     /**
+     * The GUID of the entity.
+     *
      * The GUID is not set until the entity is saved. GUIDs must be unique
      * forever. It's the job of the entity manager to make sure no two entities
      * ever have the same GUID.
      *
      * @var int
      */
-	public $guid = null;
     /**
-     * The GUID of the parent entity. You can use this feature to create complex
-     * hierarchies of entities. $parent defaults to the current user ID, if one
-     * is logged in.
+     * The GUID of the parent entity.
+     * 
+     * You can use this feature to create complex hierarchies of entities.
+     * $parent defaults to the current user ID, if one is logged in.
      *
      * @var int
      */
-	public $parent = null;
+	public $guid, $parent = null;
     /**
-     * Tags are used to classify entities. Though not sctrictly necessary, it is
-     * a VERY good idea to give every entity your component creates a tag
-     * indentical to your component's name. Such as 'com_xmlparser'.
+     * Tags are used to classify entities.
+     * 
+     * Though not sctrictly necessary, it is a VERY good idea to give every
+     * entity your component creates a tag indentical to your component's name.
+     * Such as 'com_xmlparser'.
      *
      * @var array
      */
@@ -340,6 +347,7 @@ class entity {
 
 /**
  * The template base class. Templates should extend this class.
+ * @package Dandelion
  */
 class template {
     /**
