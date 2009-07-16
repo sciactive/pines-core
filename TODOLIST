@@ -1,5 +1,6 @@
 A list of things to complete before the initial release of Dandelion.
 
+Change configuration settings to use something more easily parsable, like XML, or INI (parse_ini_file function)
 Documentation. - Finish documentation on Components and Template.
 Some sort of "front page" or "dashboard" system.
 New templates.
@@ -8,7 +9,7 @@ Installer.
 Dependency checker.
 Logging.
 Better default template. - http://matthewjamestaylor.com/blog/ultimate-3-column-holy-grail-pixels.htm
-Possibly change structure to dirs (bud (models), grow, travel (views)) to replace single files for MVC.
+Possibly change structure to dirs (bud (models), grow, travel (views)) to replace single files for MVC. (Use glob function to find files.)
 Dandelion Entity Exchange (com_dex, for easily combining two installation's entities, using hooks, effectively creating a mirror)
 Object Oriented Hooks ( $config->hooks->com_component->event[] = function() )
 
