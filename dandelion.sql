@@ -25,18 +25,7 @@ CREATE TABLE IF NOT EXISTS `ddl_com_entity_data` (
   `name` text NOT NULL,
   `value` text NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
-
---
--- Dumping data for table `ddl_com_entity_data`
---
-
-INSERT INTO `ddl_com_entity_data` (`id`, `guid`, `name`, `value`) VALUES
-(4, 1, 'password', 's:32:"47759709c486c8f54840dd5e80732901";'),
-(3, 1, 'salt', 's:32:"ef47ba7ac0f5631b7bd5eaf4a8bcc648";'),
-(2, 1, 'username', 's:5:"admin";'),
-(0, 1, 'email', 'N;'),
-(1, 1, 'abilities', 'a:1:{i:0;s:10:"system/all";}');
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -49,11 +38,4 @@ CREATE TABLE IF NOT EXISTS `ddl_com_entity_entities` (
   `parent` bigint(20) default NULL,
   `tags` text,
   PRIMARY KEY  (`guid`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
-
---
--- Dumping data for table `ddl_com_entity_entities`
---
-
-INSERT INTO `ddl_com_entity_entities` (`guid`, `name`, `parent`, `tags`) VALUES
-(1, '', NULL, 'a:2:{i:0;s:8:"com_user";i:1;s:4:"user";}');
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
