@@ -17,12 +17,13 @@ defined('D_RUN') or die('Direct access prohibited');
 class DynamicConfig { }
 
 /**
- * The main configuration object for Dandelion. This object is used to hold
- * everything from Dandelion settings, to component functions. Components should
- * put their own classes under $config, using their components name. For
- * example, a component named com_xmlparser should put its class in
- * $config->com_xmlparser. Though, it is not necessary to do this. $config also
- * holds Dandelion's standard classes, which include:
+ * The main configuration object for Dandelion.
+ *
+ * This object is used to hold everything from Dandelion settings, to component
+ * unctions. Components should put their own classes under $config, using their
+ * components name. For example, a component named com_xmlparser should put its
+ * class in $config->com_xmlparser. Though, it is not necessary to do this.
+ * $config also holds Dandelion's standard classes, which include:
  *
  * configurator - Manages Dandelion configuration.
  * entity_manager - Manages entities.
@@ -45,66 +46,64 @@ $config = new DynamicConfig;
     /**
      * The program's displayed version.
      */
-    $config->program_version = "0.12 Alpha";
+    $config->program_version = "0.13 Alpha";
 
 /**
  * Program Settings
  */
+    /**
+     * The whole location of Dandelion. (URL)
+     * End this path with a slash!
+     */
+    $config->full_location = "http://localhost/dandelion/trunk/";
 
-/**
- * The whole location of Dandelion. (URL)
- * End this path with a slash!
- */
-$config->full_location = "http://localhost/dandelion/trunk/";
+    /**
+     * The location of Dandelion relative to your server. (URL)
+     * If it is in the root of the server, just put "/".
+     * End this path with a slash!
+     */
+    $config->rela_location = "/dandelion/trunk/";
 
-/**
- * The location of Dandelion relative to your server. (URL)
- * If it is in the root of the server, just put "/".
- * End this path with a slash!
- */
-$config->rela_location = "/dandelion/trunk/";
-
-/**
- * The directory to store uploaded files. (Real Path / URL)
- * This should be the real, relative path and the relative URL.
- * End this path with a slash!
- */
-$config->setting_upload = "media/";
+    /**
+     * The directory to store uploaded files. (Real Path / URL)
+     * This should be the real, relative path and the relative URL.
+     * End this path with a slash!
+     */
+    $config->setting_upload = "media/";
 
 /**
  * Options
  */
+    /**
+     * The default title at the top of each page.
+     */
+    $config->option_title = "Dandelion";
 
-/**
- * The default title at the top of each page.
- */
-$config->option_title = "Dandelion";
+    /**
+     * The copyright notice at the bottom of each page.
+     */
+    $config->option_copyright_notice = "&copy; 2009 Hunter Perrin. All Rights Reserved. Powered by ".$config->program_title." version ".$config->program_version.".";
 
-/**
- * The copyright notice at the bottom of each page.
- */
-$config->option_copyright_notice = "&copy; 2009 Hunter Perrin. All Rights Reserved. Powered by ".$config->program_title." version ".$config->program_version.".";
+    /**
+     * The default template.
+     */
+    $config->default_template = "dandelion";
 
-/**
- * The default template.
- */
-$config->default_template = "dandelion";
+    /**
+     * Allow the template to be overriden by adding ?template=whatever
+     */
+    $config->allow_template_override = true;
 
-/**
- * Allow the template to be overriden by adding ?template=whatever
- */
-$config->allow_template_override = true;
+    /**
+     * Use url rewriting engine.
+     */
+    $config->url_rewriting = true;
 
-/**
- * Use url rewriting engine.
- */
-$config->url_rewriting = true;
-
-/**
- * Use Apache .htaccess with mod_rewrite. (Rename htaccess.txt to .htaccess before using.)
- * @todo Change this to false before any release.
- */
-$config->use_htaccess = false;
+    /**
+     * Use Apache .htaccess with mod_rewrite. (Rename htaccess.txt to .htaccess before using.)
+     * @todo Change this to false before any release.
+     */
+    $config->use_htaccess = false;
 
 // You do not need to edit anything below this line.
 
@@ -249,9 +248,11 @@ class entity {
 	}
 
     /**
-     * Delete the entity from the database. Simply calling delete() will not
-     * unset your entity, so it will still take up memory. Also, calling unset
-     * will not delete your entity from the database.
+     * Delete the entity from the database.
+     * 
+     * Simply calling delete() will not unset your entity, so it will still take
+     * up memory. Also, calling unset will not delete your entity from the
+     * database.
      *
      * @return mixed Returns what the entity manager's delete_entity function returns.
      */
@@ -261,8 +262,10 @@ class entity {
 	}
 
 	/**
-	 * Used to retrieve the data array. This should only be used by the entity
-     * manager to save the data array into the database.
+	 * Used to retrieve the data array.
+     * 
+     * This should only be used by the entity manager to save the data array
+     * into the database.
      *
      * @internal
 	 */
@@ -291,8 +294,10 @@ class entity {
 	}
 
 	/**
-	 * Used to set the data array. This should only be used by the entity
-     * manager to push the data array from the database.
+	 * Used to set the data array.
+     * 
+     * This should only be used by the entity manager to push the data array
+     * from the database.
      *
      * @internal
 	 */
@@ -339,10 +344,11 @@ class entity {
 class template {
     /**
      * Return a URL in the necessary format to be usable on the current
-     * installation. url() is designed to work with the URL rewriting features
-     * of Dandelion, so it should be called whenever outputting a URL is
-     * required. If url() is called with no parameters, it will return the URL
-     * of the index page.
+     * installation.
+     * 
+     * url() is designed to work with the URL rewriting features of Dandelion,
+     * so it should be called whenever outputting a URL is required. If url() is
+     * called with no parameters, it will return the URL of the index page.
      *
      * @param string $component The component the URL should point to.
      * @param string $action The action the URL should point to.
