@@ -12,7 +12,7 @@
  * @todo Replace this file with a component. (Use a JSON template for returning JSON.)
  */
 header("content-type: text/html"); // the return type must be text/html
-define('D_RUN', true);
+defined('D_RUN') or define('D_RUN', true);
 require('configure.php');
 //if file has been sent successfully:
 if (isset($_FILES['image']['tmp_name'])) {

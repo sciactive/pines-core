@@ -29,34 +29,39 @@ class module {
      * The modules title.
      * @var string $title
      */
+	public $title = '';
     /**
      * A suffix to append to the module's class name. Applies to HTML modules.
      * @var string $class_suffix
      */
+	public $class_suffix = '';
     /**
      * The modules content.
      *
      * Though not necessary, this should be filled using a view.
      * @var string $content
      */
+	public $content = '';
     /**
      * The component that the module will retrieve its content from.
      * @var string $component
      */
+	public $component = '';
     /**
      * The view that the module will retrieve its content from.
      * @var string $view
     */
-	public $title, $class_suffix, $content, $component, $view = '';
+	public $view = '';
     /**
      * The position on the page to place the module.
      * @var string $position
      */
+    public $position = null;
     /**
      * The order the module will be placed in.
      * @var int $order
      */
-    public $position, $order = null;
+    public $order = null;
     /**
      * Whether the title of the module should be displayed.
      * @var bool $show_title
@@ -204,43 +209,49 @@ class page {
      * @var string $title
      * @internal
      */
+	protected $title = '';
     /**
      * The head section of the page.
      * @var string $head
      * @internal
      */
+	protected $head = '';
     /**
      * The body section of the page.
      * @var string $content
      * @internal
      */
+	protected $content = '';
     /**
      * The footer at the bottom of the page.
      * @var string $footer
      * @internal
      */
+	protected $footer = '';
     /**
      * The content which will override the entire page.
      * @var string $override_doc
      * @internal
      */
-	protected $title, $head, $content, $footer, $override_doc = '';
+	protected $override_doc = '';
     /**
      * The notices to display.
      * @var array $notice
      * @internal
      */
+	protected $notice = array();
     /**
      * The errors to display.
      * @var array $error
      * @internal
      */
+	protected $error = array();
     /**
      * The moduels to display.
      * @var array $modules
      * @internal
      */
-	protected $notice, $error, $modules = array();
+	protected $modules = array();
     /**
      * Wether to override the output of the page and display custom content.
      *
@@ -484,9 +495,7 @@ class page {
 	}
 }
 
-/**
- * @ignore
- */
+/*
 class table {
 	public $name, $id, $class, $style = '';
 	public $table_array = array();
@@ -499,7 +508,7 @@ class table {
 	 * id: a string
 	 * class: a string
 	 * style: a string
-	 */
+	 *
 	function add_row($cells = array(), $info = array('type' => 'td')) {
 		if ( isset($info['index']) ) {
 			//TODO: finish this table class
@@ -515,6 +524,7 @@ class table {
 		$return .= ">\n";
 	}
 }
+ */
 
 /**
  * A menu.

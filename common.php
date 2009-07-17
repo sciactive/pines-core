@@ -113,24 +113,28 @@ if (!function_exists('display_notice')) {
 	}
 }
 
-if (!function_exists('gatekeeper')) {
-    /**
-     * Determine whether the user has permission for something.
-     *
-     * The gatekeeper function should be defined by whatever component is taking
-     * over user authentication. Gatekeeper should return false if the user is
-     * not logged in, true if he is and no arguments were given. If he is,
-     * gatekeeper should take an "ability" argument which returns true if the
-     * user has the required permissions. Gatekeeper should also take a "user"
-     * argument to check whether a different user has an ability. This helps
-     * user managers use a "login" ability, which can be used to disable an
-     * account.
-     *
-     * @return bool Always true.
-     */
-	function gatekeeper() {
-		return true;
-	}
+/**
+ * Shortcut to $config->user_manager->gatekeeper().
+ *
+ * The gatekeeper() function should be defined in whatever component is taking
+ * over user management. gatekeeper() without arguments should return false if
+ * the current user is not logged in, true if he is. If he is, gatekeeper()
+ * should take an "ability" argument which returns true if the user has the
+ * required permissions. gatekeeper() should also take a "user" argument to
+ * check whether a different user has an ability. This helps user managers use a
+ * "login" ability, which can be used to disable an account.
+ *
+ * @global DynamicConfig
+ * @uses $config->user_manager->gatekeeper() Forwards parameters and returns the result.
+ * @param string $ability The ability to provide.
+ * @param user $user The user to provide.
+ * @return bool The result is returned if there is a user management component, otherwise it returns true.
+ */
+function gatekeeper($ability = NULL, $user = NULL) {
+	global $config;
+    if (is_null($config->user_manager))
+        return true;
+	return $config->user_manager->gatekeeper($ability, $user);
 }
 
 if (!function_exists('get_confirmation')) {

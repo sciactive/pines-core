@@ -109,6 +109,12 @@ $config = new DynamicConfig;
 // You do not need to edit anything below this line.
 
 /**
+ * Base class for components.
+ * @package Dandelion
+ */
+class component { }
+
+/**
  * Used to provide an abstract way to represent and store data in Dandelion.
  * 
  * ALWAYS check tags after retrieving an entity.
@@ -124,17 +130,23 @@ $config = new DynamicConfig;
  * -When you save a sub-entity, it effectively duplicates the data in the
  * database. Once as data of the owner, and again as its own entity. This
  * is not efficient and difficult to keep track of!!
+ *
  * -ALWAYS delete sub-entities first, unless they are to survive their owner,
  * entity managers don't delete sub-entities when you delete their owner.
+ *
  * -When you delete() a sub-entity, it doesn't dissappear, it just gets removed
  * from the database as an entity and loses its GUID. You should subsequently
  * unset() it if you want it out of your owner entity.
+ *
  * -Remember to SAVE your owner after deleting and unsetting sub-entities.
+ *
  * -If you just unset() a saved sub-entity without delete()ing it, it will still
  * be an entity in the database, just no longer data in the owner.
+ *
  * -Saving an owner does not save its sub-entity. if you load the owner, its
  * sub-entity will have the new data, but if you load the sub-entity, it will
  * have the old data, so save both sub-entity and owner (sub-entities first).
+ *
  * -Also, saving sub-entities will not save their data in the owner. SAVE ALL
  * SUB-ENTITIES FIRST, THEN OWNERS.
  *
@@ -155,6 +167,7 @@ class entity {
      *
      * @var int
      */
+	public $guid = null;
     /**
      * The GUID of the parent entity.
      * 
@@ -163,7 +176,7 @@ class entity {
      *
      * @var int
      */
-	public $guid, $parent = null;
+	public $parent = null;
     /**
      * Tags are used to classify entities.
      * 
@@ -222,10 +235,11 @@ class entity {
      *
      * @param string $name The name of the variable.
      * @param string $value The value of the variable.
+     * @return mixed The value of the variable.
      * @internal
      */
     public function __set($name, $value) {
-        $this->data[$name] = $value;
+        return ($this->data[$name] = $value);
     }
 
     /**
@@ -274,6 +288,7 @@ class entity {
      * This should only be used by the entity manager to save the data array
      * into the database.
      *
+     * @return array The entity's data array.
      * @internal
 	 */
 	public function get_data() {
@@ -306,17 +321,18 @@ class entity {
      * This should only be used by the entity manager to push the data array
      * from the database.
      *
+     * @param array $data The data array.
+     * @return array The data array.
      * @internal
 	 */
 	public function put_data($data) {
-		$this->data = $data;
+		return ($this->data = $data);
 	}
 
 	/**
 	 * Remove one or more tags.
      *
      * @param mixed $tag,... List or array of tags.
-     * @return bool
 	 */
 	public function remove_tag() {
 		if (is_array(func_get_arg(0))) {
