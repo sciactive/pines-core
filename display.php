@@ -1,8 +1,8 @@
 <?php
 /**
- * The display controller for Dandelion. Handles ouput.
+ * The display controller for XROOM. Handles ouput.
  *
- * @package Dandelion
+ * @package XROOM
  * @subpackage Core
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
@@ -22,7 +22,7 @@ require_once('templates/'.$config->current_template.'/configure.php');
 
 /**
  * Modules are blocks of code or data to be placed on the page.
- * @package Dandelion
+ * @package XROOM
  */
 class module {
     /**
@@ -201,7 +201,7 @@ class module {
 
 /**
  * The controller of the page. It controls what is output to the user.
- * @package Dandelion
+ * @package XROOM
  */
 class page {
     /**
@@ -528,7 +528,7 @@ class table {
 
 /**
  * A menu.
- * @package Dandelion
+ * @package XROOM
  */
 class menu {
     /**

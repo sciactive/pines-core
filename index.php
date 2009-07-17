@@ -1,8 +1,8 @@
 <?php
 /**
- * The controller for Dandelion's architecture.
+ * The controller for XROOM's architecture.
  * 
- * @package Dandelion
+ * @package XROOM
  * @subpackage Core
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
@@ -11,7 +11,7 @@
  */
 
 /*
- * Dandelion - a Lightweight PHP Application Framework
+ * XROOM - a Lightweight PHP Application Framework
  * Copyright (C) 2008-2009  Hunter Perrin.
  *
  * This program is free software: you can redistribute it and/or modify

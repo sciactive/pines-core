@@ -37,12 +37,12 @@ RewriteRule ^(.*)$ index.php [F,L]
 
 #  Uncomment following line if your webserver's URL
 #  is not directly related to physical file paths.
-#  Update Your Dandelion Directory (just / for root)
+#  Update Your XROOM Directory (just / for root)
 
 # RewriteBase /
 
 
-########## Begin - Dandelion core SEF Section
+########## Begin - XROOM core SEF Section
 #
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
@@ -50,4 +50,4 @@ RewriteCond %{REQUEST_URI} !^/index.php
 #RewriteCond %{REQUEST_URI} (/|\.php|\.html|\.htm|\.feed|\.pdf|\.raw|/[^.]*)$  [NC]
 RewriteRule ^(.+)$ index.php/$1 [L,QSA,NE]
 #
-########## End - Dandelion core SEF Section
+########## End - XROOM core SEF Section

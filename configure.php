@@ -1,8 +1,8 @@
 <?php
 /**
- * Dandelion's configuration.
+ * XROOM's configuration.
  *
- * @package Dandelion
+ * @package XROOM
  * @subpackage Core
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
@@ -13,20 +13,20 @@ defined('D_RUN') or die('Direct access prohibited');
 
 /**
  * An empty class for arbitrary data.
- * @package Dandelion
+ * @package XROOM
  */
 class DynamicConfig { }
 
 /**
- * The main configuration object for Dandelion.
+ * The main configuration object for XROOM.
  *
- * This object is used to hold everything from Dandelion settings, to component
+ * This object is used to hold everything from XROOM settings, to component
  * unctions. Components should put their own classes under $config, using their
  * components name. For example, a component named com_xmlparser should put its
  * class in $config->com_xmlparser. Though, it is not necessary to do this.
- * $config also holds Dandelion's standard classes, which include:
+ * $config also holds XROOM's standard classes, which include:
  *
- * configurator - Manages Dandelion configuration.
+ * configurator - Manages XROOM configuration.
  * entity_manager - Manages entities.
  * db_manager - Manages database connections.
  * user_manager - Manages users.
@@ -42,7 +42,7 @@ $config = new DynamicConfig;
     /**
      * The program's displayed title.
      */
-    $config->program_title = "Dandelion";
+    $config->program_title = "XROOM";
 
     /**
      * The program's displayed version.
@@ -53,17 +53,17 @@ $config = new DynamicConfig;
  * Program Settings
  */
     /**
-     * The whole location of Dandelion. (URL)
+     * The whole location of XROOM. (URL)
      * End this path with a slash!
      */
-    $config->full_location = "http://localhost/dandelion/trunk/";
+    $config->full_location = "http://localhost/xroom/trunk/";
 
     /**
-     * The location of Dandelion relative to your server. (URL)
+     * The location of XROOM relative to your server. (URL)
      * If it is in the root of the server, just put "/".
      * End this path with a slash!
      */
-    $config->rela_location = "/dandelion/trunk/";
+    $config->rela_location = "/xroom/trunk/";
 
     /**
      * The directory to store uploaded files. (Real Path / URL)
@@ -78,7 +78,7 @@ $config = new DynamicConfig;
     /**
      * The default title at the top of each page.
      */
-    $config->option_title = "Dandelion";
+    $config->option_title = "XROOM";
 
     /**
      * The copyright notice at the bottom of each page.
@@ -88,7 +88,7 @@ $config = new DynamicConfig;
     /**
      * The default template.
      */
-    $config->default_template = "dandelion";
+    $config->default_template = "xroom";
 
     /**
      * Allow the template to be overriden by adding ?template=whatever
@@ -110,12 +110,12 @@ $config = new DynamicConfig;
 
 /**
  * Base class for components.
- * @package Dandelion
+ * @package XROOM
  */
 class component { }
 
 /**
- * Used to provide an abstract way to represent and store data in Dandelion.
+ * Used to provide an abstract way to represent and store data in XROOM.
  * 
  * ALWAYS check tags after retrieving an entity.
  *
@@ -155,7 +155,7 @@ class component { }
  * functionality, and though not as versatile, it is MUCH more efficient. Try to
  * avoid using sub-entities at all cost!
  *
- * @package Dandelion
+ * @package XROOM
  */
 class entity {
     /**
@@ -363,14 +363,14 @@ class entity {
 
 /**
  * The template base class. Templates should extend this class.
- * @package Dandelion
+ * @package XROOM
  */
 class template {
     /**
      * Return a URL in the necessary format to be usable on the current
      * installation.
      * 
-     * url() is designed to work with the URL rewriting features of Dandelion,
+     * url() is designed to work with the URL rewriting features of XROOM,
      * so it should be called whenever outputting a URL is required. If url() is
      * called with no parameters, it will return the URL of the index page.
      *
@@ -379,7 +379,7 @@ class template {
      * @param array $params An array of parameters which should be part of the URL's query string.
      * @param bool $encode_entities Whether to encode HTML entities, such as the ampersand. Use this if the URL is going to be displayed on an HTML page.
      * @param bool $full_location Whether to return an absolute URL or a relative URL.
-     * @return string The URL in a format to work with the current configuration of Dandelion.
+     * @return string The URL in a format to work with the current configuration of XROOM.
      */
 	function url($component = null, $action = null, $params = array(), $encode_entities = true, $full_location = false) {
 		global $config;

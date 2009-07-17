@@ -1,11 +1,11 @@
 <?php
 /**
- * Common functions used in Dandelion.
+ * Common functions used in XROOM.
  * 
  * These are often overriden by components, which is why this file needs to be
  * parsed after the components' common files.
  *
- * @package Dandelion
+ * @package XROOM
  * @subpackage Core
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
@@ -86,7 +86,7 @@ if (!function_exists('display_error')) {
      * Causes the system to report an error to the user.
      * 
      * This function should be used instead of calling $page->error directly,
-     * because some admins may wish to log Dandelion errors, instead of
+     * because some admins may wish to log XROOM errors, instead of
      * displaying them.
      *
      * @param string $error_text Information to display to the user.
@@ -102,7 +102,7 @@ if (!function_exists('display_notice')) {
      * Causes the system to report a notice to the user.
      * 
      * This function should be used instead of calling $page->notice directly,
-     * because some admins may wish to log Dandelion notices, instead of
+     * because some admins may wish to log XROOM notices, instead of
      * displaying them.
      *
      * @param string $notice_text Information to display to the user.

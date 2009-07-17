@@ -1,8 +1,8 @@
 <?php
 /**
- * The uploader for Dandelion.
+ * The uploader for XROOM.
  *
- * @package Dandelion
+ * @package XROOM
  * @subpackage Core
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>

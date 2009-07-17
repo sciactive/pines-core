@@ -1,21 +1,21 @@
 -Installation Instructions-
 
 These instructions are preliminary and will not apply to future releases of
-Dandelion.
+XROOM.
 
-There is a dandelion.sql file with the current state of the database.
+There is a xroom.sql file with the current state of the database.
 
 There are configure.php files in the root dir and in some component dirs. These
-files contain settings that Dandelion needs to run. You should edit these files
+files contain settings that XROOM needs to run. You should edit these files
 to suit your server's configuration.
 
-Basically, to install Dandelion, you currently need PHP and MySQL. Set up a
-database for Dandelion and put the settings in
+Basically, to install XROOM, you currently need PHP and MySQL. Set up a
+database for XROOM and put the settings in
 
 /components/com_mysql/configure.php
 
-Once you install Dandelion, if you use com_user, you need to create an admin
-user. To do this, point your browser to your Dandelion installation, then add
+Once you install XROOM, if you use com_user, you need to create an admin
+user. To do this, point your browser to your XROOM installation, then add
 this to the URL:
 
 ?option=com_user&action=createadmin&secret=874jdiv8
