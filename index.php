@@ -37,15 +37,15 @@
 /**
  * Declare that the program is running through the index, as it should.
  */
-define('D_RUN', true);
+define('X_RUN', true);
 /**
  * The installation's base path.
  */
-define('D_BASE_PATH', dirname(__FILE__));
+define('X_BASE_PATH', dirname(__FILE__));
 /**
  * The name of our index file.
  */
-define('D_INDEX', basename($_SERVER['SCRIPT_FILENAME']));
+define('X_INDEX', basename($_SERVER['SCRIPT_FILENAME']));
 
 session_start();
 

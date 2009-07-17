@@ -9,7 +9,7 @@
  * @copyright Hunter Perrin
  * @link http://sciactive.com/
  */
-defined('D_RUN') or die('Direct access prohibited');
+defined('X_RUN') or die('Direct access prohibited');
 
 /**
  * An empty class for arbitrary data.
@@ -391,7 +391,7 @@ class template {
 			return $return;
 		if ( $config->url_rewriting ) {
 			if ( !$config->use_htaccess )
-				$return .= D_INDEX.'/';
+				$return .= X_INDEX.'/';
 			if ( !is_null($component) ) {
 				// Get rid of 'com_'
 				$return .= substr($component, 4).'/';
@@ -408,7 +408,7 @@ class template {
 				$return .= ($encode_entities) ? htmlentities($param_return) : $param_return;
 			}
 		} else {
-			$return .= ($config->use_htaccess) ? '?' : D_INDEX.'?';
+			$return .= ($config->use_htaccess) ? '?' : X_INDEX.'?';
 			if ( !is_null($component) ) {
 				$param_return = "option=$component";
 				if (!is_null($action))
