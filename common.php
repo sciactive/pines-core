@@ -148,23 +148,23 @@ if (!function_exists('get_confirmation')) {
      * @deprecated
      */
 	function get_confirmation($heading, $new_option, $new_action, $file = "") {
-		$module = new module('system', 'false', 'content');
-		$module->title = $heading;
-		$module->content("<form method=\"post\" style=\"display: inline;\">\n");
-		$module->content("<input type=\"hidden\" name=\"response\" value=\"yes\" />\n");
-		$module->content("<input type=\"hidden\" name=\"option\" value=\"$new_option\" />\n");
-		$module->content("<input type=\"hidden\" name=\"action\" value=\"$new_action\" />\n");
-		$module->content("<input type=\"hidden\" name=\"file\" value=\"$file\" />\n");
-		$module->content("<input type=\"submit\" value=\"Yes\" />\n");
-		$module->content("</form>\n");
-		$module->content("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n");
-		$module->content("<form method=\"post\" style=\"display: inline;\">\n");
-		$module->content("<input type=\"hidden\" name=\"response\" value=\"no\" />\n");
-		$module->content("<input type=\"hidden\" name=\"option\" value=\"$new_option\" />\n");
-		$module->content("<input type=\"hidden\" name=\"action\" value=\"$new_action\" />\n");
-		$module->content("<input type=\"hidden\" name=\"file\" value=\"$file\" />\n");
-		$module->content("<input type=\"submit\" value=\"No\" />\n");
-		$module->content("</form><br />\n");
+		$get_confirmation = new module('system', 'false', 'content');
+		$get_confirmation->title = $heading;
+		$get_confirmation->content("<form method=\"post\" style=\"display: inline;\">\n");
+		$get_confirmation->content("<input type=\"hidden\" name=\"response\" value=\"yes\" />\n");
+		$get_confirmation->content("<input type=\"hidden\" name=\"option\" value=\"$new_option\" />\n");
+		$get_confirmation->content("<input type=\"hidden\" name=\"action\" value=\"$new_action\" />\n");
+		$get_confirmation->content("<input type=\"hidden\" name=\"file\" value=\"$file\" />\n");
+		$get_confirmation->content("<input type=\"submit\" value=\"Yes\" />\n");
+		$get_confirmation->content("</form>\n");
+		$get_confirmation->content("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n");
+		$get_confirmation->content("<form method=\"post\" style=\"display: inline;\">\n");
+		$get_confirmation->content("<input type=\"hidden\" name=\"response\" value=\"no\" />\n");
+		$get_confirmation->content("<input type=\"hidden\" name=\"option\" value=\"$new_option\" />\n");
+		$get_confirmation->content("<input type=\"hidden\" name=\"action\" value=\"$new_action\" />\n");
+		$get_confirmation->content("<input type=\"hidden\" name=\"file\" value=\"$file\" />\n");
+		$get_confirmation->content("<input type=\"submit\" value=\"No\" />\n");
+		$get_confirmation->content("</form><br />\n");
 	}
 }
 
@@ -180,16 +180,16 @@ if (!function_exists('get_name')) {
      * @deprecated
      */
 	function get_name($heading, $new_option, $new_action, $orig_name = "", $default = "") {
-		$module = new module('system', 'false', 'content');
-		$module->title = $heading;
-		$module->content("<form method=\"post\">\n");
-		$module->content("<input type=\"text\" name=\"return_name\" value=\"$default\" />\n");
-		$module->content("<input type=\"hidden\" name=\"option\" value=\"$new_option\" />\n");
-		$module->content("<input type=\"hidden\" name=\"action\" value=\"$new_action\" />\n");
-		$module->content("<input type=\"hidden\" name=\"orig_name\" value=\"$orig_name\" />\n");
-		$module->content("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=\"submit\" value=\"Submit\" />\n");
-		$module->content("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=\"button\" onclick=\"window.location='".$config->template->url()."';\" value=\"Cancel\" />\n");
-		$module->content("</form><br />\n");
+		$get_name = new module('system', 'false', 'content');
+		$get_name->title = $heading;
+		$get_name->content("<form method=\"post\">\n");
+		$get_name->content("<input type=\"text\" name=\"return_name\" value=\"$default\" />\n");
+		$get_name->content("<input type=\"hidden\" name=\"option\" value=\"$new_option\" />\n");
+		$get_name->content("<input type=\"hidden\" name=\"action\" value=\"$new_action\" />\n");
+		$get_name->content("<input type=\"hidden\" name=\"orig_name\" value=\"$orig_name\" />\n");
+		$get_name->content("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=\"submit\" value=\"Submit\" />\n");
+		$get_name->content("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=\"button\" onclick=\"window.location='".$config->template->url()."';\" value=\"Cancel\" />\n");
+		$get_name->content("</form><br />\n");
 	}
 }
 

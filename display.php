@@ -187,15 +187,12 @@ class module {
                 }
             }
         }
-        $this->content(ob_get_contents());
-        ob_end_clean();
+        $this->content(ob_get_clean());
 
         // Return the content.
         ob_start();
         require 'templates/'.$config->current_template.'/models/module.php';
-        $return = ob_get_contents();
-        ob_end_clean();
-        return $return;
+        return ob_get_clean();
 	}
 }
 
@@ -486,7 +483,8 @@ class page {
      * @uses page::$override
      */
 	function render() {
-		foreach ($GLOBALS as $key => $val) { global $$key; }
+		//foreach ($GLOBALS as $key => $val) { global $$key; }
+        global $config;
 		if ( $this->override ) {
 			echo $this->get_override_doc();
 		} else {
