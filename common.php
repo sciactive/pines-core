@@ -148,7 +148,7 @@ if (!function_exists('get_confirmation')) {
      * @deprecated
      */
 	function get_confirmation($heading, $new_option, $new_action, $file = "") {
-		$get_confirmation = new module('system', 'false', 'content');
+		$get_confirmation = new module('system', 'null', 'content');
 		$get_confirmation->title = $heading;
 		$get_confirmation->content("<form method=\"post\" style=\"display: inline;\">\n");
 		$get_confirmation->content("<input type=\"hidden\" name=\"response\" value=\"yes\" />\n");
@@ -180,7 +180,7 @@ if (!function_exists('get_name')) {
      * @deprecated
      */
 	function get_name($heading, $new_option, $new_action, $orig_name = "", $default = "") {
-		$get_name = new module('system', 'false', 'content');
+		$get_name = new module('system', 'null', 'content');
 		$get_name->title = $heading;
 		$get_name->content("<form method=\"post\">\n");
 		$get_name->content("<input type=\"text\" name=\"return_name\" value=\"$default\" />\n");

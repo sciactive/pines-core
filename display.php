@@ -143,9 +143,9 @@ class module {
     /**
      * Renders the module.
      * 
-     * render() will first try to find the view in a folder named as the type
+     * render() will first try to find the view in a folder named as the format
      * defined in the template, then will remove text after and including the
-     * last dash in the type until it finds a view. If nothing is found after
+     * last dash in the format until it finds a view. If nothing is found after
      * the last dash is removed, it will require() the view from the directory
      * 'all'.
      *
@@ -158,7 +158,7 @@ class module {
      * components/com_game/views/xhtml/stats.php
      * components/com_game/views/all/stats.php
      *
-     * The component 'system' has views in system/views/. The view 'false' in
+     * The component 'system' has views in system/views/. The view 'null' in
      * 'system' can be used as a blank view.
      *
      * The module's template is found in the 'models' directory of the current
