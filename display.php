@@ -162,11 +162,11 @@ class module {
      * 'system' can be used as a blank view.
      *
      * The module's template is found in the 'models' directory of the current
-     * template.
+     * template. The module's content ultimately end up with the output from
+     * this file.
      *
      * @global DynamicConfig
      * @global page
-     * @return string The rendered content of the module.
      */
 	function render() {
         global $config, $page;
@@ -192,7 +192,7 @@ class module {
         // Return the content.
         ob_start();
         require 'templates/'.$config->current_template.'/models/module.php';
-        return ob_get_clean();
+        $this->content = ob_get_clean();
 	}
 }
 
@@ -267,7 +267,7 @@ class page {
      *
      * @internal
      */
-	function __construct() {
+	public function __construct() {
 		$this->main_menu = new menu;
 	}
 
@@ -276,7 +276,7 @@ class page {
      *
      * @param string $add_title Text to append.
      */
-	function title($add_title) {
+	public function title($add_title) {
 		$this->title .= $add_title;
 	}
 
@@ -287,7 +287,7 @@ class page {
      * @global DynamicConfig
      * @return string The title.
      */
-	function get_title() {
+	public function get_title() {
 		global $config;
 		if ( !empty($this->title) ) {
 			return $this->title;
@@ -301,7 +301,7 @@ class page {
      *
      * @param string $add_head Text to append.
      */
-	function head($add_head) {
+	public function head($add_head) {
 		$this->head .= $add_head;
 	}
 
@@ -310,7 +310,7 @@ class page {
      *
      * @return string The head section.
      */
-	function get_head() {
+	public function get_head() {
 		return $this->head;
 	}
 
@@ -321,7 +321,7 @@ class page {
      * @param string $image The filename of an image to use.
      * @todo Image support.
      */
-	function notice($message, $image = NULL) {
+	public function notice($message, $image = NULL) {
 		$this->notice[] = $message;
 	}
 
@@ -330,7 +330,7 @@ class page {
      *
      * @return array The array.
      */
-	function get_notice() {
+	public function get_notice() {
 		return $this->notice;
 	}
 
@@ -341,7 +341,7 @@ class page {
      * @param string $image The filename of an image to use.
      * @todo Image support.
      */
-	function error($message, $image = NULL) {
+	public function error($message, $image = NULL) {
 		$this->error[] = $message;
 	}
 
@@ -350,7 +350,7 @@ class page {
      *
      * @return array The array.
      */
-	function get_error() {
+	public function get_error() {
 		return $this->error;
 	}
 
@@ -361,7 +361,7 @@ class page {
      *
      * @param string $add_content Text to append.
      */
-	function content($add_content) {
+	public function content($add_content) {
 		$this->content .= $add_content;
 	}
 
@@ -370,7 +370,7 @@ class page {
      *
      * @return string The body text.
      */
-	function get_content() {
+	public function get_content() {
 		return $this->content;
 	}
 
@@ -383,7 +383,7 @@ class page {
      * @param int $order The order in which to try to place the module.
      * @return int The order in which the module was placed. This will be the last key + 1 if the desired order is already taken.
      */
-	function attach_module(&$module, $position, $order = null) {
+	public function attach_module(&$module, $position, $order = null) {
 		if ( is_null($order) ) {
 			if ( isset($this->modules[$position]) ) {
                 end($this->modules[$position]);
@@ -414,7 +414,7 @@ class page {
      * @param int $order The order to try first.
      * @return bool Whether a matching module was found and successfully deleted.
      */
-	function detach_module(&$module, $position, $order = null) {
+	public function detach_module(&$module, $position, $order = null) {
 		if ( is_null($order) ) {
 			if ( isset($this->modules[$position]) ) {
                 end($this->modules[$position]);
@@ -442,7 +442,7 @@ class page {
      *
      * @param string $add_footer Text to append.
      */
-	function footer($add_footer) {
+	public function footer($add_footer) {
 		$this->footer .= $add_footer;
 	}
 
@@ -451,7 +451,7 @@ class page {
      *
      * @return string The footer.
      */
-	function get_footer() {
+	public function get_footer() {
 		return $this->footer;
 	}
 
@@ -461,7 +461,7 @@ class page {
      *
      * @param string $add_body Text to append.
      */
-	function override_doc($add_body) {
+	public function override_doc($add_body) {
 		$this->override_doc .= $add_body;
 	}
 
@@ -470,21 +470,30 @@ class page {
      *
      * @return string The head section.
      */
-	function get_override_doc() {
+	public function get_override_doc() {
 		return $this->override_doc;
 	}
 
     /**
-     * Render the page. render() require()s the template.php file in the current
-     * template. However, render() will display the result of get_override_doc()
-     * if $page->override is true.
+     * Render the page.
+     * 
+     * It will first render all the modules, then require() the template.php
+     * file in the current template. However, render() will display the result
+     * of get_override_doc() if $page->override is true.
      *
      * @global mixed Declare all globals in the function so they are available in the template.
      * @uses page::$override
      */
-	function render() {
-		//foreach ($GLOBALS as $key => $val) { global $$key; }
-        global $config;
+	public function render() {
+        // Render each module. This will fill in the head section of the page.
+        foreach ($this->modules as $cur_position) {
+            foreach ($cur_position as $cur_module) {
+                $cur_module->render();
+            }
+        }
+
+        // Make all globals accessible, so the template file can use them.
+		foreach ($GLOBALS as $key => $val) { global $$key; }
 		if ( $this->override ) {
 			echo $this->get_override_doc();
 		} else {
