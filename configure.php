@@ -42,7 +42,7 @@ $config = new DynamicConfig;
     /**
      * The program's displayed title.
      */
-    $config->program_title = "XROOM";
+    $config->program_title = "X-ROOM";
 
     /**
      * The program's displayed version.
@@ -78,7 +78,7 @@ $config = new DynamicConfig;
     /**
      * The default title at the top of each page.
      */
-    $config->option_title = "XROOM";
+    $config->option_title = "X-Room";
 
     /**
      * The copyright notice at the bottom of each page.

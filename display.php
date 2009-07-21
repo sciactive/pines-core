@@ -500,6 +500,20 @@ class page {
 			require("templates/".$config->current_template."/template.php");
 		}
 	}
+
+    /**
+     * Render the modules in a position.
+     *
+     * @param string $position The position to work on.
+     * @return string The content rendered by the modules.
+     */
+    public function render_modules($position) {
+        $return = '';
+		foreach ($this->modules[$position] as $cur_module) {
+			$return .= $cur_module->get_content() . "\n";
+		}
+        return $return;
+    }
 }
 
 /*
