@@ -42,7 +42,7 @@ $config = new DynamicConfig;
     /**
      * The program's displayed title.
      */
-    $config->program_title = "X-ROOM";
+    $config->program_title = "XROOM";
 
     /**
      * The program's displayed version.
