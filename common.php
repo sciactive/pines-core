@@ -67,20 +67,6 @@ if (!function_exists('is_clean_filename')) {
 	}
 }
 
-if (!function_exists('print_default')) {
-    /**
-     * Notifies the user if there is no default component.
-     * 
-     * This behavior will change and this function will no longer exist in
-     * future versions.
-     *
-     * @deprecated
-     */
-	function print_default() {
-		display_error("There is no installed component that has taken over the default print function!");
-	}
-}
-
 if (!function_exists('display_error')) {
     /**
      * Causes the system to report an error to the user.

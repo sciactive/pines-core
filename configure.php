@@ -106,6 +106,15 @@ $config = new DynamicConfig;
      */
     $config->use_htaccess = false;
 
+    /**
+     * The default component.
+     *
+     * This component should have a "default" action. That action will be called
+     * when the user first accesses XROOM. If an action is specified, but no
+     * component, this one will be used.
+     */
+     $config->default_component = 'com_user';
+
 // You do not need to edit anything below this line.
 
 /**

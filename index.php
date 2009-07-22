@@ -64,20 +64,30 @@ if ( file_exists("components/") ) {
 	$config->components = array_values($config->components);
 }
 
+// Load the configuration for our components. This shouldn't require any sort of
+// functionality, like entity or user management.
 foreach ($config->components as $cur_component) {
 	if ( file_exists("components/$cur_component/configure.php") )
 		include_once("components/$cur_component/configure.php");
 }
+// Load the display controller.
 require_once('display.php');
+// Load the common files. This should set up the models for each component,
+// which the actions should then use to manipulate actual data.
 foreach ($config->components as $cur_component) {
 	if ( file_exists("components/$cur_component/common.php") )
 		include_once("components/$cur_component/common.php");
 }
+// Load some common functions.
 require_once('common.php');
 
-$action = clean_filename($_REQUEST['action']);
+// Load any post or get vars for our component/action.
 $component = clean_filename($_REQUEST['option']);
+$action = clean_filename($_REQUEST['action']);
+
 // URL Rewriting Engine (Simple, eh?)
+// The values from URL rewriting override any post or get vars, so don't submit
+// forms to a url you shouldn't.
 if ( $config->url_rewriting ) {
 	$args_array = explode('/', substr($_SERVER['PHP_SELF'], strlen($_SERVER['SCRIPT_NAME'])));
 	if ( isset($args_array[1]) ) $component = 'com_'.$args_array[1];
@@ -85,25 +95,27 @@ if ( $config->url_rewriting ) {
 	unset($args_array);
 }
 
-if ( !empty($component) ) {
-	if ( empty($action) ) $action = 'default';
-	
-	if ( file_exists("components/$component/actions/$action.php") ) {
-		require("components/$component/actions/$action.php");
-	} else {
-		display_error("Action not defined! D:");
-	}
+// Fill in any empty request vars.
+if ( empty($component) ) $component = $config->default_component;
+if ( empty($action) ) $action = 'default';
+
+// Call the action specified.
+if ( file_exists("components/$component/actions/$action.php") ) {
+    require("components/$component/actions/$action.php");
 } else {
-	print_default();
+    display_error("Action not defined! D:");
 }
 
+// Load the final display stuff. This includes menu entries.
 foreach ($config->components as $cur_component) {
 	if ( file_exists("components/$cur_component/display.php") )
 		include_once("components/$cur_component/display.php");
 }
 
+// Render the page.
 $page->render();
 
+// If there's still a database connection, close it.
 if ( isset($config->db_manager) )
 	$config->db_manager->disconnect();
 ?>
