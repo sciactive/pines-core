@@ -83,7 +83,7 @@ $config = new DynamicConfig;
     /**
      * The copyright notice at the bottom of each page.
      */
-    $config->option_copyright_notice = "&copy; 2009 Hunter Perrin. All Rights Reserved. Powered by ".$config->program_title." version ".$config->program_version.".";
+    $config->option_copyright_notice = "&copy; 2009 Hunter Perrin. All Rights Reserved.<br />Powered by ".$config->program_title." version ".$config->program_version.".";
 
     /**
      * The default template.
