@@ -1,8 +1,8 @@
 <?php
 /**
- * The uploader for XROOM.
+ * The uploader for Pines.
  *
- * @package XROOM
+ * @package Pines
  * @subpackage Core
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
@@ -12,7 +12,7 @@
  * @todo Replace this file with a component. (Use a JSON template for returning JSON.)
  */
 header("content-type: text/html"); // the return type must be text/html
-defined('X_RUN') or define('X_RUN', true);
+defined('P_RUN') or define('P_RUN', true);
 require('configure.php');
 //if file has been sent successfully:
 if (isset($_FILES['image']['tmp_name'])) {

@@ -1,15 +1,15 @@
 <?php
 /**
- * The display controller for XROOM. Handles ouput.
+ * The display controller for Pines. Handles ouput.
  *
- * @package XROOM
+ * @package Pines
  * @subpackage Core
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright Hunter Perrin
  * @link http://sciactive.com/
  */
-defined('X_RUN') or die('Direct access prohibited');
+defined('P_RUN') or die('Direct access prohibited');
 
 /**
  * The current template.
@@ -22,7 +22,7 @@ require_once('templates/'.$config->current_template.'/configure.php');
 
 /**
  * Modules are blocks of code or data to be placed on the page.
- * @package XROOM
+ * @package Pines
  */
 class module {
     /**
@@ -198,7 +198,7 @@ class module {
 
 /**
  * The controller of the page. It controls what is output to the user.
- * @package XROOM
+ * @package Pines
  */
 class page {
     /**
@@ -549,7 +549,7 @@ class table {
 
 /**
  * A menu.
- * @package XROOM
+ * @package Pines
  */
 class menu {
     /**

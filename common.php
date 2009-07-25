@@ -1,18 +1,18 @@
 <?php
 /**
- * Common functions used in XROOM.
+ * Common functions used in Pines.
  * 
  * These are often overriden by components, which is why this file needs to be
  * parsed after the components' common files.
  *
- * @package XROOM
+ * @package Pines
  * @subpackage Core
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright Hunter Perrin
  * @link http://sciactive.com/
  */
-defined('X_RUN') or die('Direct access prohibited');
+defined('P_RUN') or die('Direct access prohibited');
 
 if ( isset($config->ability_manager) ) {
     /**
@@ -72,7 +72,7 @@ if (!function_exists('display_error')) {
      * Causes the system to report an error to the user.
      * 
      * This function should be used instead of calling $page->error directly,
-     * because some admins may wish to log XROOM errors, instead of
+     * because some admins may wish to log Pines errors, instead of
      * displaying them.
      *
      * @param string $error_text Information to display to the user.
@@ -88,7 +88,7 @@ if (!function_exists('display_notice')) {
      * Causes the system to report a notice to the user.
      * 
      * This function should be used instead of calling $page->notice directly,
-     * because some admins may wish to log XROOM notices, instead of
+     * because some admins may wish to log Pines notices, instead of
      * displaying them.
      *
      * @param string $notice_text Information to display to the user.

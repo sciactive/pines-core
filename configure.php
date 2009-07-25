@@ -1,32 +1,32 @@
 <?php
 /**
- * XROOM's configuration.
+ * Pines's configuration.
  *
- * @package XROOM
+ * @package Pines
  * @subpackage Core
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright Hunter Perrin
  * @link http://sciactive.com/
  */
-defined('X_RUN') or die('Direct access prohibited');
+defined('P_RUN') or die('Direct access prohibited');
 
 /**
  * An empty class for arbitrary data.
- * @package XROOM
+ * @package Pines
  */
 class DynamicConfig { }
 
 /**
- * The main configuration object for XROOM.
+ * The main configuration object for Pines.
  *
- * This object is used to hold everything from XROOM settings, to component
+ * This object is used to hold everything from Pines settings, to component
  * unctions. Components should put their own classes under $config, using their
  * components name. For example, a component named com_xmlparser should put its
  * class in $config->com_xmlparser. Though, it is not necessary to do this.
- * $config also holds XROOM's standard classes, which include:
+ * $config also holds Pines's standard classes, which include:
  *
- * configurator - Manages XROOM configuration.
+ * configurator - Manages Pines configuration.
  * entity_manager - Manages entities.
  * db_manager - Manages database connections.
  * user_manager - Manages users.
@@ -42,7 +42,7 @@ $config = new DynamicConfig;
     /**
      * The program's displayed title.
      */
-    $config->program_title = "XROOM";
+    $config->program_title = "Pines";
 
     /**
      * The program's displayed version.
@@ -53,17 +53,17 @@ $config = new DynamicConfig;
  * Program Settings
  */
     /**
-     * The whole location of XROOM. (URL)
+     * The whole location of Pines. (URL)
      * End this path with a slash!
      */
-    $config->full_location = "http://localhost/xroom/trunk/";
+    $config->full_location = "http://localhost/pines/trunk/";
 
     /**
-     * The location of XROOM relative to your server. (URL)
+     * The location of Pines relative to your server. (URL)
      * If it is in the root of the server, just put "/".
      * End this path with a slash!
      */
-    $config->rela_location = "/xroom/trunk/";
+    $config->rela_location = "/pines/trunk/";
 
     /**
      * The directory to store uploaded files. (Real Path / URL)
@@ -88,7 +88,7 @@ $config = new DynamicConfig;
     /**
      * The default template.
      */
-    $config->default_template = "xroom";
+    $config->default_template = "pines";
 
     /**
      * Allow the template to be overriden by adding ?template=whatever
@@ -110,7 +110,7 @@ $config = new DynamicConfig;
      * The default component.
      *
      * This component should have a "default" action. That action will be called
-     * when the user first accesses XROOM. If an action is specified, but no
+     * when the user first accesses Pines. If an action is specified, but no
      * component, this one will be used.
      */
      $config->default_component = 'com_user';
@@ -119,12 +119,12 @@ $config = new DynamicConfig;
 
 /**
  * Base class for components.
- * @package XROOM
+ * @package Pines
  */
 class component { }
 
 /**
- * Used to provide an abstract way to represent and store data in XROOM.
+ * Used to provide an abstract way to represent and store data in Pines.
  * 
  * ALWAYS check tags after retrieving an entity.
  *
@@ -164,7 +164,7 @@ class component { }
  * functionality, and though not as versatile, it is MUCH more efficient. Try to
  * avoid using sub-entities at all cost!
  *
- * @package XROOM
+ * @package Pines
  */
 class entity {
     /**
@@ -372,14 +372,14 @@ class entity {
 
 /**
  * The template base class. Templates should extend this class.
- * @package XROOM
+ * @package Pines
  */
 class template {
     /**
      * Return a URL in the necessary format to be usable on the current
      * installation.
      * 
-     * url() is designed to work with the URL rewriting features of XROOM,
+     * url() is designed to work with the URL rewriting features of Pines,
      * so it should be called whenever outputting a URL is required. If url() is
      * called with no parameters, it will return the URL of the index page.
      *
@@ -388,7 +388,7 @@ class template {
      * @param array $params An array of parameters which should be part of the URL's query string.
      * @param bool $encode_entities Whether to encode HTML entities, such as the ampersand. Use this if the URL is going to be displayed on an HTML page.
      * @param bool $full_location Whether to return an absolute URL or a relative URL.
-     * @return string The URL in a format to work with the current configuration of XROOM.
+     * @return string The URL in a format to work with the current configuration of Pines.
      */
 	function url($component = null, $action = null, $params = array(), $encode_entities = true, $full_location = false) {
 		global $config;
@@ -400,7 +400,7 @@ class template {
 			return $return;
 		if ( $config->url_rewriting ) {
 			if ( !$config->use_htaccess )
-				$return .= X_INDEX.'/';
+				$return .= P_INDEX.'/';
 			if ( !is_null($component) ) {
 				// Get rid of 'com_'
 				$return .= substr($component, 4).'/';
@@ -417,7 +417,7 @@ class template {
 				$return .= ($encode_entities) ? htmlentities($param_return) : $param_return;
 			}
 		} else {
-			$return .= ($config->use_htaccess) ? '?' : X_INDEX.'?';
+			$return .= ($config->use_htaccess) ? '?' : P_INDEX.'?';
 			if ( !is_null($component) ) {
 				$param_return = "option=$component";
 				if (!is_null($action))

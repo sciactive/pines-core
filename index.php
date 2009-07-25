@@ -1,8 +1,8 @@
 <?php
 /**
- * The controller for XROOM's architecture.
+ * The controller for Pines's architecture.
  * 
- * @package XROOM
+ * @package Pines
  * @subpackage Core
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
@@ -11,7 +11,7 @@
  */
 
 /*
- * XROOM - a Lightweight PHP Application Framework
+ * Pines - a Lightweight PHP Application Framework
  * Copyright (C) 2008-2009  Hunter Perrin.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -37,15 +37,15 @@
 /**
  * Declare that the program is running through the index, as it should.
  */
-define('X_RUN', true);
+define('P_RUN', true);
 /**
  * The installation's base path.
  */
-define('X_BASE_PATH', dirname(__FILE__));
+define('P_BASE_PATH', dirname(__FILE__));
 /**
  * The name of our index file.
  */
-define('X_INDEX', basename($_SERVER['SCRIPT_FILENAME']));
+define('P_INDEX', basename($_SERVER['SCRIPT_FILENAME']));
 
 session_start();
 
