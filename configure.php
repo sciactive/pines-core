@@ -78,7 +78,7 @@ $config = new DynamicConfig;
     /**
      * The default title at the top of each page.
      */
-    $config->option_title = "X-Room";
+    $config->option_title = "Pines";
 
     /**
      * The copyright notice at the bottom of each page.
