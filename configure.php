@@ -1,6 +1,6 @@
 <?php
 /**
- * Pines's configuration.
+ * Pines' configuration.
  *
  * @package Pines
  * @subpackage Core
@@ -24,7 +24,7 @@ class DynamicConfig { }
  * unctions. Components should put their own classes under $config, using their
  * components name. For example, a component named com_xmlparser should put its
  * class in $config->com_xmlparser. Though, it is not necessary to do this.
- * $config also holds Pines's standard classes, which include:
+ * $config also holds Pines' standard classes, which include:
  *
  * configurator - Manages Pines configuration.
  * entity_manager - Manages entities.

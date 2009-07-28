@@ -1,6 +1,6 @@
 <?php
 /**
- * The controller for Pines's architecture.
+ * The controller for Pines' architecture.
  * 
  * @package Pines
  * @subpackage Core
