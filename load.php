@@ -1,6 +1,6 @@
 <?php
 /**
- * Pines' configuration.
+ * Pines' loader.
  *
  * @package Pines
  * @subpackage Core

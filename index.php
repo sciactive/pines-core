@@ -55,7 +55,7 @@ foreach ($temp_classes as $cur_class) {
     include_once("system/classes/$cur_class");
 }
 unset($temp_classes);
-require_once('configure.php');
+require_once('load.php');
 
 /**
  * An array of the installed components.
@@ -77,11 +77,17 @@ foreach ($config->components as $cur_component) {
     }
 }
 
+// Load the WDDX config for our components.
+foreach ($config->components as $cur_component) {
+	if ( file_exists("components/$cur_component/wddx.php") )
+		include_once("components/$cur_component/wddx.php");
+}
+
 // Load the configuration for our components. This shouldn't require any sort of
 // functionality, like entity or user management.
 foreach ($config->components as $cur_component) {
-	if ( file_exists("components/$cur_component/configure.php") )
-		include_once("components/$cur_component/configure.php");
+	if ( file_exists("components/$cur_component/load.php") )
+		include_once("components/$cur_component/load.php");
 }
 
 // Load the display controller.
