@@ -49,19 +49,32 @@ define('P_INDEX', basename($_SERVER['SCRIPT_FILENAME']));
 
 session_start();
 
+// Load system classes.
+$temp_classes = scandir_pines("system/classes/");
+foreach ($temp_classes as $cur_class) {
+    include_once("system/classes/$cur_class");
+}
+unset($temp_classes);
 require_once('configure.php');
+
 /**
  * An array of the installed components.
  * @global array $config->components
  */
 $config->components = array();
 if ( file_exists("components/") ) {
-	$config->components = scandir("components/");
-	foreach ($config->components as $cur_key => $cur_name) {
-		if ( (stripos($cur_name, '.') === 0) || ($cur_name == 'index.html') )
-			unset($config->components[$cur_key]);
-	}
-	$config->components = array_values($config->components);
+	$config->components = scandir_pines("components/");
+}
+
+// Load component classes.
+foreach ($config->components as $cur_component) {
+    if ( is_dir("components/$cur_component/classes/") ) {
+        $temp_classes = scandir_pines("components/$cur_component/classes/");
+        foreach ($temp_classes as $cur_class) {
+            include_once("components/$cur_component/classes/$cur_class");
+        }
+        unset($temp_classes);
+    }
 }
 
 // Load the configuration for our components. This shouldn't require any sort of
@@ -70,14 +83,17 @@ foreach ($config->components as $cur_component) {
 	if ( file_exists("components/$cur_component/configure.php") )
 		include_once("components/$cur_component/configure.php");
 }
+
 // Load the display controller.
 require_once('display.php');
+
 // Load the common files. This should set up the models for each component,
 // which the actions should then use to manipulate actual data.
 foreach ($config->components as $cur_component) {
 	if ( file_exists("components/$cur_component/common.php") )
 		include_once("components/$cur_component/common.php");
 }
+
 // Load some common functions.
 require_once('common.php');
 
@@ -143,5 +159,29 @@ function fill_object($wddx_data, &$object) {
         $object->$name = $value;
     }
     return true;
+}
+
+/**
+ * Scan a directory and filter the results.
+ *
+ * Scan a directory and filter any dot files/dirs and "index.html" out of the
+ * result.
+ *
+ * @param string $directory The directory that will be scanned.
+ * @param int $sorting_order By default, the sorted order is alphabetical in ascending order. If the optional sorting_order  is set to non-zero, then the sort order is alphabetical in descending order.
+ * @param resource $context An optional context.
+ * @return array|false The array of filenames on success, false on failure.
+ */
+function scandir_pines($directory, $sorting_order = 0, $context = null) {
+    if (is_null($context)) {
+        if (!($return = scandir($directory, $sorting_order))) return false;
+    } else {
+        if (!($return = scandir($directory, $sorting_order, $context))) return false;
+    }
+	foreach ($return as $cur_key => $cur_name) {
+		if ( (stripos($cur_name, '.') === 0) || ($cur_name == 'index.html') )
+			unset($return[$cur_key]);
+	}
+    return array_values($return);
 }
 ?>
