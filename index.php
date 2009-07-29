@@ -118,4 +118,30 @@ $page->render();
 // If there's still a database connection, close it.
 if ( isset($config->db_manager) )
 	$config->db_manager->disconnect();
+
+/**
+ * Fill an object with the data from a WDDX string.
+ *
+ * The WDDX string must be formatted correctly. It must contain one array which
+ * contains an array per variable, each with the following items:
+ *
+ * 'name' : The name of the variable.
+ * 'cname' : A common name for the variable. (A title)
+ * 'description' : A description of the variable.
+ * 'value' : The variable's actual value.
+ *
+ * @param string $wddx_data The WDDX string to process.
+ * @param mixed &$object The object to which the variables should be added.
+ * @return bool True on success, false on failure.
+ */
+function fill_object($wddx_data, &$object) {
+    $wddx = wddx_deserialize($wddx_data);
+    if (!is_array($wddx)) return false;
+    foreach ($wddx as $cur_var) {
+        $name = $cur_var['name'];
+        $value = $cur_var['value'];
+        $object->$name = $value;
+    }
+    return true;
+}
 ?>
