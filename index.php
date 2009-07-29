@@ -56,7 +56,7 @@ foreach ($temp_classes as $cur_class) {
 }
 unset($temp_classes);
 require_once('load.php');
-require_once('configure.php');
+$wddx_data = require('configure.php');
 fill_object($wddx_data, $config);
 unset($wddx_data);
 
@@ -83,14 +83,10 @@ foreach ($config->components as $cur_component) {
 // Load the WDDX config for our components.
 foreach ($config->components as $cur_component) {
 	if ( file_exists("components/$cur_component/configure.php") ) {
-		include_once("components/$cur_component/configure.php");
-        if (!isset($wddx_data)) {
-            display_error("Configuration file does not set \$wddx_data variable! File: components/$cur_component/configure.php");
-        } else {
-            $config->$cur_component = new DynamicConfig;
-            fill_object($wddx_data, $config->$cur_component);
-            unset($wddx_data);
-        }
+		$wddx_data = include("components/$cur_component/configure.php");
+        $config->$cur_component = new DynamicConfig;
+        fill_object($wddx_data, $config->$cur_component);
+        unset($wddx_data);
     }
 }
 
