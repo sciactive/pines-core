@@ -56,9 +56,9 @@ foreach ($temp_classes as $cur_class) {
 }
 unset($temp_classes);
 require_once('load.php');
-$wddx_data = require('configure.php');
-fill_object($wddx_data, $config);
-unset($wddx_data);
+$config_array = require('configure.php');
+fill_object($config_array, $config);
+unset($config_array);
 
 /**
  * An array of the installed components.
@@ -80,13 +80,15 @@ foreach ($config->components as $cur_component) {
     }
 }
 
-// Load the WDDX config for our components.
+// Load the config for our components.
 foreach ($config->components as $cur_component) {
 	if ( file_exists("components/$cur_component/configure.php") ) {
-		$wddx_data = include("components/$cur_component/configure.php");
-        $config->$cur_component = new DynamicConfig;
-        fill_object($wddx_data, $config->$cur_component);
-        unset($wddx_data);
+		$config_array = include("components/$cur_component/configure.php");
+        if (is_array($config_array)) {
+            $config->$cur_component = new DynamicConfig;
+            fill_object($config_array, $config->$cur_component);
+        }
+        unset($config_array);
     }
 }
 
@@ -108,7 +110,7 @@ foreach ($config->components as $cur_component) {
 }
 
 // Load some common functions.
-require_once('common.php');
+include_once('common.php');
 
 // Load any post or get vars for our component/action.
 $config->component = clean_filename($_REQUEST['option']);
@@ -149,24 +151,23 @@ if ( isset($config->db_manager) )
 	$config->db_manager->disconnect();
 
 /**
- * Fill an object with the data from a WDDX string.
+ * Fill an object with the data from a configuration array.
  *
- * The WDDX string must be formatted correctly. It must contain one array which
- * contains an array per variable, each with the following items:
+ * The configuration array must be formatted correctly. It must contain one
+ * array per variable, each with the following items:
  *
  * 'name' : The name of the variable.
  * 'cname' : A common name for the variable. (A title)
  * 'description' : A description of the variable.
  * 'value' : The variable's actual value.
  *
- * @param string $wddx_data The WDDX string to process.
+ * @param array $config_array The configuration array to process.
  * @param mixed &$object The object to which the variables should be added.
  * @return bool True on success, false on failure.
  */
-function fill_object($wddx_data, &$object) {
-    $wddx = wddx_deserialize($wddx_data);
-    if (!is_array($wddx)) return false;
-    foreach ($wddx as $cur_var) {
+function fill_object($config_array, &$object) {
+    if (!is_array($config_array)) return false;
+    foreach ($config_array as $cur_var) {
         $name = $cur_var['name'];
         $value = $cur_var['value'];
         $object->$name = $value;
