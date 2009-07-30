@@ -4,8 +4,6 @@ major structural changes.
 A list of things to complete before the initial release of Pines:
 --------------------------------------------------------------------------------
 +Views. - Finish views for com_newsletter.
-+Change configuration settings to use something more easily parsable, like XML,
-    or INI (parse_ini_file function)
 +Installer/Package Manager/Dependency checker
 +Object Oriented Hooks ( $config->hooks->com_component->event[] = function() )
     (Before and after a function/event)

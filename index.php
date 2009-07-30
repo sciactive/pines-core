@@ -60,6 +60,12 @@ $config_array = require('configure.php');
 fill_object($config_array, $config);
 unset($config_array);
 
+// Check the offline mode, and load the offline page if enabled.
+if ($config->offline_mode) {
+    include('system/offline.php');
+    exit;
+}
+
 /**
  * An array of the installed components.
  * @global array $config->components
