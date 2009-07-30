@@ -1,8 +1,7 @@
 <?php
 /**
  * The uploader for Pines.
- *
- * @ignore
+ * 
  * @deprecated
  *
  * @todo Replace this file with a component. (Use a JSON template for returning JSON.)
