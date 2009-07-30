@@ -111,26 +111,26 @@ foreach ($config->components as $cur_component) {
 require_once('common.php');
 
 // Load any post or get vars for our component/action.
-$component = clean_filename($_REQUEST['option']);
-$action = clean_filename($_REQUEST['action']);
+$config->component = clean_filename($_REQUEST['option']);
+$config->action = clean_filename($_REQUEST['action']);
 
 // URL Rewriting Engine (Simple, eh?)
 // The values from URL rewriting override any post or get vars, so don't submit
 // forms to a url you shouldn't.
 if ( $config->url_rewriting ) {
 	$args_array = explode('/', substr($_SERVER['PHP_SELF'], strlen($_SERVER['SCRIPT_NAME'])));
-	if ( isset($args_array[1]) ) $component = 'com_'.$args_array[1];
-	if ( isset($args_array[2]) ) $action = $args_array[2];
+	if ( isset($args_array[1]) ) $config->component = 'com_'.$args_array[1];
+	if ( isset($args_array[2]) ) $config->action = $args_array[2];
 	unset($args_array);
 }
 
 // Fill in any empty request vars.
-if ( empty($component) ) $component = $config->default_component;
-if ( empty($action) ) $action = 'default';
+if ( empty($config->component) ) $config->component = $config->default_component;
+if ( empty($config->action) ) $config->action = 'default';
 
 // Call the action specified.
-if ( file_exists("components/$component/actions/$action.php") ) {
-    require("components/$component/actions/$action.php");
+if ( file_exists("components/$config->component/actions/$config->action.php") ) {
+    require("components/$config->component/actions/$config->action.php");
 } else {
     display_error("Action not defined! D:");
 }
