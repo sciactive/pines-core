@@ -2,12 +2,8 @@
 /**
  * The uploader for Pines.
  *
- * @package Pines
- * @subpackage Core
- * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
- * @author Hunter Perrin <hunter@sciactive.com>
- * @copyright Hunter Perrin
- * @link http://sciactive.com/
+ * @ignore
+ * @deprecated
  *
  * @todo Replace this file with a component. (Use a JSON template for returning JSON.)
  */
