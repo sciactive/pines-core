@@ -1,6 +1,6 @@
 <?php
 /**
- * Pines' WDDX configuration.
+ * Pines' configuration.
  *
  * @package Pines
  * @subpackage Core
