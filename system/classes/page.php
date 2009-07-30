@@ -3,7 +3,6 @@
  * Page class.
  *
  * @package Pines
- * @subpackage Core
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright Hunter Perrin
@@ -71,7 +70,9 @@ class page {
      */
 	public $override = false;
     /**
-     * The page's main menu. Used to navigate the system.
+     * The page's main menu.
+     *
+     * Used to navigate the system.
      *
      * @var menu $main_menu
      */
@@ -96,8 +97,10 @@ class page {
 	}
 
     /**
-     * Get the title of the page. If the title has not been explicitly set,
-     * get_title() uses $config->option_title.
+     * Get the title of the page.
+     * 
+     * If the title has not been explicitly set, get_title() uses
+     * $config->option_title.
      *
      * @global DynamicConfig
      * @return string The title.
@@ -170,9 +173,11 @@ class page {
 	}
 
     /**
-     * Append text to the body of the page. This may not be supported by some
-     * templates, so try to avoid using it. It may also appear on in any part of
-     * the body. You can use a module with the system/false view instead.
+     * Append text to the body of the page.
+     * 
+     * This may not be supported by some templates, so try to avoid using it. It
+     * may also appear in any part of the body. You can use a module with the
+     * system/false view instead.
      *
      * @param string $add_content Text to append.
      */
@@ -190,8 +195,10 @@ class page {
 	}
 
     /**
-     * Attach a module to a position on the page. The $order parameter is not
-     * guaranteed, and will be ignored if that place is already taken.
+     * Attach a module to a position on the page.
+     * 
+     * The $order parameter is not guaranteed, and will be ignored if that place
+     * is already taken.
      *
      * @param module $module The module to attach.
      * @param string $position The position on the page. Templates can define their own positions.
@@ -219,10 +226,11 @@ class page {
 	}
 
     /**
-     * Deletes a module from the list of attached modules. It will try the
-     * module at $order or if $order is null then last one in $position, then
-     * iterate through $position searching for the module. It will delete the
-     * first match it finds, then stop and return true.
+     * Deletes a module from the list of attached modules.
+     * 
+     * It will try the module at $order or if $order is null then last one in
+     * $position, then iterate through $position searching for the module. It
+     * will delete the first match it finds, then stop and return true.
      *
      * @param module $module The module to search for.
      * @param string $position The position in which to search.
@@ -271,8 +279,9 @@ class page {
 	}
 
     /**
-     * Append text to the override document. Use this function to supply output
-     * if you are overriding the document.
+     * Append text to the override document.
+     *
+     * Use this function to supply output if you are overriding the document.
      *
      * @param string $add_body Text to append.
      */

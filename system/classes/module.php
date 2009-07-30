@@ -3,7 +3,6 @@
  * Module class.
  *
  * @package Pines
- * @subpackage Core
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright Hunter Perrin
@@ -22,14 +21,16 @@ class module {
      */
 	public $title = '';
     /**
-     * A suffix to append to the module's class name. Applies to HTML modules.
+     * A suffix to append to the module's class name.
+     *
+     * Applies to HTML modules.
      * @var string $class_suffix
      */
 	public $class_suffix = '';
     /**
      * The modules content.
      *
-     * Though not necessary, this should be filled using a view.
+     * Though not necessary, this should be filled automatically using a view.
      * @var string $content
      */
 	public $content = '';

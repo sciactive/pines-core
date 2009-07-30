@@ -1,9 +1,8 @@
 <?php
 /**
- * Description.
+ * Displays the offline message and the page title.
  *
  * @package Pines
- * @subpackage subpackage
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright Hunter Perrin

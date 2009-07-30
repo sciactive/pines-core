@@ -3,7 +3,6 @@
  * Entity Class.
  *
  * @package Pines
- * @subpackage Core
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright Hunter Perrin
@@ -95,6 +94,8 @@ class entity {
     /**
      * Sets the entity's parent to the current user.
      *
+     * This method is called by PHP as soon as the entity is instantiated.
+     *
      * @internal
      */
     public function __construct() {
@@ -104,6 +105,9 @@ class entity {
 
     /**
      * Retrieve a variable.
+     *
+     * You do not need to explicitly call this method. It is called by PHP when
+     * you access the variable normally.
      *
      * @param string $name The name of the variable.
      * @return mixed The value of the variable or null if it does not exist.
@@ -119,6 +123,9 @@ class entity {
     /**
      * Checks whether a variable is set.
      *
+     * You do not need to explicitly call this method. It is called by PHP when
+     * you access the variable normally.
+     *
      * @param string $name The name of the variable.
      * @return bool
      * @internal
@@ -129,6 +136,9 @@ class entity {
 
     /**
      * Sets a variable.
+     *
+     * You do not need to explicitly call this method. It is called by PHP when
+     * you access the variable normally.
      *
      * @param string $name The name of the variable.
      * @param string $value The value of the variable.
@@ -141,6 +151,9 @@ class entity {
 
     /**
      * Unsets a variable.
+     *
+     * You do not need to explicitly call this method. It is called by PHP when
+     * you access the variable normally.
      *
      * @param string $name The name of the variable.
      * @internal

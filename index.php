@@ -3,7 +3,6 @@
  * The controller for Pines' architecture.
  * 
  * @package Pines
- * @subpackage Core
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright Hunter Perrin
@@ -163,8 +162,11 @@ if ( isset($config->db_manager) )
  * array per variable, each with the following items:
  *
  * 'name' : The name of the variable.
+ *
  * 'cname' : A common name for the variable. (A title)
+ *
  * 'description' : A description of the variable.
+ * 
  * 'value' : The variable's actual value.
  *
  * @param array $config_array The configuration array to process.
