@@ -182,19 +182,6 @@ class hook {
         }
         return true;
     }
-
-    /**
-     * Retrieve the name of a variable.
-     *
-     * Credit: http://us3.php.net/manual/en/language.variables.php#76245
-     *
-     * @param mixed &$var The variable.
-     * @param mixed $scope The scope of the variable.
-     */
-    function var_name(&$var, $scope = 0) {
-        $old = $var;
-        if (($key = array_search($var = 'unique'.rand().'value', !$scope ? $GLOBALS : $scope)) && $var = $old) return $key;
-    }
 }
 
 ?>
