@@ -104,8 +104,14 @@ foreach ($config->components as $cur_component) {
 		include_once("components/$cur_component/load.php");
 }
 
+// Load the hooks for $config.
+$config->hook->scan_object($config, '$config->');
+
 // Load the display controller.
 require_once('display.php');
+
+// Load the hooks for $page.
+$config->hook->scan_object($page, '$page->');
 
 // Load the common files. This should set up the models for each component,
 // which the actions should then use to manipulate actual data.

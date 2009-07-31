@@ -19,14 +19,27 @@ defined('P_RUN') or die('Direct access prohibited');
  * class in $config->com_xmlparser. Though, it is not necessary to do this.
  * $config also holds Pines' standard classes, which include:
  *
+ * hook - Hooking system. (Part of the base system.)
+ *
  * configurator - Manages Pines configuration.
+ * 
  * entity_manager - Manages entities.
+ *
  * db_manager - Manages database connections.
+ *
  * user_manager - Manages users.
+ *
  * ability_manager - Manages users' abilities.
  *
  * @global DynamicConfig $config
  */
 $config = new DynamicConfig;
+
+/**
+ * The hooking system.
+ *
+ * @global hook $config->hook
+ */
+$config->hook = new hook;
 
 ?>
