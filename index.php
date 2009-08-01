@@ -48,6 +48,10 @@ define('P_INDEX', basename($_SERVER['SCRIPT_FILENAME']));
 
 session_start();
 
+// Make a random secret that only this instance knows, so we can pass secret
+// vars in hook objects.
+$_SESSION['secret'] = rand();
+
 // Load system classes.
 $temp_classes = scandir_pines("system/classes/");
 foreach ($temp_classes as $cur_class) {
@@ -105,13 +109,13 @@ foreach ($config->components as $cur_component) {
 }
 
 // Load the hooks for $config.
-$config->hook->scan_object($config, '$config->');
+$config->hook->hook_object($config, '$config->');
 
 // Load the display controller.
 require_once('display.php');
 
 // Load the hooks for $page.
-$config->hook->scan_object($page, '$page->');
+$config->hook->hook_object($page, '$page->');
 
 // Load the common files. This should set up the models for each component,
 // which the actions should then use to manipulate actual data.

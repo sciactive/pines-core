@@ -145,25 +145,17 @@ class hook {
     }
 
     /**
-     * Run the callbacks for a given hook.
+     * Hook an object.
      *
-     * Note: If the hook refers to an actual function/method, it will not be
-     * run. If that is what you want, run the actual function/method.
+     * This hooks all functions defined in the given object.
      *
-     * @todo Code this.
-     */
-    function run_hook($name) {
-        // Not done.
-    }
-
-    /**
-     * Scan an object and assign a hook for each of its methods.
-     *
-     * @param object &$object The object to scan.
-     * @param bool $recursive Whether to scan objects recursively.
+     * @param object &$object The object to hook.
+     * @param string $prefix
+     * @param bool $recursive Whether to hook objects recursively.
      * @return bool True on success, false on failure.
+     * @todo Define prefix.
      */
-    function scan_object(&$object, $prefix = '', $recursive = true) {
+    function hook_object(&$object, $prefix = '', $recursive = true) {
         if (!is_object($object)) return false;
         $ref_class = new ReflectionObject($object);
         $methods = $ref_class->getMethods();
@@ -176,11 +168,24 @@ class hook {
                 if ($cur_ref_property->isPublic()) {
                     $value = $cur_ref_property->getValue($object);
                     if (is_object($value))
-                        $this->scan_object($value, $prefix.$cur_ref_property->getName().'->');
+                        $this->hook_object($value, $prefix.$cur_ref_property->getName().'->');
                 }
             }
         }
+        $object = new hook_override($object);
         return true;
+    }
+
+    /**
+     * Run the callbacks for a given hook.
+     *
+     * Note: If the hook refers to an actual function/method, it will not be
+     * run. If that is what you want, run the actual function/method.
+     *
+     * @todo Code this.
+     */
+    function run_hook($name) {
+        // Not done.
     }
 }
 
