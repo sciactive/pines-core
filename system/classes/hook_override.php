@@ -14,6 +14,10 @@ defined('P_RUN') or die('Direct access prohibited');
  * An object used to replace another object, so it can be successfully hooked.
  */
 class hook_override {
+    /**
+     * Used to store the overridden class.
+     * @var mixed $new_object
+     */
     private $new_object = null;
 
     function __construct($object) {
