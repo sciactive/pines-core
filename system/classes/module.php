@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
  * Modules are blocks of code or data to be placed on the page.
  * @package Pines
  */
-class module {
+class module extends p_base {
     /**
      * The modules title.
      * @var string $title

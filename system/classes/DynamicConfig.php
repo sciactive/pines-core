@@ -14,6 +14,6 @@ defined('P_RUN') or die('Direct access prohibited');
  * An empty class for arbitrary data.
  * @package Pines
  */
-class DynamicConfig { }
+class DynamicConfig extends p_base { }
 
 ?>

@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
  * The controller of the page. It controls what is output to the user.
  * @package Pines
  */
-class page {
+class page extends p_base {
     /**
      * The page's title.
      * @var string $title

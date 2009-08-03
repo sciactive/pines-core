@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
  * The template base class. Templates should extend this class.
  * @package Pines
  */
-class template {
+class template extends p_base {
     /**
      * Return a URL in the necessary format to be usable on the current
      * installation.

@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
  * A menu.
  * @package Pines
  */
-class menu {
+class menu extends p_base {
     /**
      * The menu's array of entries.
      *

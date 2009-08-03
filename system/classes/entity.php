@@ -53,7 +53,7 @@ defined('P_RUN') or die('Direct access prohibited');
  *
  * @package Pines
  */
-class entity {
+class entity extends p_base {
     /**
      * The GUID of the entity.
      *
