@@ -19,6 +19,10 @@ class hook_override {
      * @var mixed $new_object
      */
     private $new_object = null;
+    /**
+     * Used to store the prefix (the object's variable name).
+     * @var string $prefix
+     */
     private $prefix = '';
 
     function __construct($object, $prefix = '') {
