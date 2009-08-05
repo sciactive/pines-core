@@ -19,9 +19,11 @@ class hook_override {
      * @var mixed $new_object
      */
     private $new_object = null;
+    private $prefix = '';
 
-    function __construct($object) {
+    function __construct($object, $prefix = '') {
         $this->new_object = $object;
+        $this->prefix = $prefix;
     }
 
     function __destruct() {
@@ -30,11 +32,33 @@ class hook_override {
     }
 
     function __call($name, $arguments) {
-        return call_user_func_array(array($this->new_object, $name), $arguments);
+        global $config;
+        // Make sure we don't take over the hook object, or we'll end up
+        // recursively calling ourself.
+        if (get_class($this->new_object) == 'hook')
+            return call_user_func_array(array($this->new_object, $name), $arguments);
+        $arguments = $config->hook->run_callbacks($this->prefix.$name, $arguments, 'before');
+        if ($arguments !== false) {
+            $return[0] = call_user_func_array(array($this->new_object, $name), $arguments);
+            $return = $config->hook->run_callbacks($this->prefix.$name, $return, 'after');
+            if (is_array($return))
+                return $return[0];
+        }
     }
 
     function __callStatic($name, $arguments) {
-        return forward_static_call_array(array($this->new_object, $name), $arguments);
+        global $config;
+        // Make sure we don't take over the hook object, or we'll end up
+        // recursively calling ourself.
+        if (get_class($this->new_object) == 'hook')
+            return call_user_func_array(array($this->new_object, $name), $arguments);
+        $arguments = $config->hook->run_callbacks($this->prefix.$name, $arguments, 'before');
+        if ($arguments !== false) {
+            $return[0] = forward_static_call_array(array($this->new_object, $name), $arguments);
+            $return = $config->hook->run_callbacks($this->prefix.$name, $return, 'after');
+            if (is_array($return))
+                return $return[0];
+        }
     }
 
     function __get($name) {

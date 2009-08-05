@@ -34,7 +34,13 @@ class hook {
      *
      * A callback is called either before a function runs or after. If the
      * callback runs before the function and returns false (or causes an error),
-     * the function will not be run.
+     * the function will not be run. The callback is passed an array of
+     * arguments and is expected to return an array of arguments. Callbacks
+     * before a function are passed the arguments given when the function was
+     * called, while callbacks after a function are given the return value of
+     * that function. If the callback neglects to return anything, the function
+     * being called will not receive/return anything. Even if your callback does
+     * nothing with the arguments, it should still return them.
      *
      * If the hook is called explicitly, callbacks defined to run before the
      * hook will run immediately followed by callbacks defined to run after.
@@ -163,29 +169,45 @@ class hook {
             $this->add_hook($prefix.$cur_ref_method->getName());
         }
         if ($recursive) {
-            $properties = $ref_class->getProperties();
+            /* $properties = $ref_class->getProperties();
             foreach ($properties as $cur_ref_property) {
                 if ($cur_ref_property->isPublic()) {
                     $value = $cur_ref_property->getValue($object);
                     if (is_object($value))
                         $this->hook_object($value, $prefix.$cur_ref_property->getName().'->');
                 }
+            } */
+            foreach ($object as $cur_name => &$cur_property) {
+                if (is_object($cur_property))
+                    $this->hook_object($cur_property, $prefix.$cur_name.'->');
             }
         }
-        $object = new hook_override($object);
+        $object = new hook_override($object, $prefix);
         return true;
     }
 
     /**
      * Run the callbacks for a given hook.
      *
-     * Note: If the hook refers to an actual function/method, it will not be
-     * run. If that is what you want, run the actual function/method.
+     * Each callback is run and passed the array of arguments. If any callback
+     * returns FALSE, the following callbacks will not be called, and FALSE will
+     * be returned.
      *
-     * @todo Code this.
+     * @param string $name The name of the hook.
+     * @param array $arguments An array of arguments to be passed to the callbacks.
+     * @param string $type The type of callbacks to run. 'before', 'after', or 'all'.
+     * @return array|bool The array of arguments returned by the last callback or FALSE if a callback returned it.
      */
-    function run_hook($name) {
-        // Not done.
+    function run_callbacks($name, $arguments = array(), $type = 'all') {
+        foreach ($this->callbacks as $cur_callback) {
+            if ($cur_callback[0] == $name) {
+                if (($type == 'all' && $cur_callback[1] != 0) || ($type == 'before' && $cur_callback[1] < 0) || ($type == 'after' && $cur_callback[1] > 0)) {
+                    $arguments = call_user_func_array($cur_callback[2], $arguments);
+                    if ($arguments === false) return false;
+                }
+            }
+        }
+        return $arguments;
     }
 }
 
