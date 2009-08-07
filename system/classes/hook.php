@@ -182,7 +182,50 @@ class hook {
                     $this->hook_object($cur_property, $prefix.$cur_name.'->');
             }
         }
-        $object = new hook_override($object, $prefix);
+        
+        $class_name = get_class($object);
+        if (!class_exists("hook_override_$class_name")) {
+            $reflection = new ReflectionObject($object);
+            $methods = $reflection->getMethods();
+            $code = '';
+            foreach ($methods as $cur_method) {
+                $fname = $cur_method->getName();
+                if (in_array($fname, array('_p_get', '_p_set', '_p_unset', '__construct', '__destruct', '__get', '__set', '__isset', '__unset', '__toString', '__invoke', '__set_state', '__clone'))) continue;
+                $fprefix = $cur_method->isStatic() ? 'static ' : '';
+                $params = $cur_method->getParameters();
+                $param_array = array();
+                $param_call_array = array();
+                foreach ($params as $cur_param) {
+                    $param_name = $cur_param->getName();
+                    $param_prefix = $cur_param->isPassedByReference() ? '&' : '';
+                    if ($cur_param->isDefaultValueAvailable()) {
+                        $param_suffix = ' = '.var_export($cur_param->getDefaultValue(), true);
+                    }
+                    $param_array[] = $param_prefix.'$'.$param_name.$param_suffix;
+                    $param_call_array[] = '$'.$param_name;
+                }
+                $code .= $fprefix."function $fname(".implode(', ', $param_array).") {\n";
+                $code .= "\tglobal \$config;\n";
+                // Make sure we don't take over the hook object, or we'll end up
+                // recursively calling ourself.
+                $code .= "\tif (get_class(\$this->_p_object) == 'hook')\n";
+                $code .= "\t\treturn \$this->_p_object->$fname(".implode(', ', $param_call_array).");\n";
+                $code .= "\t\$arguments = array(".implode(', ', $param_call_array).");\n";
+                $code .= "\t\$arguments = \$config->hook->run_callbacks(\$this->_p_prefix.'$fname', \$arguments, 'before');\n";
+                $code .= "\tif (\$arguments !== false) {\n";
+                $code .= "\t\t\$return = \$this->_p_object->$fname(".implode(', ', $param_call_array).");\n";
+                $code .= "\t\t\$return = \$config->hook->run_callbacks(\$this->_p_prefix.'$fname', array(\$return), 'after');\n";
+                $code .= "\t\tif (is_array(\$return))\n";
+                $code .= "\t\t\treturn \$return[0];\n";
+                $code .= "\t}\n";
+                //$code .= "\treturn \$this->_p_object->$fname(".implode(', ', $param_call_array).");\n";
+                $code .= "}\n\n";
+            }
+            $include = str_replace(array('_NAMEHERE_', '//#CODEHERE#', '<?php', '?>'), array($class_name, $code, '', ''), file_get_contents('system/classes/hook_override.php'));
+            eval ($include);
+        }
+
+        eval ('$object = new hook_override_'.$class_name.' ($object, $prefix);');
         return true;
     }
 
