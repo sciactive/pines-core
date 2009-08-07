@@ -197,19 +197,18 @@ class hook {
                 }
                 $code .= $fprefix."function $fname(".implode(', ', $param_array).") {\n";
                 $code .= "\tglobal \$config;\n";
+                $code .= "\t\$arguments = func_get_args();\n";
                 // Make sure we don't take over the hook object, or we'll end up
                 // recursively calling ourself.
                 $code .= "\tif (get_class(\$this->_p_object) == 'hook')\n";
-                $code .= "\t\treturn \$this->_p_object->$fname(".implode(', ', $param_call_array).");\n";
-                $code .= "\t\$arguments = array(".implode(', ', $param_call_array).");\n";
+                $code .= "\t\treturn call_user_func_array(array(\$this->_p_object, '$fname'), \$arguments);\n";
                 $code .= "\t\$arguments = \$config->hook->run_callbacks(\$this->_p_prefix.'$fname', \$arguments, 'before');\n";
                 $code .= "\tif (\$arguments !== false) {\n";
-                $code .= "\t\t\$return = \$this->_p_object->$fname(".implode(', ', $param_call_array).");\n";
+                $code .= "\t\t\$return = call_user_func_array(array(\$this->_p_object, '$fname'), \$arguments);\n";
                 $code .= "\t\t\$return = \$config->hook->run_callbacks(\$this->_p_prefix.'$fname', array(\$return), 'after');\n";
                 $code .= "\t\tif (is_array(\$return))\n";
                 $code .= "\t\t\treturn \$return[0];\n";
                 $code .= "\t}\n";
-                //$code .= "\treturn \$this->_p_object->$fname(".implode(', ', $param_call_array).");\n";
                 $code .= "}\n\n";
             }
             $include = str_replace(array('_NAMEHERE_', '//#CODEHERE#', '<?php', '?>'), array($class_name, $code, '', ''), file_get_contents('system/classes/hook_override.php'));
