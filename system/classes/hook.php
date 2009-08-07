@@ -197,7 +197,8 @@ class hook {
                 }
                 $code .= $fprefix."function $fname(".implode(', ', $param_array).") {\n";
                 $code .= "\tglobal \$config;\n";
-                $code .= "\t\$arguments = func_get_args();\n";
+                $code .= "\t\$arguments = debug_backtrace(false);\n";
+                $code .= "\t\$arguments = \$arguments[0]['args'];\n";
                 // Make sure we don't take over the hook object, or we'll end up
                 // recursively calling ourself.
                 $code .= "\tif (get_class(\$this->_p_object) == 'hook')\n";
