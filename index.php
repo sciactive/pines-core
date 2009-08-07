@@ -117,13 +117,6 @@ require_once('display.php');
 // Load the hooks for $page.
 $config->hook->hook_object($page, '$page->');
 
-//var_dump($page);
-
-function callback ($a) {
-    return array(str_replace('Pines', 'It Works', $a[0]));
-}
-$config->hook->add_callback('$page->render_modules', 1, 'callback');
-
 // Load the common files. This should set up the models for each component,
 // which the actions should then use to manipulate actual data.
 foreach ($config->components as $cur_component) {

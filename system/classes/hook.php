@@ -156,10 +156,9 @@ class hook {
      * This hooks all functions defined in the given object.
      *
      * @param object &$object The object to hook.
-     * @param string $prefix
+     * @param string $prefix The prefix used to call the object's methods. Usually something like "$object->".
      * @param bool $recursive Whether to hook objects recursively.
      * @return bool True on success, false on failure.
-     * @todo Define prefix.
      */
     function hook_object(&$object, $prefix = '', $recursive = true) {
         if (!is_object($object)) return false;
@@ -169,14 +168,6 @@ class hook {
             $this->add_hook($prefix.$cur_ref_method->getName());
         }
         if ($recursive) {
-            /* $properties = $ref_class->getProperties();
-            foreach ($properties as $cur_ref_property) {
-                if ($cur_ref_property->isPublic()) {
-                    $value = $cur_ref_property->getValue($object);
-                    if (is_object($value))
-                        $this->hook_object($value, $prefix.$cur_ref_property->getName().'->');
-                }
-            } */
             foreach ($object as $cur_name => &$cur_property) {
                 if (is_object($cur_property))
                     $this->hook_object($cur_property, $prefix.$cur_name.'->');
