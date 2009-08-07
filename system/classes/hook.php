@@ -202,7 +202,7 @@ class hook {
         foreach ($this->callbacks as $cur_callback) {
             if ($cur_callback[0] == $name) {
                 if (($type == 'all' && $cur_callback[1] != 0) || ($type == 'before' && $cur_callback[1] < 0) || ($type == 'after' && $cur_callback[1] > 0)) {
-                    $arguments = call_user_func_array($cur_callback[2], $arguments);
+                    $arguments = call_user_func_array($cur_callback[2], array($arguments));
                     if ($arguments === false) return false;
                 }
             }

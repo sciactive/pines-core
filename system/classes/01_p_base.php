@@ -16,7 +16,7 @@ defined('P_RUN') or die('Direct access prohibited');
  * @package Pines
  */
 class p_base {
-    public function _p_get($name, $secret) {
+    public function &_p_get($name, $secret) {
         if ( isset($this->$name) && ($secret == $_SESSION['secret']) )
             return $this->$name;
     }
