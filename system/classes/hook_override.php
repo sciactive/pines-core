@@ -37,6 +37,21 @@ class hook_override__NAMEHERE_ {
         }
     }
 
+    /* These will be created dynamically and are thus hookable.
+    function &__call($name, $arguments) {
+        if (method_exists($this->_p_object, '__call')) {
+            $args = func_get_args();
+            return call_user_func_array(array($this->_p_object, '__call'), $args);
+        }
+    }
+
+    static function &__callStatic($name, $arguments) {
+        if (method_exists($this->_p_object, '__callStatic')) {
+            $args = func_get_args();
+            return forward_static_call_array(array($this->_p_object, '__callStatic'), $args);
+        }
+    }*/
+
     function &__get($name) {
         if (method_exists($this->_p_object, '__get')) {
             $args = func_get_args();
