@@ -12,6 +12,9 @@ defined('P_RUN') or die('Direct access prohibited');
 
 /**
  * An object used to replace another object, so it can be successfully hooked.
+ *
+ * This class is dynamically edited during the takeover of an object for
+ * hooking.
  */
 class hook_override__NAMEHERE_ {
     /**

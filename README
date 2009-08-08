@@ -3,7 +3,7 @@ major structural changes.
 
 A list of things to complete before the initial release of Pines:
 --------------------------------------------------------------------------------
-+Views. - Finish views for com_newsletter.
++Documentation of com_newsletter.
 +Installer/Package Manager/Dependency checker
 +Logging.
 +Possibly change structure to dirs (models, control, views) to
