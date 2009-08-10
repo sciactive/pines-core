@@ -224,9 +224,9 @@ class hook {
     /**
      * Run the callbacks for a given hook.
      *
-     * Each callback is run and passed the array of arguments. If any callback
-     * returns FALSE, the following callbacks will not be called, and FALSE will
-     * be returned.
+     * Each callback is run and passed the array of arguments, and the name of
+     * the given hook. If any callback returns FALSE, the following callbacks
+     * will not be called, and FALSE will be returned.
      *
      * @param string $name The name of the hook.
      * @param array $arguments An array of arguments to be passed to the callbacks.
@@ -237,7 +237,7 @@ class hook {
         foreach ($this->callbacks as $cur_callback) {
             if ($cur_callback[0] == $name) {
                 if (($type == 'all' && $cur_callback[1] != 0) || ($type == 'before' && $cur_callback[1] < 0) || ($type == 'after' && $cur_callback[1] > 0)) {
-                    $arguments = call_user_func_array($cur_callback[2], array($arguments));
+                    $arguments = call_user_func_array($cur_callback[2], array($arguments, $name));
                     if ($arguments === false) return false;
                 }
             }
