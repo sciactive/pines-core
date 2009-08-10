@@ -33,12 +33,14 @@ class hook_override__NAMEHERE_ {
         $this->_p_prefix = $prefix;
     }
 
+    /* This shouldn't be hookable, and is called when this class is destroyed.
     function __destruct() {
         if (method_exists($this->_p_object, '__destruct')) {
             $args = func_get_args();
             return call_user_func_array(array($this->_p_object, '__destruct'), $args);
         }
     }
+    */
 
     /* These will be created dynamically and are thus hookable.
     function &__call($name, $arguments) {
