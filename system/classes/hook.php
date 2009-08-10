@@ -162,11 +162,16 @@ class hook {
      */
     function hook_object(&$object, $prefix = '', $recursive = true) {
         if (!is_object($object)) return false;
+        // Make sure we don't take over the hook object, or we'll end up
+        // recursively calling ourself.
+        if (get_class($object) == 'hook') return false;
+
         $ref_class = new ReflectionObject($object);
         $methods = $ref_class->getMethods();
         foreach ($methods as $cur_ref_method) {
             $this->add_hook($prefix.$cur_ref_method->getName());
         }
+        
         if ($recursive) {
             foreach ($object as $cur_name => &$cur_property) {
                 if (is_object($cur_property))
@@ -199,10 +204,6 @@ class hook {
                 $code .= "\tglobal \$config;\n";
                 $code .= "\t\$arguments = debug_backtrace(false);\n";
                 $code .= "\t\$arguments = \$arguments[0]['args'];\n";
-                // Make sure we don't take over the hook object, or we'll end up
-                // recursively calling ourself.
-                $code .= "\tif (get_class(\$this->_p_object) == 'hook')\n";
-                $code .= "\t\treturn call_user_func_array(array(\$this->_p_object, '$fname'), \$arguments);\n";
                 $code .= "\t\$arguments = \$config->hook->run_callbacks(\$this->_p_prefix.'$fname', \$arguments, 'before');\n";
                 $code .= "\tif (\$arguments !== false) {\n";
                 $code .= "\t\t\$return = call_user_func_array(array(\$this->_p_object, '$fname'), \$arguments);\n";
