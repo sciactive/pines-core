@@ -3,12 +3,11 @@ major structural changes.
 
 A list of things to complete before the initial release of Pines:
 --------------------------------------------------------------------------------
-+Documentation of com_newsletter.
 +Installer/Package Manager/Dependency checker
 +Logging.
 +Possibly change structure to dirs (models, control, views) to
     replace single files for MVC. (Use glob function to find files.)
-+New templates.
++New templates / Improve Pines template.
 +(2.0 Probably) Pines Entity Exchange (com_pex, for easily combining two
     installation's entities, using hooks, effectively creating a mirror)
 --------------------------------------------------------------------------------
