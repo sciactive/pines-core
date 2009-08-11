@@ -178,4 +178,19 @@ if (!function_exists('get_name')) {
 	}
 }
 
+/**
+ * Shortcut to $config->log_manager->log().
+ *
+ * @global DynamicConfig
+ * @uses $config->log_manager->log() Forwards parameters and returns the result.
+ * @return bool The result is returned if there is a log management component, otherwise it returns true.
+ */
+function pines_log() {
+	global $config;
+    if (is_null($config->log_manager))
+        return true;
+    $args = func_get_args();
+    return call_user_func_array(array($config->log_manager, 'log'), $args);
+}
+
 ?>
