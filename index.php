@@ -70,12 +70,25 @@ if ($config->offline_mode) {
 }
 
 /**
- * An array of the installed components.
+ * An array of the enabled components.
  * @global array $config->components
  */
 $config->components = array();
 if ( file_exists("components/") ) {
 	$config->components = scandir_pines("components/");
+}
+
+/**
+ * An array of all components.
+ * @global array $config->all_components
+ */
+$config->all_components = array();
+if ( file_exists("components/") ) {
+	$config->all_components = scandir_pines("components/", 0, null, false);
+    foreach ($config->all_components as $cur_key => $cur_value) {
+        if (substr($cur_value, 0, 1) == '.')
+            $config->all_components[$cur_key] = substr($cur_value, 1);
+    }
 }
 
 // Load component classes.
@@ -200,18 +213,19 @@ function fill_object($config_array, &$object) {
  * result.
  *
  * @param string $directory The directory that will be scanned.
- * @param int $sorting_order By default, the sorted order is alphabetical in ascending order. If the optional sorting_order  is set to non-zero, then the sort order is alphabetical in descending order.
+ * @param int $sorting_order By default, the sorted order is alphabetical in ascending order. If the optional sorting_order is set to non-zero, then the sort order is alphabetical in descending order.
  * @param resource $context An optional context.
+ * @param bool $hide_dot_files Whether to hide filenames beginning with a dot.
  * @return array|false The array of filenames on success, false on failure.
  */
-function scandir_pines($directory, $sorting_order = 0, $context = null) {
+function scandir_pines($directory, $sorting_order = 0, $context = null, $hide_dot_files = true) {
     if (is_null($context)) {
         if (!($return = scandir($directory, $sorting_order))) return false;
     } else {
         if (!($return = scandir($directory, $sorting_order, $context))) return false;
     }
 	foreach ($return as $cur_key => $cur_name) {
-		if ( (stripos($cur_name, '.') === 0) || ($cur_name == 'index.html') )
+        if ( (stripos($cur_name, '.') === 0 && $hide_dot_files) || (in_array($cur_name, array('index.html', '.', '..', '.svn'))) )
 			unset($return[$cur_key]);
 	}
     return array_values($return);
