@@ -34,11 +34,11 @@
     margin-top: 5px;
     margin-bottom: 5px;
 }
-.pform div.element span {
+.pform div.element .label, .pform div.element .note {
     width: 230px; /* Width of labels. */
     float: left;
 }
-.pform div.element span.note {
+.pform div.element .note {
     clear: left;
     font-size: 70%;
     color: #555;
@@ -46,13 +46,13 @@
 .pform div.element .group {
      margin-left: 230px; /* Same as width of labels. */
 }
-.pform div.element input, .pform div.element select, .pform div.element textarea, .pform div.element button {
+.pform div.element .field, .pform div.buttons .button {
     float: none;
     margin-left: 5px; /* Margin between inputs and labels. */
 }
 .pform div.buttons {
     padding-left: 215px; /* Width of labels + margin to inputs - button spacing. */
 }
-.pform div.buttons input, .pform div.buttons button {
+.pform div.buttons .button {
     margin-left: 20px; /* Button spacing. */
 }
