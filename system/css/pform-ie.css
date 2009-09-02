@@ -1,7 +1,0 @@
-/* Required for IE. */
-.pform {
-    overflow: hidden; /* Hides an extended border. */
-}
-.pform div.element {
-    width: 100%; /* Positions the inputs correctly. */
-}

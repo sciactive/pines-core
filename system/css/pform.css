@@ -9,6 +9,7 @@
 .pform fieldset {
     padding: 5.6px 10px 12px;
     border: 1px solid #CCC;
+    overflow: auto; /* Opera 8 won't enclose floated divs without this. */
 }
 .pform fieldset legend, .pform .heading h1 {
     font-size: 150%;
@@ -51,6 +52,7 @@
     margin-left: 5px; /* Margin between inputs and labels. */
 }
 .pform div.buttons {
+    clear: both;
     padding-left: 215px; /* Width of labels + margin to inputs - button spacing. */
 }
 .pform div.buttons .button {
