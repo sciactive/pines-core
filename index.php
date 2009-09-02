@@ -46,8 +46,6 @@ define('P_BASE_PATH', dirname(__FILE__));
  */
 define('P_INDEX', basename($_SERVER['SCRIPT_FILENAME']));
 
-session_start();
-
 // Make a random secret that only this instance knows, so we can pass secret
 // vars in hook objects.
 $_SESSION['secret'] = rand();
@@ -58,6 +56,9 @@ foreach ($temp_classes as $cur_class) {
     include_once("system/classes/$cur_class");
 }
 unset($temp_classes);
+
+session_start();
+
 require_once('load.php');
 $config_array = require('configure.php');
 fill_object($config_array, $config);
