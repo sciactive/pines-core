@@ -16,7 +16,8 @@
     font-weight: normal;
 }
 .pform fieldset.group {
-    clear: both;
+    display: block;
+    clear: left;
     margin-bottom: 15px;
 }
 .pform div.element {
