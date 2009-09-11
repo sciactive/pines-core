@@ -107,7 +107,7 @@ return array (
     'name' => 'program_version',
     'cname' => 'Program Version',
     'description' => 'The program\'s internal version number. Changing this may cause problems while updating!',
-    'value' => '0.14 Alpha',
+    'value' => '0.16 Alpha',
   ),
 );
 
