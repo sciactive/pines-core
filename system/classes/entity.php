@@ -92,18 +92,6 @@ class entity extends p_base {
     protected $data = array();
 
     /**
-     * Sets the entity's parent to the current user.
-     *
-     * This method is called by PHP as soon as the entity is instantiated.
-     *
-     * @internal
-     */
-    public function __construct() {
-        if (isset($_SESSION['user_id']))
-            $this->parent = $_SESSION['user_id'];
-    }
-
-    /**
      * Retrieve a variable.
      *
      * You do not need to explicitly call this method. It is called by PHP when
