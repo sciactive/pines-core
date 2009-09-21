@@ -7,6 +7,8 @@ A list of things to complete before the initial release of Pines:
 --------------------------------------------------------------------------------
 +Installer/Package Manager/Dependency checker
 +Improve menu system to be fully customizeable.
++Full SAWASC implementation for better security.
+	(http://sawasc.sciactive.com/)
 +More log entries.
 +Possibly change structure to dirs (models, control, views) to
     replace single files for MVC. (Use glob function to find files.)
