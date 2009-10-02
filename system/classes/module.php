@@ -180,6 +180,9 @@ class module extends p_base {
             }
         }
         $this->content(ob_get_clean());
+        if (empty($this->content)) {
+            return;
+        }
 
         // Return the content.
         ob_start();
