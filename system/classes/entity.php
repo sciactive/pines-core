@@ -23,28 +23,26 @@ defined('P_RUN') or die('Direct access prohibited');
  * If you still MUST save your entities in other entities:
  *							(all this only applies to *saved* sub-entities)
  *
- * -When you save a sub-entity, it effectively duplicates the data in the
+ * <ol>
+ * <li>When you save a sub-entity, it effectively duplicates the data in the
  * database. Once as data of the owner, and again as its own entity. This
- * is not efficient and difficult to keep track of!!
- *
- * -ALWAYS delete sub-entities first, unless they are to survive their owner,
- * entity managers don't delete sub-entities when you delete their owner.
- *
- * -When you delete() a sub-entity, it doesn't dissappear, it just gets removed
- * from the database as an entity and loses its GUID. You should subsequently
- * unset() it if you want it out of your owner entity.
- *
- * -Remember to SAVE your owner after deleting and unsetting sub-entities.
- *
- * -If you just unset() a saved sub-entity without delete()ing it, it will still
- * be an entity in the database, just no longer data in the owner.
- *
- * -Saving an owner does not save its sub-entity. if you load the owner, its
+ * is not efficient and difficult to keep track of!!</li>
+ * <li>ALWAYS delete sub-entities first, unless they are to survive their owner,
+ * entity managers don't delete sub-entities when you delete their owner.</li>
+ * <li>When you delete() a sub-entity, it doesn't dissappear, it just gets
+ * removed from the database as an entity and loses its GUID. You should
+ * subsequently unset() it if you want it out of your owner entity.</li>
+ * <li>Remember to SAVE your owner after deleting and unsetting
+ * sub-entities.</li>
+ * <li>If you just unset() a saved sub-entity without delete()ing it, it will
+ * still be an entity in the database, just no longer data in the owner.</li>
+ * <li>Saving an owner does not save its sub-entity. if you load the owner, its
  * sub-entity will have the new data, but if you load the sub-entity, it will
- * have the old data, so save both sub-entity and owner (sub-entities first).
- *
- * -Also, saving sub-entities will not save their data in the owner. SAVE ALL
- * SUB-ENTITIES FIRST, THEN OWNERS.
+ * have the old data, so save both sub-entity and owner (sub-entities
+ * first).</li>
+ * <li>Also, saving sub-entities will not save their data in the owner. SAVE ALL
+ * SUB-ENTITIES FIRST, THEN OWNERS.</li>
+ * </ol>
  *
  * Now, after having said all that, you can see that sub-entities are very
  * innefficient. The $entity->parent system was designed to replace this
@@ -58,8 +56,8 @@ class entity extends p_base {
      * The GUID of the entity.
      *
      * The GUID is not set until the entity is saved. GUIDs must be unique
-     * forever. It's the job of the entity manager to make sure no two entities
-     * ever have the same GUID.
+     * forever, even after deletion. It's the job of the entity manager to make
+     * sure no two entities ever have the same GUID.
      *
      * @var int
      */
@@ -68,7 +66,6 @@ class entity extends p_base {
      * The GUID of the parent entity.
      *
      * You can use this feature to create complex hierarchies of entities.
-     * $parent defaults to the current user ID, if one is logged in.
      *
      * @var int
      */
