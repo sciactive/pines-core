@@ -35,6 +35,31 @@
             pgrid.pgrid_container = $("<div />");
             pgrid.pgrid_header_select = $("<div />");
 
+			// All arrays and objects in our options need to be copied,
+			// since they just have a pointer to the defaults if we don't.
+			pgrid.pgrid_toolbar_contents = pgrid.pgrid_toolbar_contents.splice(0);
+			pgrid.pgrid_hidden_cols = pgrid.pgrid_hidden_cols.splice(0);
+
+			// If we're running on a browser that doesn't have an indexOf
+			// function on the array object, create one, so we can hide columns.
+			if (!pgrid.pgrid_hidden_cols.indexOf) {
+				pgrid.pgrid_hidden_cols.indexOf = function(elt /*, from*/) {
+					var len = this.length >>> 0;
+
+					var from = Number(arguments[1]) || 0;
+					from = (from < 0) ? Math.ceil(from) : Math.floor(from);
+					if (from < 0)
+						from += len;
+
+					for (; from < len; from++) {
+					if (from in this && this[from] === elt)
+						return from;
+					}
+					return -1;
+				};
+			}
+
+
 			// Export the current state of the grid.
             all_elements.export_state = function() {
                 return {
@@ -56,7 +81,7 @@
                 if (typeof state.pgrid_filter !== undefined)
                     pgrid.pgrid_filter = state.pgrid_filter;
                 if (typeof state.pgrid_hidden_cols !== undefined)
-                    pgrid.pgrid_hidden_cols = state.pgrid_hidden_cols;
+                    pgrid.pgrid_hidden_cols = state.pgrid_hidden_cols.slice(0);
                 if (typeof state.pgrid_sort_col !== undefined)
                     pgrid.pgrid_sort_col = state.pgrid_sort_col;
                 if (typeof state.pgrid_sort_ord !== undefined)
@@ -356,7 +381,6 @@
             };
 
             pgrid.hide_col = function(number) {
-                // Not supported in MS Internet Exploder.
                 if (pgrid.pgrid_hidden_cols.indexOf(number) == -1) {
                     pgrid.pgrid_hidden_cols.push(number);
                     pgrid.do_col_hiding();
@@ -364,7 +388,6 @@
             };
 
             pgrid.show_col = function(number) {
-                // Not supported in MS Internet Exploder.
                 if (pgrid.pgrid_hidden_cols.indexOf(number) != -1) {
                     pgrid.pgrid_hidden_cols.splice(pgrid.pgrid_hidden_cols.indexOf(number), 1);
                     pgrid.do_col_hiding();
@@ -596,18 +619,30 @@
                                     $(this).addClass(val.extra_class);
                             })
                         ).click(function(e){
-                            var selected_rows = pgrid.find("tbody tr.selected");
-                            if (!val.selection_optional && selected_rows.length == 0) {
+                            var selected_rows = (val.return_all_rows ? pgrid.find("tbody tr:not(.disabled, .p_spacer)") : pgrid.find("tbody tr.selected"));
+                            if (!val.selection_optional && !val.select_all && !val.select_none && selected_rows.length == 0) {
                                 alert("Please make a selection before performing this operation.");
                                 return false;
                             }
-                            if (!val.multi_select && !val.selection_optional && selected_rows.length > 1) {
+                            if (!val.multi_select && !val.selection_optional && !val.select_all && !val.select_none && selected_rows.length > 1) {
                                 alert("Please choose only one item before performing this operation.");
                                 return false;
                             }
                             if (val.confirm) {
                                 if (!confirm("Are you sure you want to perform the operation \""+val.text+"\" on the "+selected_rows.length+" currently selected item(s)?")) {
                                     return false;
+                                }
+                            }
+                            if (val.select_all) {
+                                if (pgrid.pgrid_select && pgrid.pgrid_multi_select) {
+                                    pgrid.find("tbody tr:not(.disabled, .p_spacer)").addClass("selected");
+									pgrid.update_selected();
+                                }
+                            }
+                            if (val.select_none) {
+                                if (pgrid.pgrid_select && pgrid.pgrid_multi_select) {
+                                    pgrid.find("tbody tr").removeClass("selected");
+									pgrid.update_selected();
                                 }
                             }
                             if (val.click) {
@@ -646,10 +681,10 @@
                             return false;
                         }).mouseup(function(){
                             $(this).removeClass("pushed");
-                        }).mouseover(function(){
+                        }).mouseover(function(e){
                             $(this).addClass("hover");
                         }).mouseout(function(){
-                            $(this).removeClass("hover");
+                            $(this).removeClass("pushed").removeClass("hover");
                         });
                         if (val.double_click) {
                             pgrid.pgrid_double_click_tb = function() {
