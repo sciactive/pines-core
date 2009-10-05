@@ -43,6 +43,9 @@
 			// If we're running on a browser that doesn't have an indexOf
 			// function on the array object, create one, so we can hide columns.
 			if (!pgrid.pgrid_hidden_cols.indexOf) {
+                //This prototype is provided by the Mozilla foundation and
+                //is distributed under the MIT license.
+                //http://www.ibiblio.org/pub/Linux/LICENSES/mit.license
 				pgrid.pgrid_hidden_cols.indexOf = function(elt /*, from*/) {
 					var len = this.length >>> 0;
 
