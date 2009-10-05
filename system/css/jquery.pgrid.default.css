@@ -18,7 +18,7 @@
     background: #D7D7D7 url(jquery.pgrid.img/footer-bg.gif) repeat-x scroll 0 0;
     border: 2px outset black;
     float: left;
-    position: absolute;
+    position: fixed;
     display: none;
     padding: 0 3px 3px 0;
 }

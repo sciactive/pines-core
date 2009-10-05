@@ -543,11 +543,13 @@
                             var cur_parent_width = resizing_cur_bar.parent().width();
                             if (cur_width < cur_parent_width)
                                 resizing_cur_bar.width(cur_parent_width);
+                            resizing_header = false;
                         }
                     });
                 }
-                // Bind to click on the header to sort it.
-                $(this).click(function(){
+                // Bind to mouseup (not click) on the header to sort it.
+                // If we bind to click, resizing_header will always be false.
+                $(this).mouseup(function(){
                     // If we're resizing, don't sort it.
                     if (resizing_header) {
                         resizing_header = false;
@@ -689,7 +691,7 @@
                         if (val.double_click) {
                             pgrid.pgrid_double_click_tb = function() {
                                 cur_button.click();
-                            }
+                            };
                         }
                         toolbar.append(cur_button);
                     } else if (val.type == "separator") {
