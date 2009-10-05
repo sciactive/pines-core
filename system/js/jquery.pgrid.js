@@ -217,8 +217,9 @@
                 pgrid.do_stripes();
             };
 
-            pgrid.do_filter = function(filter) {
-                if (pgrid.pgrid_filtering) {
+            pgrid.do_filter = function(filter, loading) {
+                // Filter if filtering is allowed, or if this is an initial filter.
+                if (pgrid.pgrid_filtering || loading) {
                     pgrid.pgrid_filter = filter;
                     if (pgrid.pgrid_filter.length > 0) {
                         var filter_arr = pgrid.pgrid_filter.toLowerCase().split(" ");
@@ -249,12 +250,15 @@
                         // If the user enters nothing, all records should be shown.
                         pgrid.find("tbody tr:not(.p_spacer)").removeClass("disabled");
                     }
-                    // Paginate, since we may have disabled rows.
-                    pgrid.paginate();
-                    // Make new page buttons, since the enabled record total may have changed.
-                    pgrid.make_page_buttons();
-                    // Update the selected items, and the record counts.
-                    pgrid.update_selected();
+                    // Only do this if we're not loading, to speed up initialization.
+                    if (!loading) {
+                        // Paginate, since we may have disabled rows.
+                        pgrid.paginate();
+                        // Make new page buttons, since the enabled record total may have changed.
+                        pgrid.make_page_buttons();
+                        // Update the selected items, and the record counts.
+                        pgrid.update_selected();
+                    }
                 }
             };
 
@@ -284,7 +288,7 @@
                 }
             };
 
-            pgrid.do_sort = function(column_class) {
+            pgrid.do_sort = function(column_class, loading) {
                 if (pgrid.pgrid_sortable) {
                     // If they click the header again, change to descending order.
                     if (pgrid.pgrid_sort_col == column_class) {
@@ -343,8 +347,11 @@
                         var cur_row = $(this);
                         cur_row.after(cur_row.siblings("."+cur_row.attr("title")));
                     });
-                    // Paginate, since we changed the order.
-                    pgrid.paginate();
+                    // Only do this if we're not loading, to speed up initialization.
+                    if (!loading) {
+                        // Paginate, since we changed the order.
+                        pgrid.paginate();
+                    }
                 }
             };
 
@@ -603,10 +610,6 @@
             // This is used to keep the rows from being sized to fill the rest of the table.
             pgrid.children("tbody").append($("<tr><td></td></tr>").addClass("p_spacer"));
 
-            // Calculate the total number of pages.
-            var elements = pgrid.find("tbody tr:not(.child, .p_spacer, .disabled)");
-            pgrid.pgrid_pages = Math.ceil(elements.length / pgrid.pgrid_perpage);
-
             /* -- Toolbar -- */
             if (pgrid.pgrid_toolbar) {
                 var toolbar = $("<div />").addClass("pgrid_toolbar").append(
@@ -717,7 +720,7 @@
                 pgrid.parent().after(footer);
             }
 
-            // Filter the grid.
+            // Provide filtering controls.
             if (pgrid.pgrid_filtering) {
                 // Add filtering controls to the grid's footer.
                 if (pgrid.pgrid_footer) {
@@ -735,8 +738,27 @@
                         })
                     );
                 }
-                // Perform the filtering.
-                pgrid.do_filter(pgrid.pgrid_filter);
+            }
+            // Filter the grid.
+            if (pgrid.pgrid_filter) {
+                pgrid.do_filter(pgrid.pgrid_filter, true);
+            }
+
+            // Sort the grid.
+            if (pgrid.pgrid_sort_col != false) {
+                // Since the order is switched if the column is already set, we need to set the order to the opposite.
+                // This also works as a validator. Anything other than "desc" will become "asc" when it's switched.
+                if (pgrid.pgrid_sort_ord == "desc") {
+                    pgrid.pgrid_sort_ord = "asc";
+                } else {
+                    pgrid.pgrid_sort_ord = "desc";
+                }
+                // Store the real sortable value in a temp val, and make sure it's true while we sort initially.
+                var tmp_col_val = pgrid.pgrid_sortable;
+                pgrid.pgrid_sortable = true;
+                pgrid.do_sort(pgrid.pgrid_sort_col, true);
+                // Restore the original sortable value. That way, you can decide to sort by a column, but not allow the user to change it.
+                pgrid.pgrid_sortable = tmp_col_val;
             }
 
             // Paginate the grid.
@@ -776,23 +798,6 @@
                 if (pgrid.pgrid_footer) {
                     pgrid.make_page_buttons();
                 }
-            }
-
-            // Sort the grid.
-            if (pgrid.pgrid_sort_col != false) {
-                // Since the order is switched if the column is already set, we need to set the order to the opposite.
-                // This also works as a validator. Anything other than "desc" will become "asc" when it's switched.
-                if (pgrid.pgrid_sort_ord == "desc") {
-                    pgrid.pgrid_sort_ord = "asc";
-                } else {
-                    pgrid.pgrid_sort_ord = "desc";
-                }
-                // Store the real sortable value in a temp val, and make sure it's true while we sort initially.
-                var tmp_col_val = pgrid.pgrid_sortable;
-                pgrid.pgrid_sortable = true;
-                pgrid.do_sort(pgrid.pgrid_sort_col);
-                // Restore the original sortable value. That way, you can decide to sort by a column, but not allow the user to change it.
-                pgrid.pgrid_sortable = tmp_col_val;
             }
 
             // Make selected and total record counters.
