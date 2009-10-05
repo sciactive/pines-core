@@ -740,7 +740,7 @@
                 }
             }
             // Filter the grid.
-            if (pgrid.pgrid_filter) {
+            if (pgrid.pgrid_filter != "") {
                 pgrid.do_filter(pgrid.pgrid_filter, true);
             }
 
