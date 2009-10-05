@@ -5,23 +5,20 @@ Pines.
 
 There is a pines.sql file with the current state of the database.
 
-There are configure.php files in the root dir and in some component dirs. These
-files contain settings that Pines needs to run. You should edit these files
-to suit your server's configuration.
-
-Basically, to install Pines, you currently need PHP and MySQL. Set up a
-database for Pines and put the settings in
+Basically, to install Pines, you currently need PHP and MySQL. Set up a database
+for Pines, run the pines.sql file on it, and put the settings in
 
 /components/com_mysql/configure.php
 
-Once you install Pines, if you use com_user, you need to create an admin
-user. To do this, point your browser to your Pines installation, then add
-this to the URL:
+Once you install Pines, if you use com_user, you need to create an admin user.
+To do this, point your browser to your Pines installation, then add this to the
+URL:
 
 ?option=com_user&action=createadmin&secret=874jdiv8
 
 The secret is stored in /components/com_user/configure.php
-You should set create_admin to false afterwards.
+You should set create_admin to false afterwards using the built in configuration
+editor. (Configuration->Components->com_user->Configure->Create Admin)
 
 The new administrator's credentials are
 
