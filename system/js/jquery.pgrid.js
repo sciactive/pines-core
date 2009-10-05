@@ -37,8 +37,8 @@
 
 			// All arrays and objects in our options need to be copied,
 			// since they just have a pointer to the defaults if we don't.
-			pgrid.pgrid_toolbar_contents = pgrid.pgrid_toolbar_contents.splice(0);
-			pgrid.pgrid_hidden_cols = pgrid.pgrid_hidden_cols.splice(0);
+			pgrid.pgrid_toolbar_contents = pgrid.pgrid_toolbar_contents.slice();
+			pgrid.pgrid_hidden_cols = pgrid.pgrid_hidden_cols.slice();
 
 			// If we're running on a browser that doesn't have an indexOf
 			// function on the array object, create one, so we can hide columns.
@@ -616,7 +616,7 @@
                     $("<hr />").addClass("toolbar_clear")
                 );
 
-                $.each(pgrid.pgrid_toolbar_contents, function(i, val){
+                $.each(pgrid.pgrid_toolbar_contents, function(key, val){
                     if (val.type == "button") {
                         var cur_button = $("<div />").addClass("tbutton").append(
                             $("<div><span>"+val.text+"</span></div>").each(function(){
@@ -669,7 +669,7 @@
                                     });
                                 });
                                 parsed_url = parsed_url.replace("#title#", cur_title);
-                                i = 0;
+                                var i = 0;
                                 for (i in cur_cols_text) {
                                     parsed_url = parsed_url.replace("#col_"+i+"#", cur_cols_text[i]);
                                 }
