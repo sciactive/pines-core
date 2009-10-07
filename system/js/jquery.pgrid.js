@@ -62,21 +62,25 @@
 				};
 			}
 
-
 			// Export the current state of the grid.
-            all_elements.export_state = function() {
+            pgrid.export_state = function() {
                 return {
                     pgrid_page: pgrid.pgrid_page,
                     pgrid_perpage: pgrid.pgrid_perpage,
                     pgrid_filter: pgrid.pgrid_filter,
-                    pgrid_hidden_cols: pgrid.pgrid_hidden_cols.slice(0),
+                    pgrid_hidden_cols: pgrid.pgrid_hidden_cols.slice(),
                     pgrid_sort_col: pgrid.pgrid_sort_col,
                     pgrid_sort_ord: pgrid.pgrid_sort_ord
                 };
             };
 
+			// User accessable alias.
+            all_elements.export_state = function() {
+                return pgrid.export_state();
+            };
+
 			// Return the grid to a provided state.
-            all_elements.import_state = function(state) {
+            pgrid.import_state = function(state) {
                 if (typeof state.pgrid_page !== undefined)
                     pgrid.pgrid_page = state.pgrid_page;
                 if (typeof state.pgrid_perpage !== undefined)
@@ -99,6 +103,19 @@
                 if (pgrid.pgrid_footer && pgrid.pgrid_paginate) {
                     footer.find(".pages span:first-child input").val(pgrid.pgrid_perpage);
                 }
+            };
+
+			// User accessable alias.
+            all_elements.import_state = function(state) {
+                return pgrid.import_state(state);
+            };
+
+            // When the grid's state changes, call the provided function, passing the current state.
+            pgrid.state_changed = function() {
+                if (pgrid.pgrid_state_change) {
+                    return pgrid.pgrid_state_change(pgrid.export_state());
+                }
+                return null;
             };
 
             pgrid.pagestart = function() {
@@ -218,6 +235,8 @@
                 }
                 // Restripe the rows, since they may have changed. (Even if pagination isn't enabled.)
                 pgrid.do_stripes();
+                // The grid's state has probably changed.
+                pgrid.state_changed();
             };
 
             pgrid.do_filter = function(filter, loading) {
@@ -388,6 +407,8 @@
                     pgrid.pgrid_header_select.find("input.col_hider_"+pgrid.pgrid_hidden_cols[cur_col]).removeAttr("checked");
                     pgrid.find(".col_"+pgrid.pgrid_hidden_cols[cur_col]).hide();
                 }
+                // The grid's state has probably changed.
+                pgrid.state_changed();
             };
 
             pgrid.hide_col = function(number) {
@@ -880,6 +901,8 @@
         // Add a hover effect to the rows.
         pgrid_row_hover_effect: true,
         // Height of the box (view) containing the entries. (Not the entire grid.) (Only works in Firefox.)
-        pgrid_view_height: "260px"
+        pgrid_view_height: "260px",
+        // State change. Get's called whenever the user changes the state of the grid. The state from export_state() will be passed.
+        pgrid_state_change: null
     };
 })(jQuery);
