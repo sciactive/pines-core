@@ -42,8 +42,8 @@ class template extends p_base {
 			if ( !$config->use_htaccess )
 				$return .= P_INDEX.'/';
 			if ( !is_null($component) ) {
-				// Get rid of 'com_'
-				$return .= substr($component, 4).'/';
+				// Get rid of 'com_', if it's not the system component.
+				$return .= ($component == 'system' ? $component : substr($component, 4)).'/';
 				if (!is_null($action))
 					$return .= "$action/";
 			}

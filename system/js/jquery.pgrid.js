@@ -206,7 +206,7 @@
                 });
             };
 
-            pgrid.paginate = function() {
+            pgrid.paginate = function(loading) {
                 if (pgrid.pgrid_paginate) {
                     // Hide all rows.
                     pgrid.find("tbody tr:not(.p_spacer, .disabled)").addClass("hidden");
@@ -236,7 +236,7 @@
                 // Restripe the rows, since they may have changed. (Even if pagination isn't enabled.)
                 pgrid.do_stripes();
                 // The grid's state has probably changed.
-                pgrid.state_changed();
+                if (!loading) pgrid.state_changed();
             };
 
             pgrid.do_filter = function(filter, loading) {
@@ -399,7 +399,7 @@
                 }
             };
 
-            pgrid.do_col_hiding = function() {
+            pgrid.do_col_hiding = function(loading) {
                 var cur_col;
                 pgrid.find("th:not(.expander, .scrollspace), td:not(.expander, .scrollspace)").show();
                 pgrid.pgrid_header_select.find("input").attr("checked", true);
@@ -408,7 +408,7 @@
                     pgrid.find(".col_"+pgrid.pgrid_hidden_cols[cur_col]).hide();
                 }
                 // The grid's state has probably changed.
-                pgrid.state_changed();
+                if (!loading) pgrid.state_changed();
             };
 
             pgrid.hide_col = function(number) {
@@ -612,7 +612,7 @@
 
             // Now that the column classes have been assigned and hiding/showing is done,
             // we can hide the default hidden columns.
-            pgrid.do_col_hiding();
+            pgrid.do_col_hiding(true);
             // Now that it's ready, insert the header selector div in the container.
             pgrid.after(pgrid.pgrid_header_select);
 
@@ -817,7 +817,7 @@
                     );
                 }
                 // Perform the pagination and update the controls' text.
-                pgrid.paginate();
+                pgrid.paginate(true);
                 // Make page buttons in the footer.
                 if (pgrid.pgrid_footer) {
                     pgrid.make_page_buttons();

@@ -150,7 +150,7 @@ $config->action = clean_filename($_REQUEST['action']);
 // forms to a url you shouldn't.
 if ( $config->url_rewriting ) {
 	$args_array = explode('/', substr($_SERVER['PHP_SELF'], strlen($_SERVER['SCRIPT_NAME'])));
-	if ( isset($args_array[1]) ) $config->component = 'com_'.$args_array[1];
+	if ( isset($args_array[1]) ) $config->component = ($args_array[1] == 'system' ? $args_array[1] : 'com_'.$args_array[1]);
 	if ( isset($args_array[2]) ) $config->action = $args_array[2];
 	unset($args_array);
 }
@@ -160,10 +160,13 @@ if ( empty($config->component) ) $config->component = $config->default_component
 if ( empty($config->action) ) $config->action = 'default';
 
 // Call the action specified.
-if ( file_exists("components/$config->component/actions/$config->action.php") ) {
-    require("components/$config->component/actions/$config->action.php");
+$action_file = ($config->component == 'system' ? $config->component : "components/$config->component")."/actions/$config->action.php";
+if ( file_exists($action_file) ) {
+    require($action_file);
 } else {
-    display_error("Action not defined! D:");
+    header('HTTP/1.0 404 Not Found', true, 404);
+    $error_page = new module('system', 'error_404', 'content');
+    $error_page->title = 'Error 404: Page not Found.';
 }
 
 // Load the final display stuff. This includes menu entries.
