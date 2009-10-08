@@ -542,7 +542,7 @@
                 $(this).wrapInner($("<div />")).addClass("col_"+cur_col);
                 // Provide a column resizer, if set. The cleared div appended to the end will actually size the entire column.
                 if (pgrid.pgrid_resize_cols) {
-                    $(this).append($("<div>|</div>").addClass("header_sizehandle").mousedown(function(e){
+                    $(this).append($("<div />").addClass("header_sizehandle").mousedown(function(e){
                             resizing_header = true;
                             resizing_tempX = e.pageX;
                             resizing_cur_bar = $(this).next();
@@ -675,7 +675,28 @@
                                 }
                             }
                             if (val.click) {
-                                return val.click(e, selected_rows);
+                                var row_data = "";
+                                if (val.pass_csv || val.pass_csv_with_headers) {
+                                    // Pass a CSV of the selected rows, instead of a jQuery object.
+                                    if (val.pass_csv_with_headers) {
+                                        selected_rows = pgrid.find("thead tr").add(selected_rows);
+                                    }
+                                    selected_rows.each(function() {
+                                        // Turn each cell into a CSV cell.
+                                        $(this).children(":not(.expander, .scrollspace)").each(function(){
+                                            row_data += "\""+$(this).contents().text().replace("\"", "\"\"")+"\"";
+                                            // Add a comma, unless only the scrollspace column is left.
+                                            if (!$(this).next().hasClass("srollspace"))
+                                                row_data += ",";
+                                        });
+                                        // Add a new line after each row.
+                                        row_data += "\n";
+                                    });
+                                } else {
+                                    // Pass a jQuery object of the selected rows.
+                                    row_data = selected_rows;
+                                }
+                                return val.click(e, row_data);
                             } else if (val.url) {
                                 var parsed_url = val.url;
                                 var cur_title = "";
