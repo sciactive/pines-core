@@ -160,10 +160,7 @@ if ( empty($config->component) ) $config->component = $config->default_component
 if ( empty($config->action) ) $config->action = 'default';
 
 // Call the action specified.
-$action_file = ($config->component == 'system' ? $config->component : "components/$config->component")."/actions/$config->action.php";
-if ( file_exists($action_file) ) {
-    require($action_file);
-} else {
+if ( action($config->component, $config->action) === 'error_404' ) {
     header('HTTP/1.0 404 Not Found', true, 404);
     $error_page = new module('system', 'error_404', 'content');
     $error_page->title = 'Error 404: Page not Found.';

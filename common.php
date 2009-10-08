@@ -13,6 +13,30 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
+if (!function_exists('action')) {
+    /**
+     * Load and run an action.
+     *
+     * @param string $component The component in which the action resides.
+     * @param string $action The action to run.
+     * @return mixed The value returned by the action, or 'error_404' if it doesn't exist.
+     * @global $config
+     * @global $page
+     */
+    function action($component, $action) {
+        global $config, $page;
+        $action_file = ($component == 'system' ? $component : "components/$component")."/actions/$action.php";
+        if ( file_exists($action_file) ) {
+            /**
+             * Run the action's file.
+             */
+            return require($action_file);
+        } else {
+            return 'error_404';
+        }
+    }
+}
+
 if ( isset($config->ability_manager) ) {
     /**
      * The system/all ability let's the user perform any action on the system,
