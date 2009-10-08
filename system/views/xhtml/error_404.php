@@ -3,7 +3,6 @@
  * A generic 404 error notice.
  *
  * @package Pines
- * @subpackage subpackage
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright Hunter Perrin

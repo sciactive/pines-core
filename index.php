@@ -142,25 +142,25 @@ foreach ($config->components as $cur_component) {
 include_once('common.php');
 
 // Load any post or get vars for our component/action.
-$config->component = clean_filename($_REQUEST['option']);
-$config->action = clean_filename($_REQUEST['action']);
+$config->request_component = clean_filename($_REQUEST['option']);
+$config->request_action = clean_filename($_REQUEST['action']);
 
 // URL Rewriting Engine (Simple, eh?)
 // The values from URL rewriting override any post or get vars, so don't submit
 // forms to a url you shouldn't.
 if ( $config->url_rewriting ) {
 	$args_array = explode('/', substr($_SERVER['PHP_SELF'], strlen($_SERVER['SCRIPT_NAME'])));
-	if ( isset($args_array[1]) ) $config->component = ($args_array[1] == 'system' ? $args_array[1] : 'com_'.$args_array[1]);
-	if ( isset($args_array[2]) ) $config->action = $args_array[2];
+	if ( isset($args_array[1]) ) $config->request_component = ($args_array[1] == 'system' ? $args_array[1] : 'com_'.$args_array[1]);
+	if ( isset($args_array[2]) ) $config->request_action = $args_array[2];
 	unset($args_array);
 }
 
 // Fill in any empty request vars.
-if ( empty($config->component) ) $config->component = $config->default_component;
-if ( empty($config->action) ) $config->action = 'default';
+if ( empty($config->request_component) ) $config->request_component = $config->default_component;
+if ( empty($config->request_action) ) $config->request_action = 'default';
 
 // Call the action specified.
-if ( action($config->component, $config->action) === 'error_404' ) {
+if ( action($config->request_component, $config->request_action) === 'error_404' ) {
     header('HTTP/1.0 404 Not Found', true, 404);
     $error_page = new module('system', 'error_404', 'content');
     $error_page->title = 'Error 404: Page not Found.';

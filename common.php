@@ -26,6 +26,10 @@ if (!function_exists('action')) {
     function action($component, $action) {
         global $config, $page;
         $action_file = ($component == 'system' ? $component : "components/$component")."/actions/$action.php";
+        $config->component = $component;
+        $config->action = $action;
+        unset($component);
+        unset($action);
         if ( file_exists($action_file) ) {
             /**
              * Run the action's file.
