@@ -84,7 +84,7 @@ class entity extends p_base {
      * The array used to store each variable assigned to an entity.
      *
      * @var array
-     * @internal
+	 * @access protected
      */
     protected $data = array();
 
@@ -96,7 +96,7 @@ class entity extends p_base {
      *
      * @param string $name The name of the variable.
      * @return mixed The value of the variable or null if it does not exist.
-     * @internal
+     * @access protected
      */
     public function &__get($name) {
         if (array_key_exists($name, $this->data)) {
@@ -113,7 +113,7 @@ class entity extends p_base {
      *
      * @param string $name The name of the variable.
      * @return bool
-     * @internal
+     * @access protected
      */
     public function __isset($name) {
         return isset($this->data[$name]);
@@ -128,7 +128,7 @@ class entity extends p_base {
      * @param string $name The name of the variable.
      * @param string $value The value of the variable.
      * @return mixed The value of the variable.
-     * @internal
+     * @access protected
      */
     public function __set($name, $value) {
         return ($this->data[$name] = $value);
@@ -141,7 +141,7 @@ class entity extends p_base {
      * you access the variable normally.
      *
      * @param string $name The name of the variable.
-     * @internal
+     * @access protected
      */
     public function __unset($name) {
         unset($this->data[$name]);
@@ -184,7 +184,7 @@ class entity extends p_base {
      * into the database.
      *
      * @return array The entity's data array.
-     * @internal
+     * @access protected
 	 */
 	public function get_data() {
 		return $this->data;
@@ -218,7 +218,7 @@ class entity extends p_base {
      *
      * @param array $data The data array.
      * @return array The data array.
-     * @internal
+     * @access protected
 	 */
 	public function put_data($data) {
 		return ($this->data = $data);

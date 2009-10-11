@@ -18,49 +18,49 @@ class page extends p_base {
     /**
      * The page's title.
      * @var string $title
-     * @internal
+     * @access protected
      */
 	protected $title = '';
     /**
      * The head section of the page.
      * @var string $head
-     * @internal
+     * @access protected
      */
 	protected $head = '';
     /**
      * The body section of the page.
      * @var string $content
-     * @internal
+     * @access protected
      */
 	protected $content = '';
     /**
      * The footer at the bottom of the page.
      * @var string $footer
-     * @internal
+     * @access protected
      */
 	protected $footer = '';
     /**
      * The content which will override the entire page.
      * @var string $override_doc
-     * @internal
+     * @access protected
      */
 	protected $override_doc = '';
     /**
      * The notices to display.
      * @var array $notice
-     * @internal
+     * @access protected
      */
 	protected $notice = array();
     /**
      * The errors to display.
      * @var array $error
-     * @internal
+     * @access protected
      */
 	protected $error = array();
     /**
      * The moduels to display.
      * @var array $modules
-     * @internal
+     * @access protected
      */
 	protected $modules = array();
     /**
@@ -81,7 +81,7 @@ class page extends p_base {
     /**
      * Initialize the main menu.
      *
-     * @internal
+     * @access protected
      */
 	public function __construct() {
 		$this->main_menu = new menu;
