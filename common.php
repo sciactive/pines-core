@@ -197,11 +197,9 @@ if (!function_exists('get_name')) {
 		$get_name->title = $heading;
 		$get_name->content("<form method=\"post\">\n");
 		$get_name->content("<input type=\"text\" name=\"return_name\" value=\"$default\" />\n");
-		$get_name->content("<input type=\"hidden\" name=\"option\" value=\"$new_option\" />\n");
-		$get_name->content("<input type=\"hidden\" name=\"action\" value=\"$new_action\" />\n");
 		$get_name->content("<input type=\"hidden\" name=\"orig_name\" value=\"$orig_name\" />\n");
 		$get_name->content("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=\"submit\" value=\"Submit\" />\n");
-		$get_name->content("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=\"button\" onclick=\"window.location='".$config->template->url()."';\" value=\"Cancel\" />\n");
+		$get_name->content("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=\"button\" onclick=\"window.location='".$config->template->url($new_option, $new_action)."';\" value=\"Cancel\" />\n");
 		$get_name->content("</form><br />\n");
 	}
 }
