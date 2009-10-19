@@ -44,4 +44,11 @@ $config = new DynamicConfig;
  */
 $config->hook = new hook;
 
+/**
+ * The dependency checker.
+ *
+ * @global hook $config->depend
+ */
+$config->depend = new depend;
+
 ?>

@@ -159,6 +159,11 @@ if ( $config->url_rewriting ) {
 if ( empty($config->request_component) ) $config->request_component = $config->default_component;
 if ( empty($config->request_action) ) $config->request_action = 'default';
 
+// Testing the dependency manager.
+echo "Ability: ".($config->depend->check('ability', '(com_user/manage&com_about/show)&com_about/show') ? 'true' : 'false');
+echo "<br />\nOption: ".($config->depend->check('option', '(com_user|com_about)&com_about') ? 'true' : 'false');
+exit;
+
 // Call the action specified.
 if ( action($config->request_component, $config->request_action) === 'error_404' ) {
     header('HTTP/1.0 404 Not Found', true, 404);
