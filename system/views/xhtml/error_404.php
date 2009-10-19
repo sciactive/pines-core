@@ -14,6 +14,6 @@ defined('P_RUN') or die('Direct access prohibited');
 <p>Suggestions:
     <ul>
         <li>Check the spelling of the address you requested.</li>
-        <li>If you are still having problems, please <a href="<?php echo $config->rela_location; ?>">visit the homepage.</a></li>
+        <li>If you are still having problems, please <a href="<?php echo $config->template->url(); ?>">visit the homepage.</a></li>
     </ul>
 </p>
