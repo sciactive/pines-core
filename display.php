@@ -21,6 +21,7 @@ require_once('templates/'.$config->current_template.'/configure.php');
 
 /**
  * The page controller's variable. One of the few objects not under $config.
+ * 
  * @global page $page
  */
 $page = new page;

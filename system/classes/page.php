@@ -101,8 +101,7 @@ class page extends p_base {
      * 
      * If the title has not been explicitly set, get_title() uses
      * $config->option_title.
-     *
-     * @global DynamicConfig
+     * 
      * @return string The title.
      */
 	public function get_title() {

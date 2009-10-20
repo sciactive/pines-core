@@ -20,8 +20,6 @@ if (!function_exists('action')) {
      * @param string $component The component in which the action resides.
      * @param string $action The action to run.
      * @return mixed The value returned by the action, or 'error_404' if it doesn't exist.
-     * @global $config
-     * @global $page
      */
     function action($component, $action) {
         global $config, $page;
@@ -137,7 +135,6 @@ if (!function_exists('display_notice')) {
  * check whether a different user has an ability. This helps user managers use a
  * "login" ability, which can be used to disable an account.
  *
- * @global DynamicConfig
  * @uses $config->user_manager->gatekeeper() Forwards parameters and returns the result.
  * @param string $ability The ability to provide.
  * @param user $user The user to provide.
@@ -207,7 +204,6 @@ if (!function_exists('get_name')) {
 /**
  * Shortcut to $config->log_manager->log().
  *
- * @global DynamicConfig
  * @uses $config->log_manager->log() Forwards parameters and returns the result.
  * @return bool The result is returned if there is a log management component, otherwise it returns true.
  */

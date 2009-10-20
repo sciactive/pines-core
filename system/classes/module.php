@@ -156,9 +156,6 @@ class module extends p_base {
      * The module's template is found in the 'models' directory of the current
      * template. The module's content ultimately end up with the output from
      * this file.
-     *
-     * @global DynamicConfig
-     * @global page
      */
 	function render() {
         global $config, $page;
