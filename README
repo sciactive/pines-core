@@ -5,14 +5,16 @@ Read the INSTALL file for installation instructions.
 
 A list of things to complete before the initial release of Pines:
 --------------------------------------------------------------------------------
-+Installer/Package Manager/Dependency checker
-+Improve menu system to be fully customizeable.
++Installer/Package Manager.
++More dependency checker types. (Version, PHP abilities, other components...)
++Fix com_newsletter.
++Improve menu system to be fully customizeable. (XML menu definitions.)
 +Full SAWASC implementation for better security.
 	(http://sawasc.sciactive.com/)
 +More log entries.
 +Possibly change structure to dirs (models, control, views) to
     replace single files for MVC. (Use glob function to find files.)
-+New templates / Improve Pines template.
++New templates / Improve Pines template. (Maybe use XSL instead of PHP.)
 +(2.0 Probably) Pines Entity Exchange (com_pex, for easily combining two
-    installation's entities, using hooks, effectively creating a mirror)
+    installation's entities, using hooks, effectively creating a DB mirror)
 --------------------------------------------------------------------------------
