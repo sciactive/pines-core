@@ -1,6 +1,6 @@
 <?php
 /**
- * An object oriented function/method hooking system.
+ * hook class
  *
  * @package Pines
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
@@ -11,7 +11,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 /**
- * A class to provide hooks.
+ * An object oriented function/method hooking system.
  *
  * Hooks are used to call specific functions when another function is called.
  *

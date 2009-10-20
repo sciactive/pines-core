@@ -923,7 +923,7 @@
         pgrid_row_hover_effect: true,
         // Height of the box (view) containing the entries. (Not the entire grid.) (Only works in Firefox.)
         pgrid_view_height: "260px",
-        // State change. Get's called whenever the user changes the state of the grid. The state from export_state() will be passed.
+        // State change. Gets called whenever the user changes the state of the grid. The state from export_state() will be passed.
         pgrid_state_change: null
     };
 })(jQuery);

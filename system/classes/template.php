@@ -1,6 +1,6 @@
 <?php
 /**
- * Template class.
+ * template class.
  *
  * @package Pines
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
@@ -11,7 +11,10 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 /**
- * The template base class. Templates should extend this class.
+ * The template base class.
+ *
+ * Templates should extend this class.
+ * 
  * @package Pines
  */
 class template extends p_base {

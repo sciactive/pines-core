@@ -1,6 +1,6 @@
 <?php
 /**
- * Depend Class.
+ * depend class.
  *
  * @package Pines
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
