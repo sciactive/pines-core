@@ -34,6 +34,10 @@ class depend extends p_base {
 
     /**
      * Set up the default dependency checker types.
+     *
+     * - ability (System abilities.)
+     * - option (Current or requested component.)
+     * - action (Current or requested action.)
      */
     function __construct() {
         global $config;
@@ -75,23 +79,6 @@ class depend extends p_base {
     }
 
     /**
-     * Check against the current or requested component.
-     *
-     * Uses simple_parse() to provide simple logic.
-     *
-     * @uses $config->component
-     * @uses $config->request_component
-     * @param string $value The value to check.
-     * @return bool The result of the component check.
-     */
-    function check_option($value) {
-        global $config;
-        if (preg_match('/[!&|()]/', $value))
-            return $this->simple_parse($value, array($config->depend, 'check_option'));
-        return $config->component == $value || $config->request_component == $value;
-    }
-
-    /**
      * Check against the current or requested action.
      *
      * Uses simple_parse() to provide simple logic.
@@ -106,6 +93,23 @@ class depend extends p_base {
         if (preg_match('/[!&|()]/', $value))
             return $this->simple_parse($value, array($config->depend, 'check_action'));
         return $config->action == $value || $config->request_action == $value;
+    }
+
+    /**
+     * Check against the current or requested component.
+     *
+     * Uses simple_parse() to provide simple logic.
+     *
+     * @uses $config->component
+     * @uses $config->request_component
+     * @param string $value The value to check.
+     * @return bool The result of the component check.
+     */
+    function check_option($value) {
+        global $config;
+        if (preg_match('/[!&|()]/', $value))
+            return $this->simple_parse($value, array($config->depend, 'check_option'));
+        return $config->component == $value || $config->request_component == $value;
     }
 
     /**
