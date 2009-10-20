@@ -31,9 +31,9 @@ defined('P_RUN') or die('Direct access prohibited');
  * - user_manager - Manages users.
  * - ability_manager - Manages users' abilities.
  *
- * @global DynamicConfig $config
+ * @global dynamic_config $config
  */
-$config = new DynamicConfig;
+$config = new dynamic_config;
 
 /**
  * The hooking system.

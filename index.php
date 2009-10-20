@@ -108,7 +108,7 @@ foreach ($config->components as $cur_component) {
 	if ( file_exists("components/$cur_component/configure.php") ) {
 		$config_array = include("components/$cur_component/configure.php");
         if (is_array($config_array)) {
-            $config->$cur_component = new DynamicConfig;
+            $config->$cur_component = new dynamic_config;
             fill_object($config_array, $config->$cur_component);
         }
         unset($config_array);

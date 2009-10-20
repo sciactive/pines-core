@@ -18,7 +18,7 @@ defined('P_RUN') or die('Direct access prohibited');
  * Some notes about saving entities in other entity's variables (sub-entity):
  *
  * --To avoid all this confusion, don't save sub-entities, and try not to even
- * use them. Think about parent entities, DynamicConfig, or tags instead. :)
+ * use them. Think about parent entities, dynamic_config, or tags instead. :)
  *
  * If you still MUST save your entities in other entities:
  *							(all this only applies to *saved* sub-entities)
