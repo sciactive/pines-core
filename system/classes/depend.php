@@ -16,7 +16,7 @@ defined('P_RUN') or die('Direct access prohibited');
  * To add a dependency checker type, assign a callback to the $checkers array.
  *
  * <code>
- * $config->depend->checkers['my_type'] = array($config->com_my_component, 'my_checking_method');
+ * $config->depend->checkers['my_type'] = array($config->run_my_component, 'my_checking_method');
  * </code>
  *
  * Your checker callback should return true if the dependency is satisfied, or
@@ -124,7 +124,7 @@ class depend extends p_base {
      *
      * For example:
      * <code>
-     * simple_parse('!val1&(val2|!val3|(val2&!val4))', array($config->com_my_component, 'my_checking_method'));
+     * simple_parse('!val1&(val2|!val3|(val2&!val4))', array($config->run_my_component, 'my_checking_method'));
      * </code>
      *
      * @param string $value The logic statement.
