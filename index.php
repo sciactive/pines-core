@@ -51,7 +51,7 @@ define('P_INDEX', basename($_SERVER['SCRIPT_FILENAME']));
 $_SESSION['secret'] = rand();
 
 // Load system classes.
-$temp_classes = scandir_pines("system/classes/");
+$temp_classes = pines_scandir("system/classes/");
 foreach ($temp_classes as $cur_class) {
     include_once("system/classes/$cur_class");
 }
@@ -76,7 +76,7 @@ if ($config->offline_mode) {
  */
 $config->components = array();
 if ( file_exists("components/") ) {
-	$config->components = scandir_pines("components/");
+	$config->components = pines_scandir("components/");
 }
 
 /**
@@ -85,7 +85,7 @@ if ( file_exists("components/") ) {
  */
 $config->all_components = array();
 if ( file_exists("components/") ) {
-	$config->all_components = scandir_pines("components/", 0, null, false);
+	$config->all_components = pines_scandir("components/", 0, null, false);
     foreach ($config->all_components as $cur_key => $cur_value) {
         if (substr($cur_value, 0, 1) == '.')
             $config->all_components[$cur_key] = substr($cur_value, 1);
@@ -95,7 +95,7 @@ if ( file_exists("components/") ) {
 // Load component classes.
 foreach ($config->components as $cur_component) {
     if ( is_dir("components/$cur_component/classes/") ) {
-        $temp_classes = scandir_pines("components/$cur_component/classes/");
+        $temp_classes = pines_scandir("components/$cur_component/classes/");
         foreach ($temp_classes as $cur_class) {
             include_once("components/$cur_component/classes/$cur_class");
         }
@@ -219,7 +219,7 @@ function fill_object($config_array, &$object) {
  * @param bool $hide_dot_files Whether to hide filenames beginning with a dot.
  * @return array|false The array of filenames on success, false on failure.
  */
-function scandir_pines($directory, $sorting_order = 0, $context = null, $hide_dot_files = true) {
+function pines_scandir($directory, $sorting_order = 0, $context = null, $hide_dot_files = true) {
     if (is_null($context)) {
         if (!($return = scandir($directory, $sorting_order))) return false;
     } else {
