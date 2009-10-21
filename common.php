@@ -215,4 +215,18 @@ function pines_log() {
     return call_user_func_array(array($config->log_manager, 'log'), $args);
 }
 
+/**
+ * Shortcut to $config->template->url().
+ *
+ * @uses $config->template->url() Forwards parameters and returns the result.
+ * @return bool The result is returned if there is a template, otherwise it returns null.
+ */
+function pines_url() {
+	global $config;
+    if (is_null($config->template))
+        return null;
+    $args = func_get_args();
+    return call_user_func_array(array($config->template, 'url'), $args);
+}
+
 ?>
