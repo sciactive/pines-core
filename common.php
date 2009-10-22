@@ -202,6 +202,20 @@ if (!function_exists('get_name')) {
 }
 
 /**
+ * Shortcut to $config->depend->check().
+ *
+ * @uses $config->depend->check() Forwards parameters and returns the result.
+ * @return bool The result is returned from the dependency checker.
+ */
+function pines_depend() {
+	global $config;
+    if (is_null($config->depend))
+        return true;
+    $args = func_get_args();
+    return call_user_func_array(array($config->depend, 'check'), $args);
+}
+
+/**
  * Shortcut to $config->log_manager->log().
  *
  * @uses $config->log_manager->log() Forwards parameters and returns the result.
