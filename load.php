@@ -30,6 +30,7 @@ defined('P_RUN') or die('Direct access prohibited');
  * - db_manager - Manages database connections.
  * - user_manager - Manages users.
  * - ability_manager - Manages users' abilities.
+ * - editor - Provides a content editor.
  *
  * @global dynamic_config $config
  */
