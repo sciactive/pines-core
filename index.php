@@ -57,8 +57,6 @@ foreach ($temp_classes as $cur_class) {
 }
 unset($temp_classes);
 
-session_start();
-
 require_once('load.php');
 $config_array = require('configure.php');
 fill_object($config_array, $config);
@@ -102,6 +100,10 @@ foreach ($config->components as $cur_component) {
         unset($temp_classes);
     }
 }
+
+// Now that all classes are loaded, we can start the session manager. This
+// allows variables to keep their classes over sessions.
+session_start();
 
 // Load the config for our components.
 foreach ($config->components as $cur_component) {
