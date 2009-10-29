@@ -47,6 +47,7 @@
     float: left;
 }
 .pform div.element .note {
+    margin-top: .5em;
     clear: left;
     font-size: 70%;
     color: #555;
