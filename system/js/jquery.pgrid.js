@@ -900,7 +900,7 @@
         // Opening page.
         pgrid_page: 0,
         // Top-level entries per page.
-        pgrid_perpage: 10,
+        pgrid_perpage: 15,
         // Allow filtering.
         pgrid_filtering: true,
         // Default filter.
