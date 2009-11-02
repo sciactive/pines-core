@@ -14,8 +14,8 @@ if (!gatekeeper()) {
     $config->user_manager->punt_user("You don't have necessary permission.");
     return;
 }
-$cur_state = stripslashes($_REQUEST['state']);
-$cur_view = stripslashes($_REQUEST['view']);
+$cur_state = $_REQUEST['state'];
+$cur_view = $_REQUEST['view'];
 if (isset($_SESSION['user'])) {
     if (!is_array($_SESSION['user']->pgrid_saved_states))
         $_SESSION['user']->pgrid_saved_states = array();

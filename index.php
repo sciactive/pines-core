@@ -46,9 +46,13 @@ define('P_BASE_PATH', dirname(__FILE__));
  */
 define('P_INDEX', basename($_SERVER['SCRIPT_FILENAME']));
 
-// Make a random secret that only this instance knows, so we can pass secret
-// vars in hook objects.
-$_SESSION['secret'] = rand();
+// Strip magic quotes.
+if (get_magic_quotes_gpc()) {
+    pines_stripslashes_array_recursive($_GET);
+    pines_stripslashes_array_recursive($_POST);
+    pines_stripslashes_array_recursive($_REQUEST);
+    pines_stripslashes_array_recursive($_COOKIE);
+}
 
 // Load system classes.
 $temp_classes = pines_scandir("system/classes/");
@@ -104,6 +108,10 @@ foreach ($config->components as $cur_component) {
 // Now that all classes are loaded, we can start the session manager. This
 // allows variables to keep their classes over sessions.
 session_start();
+
+// Make a random secret that only this instance knows, so we can pass secret
+// vars in hook objects.
+$_SESSION['secret'] = rand();
 
 // Load the config for our components.
 foreach ($config->components as $cur_component) {
@@ -232,5 +240,25 @@ function pines_scandir($directory, $sorting_order = 0, $context = null, $hide_do
 			unset($return[$cur_key]);
 	}
     return array_values($return);
+}
+
+/**
+ * Strip slashes from an array recursively.
+ *
+ * Only processes strings.
+ *
+ * @param array &$array The array to process.
+ * @return bool True on success, false on failure.
+ */
+function pines_stripslashes_array_recursive(&$array) {
+    if (!is_array($array)) return false;
+    foreach ($array as &$cur_item) {
+        if (is_array($cur_item)) {
+            pines_stripslashes_array_recursive($cur_item);
+        } elseif (is_string($cur_item)) {
+            $cur_item = stripslashes($cur_item);
+        }
+    }
+    return true;
 }
 ?>
