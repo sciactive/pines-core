@@ -32,5 +32,4 @@ if (!$GLOBALS['js_json_included']) {
     $GLOBALS['js_json_included'] = true;
 }
 
-return;
 ?>

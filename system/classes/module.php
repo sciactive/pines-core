@@ -19,31 +19,31 @@ class module extends p_base {
      * The modules title.
      * @var string $title
      */
-	public $title = '';
+    public $title = '';
     /**
      * A suffix to append to the module's class name.
      *
      * Applies to HTML modules.
      * @var string $class_suffix
      */
-	public $class_suffix = '';
+    public $class_suffix = '';
     /**
      * The modules content.
      *
      * Though not necessary, this should be filled automatically using a view.
      * @var string $content
      */
-	public $content = '';
+    public $content = '';
     /**
      * The component that the module will retrieve its content from.
      * @var string $component
      */
-	public $component = '';
+    public $component = '';
     /**
      * The view that the module will retrieve its content from.
      * @var string $view
-    */
-	public $view = '';
+     */
+    public $view = '';
     /**
      * The position on the page to place the module.
      * @var string $position
@@ -58,7 +58,7 @@ class module extends p_base {
      * Whether the title of the module should be displayed.
      * @var bool $show_title
      */
-	public $show_title = true;
+    public $show_title = true;
 
     /**
      * @param string $component
@@ -70,13 +70,13 @@ class module extends p_base {
      * @uses module::attach()
      * @return mixed If $position is given, returns the value of attach($position, $order).
      */
-	function __construct($component, $view, $position = null, $order = null) {
-        $this->component = $component;
-        $this->view = $view;
-		if ( !is_null($position) ) {
-			return $this->attach($position, $order);
-		}
+    function __construct($component, $view, $position = null, $order = null) {
+	$this->component = $component;
+	$this->view = $view;
+	if ( !is_null($position) ) {
+	    return $this->attach($position, $order);
 	}
+    }
 
     /**
      * Attach the module to a position on the page.
@@ -89,12 +89,12 @@ class module extends p_base {
      * @uses page::attach_module()
      * @return int The order in which the module was placed.
      */
-	function attach($position, $order = null) {
-		global $page;
-        $this->position = $position;
-        $this->order = $page->attach_module($this, $position, $order);
-		return $this->order;
-	}
+    function attach($position, $order = null) {
+	global $page;
+	$this->position = $position;
+	$this->order = $page->attach_module($this, $position, $order);
+	return $this->order;
+    }
 
     /**
      * Detach the module from the page.
@@ -104,8 +104,8 @@ class module extends p_base {
      * @return mixed The value of $page->detach_module.
      */
     function detach() {
-		global $page;
-		return $page->detach_module($this, $this->position, $this->order);
+	global $page;
+	return $page->detach_module($this, $this->position, $this->order);
     }
 
     /**
@@ -116,9 +116,9 @@ class module extends p_base {
      *
      * @param string $add_content Content to append.
      */
-	function content($add_content) {
-		$this->content .= $add_content;
-	}
+    function content($add_content) {
+	$this->content .= $add_content;
+    }
 
     /**
      * Retrieve the current content of the module.
@@ -128,9 +128,9 @@ class module extends p_base {
      *
      * @return string The content.
      */
-	function get_content() {
-		return $this->content;
-	}
+    function get_content() {
+	return $this->content;
+    }
 
     /**
      * Renders the module.
@@ -154,38 +154,44 @@ class module extends p_base {
      * 'system' can be used as a blank view.
      *
      * The module's template is found in the 'models' directory of the current
-     * template. The module's content ultimately end up with the output from
-     * this file.
+     * template. If the module's position is 'head', render() will check for
+     * module_head.php. If it doesn't exist, or the position is not 'head',
+     * render() will require module.php. The module's content ultimately ends up
+     * with the output from this file.
      */
-	function render() {
-        global $config, $page;
+    function render() {
+	global $config, $page;
 
-        // Get content from the view.
-        ob_start();
-        $format = $config->template->format;
-        while(true) {
-            $filename = (($this->component != 'system') ? 'components/' : '').$this->component.'/views/'.$format.'/'.$this->view.'.php';
-            if (file_exists($filename) || $format == 'all') {
-                require $filename;
-                break;
-            } else {
-                if (strrpos($format, '-') === false) {
-                    $format = 'all';
-                } else {
-                    $format = substr($format, 0, strrpos($format, '-'));
-                }
-            }
-        }
-        $this->content(ob_get_clean());
-        if (empty($this->content)) {
-            return;
-        }
-
-        // Return the content.
-        ob_start();
-        require 'templates/'.$config->current_template.'/models/module.php';
-        $this->content = ob_get_clean();
+	// Get content from the view.
+	ob_start();
+	$format = $config->template->format;
+	while(true) {
+	    $filename = (($this->component != 'system') ? 'components/' : '').$this->component.'/views/'.$format.'/'.$this->view.'.php';
+	    if (file_exists($filename) || $format == 'all') {
+		require $filename;
+		break;
+	    } else {
+		if (strrpos($format, '-') === false) {
+		    $format = 'all';
+		} else {
+		    $format = substr($format, 0, strrpos($format, '-'));
+		}
+	    }
 	}
+	$this->content(ob_get_clean());
+	if (empty($this->content)) {
+	    return;
+	}
+
+	// Return the content.
+	ob_start();
+	if ($this->position == 'head' && file_exists('templates/'.$config->current_template.'/models/module_head.php')) {
+	    require 'templates/'.$config->current_template.'/models/module_head.php';
+	} else {
+	    require 'templates/'.$config->current_template.'/models/module.php';
+	}
+	$this->content = ob_get_clean();
+    }
 }
 
 ?>
