@@ -5,7 +5,6 @@ Read the INSTALL file for installation instructions.
 
 A list of things to complete before the initial release of Pines:
 --------------------------------------------------------------------------------
-+Finish importing jQuery UI into all templates.
 +Installer/Package Manager.
 +More dependency checker types. (Version, PHP abilities, other components...)
 +Fix com_newsletter.
