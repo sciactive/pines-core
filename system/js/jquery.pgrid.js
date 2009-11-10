@@ -496,33 +496,17 @@
 		;
 	    });
 
-	    pgrid.children("tbody").each(function(){
-		if (pgrid.pgrid_select && pgrid.pgrid_ui_select) {
-		    $(this).selectable({
-			cancel: ".ui-pgrid-table-expander, .ui-pgrid-table-cell-scrollspace",
-			filter: "tr:not(.ui-pgrid-table-row-spacer)",
-			stop: function(event, ui){
-			    $("tr:not(.ui-pgrid-table-row-spacer)", this).each(function(){
-				if ($(this).hasClass("ui-selected")) {
-				    $(this).addClass("ui-pgrid-table-row-selected").children(":not(.ui-pgrid-table-cell-scrollspace)").addClass("ui-state-active");
-				} else {
-				    $(this).removeClass("ui-pgrid-table-row-selected").children(":not(.ui-pgrid-table-cell-scrollspace)").removeClass("ui-state-active");
-				}
-			    });
-			}
-		    });
-		}
-	    }).children("tr").each(function(){
-		// Add an expander and scrollspace column to the rows, add hover events, and give child rows indentation.
+	    // Add an expander and scrollspace column to the rows, add hover events, and give child rows indentation.
+	    pgrid.find("tbody tr").each(function(){
 		if ($(this).hasClass("parent")) {
 		    var cur_left_padding = parseInt($(this).children("td:first-child").css("padding-left"));
 		    $(this).siblings("."+$(this).attr("title"))
 		    .children() //("td:first-child")
 		    .css("padding-left", (cur_left_padding+10)+"px");
-		    //.slice(0, -1)
-		    //.prepend("<span style=\"font-family: Arial, sans-serif; font-size: 85%; font-weight: lighter; vertical-align: top;\">├ </span>")
-		    //.end().slice(-1)
-		    //.prepend("<span style=\"font-family: Arial, sans-serif; font-size: 85%; font-weight: lighter; vertical-align: top;\">└ </span>");
+		//.slice(0, -1)
+		//.prepend("<span style=\"font-family: Arial, sans-serif; font-size: 85%; font-weight: lighter; vertical-align: top;\">├ </span>")
+		//.end().slice(-1)
+		//.prepend("<span style=\"font-family: Arial, sans-serif; font-size: 85%; font-weight: lighter; vertical-align: top;\">└ </span>");
 		}
 		$(this).prepend("<td class=\"ui-pgrid-table-expander\"></td>")
 		.append("<td class=\"ui-pgrid-table-cell-scrollspace\"></td>");
@@ -537,41 +521,36 @@
 		}
 		// Bind to click for selecting records. Double click for double click action.
 		if (pgrid.pgrid_select) {
-		    $(this).children(":not(.ui-pgrid-table-expander, .ui-pgrid-table-cell-scrollspace)").each(function(){
-			if (!pgrid.pgrid_ui_select) {
-			    $(this).click(function(e){
-				var clicked_row = $(this).parent();
-				if (!pgrid.pgrid_multi_select || (!e.ctrlKey && !e.shiftKey)) {
-				    clicked_row.siblings().removeClass("ui-pgrid-table-row-selected").children(":not(.ui-pgrid-table-cell-scrollspace)").removeClass("ui-state-active");
-				} else if (e.shiftKey) {
-				    var cur_row = clicked_row;
-				    while (cur_row.prev().length > 0 && !cur_row.prev().hasClass("ui-pgrid-table-row-selected")) {
-					cur_row = cur_row.prev();
-					cur_row.addClass("ui-pgrid-table-row-selected").children(":not(.ui-pgrid-table-cell-scrollspace)").addClass("ui-state-active");
-				    }
-				}
-				if (e.ctrlKey) {
-				    clicked_row.toggleClass("ui-pgrid-table-row-selected").children(":not(.ui-pgrid-table-cell-scrollspace)").toggleClass("ui-state-active");
-				} else {
-				    clicked_row.addClass("ui-pgrid-table-row-selected").children(":not(.ui-pgrid-table-cell-scrollspace)").addClass("ui-state-active");
-				}
-				pgrid.update_selected();
-			    }).dblclick(function(e){
-				$(this).parent().addClass("ui-pgrid-table-row-selected").children(":not(.ui-pgrid-table-cell-scrollspace)").addClass("ui-state-active");
-			    }).mousedown(function(e){
-				// Prevent the browser from selecting text if the user is holding a modifier key.
-				if (e.ctrlKey || e.shiftKey) {
-				    return false;
-				}
-				return true;
-			    });
+		    $(this).children(":not(.ui-pgrid-table-expander, .ui-pgrid-table-cell-scrollspace)").click(function(e){
+			var clicked_row = $(this).parent();
+			if (!pgrid.pgrid_multi_select || (!e.ctrlKey && !e.shiftKey)) {
+			    clicked_row.siblings().removeClass("ui-pgrid-table-row-selected").children(":not(.ui-pgrid-table-cell-scrollspace)").removeClass("ui-state-active");
+			} else if (e.shiftKey) {
+			    var cur_row = clicked_row;
+			    while (cur_row.prev().length > 0 && !cur_row.prev().hasClass("ui-pgrid-table-row-selected")) {
+				cur_row = cur_row.prev();
+				cur_row.addClass("ui-pgrid-table-row-selected").children(":not(.ui-pgrid-table-cell-scrollspace)").addClass("ui-state-active");
+			    }
 			}
-			
+			if (e.ctrlKey) {
+			    clicked_row.toggleClass("ui-pgrid-table-row-selected").children(":not(.ui-pgrid-table-cell-scrollspace)").toggleClass("ui-state-active");
+			} else {
+			    clicked_row.addClass("ui-pgrid-table-row-selected").children(":not(.ui-pgrid-table-cell-scrollspace)").addClass("ui-state-active");
+			}
+			pgrid.update_selected();
 		    }).dblclick(function(e){
+			$(this).parent().addClass("ui-pgrid-table-row-selected").children(":not(.ui-pgrid-table-cell-scrollspace)").addClass("ui-state-active");
 			if (pgrid.pgrid_double_click)
 			    pgrid.pgrid_double_click(e, pgrid.find("tbody tr.ui-pgrid-table-row-selected"));
 			if (pgrid.pgrid_double_click_tb)
 			    pgrid.pgrid_double_click_tb();
+		    });
+		    // Prevent the browser from selecting text if the user is holding a modifier key.
+		    $(this).mousedown(function(e){
+			if (e.ctrlKey || e.shiftKey) {
+			    return false;
+			}
+			return true;
 		    });
 		}
 	    });
@@ -955,8 +934,6 @@
 	pgrid_count: true,
 	// Allow selecting records.
 	pgrid_select: true,
-	// Use the jQuery UI Select interaction. (Set to false if it is not available.)
-	pgrid_ui_select: true,
 	// Allow selecting multiple records.
 	pgrid_multi_select: true,
 	// Double click action.
