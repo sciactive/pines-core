@@ -769,7 +769,7 @@
 			toolbar.append(cur_button);
 		    } else if (val.type == "separator") {
 			toolbar.append(
-			    $("<div />").addClass("ui-pgrid-toolbar-sep ui-state-active")
+			    $("<div />").addClass("ui-pgrid-toolbar-sep ui-state-default")
 			    );
 		    }
 		});
