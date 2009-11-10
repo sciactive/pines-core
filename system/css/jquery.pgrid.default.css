@@ -6,138 +6,104 @@
         Default styling for Pines Grid jQuery plugin.
 */
 
-/* -- The Container -- */
-.pgrid_container {
-    border: 1px solid #8F8F8F;
-    width: 100%;
+/* -- The Grid -- */
+.ui-pgrid {
+    padding: 0.2em;
+}
+
+/* -- The Table Container -- */
+.ui-pgrid-table-container {
     overflow: auto;
 }
 
 /* -- The Header Selector -- */
-.pgrid_container .header_select {
-    background: #D7D7D7 url(jquery.pgrid.img/footer-bg.gif) repeat-x scroll 0 0;
-    border: 2px outset black;
+.ui-pgrid-table-container .header_select {
     float: left;
     position: fixed;
     display: none;
-    padding: 0 3px 3px 0;
+    padding: 3px;
 }
-.pgrid_container .header_select label {
+.ui-pgrid-table-container .header_select label {
     display: block;
+    margin-top: 2px;
+    padding: 0 2px;
+}
+.ui-pgrid-table-container .header_select label input {
+    margin-right: 3px;
 }
 
 /* -- The Toolbar -- */
-.pgrid_toolbar_container {
-    width: 100%;
-    background: #D7D7D7 url(jquery.pgrid.img/toolbar-bg.gif) repeat-x scroll 0 0;
-    border-color: #8F8F8F;
-    border-width: 1px 1px 0;
-    border-style: solid;
-}
-.pgrid_toolbar {
-    padding-left: 2px;
-    padding-right: 2px;
+.ui-pgrid-toolbar {
+    padding: 3px;
     margin: 0;
 }
-.pgrid_toolbar .toolbar_clear {
-    height: 1px;
-    clear: both;
-    visibility: hidden;
-    margin: 0;
-    padding: 0;
-}
-.pgrid_toolbar .tsep {
+.ui-pgrid-toolbar .tsep {
     float: left;
     height: 1em;
     width: 0;
-    border: 1px outset black;
     padding: 5px 0;
     margin: 0 2px;
 }
-.pgrid_toolbar .tbutton {
+.ui-pgrid-toolbar .tbutton {
     float: left;
     cursor: default;
-    border: 1px outset transparent;
-}
-.pgrid_toolbar .tbutton div {
     padding: 3px;
-    border: 1px solid transparent;
 }
-.pgrid_toolbar .tbutton.hover {
-    border-color: black;
-}
-.pgrid_toolbar .tbutton.hover div {
-    border-color: #FFF #EEE #EEE #FFF;
-}
-.pgrid_toolbar .tbutton.pushed {
-    border-style: inset;
-}
-.pgrid_toolbar .tbutton.pushed div {
-    border-color: #EEE #FFF #FFF #EEE;
+.ui-pgrid-toolbar .tbutton div {
+    padding: 1px;
 }
 
 /* -- The Footer -- */
-.pgrid_footer {
-    width: 100%;
-    background: #D7D7D7 url(jquery.pgrid.img/footer-bg.gif) repeat-x scroll 0 0;
-    border-color: #8F8F8F;
-    border-width: 0 1px 1px;
-    border-style: solid;
+.ui-pgrid-footer {
+    padding: 3px;
 }
-.pgrid_footer .footer_clear {
-    height: 1px;
-    clear: both;
-    visibility: hidden;
-    margin: 0;
-    padding: 0;
-}
-.pgrid_footer .filter {
+.ui-pgrid-footer .filter {
     display: inline;
     margin-left: 5px;
 }
-.pgrid_footer .filter button {
+.ui-pgrid-footer .filter button {
     padding: 0 1px;
     margin: 0;
 }
-.pgrid_footer .pages {
+.ui-pgrid-footer .pages {
     display: inline;
     margin-left: 5px;
 }
-.pgrid_footer .pages button {
-    padding: 0 1px;
+.ui-pgrid-footer button, .ui-pgrid-footer input {
+    padding: 1px;
     margin: 0;
 }
-.pgrid_footer .page_buttons {
+.ui-pgrid-footer .page_buttons {
     display: inline;
 }
-.pgrid_footer .count_container {
+.ui-pgrid-footer .count_container {
     float: right;
-    margin: 5px;
+    margin-left: 5px;
+    margin-top: 3px;
 }
 
 /* -- The Grid Itself -- */
-.pgrid {
+.ui-pgrid-table {
     white-space: nowrap;
     padding: 0;
     border-spacing: 0;
     min-width: 100%;
 }
-.pgrid .sized_cell {
+.ui-pgrid-table .sized_cell {
     width: 1px; /* Allows cell resizing less than its content's width. */
     white-space: nowrap;
 }
-.pgrid tbody {
+.ui-pgrid-table tbody {
     overflow: auto;
 }
-.pgrid tr {
+.ui-pgrid-table tr {
     overflow: hidden;
     height: 1em;
 }
-.pgrid thead tr {
+.ui-pgrid-table thead tr {
     position: relative;
-    background: #FAFAFA url(jquery.pgrid.img/header-bg.gif) repeat-x scroll 0 0;
 }
-.pgrid thead th {
+.ui-pgrid-table thead th {
     border-color: #BBB;
     border-width: 0 1px 1px 0;
     border-style: solid;
@@ -149,21 +115,25 @@
     padding: 0;
     cursor: pointer;
 }
-.pgrid thead th.sort-desc {
-    background-image: url(jquery.pgrid.img/sort-desc.png);
-    background-repeat: no-repeat;
-    background-position: top center;
+.ui-pgrid-table thead th .ui-icon {
+    float: right;
+    visibility: hidden;
 }
-.pgrid thead th.sort-asc {
-    background-image: url(jquery.pgrid.img/sort-asc.png);
-    background-repeat: no-repeat;
-    background-position: top center;
+.ui-pgrid-table thead th.expander .ui-icon {
+    float: none;
+    visibility: visible;
 }
-.pgrid thead th .header_text {
+.ui-pgrid-table thead th .ui-icon.sort-desc {
+    visibility: visible;
+}
+.ui-pgrid-table thead th .ui-icon.sort-asc {
+    visibility: visible;
+}
+.ui-pgrid-table thead th .header_text {
     float: left;
-    padding: 2px 0 2px 2px;
+    padding: 0 2px;
 }
-.pgrid thead th .header_sizehandle {
+.ui-pgrid-table thead th .header_sizehandle {
     background-color: #D0D0D0;
     color: #D0D0D0;
     white-space: normal;
@@ -173,39 +143,38 @@
     height: 100%;
     overflow: hidden;
 }
-.pgrid thead th .header_sizer {
+.ui-pgrid-table thead th .header_sizer {
     min-width: 6px;
 }
-.pgrid tbody tr.disabled {
+.ui-pgrid-table tbody tr.disabled {
     display: none;
 }
-.pgrid tbody tr.hidden {
+.ui-pgrid-table tbody tr.hidden {
     display: none;
 }
-.pgrid tbody tr.p_spacer {
+.ui-pgrid-table tbody tr.p_spacer {
     visibility: hidden;
     height: auto;
 }
-.pgrid tbody tr.selected td {
+.ui-pgrid-table tbody tr.selected td {
     background-image: url(jquery.pgrid.img/select-bg.png);
     background-position: bottom left;
     background-repeat: repeat-x;
 }
-.pgrid tbody tr.striped td {
-    /* background-color: #EDF3FE; */
+.ui-pgrid-table tbody tr.striped td {
     background-color: #F7F7F7;
 }
-.pgrid tbody tr td.sorted {
+.ui-pgrid-table tbody tr td.sorted {
     background-color: #E5EDFF;
 }
-.pgrid tbody tr.striped td.sorted {
+.ui-pgrid-table tbody tr.striped td.sorted {
     background-color: #D3E2FE;
 }
-.pgrid tbody tr.hover td, .pgrid tbody tr.striped.hover td.sorted {
+.ui-pgrid-table tbody tr.hover td, .ui-pgrid-table tbody tr.striped.hover td.sorted {
     background-color: #A1B0CF;
     color: #FFF;
 }
-.pgrid tbody td {
+.ui-pgrid-table tbody td {
     border-color: #BBB;
     border-width: 0 1px 1px 0;
     border-style: solid;
@@ -213,26 +182,25 @@
     overflow: hidden;
     text-align: left;
 }
-.pgrid tbody td.expander, .pgrid thead th.expander, .pgrid .scrollspace {
-    width: 19px;
-    height: 19px;
+.ui-pgrid-table tbody td.expander, .ui-pgrid-table thead th.expander, .ui-pgrid-table .scrollspace {
+    width: 16px;
+    height: 16px;
     padding: 0;
 }
-.pgrid thead .scrollspace {
+.ui-pgrid-table thead .scrollspace {
     width: 100%;
     min-width: 19px;
 }
-.pgrid tbody .scrollspace {
+.ui-pgrid-table tbody .scrollspace {
     visibility: hidden;
 }
-.pgrid thead tr.show_handle th.expander {
-    background: url(jquery.pgrid.img/down-arrow.png) no-repeat scroll left center;
-}
-.pgrid tbody tr.parent td.expander {
+/*
+.ui-pgrid-table tbody tr.parent td.expander {
     background-image: url(jquery.pgrid.img/plus.png);
     background-repeat: no-repeat;
     background-position: left center;
 }
-.pgrid tbody tr.parent.expanded td.expander {
+.ui-pgrid-table tbody tr.parent.expanded td.expander {
     background-image: url(jquery.pgrid.img/minus.png);
 }
+*/

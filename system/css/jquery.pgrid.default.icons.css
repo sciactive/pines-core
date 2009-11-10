@@ -8,7 +8,7 @@
 
 @import "tango-icon-theme/icons.css";
 
-.pgrid_toolbar .tbutton div.icon {
+.ui-pgrid-toolbar .tbutton div.icon {
     background-color: transparent;
     background-repeat: no-repeat;
     background-position: center left;
