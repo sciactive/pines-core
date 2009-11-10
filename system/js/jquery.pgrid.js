@@ -503,10 +503,10 @@
 		    $(this).siblings("."+$(this).attr("title"))
 		    .children() //("td:first-child")
 		    .css("padding-left", (cur_left_padding+10)+"px");
-		//.slice(0, -1)
-		//.prepend("<span style=\"font-family: Arial, sans-serif; font-size: 85%; font-weight: lighter; vertical-align: top;\">├ </span>")
-		//.end().slice(-1)
-		//.prepend("<span style=\"font-family: Arial, sans-serif; font-size: 85%; font-weight: lighter; vertical-align: top;\">└ </span>");
+		    //.slice(0, -1)
+		    //.prepend("<span style=\"font-family: Arial, sans-serif; font-size: 85%; font-weight: lighter; vertical-align: top;\">├ </span>")
+		    //.end().slice(-1)
+		    //.prepend("<span style=\"font-family: Arial, sans-serif; font-size: 85%; font-weight: lighter; vertical-align: top;\">└ </span>");
 		}
 		$(this).prepend("<td class=\"ui-pgrid-table-expander\"></td>")
 		.append("<td class=\"ui-pgrid-table-cell-scrollspace\"></td>");
@@ -581,7 +581,7 @@
 			    // The resizer handle needs room, or it will be on a new line.
 			    $(this).children(".ui-pgrid-table-header-sizer").width($(this).width() + 21);
 			} else {
-			    $(this).children(".ui-pgrid-table-header-sizer").width($(this).width());
+			    $(this).children(".ui-pgrid-table-header-sizer").width($(this).width() + 16);
 			}
 		    });
 		    pgrid.mousemove(function(e){
