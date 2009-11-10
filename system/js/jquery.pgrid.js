@@ -564,6 +564,17 @@
 		var resizing_cur_bar;
 		// Wrap the contents and add the column class to the cell.
 		$(this).wrapInner($("<div />").addClass("ui-pgrid-table-header-text")).addClass("col_"+cur_col).append($("<span />").addClass("ui-icon"));
+		// Make a sizer div to keep all header contents (text, sort icon, sizer handle) on one line.
+		$(this).append($("<div style=\"clear: both; height: 0pt;\" />").addClass("ui-pgrid-table-header-sizer"))
+		.each(function(){
+		    // Make sure the sizer div has a width.
+		    if ($(this).children(".ui-pgrid-table-header-text").width() + 18 >= $(this).width()) {
+			// The resizer handle and sort icon need room, or they will be on a new line.
+			$(this).children(".ui-pgrid-table-header-sizer").width($(this).width() + 21);
+		    } else {
+			$(this).children(".ui-pgrid-table-header-sizer").width($(this).width() + 16);
+		    }
+		});
 		// Provide a column resizer, if set. The cleared div appended to the end will actually size the entire column.
 		if (pgrid.pgrid_resize_cols) {
 		    $(this).children(".ui-pgrid-table-header-text").after($("<div />").addClass("ui-pgrid-table-header-sizehandle").addClass("ui-state-hover").mousedown(function(e){
@@ -572,18 +583,7 @@
 			resizing_cur_bar = $(this).nextAll(".ui-pgrid-table-header-sizer");
 			// Prevent the browser from selecting text while the user is resizing a header.
 			return false;
-		    })
-		    ).end()
-		    .append($("<div style=\"clear: both; height: 0pt;\" />").addClass("ui-pgrid-table-header-sizer"))
-		    .each(function(){
-			// Make sure the resizer div has a width.
-			if ($(this).children(".ui-pgrid-table-header-text").width() + 18 >= $(this).width()) {
-			    // The resizer handle needs room, or it will be on a new line.
-			    $(this).children(".ui-pgrid-table-header-sizer").width($(this).width() + 21);
-			} else {
-			    $(this).children(".ui-pgrid-table-header-sizer").width($(this).width() + 16);
-			}
-		    });
+		    }));
 		    pgrid.mousemove(function(e){
 			if (resizing_header) {
 			    var cur_width = resizing_cur_bar.width();
