@@ -6,66 +6,72 @@
         Default styling for Pines Grid jQuery plugin.
 */
 
-/* -- The Grid -- */
+/* Grid container
+----------------------------------*/
 .ui-pgrid {
     padding: 0.2em;
 }
 
-/* -- The Table Container -- */
+/* Table container
+----------------------------------*/
 .ui-pgrid-table-container {
     overflow: auto;
 }
 
-/* -- The Header Selector -- */
-.ui-pgrid-table-container .header_select {
+/* Header selector
+----------------------------------*/
+.ui-pgrid .ui-pgrid-header-select {
     float: left;
     position: fixed;
     display: none;
     padding: 3px;
 }
-.ui-pgrid-table-container .header_select label {
+.ui-pgrid .ui-pgrid-header-select label {
     display: block;
     margin-top: 2px;
     padding: 0 2px;
 }
-.ui-pgrid-table-container .header_select label input {
+.ui-pgrid .ui-pgrid-header-select label input {
     margin-right: 3px;
 }
 
-/* -- The Toolbar -- */
+/* Toolbar
+----------------------------------*/
 .ui-pgrid-toolbar {
     padding: 3px;
     margin: 0;
 }
-.ui-pgrid-toolbar .tsep {
+.ui-pgrid-toolbar .ui-pgrid-toolbar-sep {
     float: left;
     height: 1em;
     width: 0;
     padding: 5px 0;
     margin: 0 2px;
 }
-.ui-pgrid-toolbar .tbutton {
+.ui-pgrid-toolbar .ui-pgrid-toolbar-button {
     float: left;
     cursor: default;
     padding: 3px;
+    margin: 0 1px;
 }
-.ui-pgrid-toolbar .tbutton div {
+.ui-pgrid-toolbar .ui-pgrid-toolbar-button div {
     padding: 1px;
 }
 
-/* -- The Footer -- */
+/* Footer
+----------------------------------*/
 .ui-pgrid-footer {
     padding: 3px;
 }
-.ui-pgrid-footer .filter {
+.ui-pgrid-footer .ui-pgrid-footer-filter-container {
     display: inline;
     margin-left: 5px;
 }
-.ui-pgrid-footer .filter button {
+.ui-pgrid-footer .ui-pgrid-footer-filter-container button {
     padding: 0 1px;
     margin: 0;
 }
-.ui-pgrid-footer .pages {
+.ui-pgrid-footer .ui-pgrid-footer-pager-container {
     display: inline;
     margin-left: 5px;
 }
@@ -73,23 +79,24 @@
     padding: 1px;
     margin: 0;
 }
-.ui-pgrid-footer .page_buttons {
+.ui-pgrid-footer .ui-pgrid-footer-pager-button-container {
     display: inline;
 }
-.ui-pgrid-footer .count_container {
+.ui-pgrid-footer .ui-pgrid-footer-count-container {
     float: right;
     margin-left: 5px;
     margin-top: 3px;
 }
 
-/* -- The Grid Itself -- */
+/* Grid Itself
+----------------------------------*/
 .ui-pgrid-table {
     white-space: nowrap;
     padding: 0;
     border-spacing: 0;
     min-width: 100%;
 }
-.ui-pgrid-table .sized_cell {
+.ui-pgrid-table .ui-pgrid-table-sized-cell {
     width: 1px; /* Allows cell resizing less than its content's width. */
     white-space: nowrap;
 }
@@ -104,7 +111,6 @@
     position: relative;
 }
 .ui-pgrid-table thead th {
-    border-color: #BBB;
     border-width: 0 1px 1px 0;
     border-style: solid;
     vertical-align: middle;
@@ -119,23 +125,22 @@
     float: right;
     visibility: hidden;
 }
-.ui-pgrid-table thead th.expander .ui-icon {
+.ui-pgrid-table thead th.ui-pgrid-table-expander .ui-icon {
     float: none;
     visibility: visible;
 }
-.ui-pgrid-table thead th .ui-icon.sort-desc {
+.ui-pgrid-table thead th .ui-icon.ui-pgrid-table-header-sorted-desc {
     visibility: visible;
 }
-.ui-pgrid-table thead th .ui-icon.sort-asc {
+.ui-pgrid-table thead th .ui-icon.ui-pgrid-table-header-sorted-asc {
     visibility: visible;
 }
-.ui-pgrid-table thead th .header_text {
+.ui-pgrid-table thead th .ui-pgrid-table-header-text {
     float: left;
     padding: 0 2px;
 }
-.ui-pgrid-table thead th .header_sizehandle {
-    background-color: #D0D0D0;
-    color: #D0D0D0;
+.ui-pgrid-table thead th .ui-pgrid-table-header-sizehandle {
+    border-width: 0;
     white-space: normal;
     cursor: e-resize;
     float: right;
@@ -143,64 +148,35 @@
     height: 100%;
     overflow: hidden;
 }
-.ui-pgrid-table thead th .header_sizer {
+.ui-pgrid-table thead th .ui-pgrid-table-header-sizer {
     min-width: 6px;
 }
-.ui-pgrid-table tbody tr.disabled {
+.ui-pgrid-table tbody tr.ui-pgrid-table-row-hidden {
     display: none;
 }
-.ui-pgrid-table tbody tr.hidden {
-    display: none;
-}
-.ui-pgrid-table tbody tr.p_spacer {
+.ui-pgrid-table tbody tr.ui-pgrid-table-row-spacer {
     visibility: hidden;
     height: auto;
 }
-.ui-pgrid-table tbody tr.selected td {
-    background-image: url(jquery.pgrid.img/select-bg.png);
-    background-position: bottom left;
-    background-repeat: repeat-x;
+.ui-pgrid-table tbody tr td.ui-pgrid-table-cell-sorted {
+    font-style: italic;
 }
-.ui-pgrid-table tbody tr.striped td {
-    background-color: #F7F7F7;
-}
-.ui-pgrid-table tbody tr td.sorted {
-    background-color: #E5EDFF;
-}
-.ui-pgrid-table tbody tr.striped td.sorted {
-    background-color: #D3E2FE;
-}
-.ui-pgrid-table tbody tr.hover td, .ui-pgrid-table tbody tr.striped.hover td.sorted {
-    background-color: #A1B0CF;
-    color: #FFF;
-}
-.ui-pgrid-table tbody td {
-    border-color: #BBB;
+.ui-pgrid-table tbody td, .ui-pgrid-table tbody td.ui-state-highlight, .ui-pgrid-table tbody td.ui-state-default, .ui-pgrid-table tbody td.ui-state-hover {
     border-width: 0 1px 1px 0;
     border-style: solid;
     padding: 2px;
     overflow: hidden;
     text-align: left;
 }
-.ui-pgrid-table tbody td.expander, .ui-pgrid-table thead th.expander, .ui-pgrid-table .scrollspace {
+.ui-pgrid-table tbody td.ui-pgrid-table-expander, .ui-pgrid-table thead th.ui-pgrid-table-expander, .ui-pgrid-table .ui-pgrid-table-cell-scrollspace {
     width: 16px;
     height: 16px;
     padding: 0;
 }
-.ui-pgrid-table thead .scrollspace {
+.ui-pgrid-table thead .ui-pgrid-table-cell-scrollspace {
     width: 100%;
     min-width: 19px;
 }
-.ui-pgrid-table tbody .scrollspace {
+.ui-pgrid-table tbody .ui-pgrid-table-cell-scrollspace {
     visibility: hidden;
 }
-/*
-.ui-pgrid-table tbody tr.parent td.expander {
-    background-image: url(jquery.pgrid.img/plus.png);
-    background-repeat: no-repeat;
-    background-position: left center;
-}
-.ui-pgrid-table tbody tr.parent.expanded td.expander {
-    background-image: url(jquery.pgrid.img/minus.png);
-}
-*/
