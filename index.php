@@ -173,7 +173,6 @@ if ( empty($config->request_action) ) $config->request_action = 'default';
 if ( action($config->request_component, $config->request_action) === 'error_404' ) {
     header('HTTP/1.0 404 Not Found', true, 404);
     $error_page = new module('system', 'error_404', 'content');
-    $error_page->title = 'Error 404: Page not Found.';
 }
 
 // Load the final display stuff. This includes menu entries.

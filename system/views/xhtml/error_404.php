@@ -9,6 +9,8 @@
  * @link http://sciactive.com/
  */
 defined('P_RUN') or die('Direct access prohibited');
+$this->title = 'Error 404';
+$this->note = 'Page not Found.';
 ?>
 <p>The page you requested cannot be found on this server.</p>
 <p>Suggestions:

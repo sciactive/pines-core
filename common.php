@@ -147,60 +147,6 @@ function gatekeeper($ability = NULL, $user = NULL) {
 	return $config->user_manager->gatekeeper($ability, $user);
 }
 
-if (!function_exists('get_confirmation')) {
-    /**
-     * Gets confirmation from a user.
-     *
-     * @param string $heading The heading to display.
-     * @param string $new_option The option to pass the response to.
-     * @param string $new_action The action to pass the response to.
-     * @param string $file An optional filename to pass.
-     * @deprecated
-     */
-	function get_confirmation($heading, $new_option, $new_action, $file = "") {
-		$get_confirmation = new module('system', 'null', 'content');
-		$get_confirmation->title = $heading;
-		$get_confirmation->content("<form method=\"post\" style=\"display: inline;\">\n");
-		$get_confirmation->content("<input type=\"hidden\" name=\"response\" value=\"yes\" />\n");
-		$get_confirmation->content("<input type=\"hidden\" name=\"option\" value=\"$new_option\" />\n");
-		$get_confirmation->content("<input type=\"hidden\" name=\"action\" value=\"$new_action\" />\n");
-		$get_confirmation->content("<input type=\"hidden\" name=\"file\" value=\"$file\" />\n");
-		$get_confirmation->content("<input type=\"submit\" value=\"Yes\" />\n");
-		$get_confirmation->content("</form>\n");
-		$get_confirmation->content("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n");
-		$get_confirmation->content("<form method=\"post\" style=\"display: inline;\">\n");
-		$get_confirmation->content("<input type=\"hidden\" name=\"response\" value=\"no\" />\n");
-		$get_confirmation->content("<input type=\"hidden\" name=\"option\" value=\"$new_option\" />\n");
-		$get_confirmation->content("<input type=\"hidden\" name=\"action\" value=\"$new_action\" />\n");
-		$get_confirmation->content("<input type=\"hidden\" name=\"file\" value=\"$file\" />\n");
-		$get_confirmation->content("<input type=\"submit\" value=\"No\" />\n");
-		$get_confirmation->content("</form><br />\n");
-	}
-}
-
-if (!function_exists('get_name')) {
-    /**
-     * Gets a name from a user.
-     *
-     * @param string $heading The heading to display.
-     * @param string $new_option The option to pass the response to.
-     * @param string $new_action The action to pass the response to.
-     * @param string $orig_name The original name.
-     * @param string $default The default value.
-     * @deprecated
-     */
-	function get_name($heading, $new_option, $new_action, $orig_name = "", $default = "") {
-		$get_name = new module('system', 'null', 'content');
-		$get_name->title = $heading;
-		$get_name->content("<form method=\"post\">\n");
-		$get_name->content("<input type=\"text\" name=\"return_name\" value=\"$default\" />\n");
-		$get_name->content("<input type=\"hidden\" name=\"orig_name\" value=\"$orig_name\" />\n");
-		$get_name->content("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=\"submit\" value=\"Submit\" />\n");
-		$get_name->content("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=\"button\" onclick=\"window.location='".pines_url($new_option, $new_action)."';\" value=\"Cancel\" />\n");
-		$get_name->content("</form><br />\n");
-	}
-}
-
 /**
  * Shortcut to $config->depend->check().
  *
