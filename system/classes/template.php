@@ -18,21 +18,21 @@ defined('P_RUN') or die('Direct access prohibited');
  * @package Pines
  */
 class template extends p_base {
-    /**
-     * Return a URL in the necessary format to be usable on the current
-     * installation.
-     *
-     * url() is designed to work with the URL rewriting features of Pines,
-     * so it should be called whenever outputting a URL is required. If url() is
-     * called with no parameters, it will return the URL of the index page.
-     *
-     * @param string $component The component the URL should point to.
-     * @param string $action The action the URL should point to.
-     * @param array $params An array of parameters which should be part of the URL's query string.
-     * @param bool $encode_entities Whether to encode HTML entities, such as the ampersand. Use this if the URL is going to be displayed on an HTML page.
-     * @param bool $full_location Whether to return an absolute URL or a relative URL.
-     * @return string The URL in a format to work with the current configuration of Pines.
-     */
+	/**
+	 * Return a URL in the necessary format to be usable on the current
+	 * installation.
+	 *
+	 * url() is designed to work with the URL rewriting features of Pines,
+	 * so it should be called whenever outputting a URL is required. If url() is
+	 * called with no parameters, it will return the URL of the index page.
+	 *
+	 * @param string $component The component the URL should point to.
+	 * @param string $action The action the URL should point to.
+	 * @param array $params An array of parameters which should be part of the URL's query string.
+	 * @param bool $encode_entities Whether to encode HTML entities, such as the ampersand. Use this if the URL is going to be displayed on an HTML page.
+	 * @param bool $full_location Whether to return an absolute URL or a relative URL.
+	 * @return string The URL in a format to work with the current configuration of Pines.
+	 */
 	function url($component = null, $action = null, $params = array(), $encode_entities = true, $full_location = false) {
 		global $config;
 		if ( is_null($params) ) $params = array();

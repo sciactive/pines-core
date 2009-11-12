@@ -52,105 +52,105 @@ defined('P_RUN') or die('Direct access prohibited');
  * @package Pines
  */
 class entity extends p_base {
-    /**
-     * The GUID of the entity.
-     *
-     * The GUID is not set until the entity is saved. GUIDs must be unique
-     * forever, even after deletion. It's the job of the entity manager to make
-     * sure no two entities ever have the same GUID.
-     *
-     * @var int
-     */
+	/**
+	 * The GUID of the entity.
+	 *
+	 * The GUID is not set until the entity is saved. GUIDs must be unique
+	 * forever, even after deletion. It's the job of the entity manager to make
+	 * sure no two entities ever have the same GUID.
+	 *
+	 * @var int
+	 */
 	public $guid = null;
-    /**
-     * The GUID of the parent entity.
-     *
-     * You can use this feature to create complex hierarchies of entities.
-     *
-     * @var int
-     */
+	/**
+	 * The GUID of the parent entity.
+	 *
+	 * You can use this feature to create complex hierarchies of entities.
+	 *
+	 * @var int
+	 */
 	public $parent = null;
-    /**
-     * Tags are used to classify entities.
-     *
-     * Though not sctrictly necessary, it is a VERY good idea to give every
-     * entity your component creates a tag indentical to your component's name.
-     * Such as 'com_xmlparser'.
-     *
-     * @var array
-     */
+	/**
+	 * Tags are used to classify entities.
+	 *
+	 * Though not sctrictly necessary, it is a VERY good idea to give every
+	 * entity your component creates a tag indentical to your component's name.
+	 * Such as 'com_xmlparser'.
+	 *
+	 * @var array
+	 */
 	public $tags = array();
-    /**
-     * The array used to store each variable assigned to an entity.
-     *
-     * @var array
+	/**
+	 * The array used to store each variable assigned to an entity.
+	 *
+	 * @var array
 	 * @access protected
-     */
-    protected $data = array();
+	 */
+	protected $data = array();
 
-    /**
-     * Retrieve a variable.
-     *
-     * You do not need to explicitly call this method. It is called by PHP when
-     * you access the variable normally.
-     *
-     * @param string $name The name of the variable.
-     * @return mixed The value of the variable or null if it does not exist.
-     * @access protected
-     */
-    public function &__get($name) {
-        if (array_key_exists($name, $this->data)) {
-            return $this->data[$name];
-        }
-        return null;
-    }
+	/**
+	 * Retrieve a variable.
+	 *
+	 * You do not need to explicitly call this method. It is called by PHP when
+	 * you access the variable normally.
+	 *
+	 * @param string $name The name of the variable.
+	 * @return mixed The value of the variable or null if it does not exist.
+	 * @access protected
+	 */
+	public function &__get($name) {
+		if (array_key_exists($name, $this->data)) {
+			return $this->data[$name];
+		}
+		return null;
+	}
 
-    /**
-     * Checks whether a variable is set.
-     *
-     * You do not need to explicitly call this method. It is called by PHP when
-     * you access the variable normally.
-     *
-     * @param string $name The name of the variable.
-     * @return bool
-     * @access protected
-     */
-    public function __isset($name) {
-        return isset($this->data[$name]);
-    }
+	/**
+	 * Checks whether a variable is set.
+	 *
+	 * You do not need to explicitly call this method. It is called by PHP when
+	 * you access the variable normally.
+	 *
+	 * @param string $name The name of the variable.
+	 * @return bool
+	 * @access protected
+	 */
+	public function __isset($name) {
+		return isset($this->data[$name]);
+	}
 
-    /**
-     * Sets a variable.
-     *
-     * You do not need to explicitly call this method. It is called by PHP when
-     * you access the variable normally.
-     *
-     * @param string $name The name of the variable.
-     * @param string $value The value of the variable.
-     * @return mixed The value of the variable.
-     * @access protected
-     */
-    public function __set($name, $value) {
-        return ($this->data[$name] = $value);
-    }
+	/**
+	 * Sets a variable.
+	 *
+	 * You do not need to explicitly call this method. It is called by PHP when
+	 * you access the variable normally.
+	 *
+	 * @param string $name The name of the variable.
+	 * @param string $value The value of the variable.
+	 * @return mixed The value of the variable.
+	 * @access protected
+	 */
+	public function __set($name, $value) {
+		return ($this->data[$name] = $value);
+	}
 
-    /**
-     * Unsets a variable.
-     *
-     * You do not need to explicitly call this method. It is called by PHP when
-     * you access the variable normally.
-     *
-     * @param string $name The name of the variable.
-     * @access protected
-     */
-    public function __unset($name) {
-        unset($this->data[$name]);
-    }
+	/**
+	 * Unsets a variable.
+	 *
+	 * You do not need to explicitly call this method. It is called by PHP when
+	 * you access the variable normally.
+	 *
+	 * @param string $name The name of the variable.
+	 * @access protected
+	 */
+	public function __unset($name) {
+		unset($this->data[$name]);
+	}
 
 	/**
 	 * Add one or more tags.
-     *
-     * @param mixed $tag,... List or array of tags.
+	 *
+	 * @param mixed $tag,... List or array of tags.
 	 */
 	public function add_tag() {
 		if (is_array(func_get_arg(0))) {
@@ -163,15 +163,15 @@ class entity extends p_base {
 		}
 	}
 
-    /**
-     * Delete the entity from the database.
-     *
-     * Simply calling delete() will not unset your entity, so it will still take
-     * up memory. Also, calling unset will not delete your entity from the
-     * database.
-     *
-     * @return mixed Returns what the entity manager's delete_entity function returns.
-     */
+	/**
+	 * Delete the entity from the database.
+	 *
+	 * Simply calling delete() will not unset your entity, so it will still take
+	 * up memory. Also, calling unset will not delete your entity from the
+	 * database.
+	 *
+	 * @return mixed Returns what the entity manager's delete_entity function returns.
+	 */
 	public function delete() {
 		global $config;
 		return $config->entity_manager->delete_entity($this);
@@ -179,12 +179,12 @@ class entity extends p_base {
 
 	/**
 	 * Used to retrieve the data array.
-     *
-     * This should only be used by the entity manager to save the data array
-     * into the database.
-     *
-     * @return array The entity's data array.
-     * @access protected
+	 *
+	 * This should only be used by the entity manager to save the data array
+	 * into the database.
+	 *
+	 * @return array The entity's data array.
+	 * @access protected
 	 */
 	public function get_data() {
 		return $this->data;
@@ -192,9 +192,9 @@ class entity extends p_base {
 
 	/**
 	 * Check that the entity has all of the given tags.
-     *
-     * @param mixed $tag,... List or array of tags.
-     * @return bool
+	 *
+	 * @param mixed $tag,... List or array of tags.
+	 * @return bool
 	 */
 	public function has_tag() {
 		if (is_array(func_get_arg(0))) {
@@ -212,13 +212,13 @@ class entity extends p_base {
 
 	/**
 	 * Used to set the data array.
-     *
-     * This should only be used by the entity manager to push the data array
-     * from the database.
-     *
-     * @param array $data The data array.
-     * @return array The data array.
-     * @access protected
+	 *
+	 * This should only be used by the entity manager to push the data array
+	 * from the database.
+	 *
+	 * @param array $data The data array.
+	 * @return array The data array.
+	 * @access protected
 	 */
 	public function put_data($data) {
 		return ($this->data = $data);
@@ -226,8 +226,8 @@ class entity extends p_base {
 
 	/**
 	 * Remove one or more tags.
-     *
-     * @param mixed $tag,... List or array of tags.
+	 *
+	 * @param mixed $tag,... List or array of tags.
 	 */
 	public function remove_tag() {
 		if (is_array(func_get_arg(0))) {
@@ -245,11 +245,11 @@ class entity extends p_base {
 		$this->tags = array_values($this->tags);
 	}
 
-    /**
-     * Save the entity to the database.
-     *
-     * @return mixed Returns what the entity manager's save_entity function returns.
-     */
+	/**
+	 * Save the entity to the database.
+	 *
+	 * @return mixed Returns what the entity manager's save_entity function returns.
+	 */
 	public function save() {
 		global $config;
 		return $config->entity_manager->save_entity($this);

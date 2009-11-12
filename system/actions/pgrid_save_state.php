@@ -11,16 +11,16 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if (!gatekeeper()) {
-    $config->user_manager->punt_user("You don't have necessary permission.");
-    return;
+	$config->user_manager->punt_user("You don't have necessary permission.");
+	return;
 }
 $cur_state = $_REQUEST['state'];
 $cur_view = $_REQUEST['view'];
 if (isset($_SESSION['user'])) {
-    if (!is_array($_SESSION['user']->pgrid_saved_states))
-        $_SESSION['user']->pgrid_saved_states = array();
-    $_SESSION['user']->pgrid_saved_states[$cur_view] = $cur_state;
-    $_SESSION['user']->save();
+	if (!is_array($_SESSION['user']->pgrid_saved_states))
+		$_SESSION['user']->pgrid_saved_states = array();
+	$_SESSION['user']->pgrid_saved_states[$cur_view] = $cur_state;
+	$_SESSION['user']->save();
 }
 $page->override = true;
 

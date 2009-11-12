@@ -29,109 +29,109 @@ defined('P_RUN') or die('Direct access prohibited');
 			<depends>
 				<ability>com_configure/edit|com_configure/view</ability>
 			</depends>
-            <entry>
-                <name>Components</name>
-                <href>/configure/list</href>
-            </entry>
+			<entry>
+				<name>Components</name>
+				<href>/configure/list</href>
+			</entry>
 		</entry>
 		<entry>
 			<name>Customers</name>
 			<depends>
 				<ability>com_customer/managecustomers|com_customer/new</ability>
 			</depends>
-            <entry>
-                <name>Customers</name>
-                <href>/customer/listcustomers</href>
-                <depends>
-                    <ability>com_customer/managecustomers</ability>
-                </depends>
-            </entry>
-            <entry>
-                <name>New Customer</name>
-                <href>/customer/newcustomer</href>
-                <depends>
-                    <ability>com_customer/new</ability>
-                </depends>
-            </entry>
+			<entry>
+				<name>Customers</name>
+				<href>/customer/listcustomers</href>
+				<depends>
+					<ability>com_customer/managecustomers</ability>
+				</depends>
+			</entry>
+			<entry>
+				<name>New Customer</name>
+				<href>/customer/newcustomer</href>
+				<depends>
+					<ability>com_customer/new</ability>
+				</depends>
+			</entry>
 		</entry>
 		<entry>
 			<name>Log Manager</name>
 			<depends>
 				<ability>com_logger/view|com_logger/clear</ability>
 			</depends>
-            <entry>
-                <name>View</name>
-                <href>/logger/view</href>
-                <depends>
-                    <ability>com_logger/view</ability>
-                </depends>
-            </entry>
-            <entry>
-                <name>Clear</name>
-                <href>/logger/clear</href>
-                <depends>
-                    <ability>com_logger/clear</ability>
-                </depends>
-            </entry>
+			<entry>
+				<name>View</name>
+				<href>/logger/view</href>
+				<depends>
+					<ability>com_logger/view</ability>
+				</depends>
+			</entry>
+			<entry>
+				<name>Clear</name>
+				<href>/logger/clear</href>
+				<depends>
+					<ability>com_logger/clear</ability>
+				</depends>
+			</entry>
 		</entry>
 		<entry>
 			<name>Newsletter</name>
 			<depends>
 				<ability>com_newsletter/managemails|com_newsletter/send</ability>
 			</depends>
-            <entry>
-                <name>Mails Index</name>
-                <href>/newsletter/list</href>
-            </entry>
-            <entry>
-                <name>New Mail</name>
-                <href>/newsletter/new</href>
-            </entry>
+			<entry>
+				<name>Mails Index</name>
+				<href>/newsletter/list</href>
+			</entry>
+			<entry>
+				<name>New Mail</name>
+				<href>/newsletter/new</href>
+			</entry>
 		</entry>
 		<entry>
 			<name>User Manager</name>
 			<depends>
 				<ability>com_user/new|com_user/manage|com_user/newg|com_user/manageg</ability>
 			</depends>
-            <entry>
-                <name>Users</name>
-                <href>/user/manageusers</href>
-                <depends>
-                    <ability>com_user/manage</ability>
-                </depends>
-            </entry>
-            <entry>
-                <name>Groups</name>
-                <href>/user/managegroups</href>
-                <depends>
-                    <ability>com_user/manageg</ability>
-                </depends>
-            </entry>
-            <entry>
-                <name>New User</name>
-                <href>/user/newuser</href>
-                <depends>
-                    <ability>com_user/new</ability>
-                </depends>
-            </entry>
-            <entry>
-                <name>New Group</name>
-                <href>/user/newgroup</href>
-                <depends>
-                    <ability>com_user/newg</ability>
-                </depends>
-            </entry>
+			<entry>
+				<name>Users</name>
+				<href>/user/manageusers</href>
+				<depends>
+					<ability>com_user/manage</ability>
+				</depends>
+			</entry>
+			<entry>
+				<name>Groups</name>
+				<href>/user/managegroups</href>
+				<depends>
+					<ability>com_user/manageg</ability>
+				</depends>
+			</entry>
+			<entry>
+				<name>New User</name>
+				<href>/user/newuser</href>
+				<depends>
+					<ability>com_user/new</ability>
+				</depends>
+			</entry>
+			<entry>
+				<name>New Group</name>
+				<href>/user/newgroup</href>
+				<depends>
+					<ability>com_user/newg</ability>
+				</depends>
+			</entry>
 		</entry>
 		<entry>
 			<name>My Account</name>
-            <href>/user/edituser?id=me</href>
+			<href>/user/edituser?id=me</href>
 			<depends>
 				<ability>com_user/self</ability>
 			</depends>
 		</entry>
 		<entry>
 			<name>Logout</name>
-            <href>/user/logout</href>
+			<href>/user/logout</href>
 			<depends>
 				<ability />
 			</depends>

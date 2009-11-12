@@ -14,36 +14,36 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if (!function_exists('action')) {
-    /**
-     * Load and run an action.
-     *
-     * @param string $component The component in which the action resides.
-     * @param string $action The action to run.
-     * @return mixed The value returned by the action, or 'error_404' if it doesn't exist.
-     */
-    function action($component, $action) {
-        global $config, $page;
-        $action_file = ($component == 'system' ? $component : "components/$component")."/actions/$action.php";
-        $config->component = $component;
-        $config->action = $action;
-        unset($component);
-        unset($action);
-        if ( file_exists($action_file) ) {
-            /**
-             * Run the action's file.
-             */
-            return require($action_file);
-        } else {
-            return 'error_404';
-        }
-    }
+	/**
+	 * Load and run an action.
+	 *
+	 * @param string $component The component in which the action resides.
+	 * @param string $action The action to run.
+	 * @return mixed The value returned by the action, or 'error_404' if it doesn't exist.
+	 */
+	function action($component, $action) {
+		global $config, $page;
+		$action_file = ($component == 'system' ? $component : "components/$component")."/actions/$action.php";
+		$config->component = $component;
+		$config->action = $action;
+		unset($component);
+		unset($action);
+		if ( file_exists($action_file) ) {
+			/**
+			 * Run the action's file.
+			 */
+			return require($action_file);
+		} else {
+			return 'error_404';
+		}
+	}
 }
 
 if ( isset($config->ability_manager) ) {
-    /**
-     * The system/all ability let's the user perform any action on the system,
-     * regardless of their other abilities.
-     */
+	/**
+	 * The system/all ability let's the user perform any action on the system,
+	 * regardless of their other abilities.
+	 */
 	$config->ability_manager->add('system', 'all', 'All Abilities', 'Let user do anything, regardless of whether they have the ability.');
 }
 
@@ -52,37 +52,37 @@ if ( isset($config->ability_manager) ) {
  * security, you should consider replacing them.
  */
 if (!function_exists('clean_checkbox')) {
-    /**
-     * Cleans an HTML checkbox's name, so that it can be parsed correctly by
-     * PHP.
-     *
-     * @param string $name Name to clean.
-     * @return string The cleaned name.
-     */
+	/**
+	 * Cleans an HTML checkbox's name, so that it can be parsed correctly by
+	 * PHP.
+	 *
+	 * @param string $name Name to clean.
+	 * @return string The cleaned name.
+	 */
 	function clean_checkbox($name) {
 		return str_replace('.', 'dot', urlencode($name));
 	}
 }
 
 if (!function_exists('clean_filename')) {
-    /**
-     * Cleans a filename, so it doesn't refer to any parent directories.
-     *
-     * @param string $filename Filename to clean.
-     * @return string The cleaned filename.
-     */
+	/**
+	 * Cleans a filename, so it doesn't refer to any parent directories.
+	 *
+	 * @param string $filename Filename to clean.
+	 * @return string The cleaned filename.
+	 */
 	function clean_filename($filename) {
 		return str_replace('..', 'fail-danger-dont-use-hack-attempt', $filename);
 	}
 }
 
 if (!function_exists('is_clean_filename')) {
-    /**
-     * Checks whether a filename refers to any parent directories.
-     *
-     * @param string $filename Filename to check.
-     * @return bool
-     */
+	/**
+	 * Checks whether a filename refers to any parent directories.
+	 *
+	 * @param string $filename Filename to check.
+	 * @return bool
+	 */
 	function is_clean_filename($filename) {
 		if ( strpos($filename, '..') === false ) {
 			return true;
@@ -93,15 +93,15 @@ if (!function_exists('is_clean_filename')) {
 }
 
 if (!function_exists('display_error')) {
-    /**
-     * Causes the system to report an error to the user.
-     * 
-     * This function should be used instead of calling $page->error directly,
-     * because some admins may wish to log Pines errors, instead of
-     * displaying them.
-     *
-     * @param string $error_text Information to display to the user.
-     */
+	/**
+	 * Causes the system to report an error to the user.
+	 * 
+	 * This function should be used instead of calling $page->error directly,
+	 * because some admins may wish to log Pines errors, instead of
+	 * displaying them.
+	 *
+	 * @param string $error_text Information to display to the user.
+	 */
 	function display_error($error_text) {
 		global $page;
 		$page->error($error_text);
@@ -109,15 +109,15 @@ if (!function_exists('display_error')) {
 }
 
 if (!function_exists('display_notice')) {
-    /**
-     * Causes the system to report a notice to the user.
-     * 
-     * This function should be used instead of calling $page->notice directly,
-     * because some admins may wish to log Pines notices, instead of
-     * displaying them.
-     *
-     * @param string $notice_text Information to display to the user.
-     */
+	/**
+	 * Causes the system to report a notice to the user.
+	 * 
+	 * This function should be used instead of calling $page->notice directly,
+	 * because some admins may wish to log Pines notices, instead of
+	 * displaying them.
+	 *
+	 * @param string $notice_text Information to display to the user.
+	 */
 	function display_notice($notice_text) {
 		global $page;
 		$page->notice($notice_text);
@@ -142,8 +142,8 @@ if (!function_exists('display_notice')) {
  */
 function gatekeeper($ability = NULL, $user = NULL) {
 	global $config;
-    if (is_null($config->user_manager))
-        return true;
+	if (is_null($config->user_manager))
+		return true;
 	return $config->user_manager->gatekeeper($ability, $user);
 }
 
@@ -155,10 +155,10 @@ function gatekeeper($ability = NULL, $user = NULL) {
  */
 function pines_depend() {
 	global $config;
-    if (is_null($config->depend))
-        return true;
-    $args = func_get_args();
-    return call_user_func_array(array($config->depend, 'check'), $args);
+	if (is_null($config->depend))
+		return true;
+	$args = func_get_args();
+	return call_user_func_array(array($config->depend, 'check'), $args);
 }
 
 /**
@@ -169,10 +169,10 @@ function pines_depend() {
  */
 function pines_log() {
 	global $config;
-    if (is_null($config->log_manager))
-        return true;
-    $args = func_get_args();
-    return call_user_func_array(array($config->log_manager, 'log'), $args);
+	if (is_null($config->log_manager))
+		return true;
+	$args = func_get_args();
+	return call_user_func_array(array($config->log_manager, 'log'), $args);
 }
 
 /**
@@ -183,10 +183,10 @@ function pines_log() {
  */
 function pines_url() {
 	global $config;
-    if (is_null($config->template))
-        return null;
-    $args = func_get_args();
-    return call_user_func_array(array($config->template, 'url'), $args);
+	if (is_null($config->template))
+		return null;
+	$args = func_get_args();
+	return call_user_func_array(array($config->template, 'url'), $args);
 }
 
 ?>

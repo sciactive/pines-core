@@ -17,19 +17,19 @@ defined('P_RUN') or die('Direct access prohibited');
 
 // Check to see if the default icons are already included.
 if (!$GLOBALS['js_pgrid_default_icons_included']) {
-    if ($this->icons) $page->head("<link href=\"{$config->rela_location}system/css/jquery.pgrid.default.icons.css\" media=\"all\" rel=\"stylesheet\" type=\"text/css\" />\n");
-    $GLOBALS['js_pgrid_default_icons_included'] = true;
+	if ($this->icons) $page->head("<link href=\"{$config->rela_location}system/css/jquery.pgrid.default.icons.css\" media=\"all\" rel=\"stylesheet\" type=\"text/css\" />\n");
+	$GLOBALS['js_pgrid_default_icons_included'] = true;
 }
 // Check to see if pgrid is already included.
 if (!$GLOBALS['js_pgrid_included']) {
-    $page->head("<link href=\"{$config->rela_location}system/css/jquery.pgrid.default.css\" media=\"all\" rel=\"stylesheet\" type=\"text/css\" />\n");
-    $page->head("<script type=\"text/javascript\" src=\"{$config->rela_location}system/js/jquery.pgrid.js\"></script>\n");
-    $GLOBALS['js_pgrid_included'] = true;
+	$page->head("<link href=\"{$config->rela_location}system/css/jquery.pgrid.default.css\" media=\"all\" rel=\"stylesheet\" type=\"text/css\" />\n");
+	$page->head("<script type=\"text/javascript\" src=\"{$config->rela_location}system/js/jquery.pgrid.js\"></script>\n");
+	$GLOBALS['js_pgrid_included'] = true;
 }
 // Check to see if JSON is already included.
 if (!$GLOBALS['js_json_included']) {
-    $page->head("<script type=\"text/javascript\" src=\"{$config->rela_location}system/js/json2.js\"></script>\n");
-    $GLOBALS['js_json_included'] = true;
+	$page->head("<script type=\"text/javascript\" src=\"{$config->rela_location}system/js/json2.js\"></script>\n");
+	$GLOBALS['js_json_included'] = true;
 }
 
 ?>

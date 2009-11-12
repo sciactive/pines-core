@@ -13,8 +13,8 @@ A list of things to complete before the initial release of Pines:
 	(http://sawasc.sciactive.com/)
 +More log entries.
 +Possibly change structure to dirs (models, control, views) to
-    replace single files for MVC. (Use glob function to find files.)
+	replace single files for MVC. (Use glob function to find files.)
 +New templates / Improve Pines template. (Maybe use XSL instead of PHP.)
 +(2.0 Probably) Pines Entity Exchange (com_pex, for easily combining two
-    installation's entities, using hooks, effectively creating a DB mirror)
+	installation's entities, using hooks, effectively creating a DB mirror)
 --------------------------------------------------------------------------------

@@ -15,22 +15,22 @@ defined('P_RUN') or die('Direct access prohibited');
  * @package Pines
  */
 class menu extends p_base {
-    /**
-     * The menu's array of entries.
-     *
-     * @var array
-     */
+	/**
+	 * The menu's array of entries.
+	 *
+	 * @var array
+	 */
 	public $menu = array();
 
-    /**
-     * Add an item to or overwrite an entry in the menu.
-     *
-     * @param string $name The name of the entry.
-     * @param string $data The data of the entry. Usually this is the URL to which the entry will point.
-     * @param int $father The parent entry.
-     * @param int $id The ID of the entry. This should only be set if you are overwriting another entry.
-     * @return int The ID of the new entry.
-     */
+	/**
+	 * Add an item to or overwrite an entry in the menu.
+	 *
+	 * @param string $name The name of the entry.
+	 * @param string $data The data of the entry. Usually this is the URL to which the entry will point.
+	 * @param int $father The parent entry.
+	 * @param int $id The ID of the entry. This should only be set if you are overwriting another entry.
+	 * @return int The ID of the new entry.
+	 */
 	function add($name, $data = '#', $father = NULL, $id = NULL) {
 		if ( is_null($id) )
 			$id = count($this->menu);
@@ -40,18 +40,18 @@ class menu extends p_base {
 		return $id;
 	}
 
-    /**
-     * Renders the menu.
-     *
-     * @param array $top_container The containing element of the menu.
-     * @param array $top_element The element of each toplevel entry.
-     * @param array $sub_container The containing element of each sublevel entry in the menu.
-     * @param array $sub_element The element of each sublevel entry.
-     * @param string $link The link code for each entry. The text "#NAME#" and "#DATA#" will be replaced by the name and data of the entry respectively.
-     * @param string $post_code Any code which will be appended to the completed menu.
-     * @uses menu::render_item()
-     * @return string The rendered code.
-     */
+	/**
+	 * Renders the menu.
+	 *
+	 * @param array $top_container The containing element of the menu.
+	 * @param array $top_element The element of each toplevel entry.
+	 * @param array $sub_container The containing element of each sublevel entry in the menu.
+	 * @param array $sub_element The element of each sublevel entry.
+	 * @param string $link The link code for each entry. The text "#NAME#" and "#DATA#" will be replaced by the name and data of the entry respectively.
+	 * @param string $post_code Any code which will be appended to the completed menu.
+	 * @uses menu::render_item()
+	 * @return string The rendered code.
+	 */
 	function render($top_container = array('<ul class="dropdown dropdown-horizontal">', '</ul>'), $top_element = array('<li>', '</li>'), $sub_container = array('<ul>', '</ul>'), $sub_element = array('<li>', '</li>'), $link = '<a href="#DATA#">#NAME#</a>', $post_code = '<hr style="visibility: hidden; clear: both;" />') {
 		$return = '';
 		if ( empty($this->menu) ) return $return;
@@ -71,15 +71,15 @@ class menu extends p_base {
 		return $return;
 	}
 
-    /**
-     * Render an entry (and children) of the menu.
-     *
-     * @param int $id The entry's ID.
-     * @param array $sub_container The containing element of each entry.
-     * @param array $sub_element The element of each entry.
-     * @param string $link The link code for each entry. The text "#NAME#" and "#DATA#" will be replaced by the name and data of the entry respectively.
-     * @return string The rendered entry.
-     */
+	/**
+	 * Render an entry (and children) of the menu.
+	 *
+	 * @param int $id The entry's ID.
+	 * @param array $sub_container The containing element of each entry.
+	 * @param array $sub_element The element of each entry.
+	 * @param string $link The link code for each entry. The text "#NAME#" and "#DATA#" will be replaced by the name and data of the entry respectively.
+	 * @return string The rendered entry.
+	 */
 	function render_item($id, $sub_container, $sub_element, $link) {
 		$return = '';
 		foreach ($this->menu as $cur_id => $cur_item) {
@@ -97,11 +97,11 @@ class menu extends p_base {
 		return $return;
 	}
 
-    /**
-     * Find all the orphaned entries in the menu.
-     *
-     * @return array An array of entries.
-     */
+	/**
+	 * Find all the orphaned entries in the menu.
+	 *
+	 * @return array An array of entries.
+	 */
 	function orphans() {
 		$return = array();
 		foreach ($this->menu as $cur_id => $cur_item) {

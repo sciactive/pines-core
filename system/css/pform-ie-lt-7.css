@@ -1,19 +1,19 @@
 /* Required for IE 6 and lower. */
 .pform_twocol div.element {
-    width: 48%;
+	width: 48%;
 }
 .pform_twocol div.heading {
-    width: 100%;
+	width: 100%;
 }
 .pform_twocol div.buttons {
-    width: 550px;
+	width: 550px;
 }
 .pform_threecol div.element {
-    width: 32%;
+	width: 32%;
 }
 .pform_threecol div.heading {
-    width: 100%;
+	width: 100%;
 }
 .pform_threecol div.buttons {
-    width: 550px;
+	width: 550px;
 }

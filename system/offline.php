@@ -16,44 +16,44 @@ echo '<?xml version="1.0" encoding="UTF-8" standalone="no" ?>'; ?>
 
 <head>
 	<title><?php echo $config->option_title; ?></title>
-    <style type="text/css" media="all">
-        /* <![CDATA[ */
-        .wrapper {
-            margin: 3em;
-            font-family: sans;
-            font-size: 80%;
-        }
-        .wrapper fieldset {
-            border: 1px solid #040;
-            -moz-border-radius: 10px;
-        }
-        .wrapper legend {
-            padding: 0.5em 0.8em;
-            border: 2px solid #040;
-            color: #040;
-            font-size: 120%;
-            -moz-border-radius: 10px;
-        }
-        .wrapper label {
-            display: block;
-            text-align: right;
-            margin-right: 60%;
-        }
-        .wrapper input {
-            color: #040;
-        }
-        .wrapper .buttons {
-            text-align: right;
-        }
-        /* ]]> */
-    </style>
+	<style type="text/css" media="all">
+		/* <![CDATA[ */
+		.wrapper {
+			margin: 3em;
+			font-family: sans;
+			font-size: 80%;
+		}
+		.wrapper fieldset {
+			border: 1px solid #040;
+			-moz-border-radius: 10px;
+		}
+		.wrapper legend {
+			padding: 0.5em 0.8em;
+			border: 2px solid #040;
+			color: #040;
+			font-size: 120%;
+			-moz-border-radius: 10px;
+		}
+		.wrapper label {
+			display: block;
+			text-align: right;
+			margin-right: 60%;
+		}
+		.wrapper input {
+			color: #040;
+		}
+		.wrapper .buttons {
+			text-align: right;
+		}
+		/* ]]> */
+	</style>
 </head>
 <body>
 <div class="wrapper">
-    <fieldset>
-        <legend><?php echo $config->option_title; ?></legend>
-        <p><?php echo $config->offline_message; ?></p>
-    </fieldset>
+	<fieldset>
+		<legend><?php echo $config->option_title; ?></legend>
+		<p><?php echo $config->offline_message; ?></p>
+	</fieldset>
 </div>
 </body>
 </html>

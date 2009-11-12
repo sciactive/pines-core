@@ -48,16 +48,16 @@ define('P_INDEX', basename($_SERVER['SCRIPT_FILENAME']));
 
 // Strip magic quotes.
 if (get_magic_quotes_gpc()) {
-    pines_stripslashes_array_recursive($_GET);
-    pines_stripslashes_array_recursive($_POST);
-    pines_stripslashes_array_recursive($_REQUEST);
-    pines_stripslashes_array_recursive($_COOKIE);
+	pines_stripslashes_array_recursive($_GET);
+	pines_stripslashes_array_recursive($_POST);
+	pines_stripslashes_array_recursive($_REQUEST);
+	pines_stripslashes_array_recursive($_COOKIE);
 }
 
 // Load system classes.
 $temp_classes = pines_scandir("system/classes/");
 foreach ($temp_classes as $cur_class) {
-    include_once("system/classes/$cur_class");
+	include_once("system/classes/$cur_class");
 }
 unset($temp_classes);
 
@@ -68,8 +68,8 @@ unset($config_array);
 
 // Check the offline mode, and load the offline page if enabled.
 if ($config->offline_mode) {
-    include('system/offline.php');
-    exit;
+	include('system/offline.php');
+	exit;
 }
 
 /**
@@ -88,21 +88,21 @@ if ( file_exists("components/") ) {
 $config->all_components = array();
 if ( file_exists("components/") ) {
 	$config->all_components = pines_scandir("components/", 0, null, false);
-    foreach ($config->all_components as $cur_key => $cur_value) {
-        if (substr($cur_value, 0, 1) == '.')
-            $config->all_components[$cur_key] = substr($cur_value, 1);
-    }
+	foreach ($config->all_components as $cur_key => $cur_value) {
+		if (substr($cur_value, 0, 1) == '.')
+			$config->all_components[$cur_key] = substr($cur_value, 1);
+	}
 }
 
 // Load component classes.
 foreach ($config->components as $cur_component) {
-    if ( is_dir("components/$cur_component/classes/") ) {
-        $temp_classes = pines_scandir("components/$cur_component/classes/");
-        foreach ($temp_classes as $cur_class) {
-            include_once("components/$cur_component/classes/$cur_class");
-        }
-        unset($temp_classes);
-    }
+	if ( is_dir("components/$cur_component/classes/") ) {
+		$temp_classes = pines_scandir("components/$cur_component/classes/");
+		foreach ($temp_classes as $cur_class) {
+			include_once("components/$cur_component/classes/$cur_class");
+		}
+		unset($temp_classes);
+	}
 }
 
 // Now that all classes are loaded, we can start the session manager. This
@@ -117,12 +117,12 @@ $_SESSION['secret'] = rand();
 foreach ($config->components as $cur_component) {
 	if ( file_exists("components/$cur_component/configure.php") ) {
 		$config_array = include("components/$cur_component/configure.php");
-        if (is_array($config_array)) {
-            $config->$cur_component = new dynamic_config;
-            fill_object($config_array, $config->$cur_component);
-        }
-        unset($config_array);
-    }
+		if (is_array($config_array)) {
+			$config->$cur_component = new dynamic_config;
+			fill_object($config_array, $config->$cur_component);
+		}
+		unset($config_array);
+	}
 }
 
 // Load the configuration for our components. This shouldn't require any sort of
@@ -171,8 +171,8 @@ if ( empty($config->request_action) ) $config->request_action = 'default';
 
 // Call the action specified.
 if ( action($config->request_component, $config->request_action) === 'error_404' ) {
-    header('HTTP/1.0 404 Not Found', true, 404);
-    $error_page = new module('system', 'error_404', 'content');
+	header('HTTP/1.0 404 Not Found', true, 404);
+	$error_page = new module('system', 'error_404', 'content');
 }
 
 // Load the final display stuff. This includes menu entries.
@@ -207,13 +207,13 @@ if ( isset($config->db_manager) )
  * @return bool True on success, false on failure.
  */
 function fill_object($config_array, &$object) {
-    if (!is_array($config_array)) return false;
-    foreach ($config_array as $cur_var) {
-        $name = $cur_var['name'];
-        $value = $cur_var['value'];
-        $object->$name = $value;
-    }
-    return true;
+	if (!is_array($config_array)) return false;
+	foreach ($config_array as $cur_var) {
+		$name = $cur_var['name'];
+		$value = $cur_var['value'];
+		$object->$name = $value;
+	}
+	return true;
 }
 
 /**
@@ -229,16 +229,16 @@ function fill_object($config_array, &$object) {
  * @return array|false The array of filenames on success, false on failure.
  */
 function pines_scandir($directory, $sorting_order = 0, $context = null, $hide_dot_files = true) {
-    if (is_null($context)) {
-        if (!($return = scandir($directory, $sorting_order))) return false;
-    } else {
-        if (!($return = scandir($directory, $sorting_order, $context))) return false;
-    }
+	if (is_null($context)) {
+		if (!($return = scandir($directory, $sorting_order))) return false;
+	} else {
+		if (!($return = scandir($directory, $sorting_order, $context))) return false;
+	}
 	foreach ($return as $cur_key => $cur_name) {
-        if ( (stripos($cur_name, '.') === 0 && $hide_dot_files) || (in_array($cur_name, array('index.html', '.', '..', '.svn'))) )
+		if ( (stripos($cur_name, '.') === 0 && $hide_dot_files) || (in_array($cur_name, array('index.html', '.', '..', '.svn'))) )
 			unset($return[$cur_key]);
 	}
-    return array_values($return);
+	return array_values($return);
 }
 
 /**
@@ -250,14 +250,14 @@ function pines_scandir($directory, $sorting_order = 0, $context = null, $hide_do
  * @return bool True on success, false on failure.
  */
 function pines_stripslashes_array_recursive(&$array) {
-    if (!is_array($array)) return false;
-    foreach ($array as &$cur_item) {
-        if (is_array($cur_item)) {
-            pines_stripslashes_array_recursive($cur_item);
-        } elseif (is_string($cur_item)) {
-            $cur_item = stripslashes($cur_item);
-        }
-    }
-    return true;
+	if (!is_array($array)) return false;
+	foreach ($array as &$cur_item) {
+		if (is_array($cur_item)) {
+			pines_stripslashes_array_recursive($cur_item);
+		} elseif (is_string($cur_item)) {
+			$cur_item = stripslashes($cur_item);
+		}
+	}
+	return true;
 }
 ?>
