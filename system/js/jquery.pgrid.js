@@ -8,11 +8,123 @@
  */
 
 (function($) {
+	$.fn.pgrid_add = function(rows) {
+		this.each(function(){
+			if (!this.pines_grid)
+				return;
+			var pgrid = this.pines_grid;
+			$.each(rows, function(){
+				var cur_row = this;
+				pgrid.find("tbody tr.ui-pgrid-table-row-spacer").before(
+					$("<tr />")
+					.attr("title", cur_row.key)
+					.addClass(cur_row.classes)
+					.each(function(){
+						var this_row = $(this);
+						$.each(cur_row.values, function(){
+							this_row.append($("<td>"+this+"</td>"));
+						});
+						pgrid.init_rows(this_row);
+					})
+				);
+			});
+			pgrid.do_sort(false, true);
+			pgrid.do_filter(false, true);
+			pgrid.paginate(true);
+			pgrid.make_page_buttons();
+			pgrid.update_selected();
+		});
+		return this;
+	};
+	$.fn.pgrid_delete = function(keysorrows) {
+		this.each(function(){
+			if (!this.pines_grid)
+				return;
+			var pgrid = this.pines_grid;
+			if (keysorrows.jquery) {
+				keysorrows.each(function(){
+					pgrid.mark_for_delete_recursively($(this));
+				});
+			} else {
+				$.each(keysorrows, function(){
+					var cur_keyorrow = this;
+					if (typeof cur_keyorrow == "object") {
+						pgrid.mark_for_delete_recursively($(this));
+					} else {
+						pgrid.find("tbody tr[title="+cur_keyorrow+"]:not(.ui-pgrid-table-row-spacer)").each(function(){
+							pgrid.mark_for_delete_recursively($(this));
+						});
+					}
+
+				});
+			}
+			pgrid.delete_marked();
+		});
+		return this;
+	};
+	$.fn.pgrid_export_rows = function(rows) {
+		var return_array = [];
+		rows.each(function(){
+			var cur_row = $(this);
+			var value_array = [];
+			cur_row.children("td:not(.ui-pgrid-table-expander, .ui-pgrid-table-cell-scrollspace)").each(function(){
+				value_array = $.merge(value_array, [$(this).text()]);
+			});
+			return_array = $.merge(return_array, [{
+				key: cur_row.attr("title"),
+				classes: cur_row.attr("class").replace(/ui-[a-z0-9 -]+/, ""),
+				values: value_array
+			}]);
+		});
+		return return_array;
+	};
+	$.fn.pgrid_get_all_rows = function() {
+		var return_rows = null;
+		this.each(function(){
+			if (!this.pines_grid)
+				return;
+			var pgrid = this.pines_grid;
+			if (return_rows) {
+				return_rows = return_rows.add(pgrid.find("tbody tr:not(.ui-pgrid-table-row-spacer)"));
+			} else {
+				return_rows = pgrid.find("tbody tr:not(.ui-pgrid-table-row-spacer)");
+			}
+		});
+		return return_rows;
+	};
+	$.fn.pgrid_get_selected_rows = function() {
+		var return_rows = null;
+		this.each(function(){
+			if (!this.pines_grid)
+				return;
+			var pgrid = this.pines_grid;
+			if (return_rows) {
+				return_rows = return_rows.add(pgrid.find("tbody tr.ui-pgrid-table-row-selected"));
+			} else {
+				return_rows = pgrid.find("tbody tr.ui-pgrid-table-row-selected");
+			}
+		});
+		return return_rows;
+	};
+	$.fn.pgrid_export_state = function() {
+		var pgrid = this.get(0).pines_grid;
+		if (pgrid)
+			return pgrid.export_state();
+		return false;
+	};
+	$.fn.pgrid_import_state = function(state) {
+		this.each(function(){
+			if (!this.pines_grid) return;
+			this.pines_grid.import_state(state);
+		});
+		return this;
+	};
+
 	$.fn.pgrid = function(options) {
 		// Build main options before element iteration.
 		var opts = $.extend({}, $.fn.pgrid.defaults, options);
 
-		// Iterate and pgridify each matched element.
+		// Iterate and gridify each matched element.
 		var all_elements = this;
 		all_elements.each(function() {
 			var pgrid = $(this);
@@ -76,11 +188,6 @@
 				};
 			};
 
-			// User accessable alias.
-			all_elements.export_state = function() {
-				return pgrid.export_state();
-			};
-
 			// Return the grid to a provided state.
 			pgrid.import_state = function(state) {
 				if (typeof state.pgrid_page !== undefined)
@@ -105,11 +212,6 @@
 				if (pgrid.pgrid_footer && pgrid.pgrid_paginate) {
 					footer.find(".ui-pgrid-footer-pager-container span:first-child input").val(pgrid.pgrid_perpage);
 				}
-			};
-
-			// User accessable alias.
-			all_elements.import_state = function(state) {
-				return pgrid.import_state(state);
 			};
 
 			// When the grid's state changes, call the provided function, passing the current state.
@@ -194,7 +296,7 @@
 				jq_rows.each(function() {
 					var cur_row = $(this);
 					cur_row.siblings("."+cur_row.attr("title")).addClass("ui-pgrid-table-row-hidden").each(function(){
-						// And its descendants, if its a parent.
+						// And its descendants, if it's a parent.
 						var this_row = $(this);
 						if (this_row.hasClass("parent"))
 							pgrid.hide_children(this_row);
@@ -214,6 +316,33 @@
 						});
 					}
 				});
+			};
+
+			pgrid.mark_for_delete_recursively = function(jq_rows) {
+				// For each row, mark its children.
+				jq_rows.each(function() {
+					var cur_row = $(this);
+					cur_row.siblings("."+cur_row.attr("title")).each(function(){
+						// And its descendants, if it's a parent.
+						var this_row = $(this);
+						if (this_row.hasClass("parent")) {
+							pgrid.mark_for_delete_recursively(this_row);
+						} else {
+							this_row.addClass("ui-pgrid-table-row-marked-for-deletion");
+						}
+					});
+					// Then itself.
+					cur_row.addClass("ui-pgrid-table-row-marked-for-deletion");
+				});
+			};
+
+			pgrid.delete_marked = function() {
+				pgrid.find("tbody tr.ui-pgrid-table-row-marked-for-deletion").remove();
+				pgrid.do_sort(false, true);
+				pgrid.do_filter(false, true);
+				pgrid.paginate(true);
+				pgrid.make_page_buttons();
+				pgrid.update_selected();
 			};
 
 			pgrid.paginate = function(loading) {
@@ -252,7 +381,8 @@
 			pgrid.do_filter = function(filter, loading) {
 				// Filter if filtering is allowed, or if this is an initial filter.
 				if (pgrid.pgrid_filtering || loading) {
-					pgrid.pgrid_filter = filter;
+					if (typeof filter == "string")
+						pgrid.pgrid_filter = filter;
 					if (pgrid.pgrid_filter.length > 0) {
 						var filter_arr = pgrid.pgrid_filter.toLowerCase().split(" ");
 						var i;
@@ -323,7 +453,7 @@
 			pgrid.do_sort = function(column_class, loading) {
 				if (pgrid.pgrid_sortable) {
 					// If they click the header again, change to descending order.
-					if (pgrid.pgrid_sort_col == column_class) {
+					if (pgrid.pgrid_sort_col == column_class && !loading) {
 						if (pgrid.pgrid_sort_ord == "asc") {
 							pgrid.pgrid_sort_ord = "desc";
 						} else {
@@ -398,7 +528,9 @@
 			pgrid.update_selected = function() {
 				if (pgrid.pgrid_select) {
 					// Deselect any disabled or incorrect rows. They shouldn't be selected.
-					pgrid.find("tbody tr.ui-helper-hidden.ui-pgrid-table-row-selected, tbody tr.ui-pgrid-table-row-spacer.ui-pgrid-table-row-selected").removeClass("ui-pgrid-table-row-selected").children(":not(.ui-pgrid-table-cell-scrollspace)").removeClass("ui-state-active");
+					pgrid.find("tbody tr.ui-helper-hidden.ui-pgrid-table-row-selected, tbody tr.ui-pgrid-table-row-spacer.ui-pgrid-table-row-selected").removeClass("ui-pgrid-table-row-selected").each(function(){
+						$(this).children(":not(.ui-pgrid-table-cell-scrollspace)").removeClass("ui-state-active");
+					});
 
 					// Update the table footer.
 					if (pgrid.pgrid_footer && pgrid.pgrid_count) {
@@ -443,6 +575,106 @@
 				}
 			};
 
+			pgrid.init_rows = function(jq_rows) {
+				// Add an expander and scrollspace column to the rows, add hover events, and give child rows indentation.
+				jq_rows.each(function(){
+					var cur_row = $(this);
+					if (cur_row.hasClass("parent")) {
+						var cur_left_padding = parseInt(cur_row.children("td:first-child").css("padding-left"));
+						cur_row.siblings("."+cur_row.attr("title"))
+						.children() //("td:first-child")
+						.css("padding-left", (cur_left_padding+10)+"px");
+						//.slice(0, -1)
+						//.prepend("<span style=\"font-family: Arial, sans-serif; font-size: 85%; font-weight: lighter; vertical-align: top;\">├ </span>")
+						//.end().slice(-1)
+						//.prepend("<span style=\"font-family: Arial, sans-serif; font-size: 85%; font-weight: lighter; vertical-align: top;\">└ </span>");
+					}
+					cur_row.prepend("<td class=\"ui-pgrid-table-expander\"></td>")
+					.append("<td class=\"ui-pgrid-table-cell-scrollspace\"></td>");
+					// Add some coloring when hovering over rows.
+					if (pgrid.pgrid_row_hover_effect) {
+						// Can't use "hover" because of a bug in Firefox when the mouse moves onto a scrollbar.
+						cur_row.mouseover(function(){
+							cur_row.children(":not(.ui-pgrid-table-cell-scrollspace)").addClass("ui-state-hover");
+						}).mouseout(function(){
+							cur_row.children(":not(.ui-pgrid-table-cell-scrollspace)").removeClass("ui-state-hover");
+						});
+					}
+					// Bind to click for selecting records. Double click for double click action.
+					if (pgrid.pgrid_select) {
+						cur_row.children(":not(.ui-pgrid-table-expander, .ui-pgrid-table-cell-scrollspace)").click(function(e){
+							var clicked_row = $(this).parent();
+							if (!pgrid.pgrid_multi_select || (!e.ctrlKey && !e.shiftKey)) {
+								clicked_row.siblings().removeClass("ui-pgrid-table-row-selected").children(":not(.ui-pgrid-table-cell-scrollspace)").removeClass("ui-state-active");
+							} else if (e.shiftKey) {
+								var cur_row = clicked_row;
+								while (cur_row.prev().length > 0 && !cur_row.prev().hasClass("ui-pgrid-table-row-selected")) {
+									cur_row = cur_row.prev();
+									cur_row.addClass("ui-pgrid-table-row-selected").children(":not(.ui-pgrid-table-cell-scrollspace)").addClass("ui-state-active");
+								}
+							}
+							if (e.ctrlKey) {
+								clicked_row.toggleClass("ui-pgrid-table-row-selected").children(":not(.ui-pgrid-table-cell-scrollspace)").toggleClass("ui-state-active");
+							} else {
+								clicked_row.addClass("ui-pgrid-table-row-selected").children(":not(.ui-pgrid-table-cell-scrollspace)").addClass("ui-state-active");
+							}
+							pgrid.update_selected();
+						}).dblclick(function(e){
+							$(this).parent().addClass("ui-pgrid-table-row-selected").children(":not(.ui-pgrid-table-cell-scrollspace)").addClass("ui-state-active");
+							if (pgrid.pgrid_double_click)
+								pgrid.pgrid_double_click(e, pgrid.find("tbody tr.ui-pgrid-table-row-selected"));
+							if (pgrid.pgrid_double_click_tb)
+								pgrid.pgrid_double_click_tb();
+						});
+						// Prevent the browser from selecting text if the user is holding a modifier key.
+						cur_row.mousedown(function(e){
+							if (e.ctrlKey || e.shiftKey) {
+								return false;
+							}
+							return true;
+						});
+					}
+					// Get table cells ready.
+					cur_row.find("td:not(.ui-pgrid-table-cell-scrollspace)").each(function(){
+						var cur_cell = $(this);
+						// Add some styling.
+						cur_cell.addClass("ui-state-default");
+
+						// Wrap cell contents in a div, so we can resize and sort them correctly.
+						if (!cur_cell.hasClass("ui-pgrid-table-expander")) {
+							// Calculate the current column number. Don't need to add 1 because of the expander column.
+							var cur_col = cur_cell.prevAll().length;
+							// Wrap the contents and add the column class to the cell.
+							cur_cell.wrapInner($("<div />").addClass("ui-pgrid-table-cell-text")).addClass("col_"+cur_col);
+							// If this table is resizable, we need its cells to have a width of 1px;
+							if (pgrid.pgrid_resize_cols) {
+								cur_cell.children(".ui-pgrid-table-cell-text").addClass("ui-pgrid-table-sized-cell");
+							}
+						}
+					});
+					if (cur_row.hasClass("child")) {
+						// Hide children.
+						cur_row.addClass("ui-pgrid-table-row-hidden");
+					}
+					// Bind to expander's click to toggle its children.
+					if (cur_row.hasClass("parent")) {
+						cur_row.children("td.ui-pgrid-table-expander").append($("<span />").addClass("ui-icon ui-icon-triangle-1-e")).click(function(){
+							var cur_working_row = $(this).parent();
+							if (cur_working_row.hasClass("ui-pgrid-table-row-expanded")) {
+								cur_working_row.removeClass("ui-pgrid-table-row-expanded");
+								$(this).children(".ui-icon").removeClass("ui-icon-triangle-1-s").addClass("ui-icon-triangle-1-e");
+								pgrid.hide_children(cur_working_row);
+							} else {
+								cur_working_row.addClass("ui-pgrid-table-row-expanded");
+								$(this).children(".ui-icon").removeClass("ui-icon-triangle-1-e").addClass("ui-icon-triangle-1-s");
+								pgrid.show_children(cur_working_row);
+							}
+							pgrid.do_stripes();
+						});
+					}
+				});
+			};
+
 			// Add the pgrid class to the container.
 			pgrid.pgrid_widget.addClass("ui-pgrid ui-widget ui-widget-content ui-corner-all");
 			// And the table container.
@@ -482,86 +714,10 @@
 				});
 			});
 
-			// Add an expander and scrollspace column to the header.
-			pgrid.find("thead tr").addClass("ui-widget-header").each(function(){
-				$(this).prepend($("<th class=\"ui-pgrid-table-expander\"><div style=\"width: 16px; visibility: hidden;\">+</div></th>").click(function(e){
-					// Show the header selector.
-					pgrid.pgrid_header_select.css({
-						left: (e.pageX-5),
-						top: (e.pageY-5)
-					});
-					pgrid.pgrid_header_select.fadeIn("fast");
-				}).mouseover(function(){
-					$(this).addClass("ui-icon ui-icon-triangle-1-s");
-				}).mouseout(function(){
-					$(this).removeClass("ui-icon").removeClass("ui-icon-triangle-1-s");
-				})).append("<th class=\"ui-pgrid-table-cell-scrollspace\"><div style=\"width: 16px; visibility: hidden;\">+</div></th>")
-			;
-			});
-
-			// Add an expander and scrollspace column to the rows, add hover events, and give child rows indentation.
-			pgrid.find("tbody tr").each(function(){
-				if ($(this).hasClass("parent")) {
-					var cur_left_padding = parseInt($(this).children("td:first-child").css("padding-left"));
-					$(this).siblings("."+$(this).attr("title"))
-					.children() //("td:first-child")
-					.css("padding-left", (cur_left_padding+10)+"px");
-				//.slice(0, -1)
-				//.prepend("<span style=\"font-family: Arial, sans-serif; font-size: 85%; font-weight: lighter; vertical-align: top;\">├ </span>")
-				//.end().slice(-1)
-				//.prepend("<span style=\"font-family: Arial, sans-serif; font-size: 85%; font-weight: lighter; vertical-align: top;\">└ </span>");
-				}
-				$(this).prepend("<td class=\"ui-pgrid-table-expander\"></td>")
-				.append("<td class=\"ui-pgrid-table-cell-scrollspace\"></td>");
-				// Add some coloring when hovering over rows.
-				if (pgrid.pgrid_row_hover_effect) {
-					// Can't use "hover" because of a bug in Firefox when the mouse moves onto a scrollbar.
-					$(this).mouseover(function(){
-						$(this).children(":not(.ui-pgrid-table-cell-scrollspace)").addClass("ui-state-hover");
-					}).mouseout(function(){
-						$(this).children(":not(.ui-pgrid-table-cell-scrollspace)").removeClass("ui-state-hover");
-					});
-				}
-				// Bind to click for selecting records. Double click for double click action.
-				if (pgrid.pgrid_select) {
-					$(this).children(":not(.ui-pgrid-table-expander, .ui-pgrid-table-cell-scrollspace)").click(function(e){
-						var clicked_row = $(this).parent();
-						if (!pgrid.pgrid_multi_select || (!e.ctrlKey && !e.shiftKey)) {
-							clicked_row.siblings().removeClass("ui-pgrid-table-row-selected").children(":not(.ui-pgrid-table-cell-scrollspace)").removeClass("ui-state-active");
-						} else if (e.shiftKey) {
-							var cur_row = clicked_row;
-							while (cur_row.prev().length > 0 && !cur_row.prev().hasClass("ui-pgrid-table-row-selected")) {
-								cur_row = cur_row.prev();
-								cur_row.addClass("ui-pgrid-table-row-selected").children(":not(.ui-pgrid-table-cell-scrollspace)").addClass("ui-state-active");
-							}
-						}
-						if (e.ctrlKey) {
-							clicked_row.toggleClass("ui-pgrid-table-row-selected").children(":not(.ui-pgrid-table-cell-scrollspace)").toggleClass("ui-state-active");
-						} else {
-							clicked_row.addClass("ui-pgrid-table-row-selected").children(":not(.ui-pgrid-table-cell-scrollspace)").addClass("ui-state-active");
-						}
-						pgrid.update_selected();
-					}).dblclick(function(e){
-						$(this).parent().addClass("ui-pgrid-table-row-selected").children(":not(.ui-pgrid-table-cell-scrollspace)").addClass("ui-state-active");
-						if (pgrid.pgrid_double_click)
-							pgrid.pgrid_double_click(e, pgrid.find("tbody tr.ui-pgrid-table-row-selected"));
-						if (pgrid.pgrid_double_click_tb)
-							pgrid.pgrid_double_click_tb();
-					});
-					// Prevent the browser from selecting text if the user is holding a modifier key.
-					$(this).mousedown(function(e){
-						if (e.ctrlKey || e.shiftKey) {
-							return false;
-						}
-						return true;
-					});
-				}
-			});
-
 			// Wrap header contents in a div and provide a resizer.
 			pgrid.find("thead tr th:not(.ui-pgrid-table-expander, .ui-pgrid-table-cell-scrollspace)").each(function(){
 				// Calculate the current column number.
-				var cur_col = $(this).prevAll().length;
+				var cur_col = $(this).prevAll().length + 1;
 				var resizing_header = false;
 				var resizing_tempX = 0;
 				var resizing_cur_bar;
@@ -622,24 +778,24 @@
 				}
 			});
 
-			// Get table cells ready.
-			pgrid.find("tbody td:not(.ui-pgrid-table-cell-scrollspace)").each(function(){
-				var cur_cell = $(this);
-				// Add some styling.
-				cur_cell.addClass("ui-state-default");
-
-				// Wrap cell contents in a div, so we can resize and sort them correctly.
-				if (!cur_cell.hasClass("ui-pgrid-table-expander")) {
-					// Calculate the current column number.
-					var cur_col = cur_cell.prevAll().length;
-					// Wrap the contents and add the column class to the cell.
-					cur_cell.wrapInner($("<div />").addClass("ui-pgrid-table-cell-text-")).addClass("col_"+cur_col);
-					// If this table is resizable, we need its cells to have a width of 1px;
-					if (pgrid.pgrid_resize_cols) {
-						cur_cell.children(".ui-pgrid-table-cell-text-").addClass("ui-pgrid-table-sized-cell");
-					}
-				}
+			// Add an expander and scrollspace column to the header.
+			pgrid.find("thead tr").addClass("ui-widget-header").each(function(){
+				$(this).prepend($("<th class=\"ui-pgrid-table-expander\"><div style=\"width: 16px; visibility: hidden;\">+</div></th>").click(function(e){
+					// Show the header selector.
+					pgrid.pgrid_header_select.css({
+						left: (e.pageX-5),
+						top: (e.pageY-5)
+					});
+					pgrid.pgrid_header_select.fadeIn("fast");
+				}).mouseover(function(){
+					$(this).addClass("ui-icon ui-icon-triangle-1-s");
+				}).mouseout(function(){
+					$(this).removeClass("ui-icon").removeClass("ui-icon-triangle-1-s");
+				})).append("<th class=\"ui-pgrid-table-cell-scrollspace\"><div style=\"width: 16px; visibility: hidden;\">+</div></th>");
 			});
+
+			// Initialize the rows.
+			pgrid.init_rows(pgrid.find("tbody tr"));
 
 			// Now that the column classes have been assigned and hiding/showing is done,
 			// we can hide the default hidden columns.
@@ -647,22 +803,6 @@
 			// Now that it's ready, insert the header selector div in the container.
 			pgrid.pgrid_widget.append(pgrid.pgrid_header_select);
 
-			// Hide child entries.
-			pgrid.find("tbody tr.child").addClass("ui-pgrid-table-row-hidden");
-			// Bind to expander's click to toggle its children.
-			pgrid.find("tbody tr.parent td.ui-pgrid-table-expander").append($("<span />").addClass("ui-icon ui-icon-triangle-1-e")).click(function(){
-				var cur_row = $(this).parent();
-				if (cur_row.hasClass("ui-pgrid-table-row-expanded")) {
-					cur_row.removeClass("ui-pgrid-table-row-expanded");
-					$(this).children(".ui-icon").removeClass("ui-icon-triangle-1-s").addClass("ui-icon-triangle-1-e");
-					pgrid.hide_children(cur_row);
-				} else {
-					cur_row.addClass("ui-pgrid-table-row-expanded");
-					$(this).children(".ui-icon").removeClass("ui-icon-triangle-1-e").addClass("ui-icon-triangle-1-s");
-					pgrid.show_children(cur_row);
-				}
-				pgrid.do_stripes();
-			});
 
 			// This is used to keep the rows from being sized to fill the rest of the table.
 			pgrid.children("tbody").append($("<tr><td></td></tr>").addClass("ui-pgrid-table-row-spacer"));
@@ -689,8 +829,18 @@
 								return false;
 							}
 							if (val.confirm) {
-								if (!confirm("Are you sure you want to perform the operation \""+val.text+"\" on the "+selected_rows.length+" currently selected item(s)?")) {
-									return false;
+								if (val.return_all_rows) {
+									if (!confirm("Are you sure you want to perform the operation \""+val.text+"\" on all items?")) {
+										return false;
+									}
+								} else if (selected_rows.length == 0) {
+									if (!confirm("Are you sure you want to perform the operation \""+val.text+"\"?")) {
+										return false;
+									}
+								} else {
+									if (!confirm("Are you sure you want to perform the operation \""+val.text+"\" on the "+selected_rows.length+" currently selected item(s)?")) {
+										return false;
+									}
 								}
 							}
 							if (val.select_all) {
@@ -928,6 +1078,8 @@
 				}
 			}
 
+			// Save the pgrid object in the DOM, so we can access it.
+			this.pines_grid = pgrid;
 		});
 
 		return all_elements;
