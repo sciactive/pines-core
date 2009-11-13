@@ -176,11 +176,14 @@
 							$(this).append($("<button>"+(cur_page+1)+"</button>").addClass("ui-state-default ui-corner-all").click(function(){
 								pgrid.pagenum(parseInt($(this).text()) - 1);
 								return false;
-							}).mouseover(function(){
-								$(this).addClass("ui-state-hover");
-							}).mouseout(function(){
-								$(this).removeClass("ui-state-hover");
-							}));
+							}).hover(
+								function(){
+									$(this).addClass("ui-state-hover");
+								},
+								function(){
+									$(this).removeClass("ui-state-hover");
+								}
+							));
 						}
 					});
 				}
@@ -512,10 +515,10 @@
 				.append("<td class=\"ui-pgrid-table-cell-scrollspace\"></td>");
 				// Add some coloring when hovering over rows.
 				if (pgrid.pgrid_row_hover_effect) {
-					$(this).mousemove(function(){
+					// Can't use "hover" because of a bug in Firefox when the mouse moves onto a scrollbar.
+					$(this).mouseover(function(){
 						$(this).children(":not(.ui-pgrid-table-cell-scrollspace)").addClass("ui-state-hover");
-					})
-					.mouseout(function(){
+					}).mouseout(function(){
 						$(this).children(":not(.ui-pgrid-table-cell-scrollspace)").removeClass("ui-state-hover");
 					});
 				}
@@ -756,11 +759,14 @@
 						}).mousedown(function(){
 							// Prevent text selection;
 							return false;
-						}).mouseover(function(e){
-							$(this).addClass("ui-state-hover");
-						}).mouseout(function(){
-							$(this).removeClass("ui-state-hover");
-						});
+						}).hover(
+							function(e){
+								$(this).addClass("ui-state-hover");
+							},
+							function(){
+								$(this).removeClass("ui-state-hover");
+							}
+						);
 						if (val.double_click) {
 							pgrid.pgrid_double_click_tb = function() {
 								cur_button.click();
@@ -802,12 +808,14 @@
 								).append(
 								$("<button>X</button>").addClass("ui-state-default ui-corner-all").click(function(){
 									$(this).prev("input").val("").keyup().focus();
-								}).mouseover(function(){
-									$(this).addClass("ui-state-hover");
-								}).mouseout(function(){
-									$(this).removeClass("ui-state-hover");
-								})
-								));
+								}).hover(
+									function(){
+										$(this).addClass("ui-state-hover");
+									},
+									function(){
+										$(this).removeClass("ui-state-hover");
+									}
+								)));
 						})
 						);
 				}
@@ -852,33 +860,45 @@
 								).append(" "));
 							$(this).append($("<button>&lt;&lt; Start</button>").addClass("ui-state-default ui-corner-all").click(function(){
 								pgrid.pagestart();
-							}).mouseover(function(){
-								$(this).addClass("ui-state-hover");
-							}).mouseout(function(){
-								$(this).removeClass("ui-state-hover");
-							}));
+							}).hover(
+								function(){
+									$(this).addClass("ui-state-hover");
+								},
+								function(){
+									$(this).removeClass("ui-state-hover");
+								}
+							));
 							$(this).append($("<button>&lt; Prev</button>").addClass("ui-state-default ui-corner-all").click(function(){
 								pgrid.pageprev();
-							}).mouseover(function(){
-								$(this).addClass("ui-state-hover");
-							}).mouseout(function(){
-								$(this).removeClass("ui-state-hover");
-							}));
+							}).hover(
+								function(){
+									$(this).addClass("ui-state-hover");
+								},
+								function(){
+									$(this).removeClass("ui-state-hover");
+								}
+							));
 							$(this).append($("<div />").addClass("ui-pgrid-footer-pager-button-container"));
 							$(this).append($("<button>Next &gt;</button>").addClass("ui-state-default ui-corner-all").click(function(){
 								pgrid.pagenext();
-							}).mouseover(function(){
-								$(this).addClass("ui-state-hover");
-							}).mouseout(function(){
-								$(this).removeClass("ui-state-hover");
-							}));
+							}).hover(
+								function(){
+									$(this).addClass("ui-state-hover");
+								},
+								function(){
+									$(this).removeClass("ui-state-hover");
+								}
+							));
 							$(this).append($("<button>End &gt;&gt;</button>").addClass("ui-state-default ui-corner-all").click(function(){
 								pgrid.pageend();
-							}).mouseover(function(){
-								$(this).addClass("ui-state-hover");
-							}).mouseout(function(){
-								$(this).removeClass("ui-state-hover");
-							}));
+							}).hover(
+								function(){
+									$(this).addClass("ui-state-hover");
+								},
+								function(){
+									$(this).removeClass("ui-state-hover");
+								}
+							));
 							$(this).append($("<span> Page <span class=\"page_number\">1</span> of <span class=\"page_total\">1</span></span>"));
 						})
 						);
