@@ -22,7 +22,7 @@
 ----------------------------------*/
 .ui-pgrid .ui-pgrid-header-select {
 	float: left;
-	position: fixed;
+	position: absolute;
 	display: none;
 	padding: 3px;
 }

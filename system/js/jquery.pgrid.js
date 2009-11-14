@@ -13,7 +13,7 @@
 			if (!this.pines_grid)
 				return;
 			var pgrid = this.pines_grid;
-			var new_rows = null;
+			var new_rows = false;
 			$.each(rows, function(){
 				var cur_row = this;
 				var jq_row = $("<tr />").attr("title", cur_row.key).addClass(cur_row.classes).each(function(){
@@ -33,6 +33,7 @@
 			// The rows need to be initialized after they've all been added, for child indentation.
 			pgrid.init_rows(new_rows);
 
+			pgrid.do_col_hiding(true);
 			pgrid.do_sort(false, true);
 			pgrid.do_filter(false, true);
 			pgrid.paginate(true);
@@ -84,7 +85,7 @@
 		return return_array;
 	};
 	$.fn.pgrid_get_all_rows = function() {
-		var return_rows = null;
+		var return_rows = false;
 		this.each(function(){
 			if (!this.pines_grid.jquery)
 				return;
@@ -98,7 +99,7 @@
 		return return_rows;
 	};
 	$.fn.pgrid_get_selected_rows = function() {
-		var return_rows = null;
+		var return_rows = false;
 		this.each(function(){
 			if (!this.pines_grid.jquery)
 				return;
@@ -593,6 +594,7 @@
 			};
 
 			pgrid.init_rows = function(jq_rows) {
+				if (!jq_rows) return;
 				// Add an expander and scrollspace column to the rows, add hover events, and give child rows indentation.
 				jq_rows.each(function(){
 					var cur_row = $(this);
