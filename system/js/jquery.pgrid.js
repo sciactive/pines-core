@@ -13,21 +13,26 @@
 			if (!this.pines_grid)
 				return;
 			var pgrid = this.pines_grid;
+			var new_rows = null;
 			$.each(rows, function(){
 				var cur_row = this;
-				pgrid.find("tbody tr.ui-pgrid-table-row-spacer").before(
-					$("<tr />")
-					.attr("title", cur_row.key)
-					.addClass(cur_row.classes)
-					.each(function(){
-						var this_row = $(this);
-						$.each(cur_row.values, function(){
-							this_row.append($("<td>"+this+"</td>"));
-						});
-						pgrid.init_rows(this_row);
-					})
-				);
+				var jq_row = $("<tr />").attr("title", cur_row.key).addClass(cur_row.classes).each(function(){
+					var this_row = $(this);
+					$.each(cur_row.values, function(){
+						this_row.append($("<td>"+this+"</td>"));
+					});
+				});
+				pgrid.find("tbody tr.ui-pgrid-table-row-spacer").before(jq_row);
+				// Gather all the rows.
+				if (new_rows) {
+					new_rows = new_rows.add(jq_row);
+				} else {
+					new_rows = jq_row;
+				}
 			});
+			// The rows need to be initialized after they've all been added, for child indentation.
+			pgrid.init_rows(new_rows);
+
 			pgrid.do_sort(false, true);
 			pgrid.do_filter(false, true);
 			pgrid.paginate(true);
@@ -64,7 +69,7 @@
 	};
 	$.fn.pgrid_export_rows = function(rows) {
 		var return_array = [];
-		rows.each(function(){
+		$.each(rows, function(){
 			var cur_row = $(this);
 			var value_array = [];
 			cur_row.children("td:not(.ui-pgrid-table-expander, .ui-pgrid-table-cell-scrollspace)").each(function(){
@@ -81,7 +86,7 @@
 	$.fn.pgrid_get_all_rows = function() {
 		var return_rows = null;
 		this.each(function(){
-			if (!this.pines_grid)
+			if (!this.pines_grid.jquery)
 				return;
 			var pgrid = this.pines_grid;
 			if (return_rows) {
@@ -95,7 +100,7 @@
 	$.fn.pgrid_get_selected_rows = function() {
 		var return_rows = null;
 		this.each(function(){
-			if (!this.pines_grid)
+			if (!this.pines_grid.jquery)
 				return;
 			var pgrid = this.pines_grid;
 			if (return_rows) {
@@ -106,9 +111,21 @@
 		});
 		return return_rows;
 	};
+	$.fn.pgrid_add_descendent_rows = function() {
+		var rows = $(this);
+		this.each(function(){
+			var cur_row = $(this);
+			
+			if (cur_row.hasClass("parent")) {
+				var children = cur_row.siblings("."+cur_row.attr("title"));
+				rows = rows.add(children.pgrid_add_descendent_rows());
+			}
+		});
+		return rows;
+	};
 	$.fn.pgrid_export_state = function() {
 		var pgrid = this.get(0).pines_grid;
-		if (pgrid)
+		if (pgrid.jquery)
 			return pgrid.export_state();
 		return false;
 	};
