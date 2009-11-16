@@ -43,33 +43,48 @@
 		return this;
 	};
 	$.fn.pgrid_delete = function(keysorrows) {
-		this.each(function(){
-			if (!this.pines_grid)
-				return;
-			var pgrid = this.pines_grid;
-			if (keysorrows.jquery) {
-				keysorrows.each(function(){
-					pgrid.mark_for_delete_recursively($(this));
-				});
-			} else {
-				$.each(keysorrows, function(){
-					var cur_keyorrow = this;
-					if (typeof cur_keyorrow == "object") {
+		if (keysorrows) {
+			this.each(function(){
+				var pgrid = this.pines_grid;
+				if (!pgrid)
+					return;
+				if (keysorrows.jquery) {
+					keysorrows.each(function(){
 						pgrid.mark_for_delete_recursively($(this));
-					} else {
-						pgrid.find("tbody tr[title="+cur_keyorrow+"]:not(.ui-pgrid-table-row-spacer)").each(function(){
+					});
+				} else {
+					$.each(keysorrows, function(){
+						var cur_keyorrow = this;
+						if (typeof cur_keyorrow == "object") {
 							pgrid.mark_for_delete_recursively($(this));
-						});
-					}
+						} else {
+							pgrid.find("tbody tr[title="+cur_keyorrow+"]:not(.ui-pgrid-table-row-spacer)").each(function(){
+								pgrid.mark_for_delete_recursively($(this));
+							});
+						}
 
-				});
-			}
+					});
+				}
+				// Delete the rows we just marked for deletion.
+				// Marking them for deletion first prevents errors when selecting children.
+				pgrid.delete_marked();
+			});
+		} else {
+			var pgrid = this.closest(".ui-pgrid-table").get(0).pines_grid;
+			if (!pgrid)
+				return this;
+			this.each(function(){
+				pgrid.mark_for_delete_recursively($(this));
+			});
 			pgrid.delete_marked();
-		});
+		}
 		return this;
 	};
 	$.fn.pgrid_export_rows = function(rows) {
 		var return_array = [];
+		if (!rows) {
+			rows = this;
+		}
 		$.each(rows, function(){
 			var cur_row = $(this);
 			var value_array = [];
@@ -83,6 +98,44 @@
 			}]);
 		});
 		return return_array;
+	};
+	$.fn.pgrid_select_rows = function(rows) {
+		var pgrid = null;
+		if (!rows) {
+			rows = this;
+			pgrid = rows.closest(".ui-pgrid-table").get(0).pines_grid;
+		} else {
+			pgrid = this;
+		}
+		if (!pgrid)
+			return this;
+		if (pgrid.pgrid_select) {
+			if ((pgrid.find("tr.ui-pgrid-table-row-selected").length || rows.length > 1) && !pgrid.pgrid_multi_select)
+				return this;
+			$.each(rows, function(){
+				var cur_row = $(this);
+				cur_row.addClass("ui-pgrid-table-row-selected").children(":not(.ui-pgrid-table-cell-scrollspace)").addClass("ui-state-active");
+			});
+		}
+		return this;
+	};
+	$.fn.pgrid_deselect_rows = function(rows) {
+		var pgrid = null;
+		if (!rows) {
+			rows = this;
+			pgrid = rows.closest(".ui-pgrid-table").get(0).pines_grid;
+		} else {
+			pgrid = this;
+		}
+		if (!pgrid)
+			return this;
+		if (pgrid.pgrid_select) {
+			$.each(rows, function(){
+				var cur_row = $(this);
+				cur_row.removeClass("ui-pgrid-table-row-selected").children(":not(.ui-pgrid-table-cell-scrollspace)").removeClass("ui-state-active");
+			});
+		}
+		return this;
 	};
 	$.fn.pgrid_get_all_rows = function() {
 		var return_rows = false;
@@ -869,7 +922,7 @@
 								}
 							}
 							if (val.select_none) {
-								if (pgrid.pgrid_select && pgrid.pgrid_multi_select) {
+								if (pgrid.pgrid_select) {
 									pgrid.find("tbody tr").removeClass("ui-pgrid-table-row-selected").children(":not(.ui-pgrid-table-cell-scrollspace)").removeClass("ui-state-active");
 									pgrid.update_selected();
 								}
