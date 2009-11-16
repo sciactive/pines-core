@@ -14,8 +14,8 @@ defined('P_RUN') or die('Direct access prohibited');
 
 // Check to see if Tag Editor is already included.
 if (!$GLOBALS['js_tageditor_included']) {
-	$page->head("<link href=\"{$config->rela_location}system/css/jquery.tag.editor.css\" media=\"all\" rel=\"stylesheet\" type=\"text/css\" />\n");
-	$page->head("<script type=\"text/javascript\" src=\"{$config->rela_location}system/js/jquery.tag.editor.js\"></script>\n");
+	echo ("<link href=\"{$config->rela_location}system/css/jquery.tag.editor.css\" media=\"all\" rel=\"stylesheet\" type=\"text/css\" />\n");
+	echo ("<script type=\"text/javascript\" src=\"{$config->rela_location}system/js/jquery.tag.editor.js\"></script>\n");
 	$GLOBALS['js_tageditor_included'] = true;
 }
 

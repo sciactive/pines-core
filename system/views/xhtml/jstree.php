@@ -14,8 +14,8 @@ defined('P_RUN') or die('Direct access prohibited');
 
 // Check to see if jsTree is already included.
 if (!$GLOBALS['js_jstree_included']) {
-	$page->head("<script type=\"text/javascript\" src=\"{$config->rela_location}system/js/jquery.tree/jquery.tree.min.js\"></script>\n");
-	$page->head("<script type=\"text/javascript\" src=\"{$config->rela_location}system/js/jquery.tree/plugins/jquery.tree.contextmenu.js\"></script>\n");
+	echo ("<script type=\"text/javascript\" src=\"{$config->rela_location}system/js/jquery.tree/jquery.tree.min.js\"></script>\n");
+	echo ("<script type=\"text/javascript\" src=\"{$config->rela_location}system/js/jquery.tree/plugins/jquery.tree.contextmenu.js\"></script>\n");
 	$GLOBALS['js_jstree_included'] = true;
 }
 

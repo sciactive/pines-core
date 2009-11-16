@@ -28,7 +28,7 @@ class module extends p_base {
 	 */
 	public $class_suffix = '';
 	/**
-	 * The modules content.
+	 * The module's content.
 	 *
 	 * Though not necessary, this should be filled automatically using a view.
 	 * @var string $content
@@ -71,11 +71,11 @@ class module extends p_base {
 	 * @return mixed If $position is given, returns the value of attach($position, $order).
 	 */
 	function __construct($component, $view, $position = null, $order = null) {
-	$this->component = $component;
-	$this->view = $view;
-	if ( !is_null($position) ) {
-		return $this->attach($position, $order);
-	}
+		$this->component = $component;
+		$this->view = $view;
+		if ( !is_null($position) ) {
+			return $this->attach($position, $order);
+		}
 	}
 
 	/**
@@ -90,10 +90,10 @@ class module extends p_base {
 	 * @return int The order in which the module was placed.
 	 */
 	function attach($position, $order = null) {
-	global $page;
-	$this->position = $position;
-	$this->order = $page->attach_module($this, $position, $order);
-	return $this->order;
+		global $page;
+		$this->position = $position;
+		$this->order = $page->attach_module($this, $position, $order);
+		return $this->order;
 	}
 
 	/**
@@ -104,8 +104,8 @@ class module extends p_base {
 	 * @return mixed The value of $page->detach_module.
 	 */
 	function detach() {
-	global $page;
-	return $page->detach_module($this, $this->position, $this->order);
+		global $page;
+		return $page->detach_module($this, $this->position, $this->order);
 	}
 
 	/**
@@ -117,7 +117,7 @@ class module extends p_base {
 	 * @param string $add_content Content to append.
 	 */
 	function content($add_content) {
-	$this->content .= $add_content;
+		$this->content .= $add_content;
 	}
 
 	/**
@@ -129,7 +129,7 @@ class module extends p_base {
 	 * @return string The content.
 	 */
 	function get_content() {
-	return $this->content;
+		return $this->content;
 	}
 
 	/**
@@ -154,43 +154,47 @@ class module extends p_base {
 	 * 'system' can be used as a blank view.
 	 *
 	 * The module's template is found in the 'models' directory of the current
-	 * template. If the module's position is 'head', render() will check for
-	 * module_head.php. If it doesn't exist, or the position is not 'head',
-	 * render() will require module.php. The module's content ultimately ends up
-	 * with the output from this file.
+	 * template. If $model is set, it will looke for a file by that name (with
+	 * .php appended and require it. If not, or the file deosn't exist, render()
+	 * will require module.php. The module's content variable ultimately ends up
+	 * with the output from this file and is returned.
+	 *
+	 * @param string $model The model to use.
+	 * @return string The module's rendered content.
 	 */
-	function render() {
-	global $config, $page;
+	function render($model) {
+		global $config, $page;
 
-	// Get content from the view.
-	ob_start();
-	$format = $config->template->format;
-	while(true) {
-		$filename = (($this->component != 'system') ? 'components/' : '').$this->component.'/views/'.$format.'/'.$this->view.'.php';
-		if (file_exists($filename) || $format == 'all') {
-		require $filename;
-		break;
-		} else {
-		if (strrpos($format, '-') === false) {
-			$format = 'all';
-		} else {
-			$format = substr($format, 0, strrpos($format, '-'));
+		// Get content from the view.
+		ob_start();
+		$format = $config->template->format;
+		while(true) {
+			$filename = (($this->component != 'system') ? 'components/' : '').$this->component.'/views/'.$format.'/'.$this->view.'.php';
+			if (file_exists($filename) || $format == 'all') {
+				require $filename;
+				break;
+			} else {
+				if (strrpos($format, '-') === false) {
+					$format = 'all';
+				} else {
+					$format = substr($format, 0, strrpos($format, '-'));
+				}
+			}
 		}
+		$this->content(ob_get_clean());
+		if (empty($this->content)) {
+			return;
 		}
-	}
-	$this->content(ob_get_clean());
-	if (empty($this->content)) {
-		return;
-	}
 
-	// Return the content.
-	ob_start();
-	if ($this->position == 'head' && file_exists('templates/'.$config->current_template.'/models/module_head.php')) {
-		require 'templates/'.$config->current_template.'/models/module_head.php';
-	} else {
-		require 'templates/'.$config->current_template.'/models/module.php';
-	}
-	$this->content = ob_get_clean();
+		// Return the content.
+		ob_start();
+		if (isset($model) && file_exists("templates/{$config->current_template}/models/$model.php")) {
+			require "templates/{$config->current_template}/models/$model.php";
+		} else {
+			require "templates/{$config->current_template}/models/module.php";
+		}
+		$this->content = ob_get_clean();
+		return $this->content;
 	}
 }
 
