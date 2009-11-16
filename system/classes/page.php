@@ -331,17 +331,17 @@ class page extends p_base {
 	 *
 	 * @param string $position The position to work on.
 	 * @param string $model The model to render the modules with.
-	 * @param string $group_model The group model to render the modules with.
+	 * @uses module::render()
 	 * @return string The content rendered by the modules.
 	 */
-	public function render_modules($position, $model = null, $group_model = null) {
-		$return = new module_group;
+	public function render_modules($position, $model = null) {
+		$return = '';
 		if (is_array($this->modules[$position])) {
 			foreach ($this->modules[$position] as $cur_module) {
-				$return->content .= $cur_module->render($model);
+				$return .= $cur_module->render($model);
 			}
 		}
-		return $return->render($group_model);
+		return $return;
 	}
 }
 

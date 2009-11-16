@@ -155,7 +155,7 @@ class module extends p_base {
 	 *
 	 * The module's template is found in the 'models' directory of the current
 	 * template. If $model is set, it will looke for a file by that name (with
-	 * .php appended and require it. If not, or the file deosn't exist, render()
+	 * .php appended and require it. If not, or the file doesn't exist, render()
 	 * will require module.php. The module's content variable ultimately ends up
 	 * with the output from this file and is returned.
 	 *
