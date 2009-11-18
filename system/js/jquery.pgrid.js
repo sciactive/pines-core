@@ -9,6 +9,8 @@
 
 (function($) {
 	$.fn.pgrid_add = function(rows) {
+		if (!rows)
+			return this;
 		this.each(function(){
 			if (!this.pines_grid)
 				return;
@@ -123,7 +125,10 @@
 		var pgrid = null;
 		if (!rows) {
 			rows = this;
-			pgrid = rows.closest(".ui-pgrid-table").get(0).pines_grid;
+			pgrid = rows.closest(".ui-pgrid-table").get(0);
+			if (pgrid) {
+				pgrid = pgrid.pines_grid;
+			}
 		} else {
 			pgrid = this;
 		}
