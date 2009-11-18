@@ -854,10 +854,6 @@
 			pgrid.find("thead tr").addClass("ui-widget-header").each(function(){
 				$(this).prepend($("<th class=\"ui-pgrid-table-expander\"><div style=\"width: 16px; visibility: hidden;\">+</div></th>").click(function(e){
 					// Show the header selector.
-					pgrid.pgrid_header_select.css({
-						left: (e.pageX-5),
-						top: (e.pageY-5)
-					});
 					pgrid.pgrid_header_select.fadeIn("fast");
 				}).mouseover(function(){
 					$(this).addClass("ui-icon ui-icon-triangle-1-s");
@@ -872,8 +868,8 @@
 			// Now that the column classes have been assigned and hiding/showing is done,
 			// we can hide the default hidden columns.
 			pgrid.do_col_hiding(true);
-			// Now that it's ready, insert the header selector div in the container.
-			pgrid.pgrid_widget.append(pgrid.pgrid_header_select);
+			// Now that it's ready, insert the header selector div in the table container.
+			pgrid.pgrid_table_container.append(pgrid.pgrid_header_select);
 
 
 			// This is used to keep the rows from being sized to fill the rest of the table.
