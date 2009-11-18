@@ -10,13 +10,13 @@
 ----------------------------------*/
 .ui-pgrid {
 	padding: 0.2em;
+	position: relative;
 }
 
 /* Table container
 ----------------------------------*/
 .ui-pgrid-table-container {
 	overflow: auto;
-	position: relative;
 }
 
 /* Header selector
@@ -26,8 +26,6 @@
 	position: absolute;
 	display: none;
 	padding: 3px;
-	left: 2px;
-	top: 2px;
 }
 .ui-pgrid .ui-pgrid-header-select label {
 	display: block;
