@@ -26,10 +26,5 @@ if (!$GLOBALS['js_pgrid_included']) {
 	echo ("<script type=\"text/javascript\" src=\"{$config->rela_location}system/js/jquery.pgrid.js\"></script>\n");
 	$GLOBALS['js_pgrid_included'] = true;
 }
-// Check to see if JSON is already included.
-if (!$GLOBALS['js_json_included']) {
-	echo ("<script type=\"text/javascript\" src=\"{$config->rela_location}system/js/json2.js\"></script>\n");
-	$GLOBALS['js_json_included'] = true;
-}
 
 ?>

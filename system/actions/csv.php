@@ -1,6 +1,6 @@
 <?php
 /**
- * Save the state of a Pines Grid.
+ * Export a CSV document.
  *
  * @package Pines
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
