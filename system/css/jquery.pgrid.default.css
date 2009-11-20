@@ -188,8 +188,11 @@
 	text-align: left;
 }
 .ui-pgrid-table tbody td.ui-pgrid-table-expander, .ui-pgrid-table thead th.ui-pgrid-table-expander, .ui-pgrid-table .ui-pgrid-table-cell-scrollspace {
-	width: 16px;
-	height: 16px;
+	min-width: 16px;
+	min-height: 16px;
+	width: auto;
+	height: auto;
+	display: table-cell;
 	padding: 0;
 }
 .ui-pgrid-table thead .ui-pgrid-table-cell-scrollspace {
