@@ -762,16 +762,13 @@
 			// Add the pgrid class to the container.
 			pgrid.pgrid_widget.addClass("ui-pgrid ui-widget ui-widget-content ui-corner-all");
 			// And the table container.
-			pgrid.pgrid_table_container.addClass("ui-pgrid-table-container ui-widget-content");
+			pgrid.pgrid_table_container.addClass("ui-pgrid-table-container");
 			// Wrap the grid in the container.
 			pgrid.wrap(pgrid.pgrid_widget);
 			pgrid.wrap(pgrid.pgrid_table_container);
 			// Refresh the jQuery objects.
-			pgrid.pgrid_widget = pgrid.parent().parent();
 			pgrid.pgrid_table_container = pgrid.parent();
-
-			// Set the grid's height.
-			pgrid.find("tbody").css("height", pgrid.pgrid_view_height);
+			pgrid.pgrid_widget = pgrid.pgrid_table_container.parent();
 
 			// Iterate column headers and make a checkbox to hide each one.
 			pgrid.find("thead th").each(function(){
@@ -807,20 +804,27 @@
 				var resizing_header = false;
 				var resizing_tempX = 0;
 				var resizing_cur_bar;
+
 				// Wrap the contents and add the column class to the cell.
 				cur_header.wrapInner($("<div />").addClass("ui-pgrid-table-header-text")).addClass("col_"+cur_col).append($("<span />").addClass("ui-icon"));
 				// Make a sizer div to keep all header contents (text, sort icon, sizer handle) on one line.
 				cur_header.append($("<div style=\"clear: both; height: 0pt;\" />").addClass("ui-pgrid-table-header-sizer"));
+
+				var cur_text = cur_header.children(".ui-pgrid-table-header-text");
+				var cur_sizer = cur_header.children(".ui-pgrid-table-header-sizer");
+
 				// Make sure the sizer div has a width.
-				if (cur_header.children(".ui-pgrid-table-header-text").width() + 18 >= cur_width) {
-					// The resizer handle and sort icon need room, or they will be on a new line.
-					cur_header.children(".ui-pgrid-table-header-sizer").width(cur_width + 21);
+				var cur_text_width = cur_text.width();
+				// sizer width (3) + text padding (2) = 5
+				if (cur_text_width > cur_width - 3) {
+					// The resizer handle needs room, or it will be on a new line.
+					cur_sizer.width(cur_text_width + 5);
 				} else {
-					cur_header.children(".ui-pgrid-table-header-sizer").width(cur_width + 16);
+					cur_sizer.width(cur_width + 2);
 				}
 				// Provide a column resizer, if set. The cleared div appended to the end will actually size the entire column.
 				if (pgrid.pgrid_resize_cols) {
-					cur_header.children(".ui-pgrid-table-header-text").after($("<div />").addClass("ui-pgrid-table-header-sizehandle").addClass("ui-state-hover").mousedown(function(e){
+					cur_text.after($("<div />").addClass("ui-pgrid-table-header-sizehandle").addClass("ui-state-hover").mousedown(function(e){
 						resizing_header = true;
 						resizing_tempX = e.pageX;
 						resizing_cur_bar = $(this).nextAll(".ui-pgrid-table-header-sizer");
@@ -859,13 +863,13 @@
 
 				// If this table is resizable, we need its cells to have a width of 1px;
 				if (pgrid.pgrid_resize_cols) {
-					cur_header.children(".ui-pgrid-table-header-text").addClass("ui-pgrid-table-sized-cell");
+					cur_text.addClass("ui-pgrid-table-sized-cell");
 				}
 			});
 
 			// Add an expander and scrollspace column to the header.
 			pgrid.find("thead tr").addClass("ui-widget-header").each(function(){
-				$(this).prepend($("<th class=\"ui-pgrid-table-expander\"><div style=\"width: 16px; visibility: hidden;\">+</div></th>").click(function(e){
+				$(this).prepend($("<th class=\"ui-icon ui-pgrid-table-icon-hidden ui-pgrid-table-expander\"><div style=\"width: 16px; visibility: hidden;\">+</div></th>").click(function(e){
 					// Show the header selector.
 					var offset = pgrid.pgrid_widget.offset();
 					pgrid.pgrid_header_select.css({
@@ -874,10 +878,10 @@
 					});
 					pgrid.pgrid_header_select.fadeIn("fast");
 				}).mouseover(function(){
-					$(this).addClass("ui-icon ui-icon-triangle-1-s");
+					$(this).removeClass("ui-pgrid-table-icon-hidden").addClass("ui-icon-triangle-1-s");
 				}).mouseout(function(){
-					$(this).removeClass("ui-icon").removeClass("ui-icon-triangle-1-s");
-				})).append("<th class=\"ui-pgrid-table-cell-scrollspace\"><div style=\"width: 16px; visibility: hidden;\">+</div></th>");
+					$(this).addClass("ui-pgrid-table-icon-hidden").removeClass("ui-icon-triangle-1-s");
+				})).append("<th class=\"ui-pgrid-table-cell-scrollspace\"><div style=\"width: 0; visibility: hidden;\">+</div></th>");
 			});
 
 			// Initialize the rows.
@@ -892,6 +896,17 @@
 
 			// This is used to keep the rows from being sized to fill the rest of the table.
 			pgrid.children("tbody").append($("<tr><td></td></tr>").addClass("ui-pgrid-table-row-spacer"));
+
+			// Wrap the table and its container in a viewport, so we can size it.
+			pgrid.children("thead").css("position", "relative");
+			pgrid.pgrid_table_viewport = $("<div class=\"ui-pgrid-table-viewport ui-widget-content\" />");
+			pgrid.pgrid_table_container.wrapAll(pgrid.pgrid_table_viewport);
+			// Reset the object.
+			pgrid.pgrid_table_viewport = pgrid.pgrid_table_container.parent();
+			pgrid.pgrid_table_viewport.height(pgrid.pgrid_view_height);
+			if (pgrid.pgrid_view_height != "auto") {
+				pgrid.pgrid_table_container.css({position: "absolute", top: "0", bottom: "0", left: "0", right: "0"});
+			}
 
 			/* -- Toolbar -- */
 			if (pgrid.pgrid_toolbar) {

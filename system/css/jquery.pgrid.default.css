@@ -13,6 +13,12 @@
 	position: relative;
 }
 
+/* Table viewport
+----------------------------------*/
+.ui-pgrid-table-viewport {
+	position: relative;
+}
+
 /* Table container
 ----------------------------------*/
 .ui-pgrid-table-container {
@@ -100,6 +106,7 @@
 	padding: 0;
 	border-spacing: 0;
 	min-width: 100%;
+	table-layout: fixed;
 }
 .ui-pgrid-table .ui-pgrid-table-sized-cell {
 	width: 1px; /* Allows cell resizing less than its content's width. */
@@ -126,9 +133,15 @@
 	padding: 0;
 	cursor: pointer;
 }
+.ui-pgrid-table thead th.ui-icon.ui-pgrid-table-icon-hidden {
+	background-image: none;
+}
 .ui-pgrid-table thead th .ui-icon {
-	float: right;
+	display: block;
 	visibility: hidden;
+	margin: 0 auto;
+	position: relative;
+	top: -6px;
 }
 .ui-pgrid-table thead th.ui-pgrid-table-expander .ui-icon {
 	float: none;
@@ -142,7 +155,8 @@
 }
 .ui-pgrid-table thead th .ui-pgrid-table-header-text {
 	float: left;
-	padding: 0 2px;
+	height: 100%;
+	padding: 2px 0 0 2px;
 }
 .ui-pgrid-table thead th .ui-pgrid-table-header-sizehandle {
 	border-width: 0;
@@ -180,7 +194,6 @@
 }
 .ui-pgrid-table thead .ui-pgrid-table-cell-scrollspace {
 	width: 100%;
-	min-width: 19px;
 }
 .ui-pgrid-table tbody .ui-pgrid-table-cell-scrollspace {
 	visibility: hidden;
