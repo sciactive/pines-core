@@ -72,7 +72,10 @@
 				pgrid.delete_marked();
 			});
 		} else {
-			var pgrid = this.closest(".ui-pgrid-table").get(0).pines_grid;
+			var pgrid = this.closest(".ui-pgrid-table").get(0);
+			if (pgrid) {
+				pgrid = pgrid.pines_grid;
+			}
 			if (!pgrid)
 				return this;
 			this.each(function(){
@@ -90,32 +93,44 @@
 		$.each(rows, function(){
 			var cur_row = $(this);
 			var cur_title = cur_row.attr("title");
+			var cur_class = cur_row.attr("class");
 			var value_array = [];
 			cur_row.children("td:not(.ui-pgrid-table-expander, .ui-pgrid-table-cell-scrollspace)").each(function(){
 				value_array = $.merge(value_array, [$(this).text()]);
 			});
 			return_array = $.merge(return_array, [{
 				key: (typeof cur_title == "undefined" ? "" : cur_title),
-				classes: cur_row.attr("class").replace(/\bui-[a-z0-9 -]+/, ""),
+				classes: (typeof cur_class == "undefined" ? "" : cur_class.replace(/\bui-[a-z0-9 -]+/, "")),
 				values: value_array
 			}]);
 		});
 		return return_array;
 	};
-	$.fn.pgrid_select_rows = function(rows) {
+	$.fn.pgrid_select_rows = function(keysorrows) {
 		var pgrid = null;
-		if (!rows) {
-			rows = this;
-			pgrid = rows.closest(".ui-pgrid-table").get(0).pines_grid;
+		if (!keysorrows) {
+			keysorrows = this;
+			pgrid = keysorrows.closest(".ui-pgrid-table").get(0);
+			if (pgrid && pgrid.pines_grid) {
+				pgrid = pgrid.pines_grid;
+			}
 		} else {
-			pgrid = this;
+			pgrid = this.get(0);
+			if (pgrid && pgrid.pines_grid) {
+				pgrid = pgrid.pines_grid;
+			}
 		}
 		if (!pgrid)
 			return this;
-		if (pgrid.pgrid_select) {
-			if ((pgrid.find("tr.ui-pgrid-table-row-selected").length || rows.length > 1) && !pgrid.pgrid_multi_select)
+		if (!keysorrows.jquery) {
+			if (typeof keysorrows != "object")
 				return this;
-			$.each(rows, function(){
+			keysorrows = pgrid.find("tbody tr").filter("tr[title='" + keysorrows.join("'], tr[title='") + "']");
+		}
+		if (pgrid.pgrid_select) {
+			if ((pgrid.find("tr.ui-pgrid-table-row-selected").length || keysorrows.length > 1) && !pgrid.pgrid_multi_select)
+				return this;
+			$.each(keysorrows, function(){
 				var cur_row = $(this);
 				cur_row.addClass("ui-pgrid-table-row-selected").children(":not(.ui-pgrid-table-cell-scrollspace)").addClass("ui-state-active");
 			});
@@ -127,11 +142,14 @@
 		if (!rows) {
 			rows = this;
 			pgrid = rows.closest(".ui-pgrid-table").get(0);
-			if (pgrid) {
+			if (pgrid && pgrid.pines_grid) {
 				pgrid = pgrid.pines_grid;
 			}
 		} else {
-			pgrid = this;
+			pgrid = this.get(0);
+			if (pgrid && pgrid.pines_grid) {
+				pgrid = pgrid.pines_grid;
+			}
 		}
 		if (!pgrid)
 			return this;
@@ -184,7 +202,10 @@
 		return rows;
 	};
 	$.fn.pgrid_export_state = function() {
-		var pgrid = this.get(0).pines_grid;
+		var pgrid = this.get(0);
+		if (pgrid && pgrid.pines_grid) {
+			pgrid = pgrid.pines_grid;
+		}
 		if (pgrid.jquery)
 			return pgrid.export_state();
 		return false;
@@ -205,6 +226,7 @@
 		var all_elements = this;
 		all_elements.each(function() {
 			var pgrid = $(this);
+			pgrid.pgrid_version = "1.0.0";
 			
 			// Check for the pgrid class. If it has it, we've already gridified this table.
 			if (pgrid.hasClass("ui-pgrid-table")) return true;
