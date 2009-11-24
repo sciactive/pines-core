@@ -12,21 +12,18 @@
 	top: 10px;
 	right: 10px;
 	position: absolute;
+	height: auto;
 }
 
 .ui-pnotify-container {
-	padding: 8px;
 	background-position: 0 0;
-	position: absolute;
-	top: 0;
-	left: 0;
-	bottom: 0;
-	right: 0;
+	padding: 8px;
+	height: 100%;
 }
 
 .ui-pnotify-closer {
 	float: right;
-	margin: 4px;
+	margin: -2px 2px 2px;
 }
 
 .ui-pnotify-title {

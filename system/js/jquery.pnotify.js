@@ -8,6 +8,7 @@
  */
 
 (function($) {
+	var first_top;
 	$.extend({
 		pnotify_remove_all: function () {
 			var body = $("body");
@@ -19,7 +20,7 @@
 		},
 		pnotify_position_all: function () {
 			var body = $("body");
-			var next = 10;
+			var next = first_top;
 			var body_data = body.data("pnotify");
 			$.each(body_data, function(){
 				var pos = this.position();
@@ -30,6 +31,8 @@
 						this.css("top", next+"px");
 					}
 				}
+				if (!first_top)
+					next = (first_top = pos.top);
 				if (this.css("display") != "none") {
 					next += this.height() + 10;
 				}
@@ -38,7 +41,13 @@
 		pnotify: function(options) {
 			var body = $("body");
 			// Build main options.
-			var opts = $.extend({}, $.pnotify.defaults, options);
+			var opts;
+			if (typeof options == "string") {
+				opts = $.extend({}, $.pnotify.defaults);
+				opts.pnotify_text = options;
+			} else {
+				opts = $.extend({}, $.pnotify.defaults, options);
+			}
 			var pnotify = $("<div />").addClass("ui-widget ui-helper-clearfix ui-pnotify");
 			pnotify.container = $("<div />").addClass("ui-corner-all ui-pnotify-container");
 			pnotify.append(pnotify.container);
@@ -83,9 +92,18 @@
 			}
 
 			if (opts.pnotify_closer) {
-				var closer = $("<div />").addClass("ui-pnotify-closer");
+				var closer = $("<div />").addClass("ui-pnotify-closer").css("cursor", "pointer");
 				closer.append($("<span />").addClass("ui-icon ui-icon-circle-close"));
+				closer.click(function(){
+					pnotify.pnotify_remove();
+				});
+				closer.hide();
 				pnotify.container.append(closer);
+				pnotify.hover(function(){
+					closer.show();
+				}, function(){
+					closer.hide();
+				});
 			}
 
 			if (typeof opts.pnotify_title == "string") {
@@ -105,7 +123,7 @@
 			}
 
 			if (typeof opts.pnotify_min_height == "string") {
-				pnotify.css("min-height", opts.pnotify_min_height);
+				pnotify.container.css("min-height", opts.pnotify_min_height);
 			}
 
 			pnotify.hide();
@@ -138,13 +156,13 @@
 		// Width of notifications.
 		pnotify_width: "300px",
 		// Minimum height of notifications. They will expand to fit content.
-		pnotify_min_height: "50px",
+		pnotify_min_height: "16px",
 		// Provide a button for the user to manually close a notification.
 		pnotify_closer: true,
 		// After a delay, make the notification disappear.
 		pnotify_hide: true,
 		// Delay in milliseconds before notifications disappear.
-		pnotify_delay: 5000,
+		pnotify_delay: 8000,
 		// Remove the notification from the DOM after it disappears.
 		pnotify_remove: false
 	};
