@@ -52,12 +52,15 @@
 			pnotify.container = $("<div />").addClass("ui-corner-all ui-pnotify-container");
 			pnotify.append(pnotify.container);
 
+			pnotify.pnotify_version = "1.0.0"
+
 			pnotify.pnotify_display = function() {
 				if (pnotify.parent().get()) {
 					body.append(pnotify);
 				}
 				$.pnotify_position_all();
-				pnotify.fadeIn("slow");
+				// First show it, then set its opacity to 0, then fade into the set opacity.
+				pnotify.show().fadeTo(0, 0).fadeTo(opts.pnotify_fade_speed, opts.pnotify_opacity);
 			}
 
 			pnotify.pnotify_remove = function() {
@@ -65,7 +68,7 @@
 					window.clearTimeout(pnotify.timer);
 					pnotify.timer = null;
 				}
-				pnotify.fadeOut("slow", function(){
+				pnotify.fadeOut(opts.pnotify_fade_speed, function(){
 					$.pnotify_position_all();
 					if (opts.pnotify_remove)
 						pnotify.remove();
@@ -140,7 +143,7 @@
 				pnotify.pnotify_queue_remove();
 				pnotify.mouseenter(function(){
 					pnotify.stop();
-					pnotify.fadeTo("fast", 1);
+					pnotify.fadeTo("fast", opts.pnotify_opacity);
 					pnotify.pnotify_cancel_remove();
 				}).mouseleave(function(){
 					pnotify.pnotify_queue_remove();
@@ -153,17 +156,21 @@
 	});
 
 	$.pnotify.defaults = {
-		// Width of notifications.
+		// Width of the notice.
 		pnotify_width: "300px",
-		// Minimum height of notifications. They will expand to fit content.
+		// Minimum height of the notice. It will expand to fit content.
 		pnotify_min_height: "16px",
-		// Provide a button for the user to manually close a notification.
+		// Speed at which the notice fades in and out. "slow", "def", "fast" or number of milliseconds.
+		pnotify_fade_speed: "slow",
+		// Opacity to fade to.
+		pnotify_opacity: 1,
+		// Provide a button for the user to manually close a notice.
 		pnotify_closer: true,
-		// After a delay, make the notification disappear.
+		// After a delay, make the notice disappear.
 		pnotify_hide: true,
-		// Delay in milliseconds before notifications disappear.
+		// Delay in milliseconds before the notice disappears.
 		pnotify_delay: 8000,
-		// Remove the notification from the DOM after it disappears.
-		pnotify_remove: false
+		// Remove the notice from the DOM after it disappears.
+		pnotify_remove: true
 	};
 })(jQuery);
