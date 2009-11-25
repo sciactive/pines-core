@@ -23,19 +23,24 @@
 			var next = first_top;
 			var body_data = body.data("pnotify");
 			$.each(body_data, function(){
-				var pos = this.position();
-				if (!first_top) {
-					first_top = pos.top;
-					next = first_top;
+				var postop;
+				var display = this.css("display");
+				if (display != "none") {
+					// Calculate the top value, disregarding the scroll, since position=fixed.
+					postop = this.offset().top - $(window).scrollTop();
+					if (!first_top) {
+						first_top = postop;
+						next = first_top;
+					}
 				}
 				if (next) {
-					if (pos.top > next) {
+					if (postop > next) {
 						this.animate({top: next+"px"}, {duration: 500, queue: false});
 					} else {
 						this.css("top", next+"px");
 					}
 				}
-				if (this.css("display") != "none") {
+				if (display != "none") {
 					next += this.height() + 10;
 				}
 			});
