@@ -14,7 +14,7 @@
 
 header('Content-Type: text/javascript');
 
-echo file_get_contents('common.js').
+$output = file_get_contents('common.js').
 "\n".
 "pines.full_location = \"".'http'.(($_SERVER["HTTPS"] == "on") ? 's://' : '://').$_SERVER['HTTP_HOST'].substr($_SERVER['PHP_SELF'], 0, strripos($_SERVER['PHP_SELF'], 'system/js/js.php'))."\"\n".
 "pines.rela_location = \"".substr($_SERVER['PHP_SELF'], 0, strripos($_SERVER['PHP_SELF'], 'system/js/js.php'))."\"\n".
@@ -23,7 +23,21 @@ file_get_contents('json2.js').
 "\n".
 file_get_contents('jquery.min.js').
 "\n".
-file_get_contents('jquery-ui.min.js')
+file_get_contents('jquery-ui.min.js').
+"\n".
+file_get_contents('jquery.pnotify.js')
 ;
+
+// I've decided that slightly shorter load times aren't worth risking mangled JavaScript.
+// Maybe in the future...
+
+// Strip comments. (Flawed)
+//$output = preg_replace('/(\'.*?[^\/]\')|(".*?[^\/]")|(\/\*[\x{0000}-\x{FFFF}]*?(?=\*\/)\*\/|\/\/[^\x{000A}|\x{000D}|\x{2028}|\x{2029}]*)/su', "$1$2", $output);
+// Compress long white space.
+//$output = preg_replace('/[ \t]{2,}/m', " ", $output);
+// Compress multiple new lines.
+//$output = preg_replace('/\n\s*\n/m', "\n", $output);
+
+echo $output;
 
 ?>
