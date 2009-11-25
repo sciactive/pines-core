@@ -23,7 +23,7 @@
 
 .ui-pnotify-closer {
 	float: right;
-	margin: -2px 2px 2px;
+	margin-left: 2px;
 }
 
 .ui-pnotify-title {
@@ -35,4 +35,10 @@
 
 .ui-pnotify-text {
 	display: block;
+}
+
+.ui-pnotify-icon, .ui-pnotify-icon span {
+	display: block;
+	float: left;
+	margin-right: 2px;
 }

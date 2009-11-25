@@ -90,8 +90,14 @@
 
 			if (opts.pnotify_type == "error") {
 				pnotify.container.addClass("ui-state-error");
-			} else {
+			} else if (opts.pnotify_type == "notice") {
 				pnotify.container.addClass("ui-state-highlight");
+			}
+
+			if ((opts.pnotify_notice_icon && opts.pnotify_type == "notice") || (opts.pnotify_error_icon && opts.pnotify_type == "error")) {
+				var icon = $("<div />").addClass("ui-pnotify-icon");
+				icon.append($("<span />").addClass(opts.pnotify_type == "notice" ? opts.pnotify_notice_icon : opts.pnotify_error_icon));
+				pnotify.container.append(icon);
 			}
 
 			if (opts.pnotify_closer) {
@@ -160,6 +166,12 @@
 		pnotify_width: "300px",
 		// Minimum height of the notice. It will expand to fit content.
 		pnotify_min_height: "16px",
+		// Type of the notice. "notice" or "error".
+		pnotify_type: "notice",
+		// The icon class to use if type is notice.
+		pnotify_notice_icon: "ui-icon ui-icon-info",
+		// The icon class to use if type is error.
+		pnotify_error_icon: "ui-icon ui-icon-alert",
 		// Speed at which the notice fades in and out. "slow", "def", "fast" or number of milliseconds.
 		pnotify_fade_speed: "slow",
 		// Opacity to fade to.
