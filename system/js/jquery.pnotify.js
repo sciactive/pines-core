@@ -24,6 +24,10 @@
 			var body_data = body.data("pnotify");
 			$.each(body_data, function(){
 				var pos = this.position();
+				if (!first_top) {
+					first_top = pos.top;
+					next = first_top;
+				}
 				if (next) {
 					if (pos.top > next) {
 						this.animate({top: next+"px"}, {duration: 500, queue: false});
@@ -31,8 +35,6 @@
 						this.css("top", next+"px");
 					}
 				}
-				if (!first_top)
-					next = (first_top = pos.top);
 				if (this.css("display") != "none") {
 					next += this.height() + 10;
 				}
