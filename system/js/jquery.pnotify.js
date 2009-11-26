@@ -9,6 +9,7 @@
 
 (function($) {
 	var first_top;
+	var timer;
 	$.extend({
 		pnotify_remove_all: function () {
 			var body = $("body");
@@ -19,6 +20,7 @@
 			});
 		},
 		pnotify_position_all: function () {
+			timer = null;
 			var body = $("body");
 			var next = first_top;
 			var body_data = body.data("pnotify");
@@ -59,16 +61,23 @@
 			pnotify.container = $("<div />").addClass("ui-corner-all ui-pnotify-container");
 			pnotify.append(pnotify.container);
 
-			pnotify.pnotify_version = "1.0.0"
+			pnotify.pnotify_version = "1.0.0";
+
+			pnotify.pnotify_queue_position = function() {
+				if (timer) {
+					clearTimeout(timer);
+				}
+				timer = setTimeout($.pnotify_position_all, 10);
+			};
 
 			pnotify.pnotify_display = function() {
 				if (pnotify.parent().get()) {
 					body.append(pnotify);
 				}
-				$.pnotify_position_all();
+				pnotify.pnotify_queue_position();
 				// First show it, then set its opacity to 0, then fade into the set opacity.
 				pnotify.show().fadeTo(0, 0).fadeTo(opts.pnotify_fade_speed, opts.pnotify_opacity);
-			}
+			};
 
 			pnotify.pnotify_remove = function() {
 				if (pnotify.timer) {
@@ -76,24 +85,24 @@
 					pnotify.timer = null;
 				}
 				pnotify.fadeOut(opts.pnotify_fade_speed, function(){
-					$.pnotify_position_all();
+					pnotify.pnotify_queue_position();
 					if (opts.pnotify_remove)
 						pnotify.remove();
 				});
-			}
+			};
 
 			pnotify.pnotify_cancel_remove = function() {
 				if (pnotify.timer) {
 					window.clearTimeout(pnotify.timer);
 				}
-			}
+			};
 
 			pnotify.pnotify_queue_remove = function() {
 				pnotify.pnotify_cancel_remove();
 				pnotify.timer = window.setTimeout(function(){
 					pnotify.pnotify_remove();
 				}, (isNaN(opts.pnotify_delay) ? 0 : opts.pnotify_delay));
-			}
+			};
 
 			if (opts.pnotify_type == "error") {
 				pnotify.container.addClass("ui-state-error");
