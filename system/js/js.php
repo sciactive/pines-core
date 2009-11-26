@@ -14,18 +14,16 @@
 
 header('Content-Type: text/javascript');
 
-$output = file_get_contents('common.js').
-"\n".
+$exclude = explode(' ', $_REQUEST['exclude']);
+
+$output =
+(!in_array('common.js', $exclude) ? file_get_contents('common.js')."\n" : '').
 "pines.full_location = \"".'http'.(($_SERVER["HTTPS"] == "on") ? 's://' : '://').$_SERVER['HTTP_HOST'].substr($_SERVER['PHP_SELF'], 0, strripos($_SERVER['PHP_SELF'], 'system/js/js.php'))."\"\n".
 "pines.rela_location = \"".substr($_SERVER['PHP_SELF'], 0, strripos($_SERVER['PHP_SELF'], 'system/js/js.php'))."\"\n".
-"\n".
-file_get_contents('json2.js').
-"\n".
-file_get_contents('jquery.min.js').
-"\n".
-file_get_contents('jquery-ui.min.js').
-"\n".
-file_get_contents('jquery.pnotify.js')
+(!in_array('json2.js', $exclude) ? "\n".file_get_contents('json2.js') : '').
+(!in_array('jquery.min.js', $exclude) ? "\n".file_get_contents('jquery.min.js') : '').
+(!in_array('jquery-ui.min.js', $exclude) ? "\n".file_get_contents('jquery-ui.min.js') : '').
+(!in_array('jquery.pnotify.js', $exclude) ? "\n".file_get_contents('jquery.pnotify.js') : '')
 ;
 
 // I've decided that slightly shorter load times aren't worth risking mangled JavaScript.
