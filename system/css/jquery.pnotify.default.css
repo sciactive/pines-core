@@ -13,6 +13,8 @@
 	right: 15px;
 	position: fixed;
 	height: auto;
+	/* Ensure that the notices are on top of everything else. */
+	z-index: 9999;
 }
 
 .ui-pnotify-container {
@@ -51,6 +53,8 @@
 	top: 0;
 	right: 15px;
 	border-top: none;
+	/* Ensure that the history container is on top of the notices. */
+	z-index: 10000;
 }
 
 .ui-pnotify-history-container .ui-pnotify-history-header {
