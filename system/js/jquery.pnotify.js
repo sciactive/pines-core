@@ -217,7 +217,7 @@
 						body_history.animate({top: "0"}, {duration: 100, queue: false})
 					});
 					body_history.append(handle);
-					history_handle_top = handle.offset().top;
+					history_handle_top = handle.offset().top + 2;
 
 					body_history.mouseleave(function(){
 						body_history.animate({top: "-"+history_handle_top+"px"}, {duration: 100, queue: false});
