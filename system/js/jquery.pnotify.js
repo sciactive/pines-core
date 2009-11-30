@@ -9,6 +9,7 @@
 
 (function($) {
 	var first_top;
+	var history_handle_top;
 	var timer;
 	$.extend({
 		pnotify_remove_all: function () {
@@ -49,6 +50,8 @@
 		},
 		pnotify: function(options) {
 			var body = $("body");
+			var closer;
+			
 			// Build main options.
 			var opts;
 			if (typeof options == "string") {
@@ -57,11 +60,44 @@
 			} else {
 				opts = $.extend({}, $.pnotify.defaults, options);
 			}
+			
 			var pnotify = $("<div />").addClass("ui-widget ui-helper-clearfix ui-pnotify");
 			pnotify.container = $("<div />").addClass("ui-corner-all ui-pnotify-container");
 			pnotify.append(pnotify.container);
 
 			pnotify.pnotify_version = "1.0.0";
+
+			pnotify.pnotify_init = function() {
+				body.append(pnotify);
+
+				// Add events to stop fading when the user mouses over.
+				if (opts.pnotify_hide) {
+					pnotify.mouseenter(function(){
+						pnotify.stop();
+						pnotify.fadeTo("fast", opts.pnotify_opacity);
+						pnotify.pnotify_cancel_remove();
+					}).mouseleave(function(){
+						pnotify.pnotify_queue_remove();
+						$.pnotify_position_all();
+					});
+				}
+
+				if (opts.pnotify_closer) {
+					if (closer) closer.remove();
+					closer = $("<div />").addClass("ui-pnotify-closer").css("cursor", "pointer");
+					closer.append($("<span />").addClass("ui-icon ui-icon-circle-close"));
+					closer.click(function(){
+						pnotify.pnotify_remove();
+					});
+					closer.hide();
+					pnotify.container.prepend(closer);
+					pnotify.hover(function(){
+						closer.show();
+					}, function(){
+						closer.hide();
+					});
+				}
+			};
 
 			pnotify.pnotify_queue_position = function() {
 				if (timer) {
@@ -72,11 +108,16 @@
 
 			pnotify.pnotify_display = function() {
 				if (pnotify.parent().get()) {
-					body.append(pnotify);
+					pnotify.pnotify_init();
 				}
 				pnotify.pnotify_queue_position();
 				// First show it, then set its opacity to 0, then fade into the set opacity.
 				pnotify.show().fadeTo(0, 0).fadeTo(opts.pnotify_fade_speed, opts.pnotify_opacity);
+				
+				// Now set it to hide.
+				if (opts.pnotify_hide) {
+					pnotify.pnotify_queue_remove();
+				}
 			};
 
 			pnotify.pnotify_remove = function() {
@@ -116,21 +157,6 @@
 				pnotify.container.append(icon);
 			}
 
-			if (opts.pnotify_closer) {
-				var closer = $("<div />").addClass("ui-pnotify-closer").css("cursor", "pointer");
-				closer.append($("<span />").addClass("ui-icon ui-icon-circle-close"));
-				closer.click(function(){
-					pnotify.pnotify_remove();
-				});
-				closer.hide();
-				pnotify.container.append(closer);
-				pnotify.hover(function(){
-					closer.show();
-				}, function(){
-					closer.hide();
-				});
-			}
-
 			if (typeof opts.pnotify_title == "string") {
 				var title = $("<span />").addClass("ui-pnotify-title");
 				title.html(opts.pnotify_title);
@@ -161,16 +187,45 @@
 
 			pnotify.pnotify_display();
 
-			if (opts.pnotify_hide) {
-				pnotify.pnotify_queue_remove();
-				pnotify.mouseenter(function(){
-					pnotify.stop();
-					pnotify.fadeTo("fast", opts.pnotify_opacity);
-					pnotify.pnotify_cancel_remove();
-				}).mouseleave(function(){
-					pnotify.pnotify_queue_remove();
-					$.pnotify_position_all();
-				});
+			if (opts.pnotify_history) {
+				var body_history = body.data("pnotify_history");
+				if (typeof body_history == "undefined") {
+					body_history = $("<div />").addClass("ui-pnotify-history-container ui-state-default ui-corner-bottom");
+					body.append(body_history);
+					
+					body_history.append($("<div>Redisplay</div>").addClass("ui-pnotify-history-header"));
+					body_history.append($("<button>All</button>").addClass("ui-pnotify-history-all ui-state-default ui-corner-all").hover(function(){
+						$(this).addClass("ui-state-hover");
+					}, function(){
+						$(this).removeClass("ui-state-hover");
+					}).click(function(){
+						$.each(body_data, function(){
+							if (this.pnotify_display)
+								this.pnotify_display();
+						});
+					}));
+					body_history.append($("<button>Last</button>").addClass("ui-pnotify-history-last ui-state-default ui-corner-all").hover(function(){
+						$(this).addClass("ui-state-hover");
+					}, function(){
+						$(this).removeClass("ui-state-hover");
+					}).click(function(){
+						if (body_data[body_data.length - 1] && body_data[body_data.length - 1].pnotify_display)
+							body_data[body_data.length - 1].pnotify_display();
+					}));
+
+					var handle = $("<span></span>").addClass("ui-pnotify-history-pulldown ui-icon ui-icon-grip-dotted-horizontal").mouseenter(function(){
+						body_history.animate({top: "0"}, {duration: 100, queue: false})
+					});
+					body_history.append(handle);
+					history_handle_top = handle.offset().top;
+
+					body_history.mouseleave(function(){
+						body_history.animate({top: "-"+history_handle_top+"px"}, {duration: 100, queue: false});
+					});
+					body_history.css({top: "-"+history_handle_top+"px"});
+
+					body.data("pnotify_history", body_history);
+				}
 			}
 
 			return pnotify;
@@ -178,6 +233,8 @@
 	});
 
 	$.pnotify.defaults = {
+		// Display a pull down menu to redisplay previous notices.
+		pnotify_history: true,
 		// Width of the notice.
 		pnotify_width: "300px",
 		// Minimum height of the notice. It will expand to fit content.
