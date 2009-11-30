@@ -89,6 +89,17 @@ class entity extends p_base {
 	protected $data = array();
 
 	/**
+	 * Add one or more tags. (Same as add_tag)
+	 *
+	 * @param mixed $tag,... List or array of tags.
+	 */
+	public function __construct() {
+		$args = func_get_args();
+		if (!empty($args))
+			call_user_func_array(array($this, 'add_tag'), $args);
+	}
+
+	/**
 	 * Retrieve a variable.
 	 *
 	 * You do not need to explicitly call this method. It is called by PHP when
