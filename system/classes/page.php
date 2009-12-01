@@ -135,10 +135,8 @@ class page extends p_base {
 	 * Add a notice to be displayed to the user.
 	 *
 	 * @param string $message The message text.
-	 * @param string $image The filename of an image to use.
-	 * @todo Image support.
 	 */
-	public function notice($message, $image = NULL) {
+	public function notice($message) {
 		$this->notice[] = $message;
 	}
 	
@@ -155,10 +153,8 @@ class page extends p_base {
 	 * Add an error to be displayed to the user.
 	 *
 	 * @param string $message The message text.
-	 * @param string $image The filename of an image to use.
-	 * @todo Image support.
 	 */
-	public function error($message, $image = NULL) {
+	public function error($message) {
 		$this->error[] = $message;
 	}
 	
