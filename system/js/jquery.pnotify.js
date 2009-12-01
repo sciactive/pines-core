@@ -60,6 +60,12 @@
 			} else {
 				opts = $.extend({}, $.pnotify.defaults, options);
 			}
+
+			if (opts.pnotify_before_init) {
+				if (opts.pnotify_before_init(opts) === false) {
+					return null;
+				}
+			}
 			
 			var pnotify = $("<div />").addClass("ui-widget ui-helper-clearfix ui-pnotify");
 			pnotify.container = $("<div />").addClass("ui-corner-all ui-pnotify-container");
@@ -110,22 +116,31 @@
 				if (pnotify.parent().get()) {
 					pnotify.pnotify_init();
 				}
+				if (opts.pnotify_before_open)
+					opts.pnotify_before_open(pnotify);
 				pnotify.pnotify_queue_position();
 				// First show it, then set its opacity to 0, then fade into the set opacity.
-				pnotify.show().fadeTo(0, 0).fadeTo(opts.pnotify_fade_speed, opts.pnotify_opacity);
+				pnotify.show().fadeTo(0, 0).fadeTo(opts.pnotify_fade_speed, opts.pnotify_opacity, function(){
+					if (opts.pnotify_after_open)
+						opts.pnotify_after_open(pnotify);
 				
-				// Now set it to hide.
-				if (opts.pnotify_hide) {
-					pnotify.pnotify_queue_remove();
-				}
+					// Now set it to hide.
+					if (opts.pnotify_hide) {
+						pnotify.pnotify_queue_remove();
+					}
+				});
 			};
 
 			pnotify.pnotify_remove = function() {
+				if (opts.pnotify_before_close)
+					opts.pnotify_before_close(pnotify);
 				if (pnotify.timer) {
 					window.clearTimeout(pnotify.timer);
 					pnotify.timer = null;
 				}
 				pnotify.fadeOut(opts.pnotify_fade_speed, function(){
+					if (opts.pnotify_after_close)
+						opts.pnotify_after_close(pnotify);
 					pnotify.pnotify_queue_position();
 					if (opts.pnotify_remove)
 						pnotify.remove();
@@ -184,6 +199,9 @@
 				body_data = Array();
 			body_data = $.merge(body_data, [pnotify]);
 			body.data("pnotify", body_data);
+
+			if (opts.pnotify_after_init)
+				opts.pnotify_after_init(pnotify);
 
 			pnotify.pnotify_display();
 
