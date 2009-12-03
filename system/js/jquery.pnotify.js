@@ -25,6 +25,7 @@
 			var body = $("body");
 			var next = first_top;
 			var body_data = body.data("pnotify");
+			// TODO: Maybe do horizontal positioning here too. Use top % screenheight for top value.
 			$.each(body_data, function(){
 				var postop;
 				var display = this.css("display");
