@@ -171,7 +171,7 @@
 				ptags.ptags_update_tags();
 			}
 
-			ptags.ptags_widget.append($("<br />").addClass("ui-helper-clearfix ui-pgrid-clear"));
+			ptags.ptags_widget.append($("<br />").addClass("ui-helper-clearfix ui-ptags-clear"));
 
 			// Save the ptags object in the DOM, so we can access it.
 			this.pines_tags = ptags;
