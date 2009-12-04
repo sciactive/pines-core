@@ -191,7 +191,7 @@
 		ptags_show_tags: true,
 		// Show the tag box. (Not necessary if you show tags.)
 		ptags_show_box: false,
-		// Provide an input box to let the user add tags. (Copies the original box.)
+		// Provide an input box to let the user add tags. (Clones the original box's styling.)
 		ptags_input_box: true,
 		// Provide a remover button on each tag.
 		ptags_remover: true,
