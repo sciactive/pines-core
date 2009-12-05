@@ -240,6 +240,7 @@ class entity extends p_base {
 	 *
 	 * @param mixed $item The item to check.
 	 * @param mixed $key Unused.
+	 * @access private
 	 */
 	private function entity_to_reference(&$item, $key) {
 		if (is_a($item, "entity") && isset($item->guid)) {
@@ -315,6 +316,7 @@ class entity extends p_base {
 	 *
 	 * @param mixed $item The item to check.
 	 * @param mixed $key Unused.
+	 * @access private
 	 */
 	private function reference_to_entity(&$item, $key) {
 		global $config;
