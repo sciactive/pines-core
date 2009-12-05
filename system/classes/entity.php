@@ -13,41 +13,32 @@ defined('P_RUN') or die('Direct access prohibited');
 /**
  * Used to provide an abstract way to represent and store data in Pines.
  *
- * ALWAYS check tags after retrieving an entity.
+ * ALWAYS use tags to categorize your entities. You don't want to accidentally
+ * get another component's entities, so make a tag that's the name of your
+ * component.
  *
- * Some notes about saving entities in other entity's variables (sub-entity):
+ * Some notes about saving entities in other entity's variables:
  *
- * --To avoid all this confusion, don't save sub-entities, and try not to even
- * use them. Think about parent entities, dynamic_config, or tags instead. :)
+ * The entity class uses references to store an entity in another entity's
+ * variable. The reference is stored as an array with the values:
  *
- * If you still MUST save your entities in other entities:
- *							(all this only applies to *saved* sub-entities)
+ * - 0 => The string 'pines_entity_reference'
+ * - 1 => The reference entity's GUID.
+ * - 2 => The reference entity's class name.
  *
- * <ol>
- * <li>When you save a sub-entity, it effectively duplicates the data in the
- * database. Once as data of the owner, and again as its own entity. This
- * is not efficient and difficult to keep track of!!</li>
- * <li>ALWAYS delete sub-entities first, unless they are to survive their owner,
- * entity managers don't delete sub-entities when you delete their owner.</li>
- * <li>When you delete() a sub-entity, it doesn't dissappear, it just gets
- * removed from the database as an entity and loses its GUID. You should
- * subsequently unset() it if you want it out of your owner entity.</li>
- * <li>Remember to SAVE your owner after deleting and unsetting
- * sub-entities.</li>
- * <li>If you just unset() a saved sub-entity without delete()ing it, it will
- * still be an entity in the database, just no longer data in the owner.</li>
- * <li>Saving an owner does not save its sub-entity. if you load the owner, its
- * sub-entity will have the new data, but if you load the sub-entity, it will
- * have the old data, so save both sub-entity and owner (sub-entities
- * first).</li>
- * <li>Also, saving sub-entities will not save their data in the owner. SAVE ALL
- * SUB-ENTITIES FIRST, THEN OWNERS.</li>
- * </ol>
+ * Since the reference entity's class name is stored in the reference on the
+ * entity's first save and used to retrieve the reference entity using the same
+ * class, if you change the class name, you need to reassign the reference
+ * entity and save to storage.
  *
- * Now, after having said all that, you can see that sub-entities are very
- * innefficient. The $entity->parent system was designed to replace this
- * functionality, and though not as versatile, it is MUCH more efficient. Try to
- * avoid using sub-entities at all cost!
+ * When an entity is loaded, it does not request its referenced entities from
+ * the entity manager. This is done the first time the variable is accessed. The
+ * referenced entity is then stored in a cache, so if it is altered elsewhere,
+ * then accessed again through the variable, the changes will *not* be there.
+ * Therefore, you should take great care when accessing entities from multiple
+ * variables. If you might be using a referenced entity again later in the code
+ * execution (after some other processing occurs), it's recommended to call
+ * clear_cache().
  *
  * @package Pines
  */
@@ -73,7 +64,7 @@ class entity extends p_base {
 	/**
 	 * Tags are used to classify entities.
 	 *
-	 * Though not sctrictly necessary, it is a VERY good idea to give every
+	 * Though not sctrictly necessary, it is HIGHLY RECOMMENDED to give every
 	 * entity your component creates a tag indentical to your component's name.
 	 * Such as 'com_xmlparser'.
 	 *
@@ -87,6 +78,16 @@ class entity extends p_base {
 	 * @access protected
 	 */
 	protected $data = array();
+	/**
+	 * The array used to store referenced entities.
+	 *
+	 * This technique allows your code to see another entity as a variable,
+	 * while storing only a reference.
+	 *
+	 * @var array
+	 * @access protected
+	 */
+	 protected $entity_cache = array();
 
 	/**
 	 * Add one or more tags. (Same as add_tag)
@@ -110,6 +111,16 @@ class entity extends p_base {
 	 * @access protected
 	 */
 	public function &__get($name) {
+		global $config;
+		// Check for an entity first.
+		if (array_key_exists($name, $this->entity_cache)) {
+			if ($this->entity_cache[$name] === 0) {
+				// The entity hasn't been loaded yet, so load it now.
+				$this->entity_cache[$name] = $config->entity_manager->get_entity($this->data[$name][1], array(), $this->data[$name][2]);
+			}
+			return $this->entity_cache[$name];
+		}
+		// If it's not an entity, return the regular value.
 		if (array_key_exists($name, $this->data)) {
 			return $this->data[$name];
 		}
@@ -142,6 +153,16 @@ class entity extends p_base {
 	 * @access protected
 	 */
 	public function __set($name, $value) {
+		if (is_a($value, "entity") && isset($value->guid)) {
+			// This is an entity, so we don't want to store it in our own data array.
+			$this->entity_cache[$name] = $value;
+			// Store a reference to the entity (its GUID) and the class the entity was loaded as.
+			$value = array('pines_entity_reference', $value->guid, get_class($value));
+		} else {
+			// This is not an entity, so if it was one, delete the cached entity.
+			if (isset($this->entity_cache[$name]))
+				unset($this->entity_cache[$name]);
+		}
 		return ($this->data[$name] = $value);
 	}
 
@@ -155,6 +176,8 @@ class entity extends p_base {
 	 * @access protected
 	 */
 	public function __unset($name) {
+		if (isset($this->entity_cache[$name]))
+			unset($this->entity_cache[$name]);
 		unset($this->data[$name]);
 	}
 
@@ -175,11 +198,23 @@ class entity extends p_base {
 	}
 
 	/**
-	 * Delete the entity from the database.
+	 * Clear the cache of referenced entities.
 	 *
-	 * Simply calling delete() will not unset your entity, so it will still take
-	 * up memory. Also, calling unset will not delete your entity from the
-	 * database.
+	 * Calling this function ensures that the next time a referenced entity is
+	 * accessed, it will be retrieved from the entity manager.
+	 */
+	public function clear_cache() {
+		foreach ($this->entity_cache as &$value) {
+			$value = 0;
+		}
+	}
+
+	/**
+	 * Delete the entity from storage.
+	 *
+	 * Simply calling delete() will not unset the entity. It will still take up
+	 * memory. Likewise, simply calling unset will not delete the entity from
+	 * storage.
 	 *
 	 * @return mixed Returns what the entity manager's delete_entity function returns.
 	 */
@@ -192,7 +227,7 @@ class entity extends p_base {
 	 * Used to retrieve the data array.
 	 *
 	 * This should only be used by the entity manager to save the data array
-	 * into the database.
+	 * into storage.
 	 *
 	 * @return array The entity's data array.
 	 * @access protected
@@ -225,13 +260,22 @@ class entity extends p_base {
 	 * Used to set the data array.
 	 *
 	 * This should only be used by the entity manager to push the data array
-	 * from the database.
+	 * from storage.
 	 *
 	 * @param array $data The data array.
 	 * @return array The data array.
 	 * @access protected
 	 */
 	public function put_data($data) {
+		if (!is_array($data))
+			$data = array();
+		foreach($data as $name => $value) {
+			if (is_array($value) && $value[0] === 'pines_entity_reference') {
+				// Don't load the entity yet, but make the entry in the array, so we know it is an entity reference.
+				// This will speed up retrieving entities with lots of references, especially recursive references.
+				$this->entity_cache[$name] = 0;
+			}
+		}
 		return ($this->data = $data);
 	}
 
@@ -257,7 +301,7 @@ class entity extends p_base {
 	}
 
 	/**
-	 * Save the entity to the database.
+	 * Save the entity to storage.
 	 *
 	 * @return mixed Returns what the entity manager's save_entity function returns.
 	 */
