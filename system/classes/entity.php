@@ -123,14 +123,11 @@ class entity extends p_base {
 		// If it's not an entity, return the regular value.
 		if (array_key_exists($name, $this->data)) {
 			if (is_array($this->data[$name])) {
-				// But, if it's an array, check all the values for references, and change them.
+				// But, if it's an array, check all the values for entity references, and change them.
 				$get_value = $this->data[$name];
-				array_walk($get_value, array($this, 'reference_to_entity'));
-				return $get_value;
-			} else {
-				// If it's not an array, just return it.
-				return $this->data[$name];
+				array_walk($this->data[$name], array($this, 'reference_to_entity'));
 			}
+			return $this->data[$name];
 		}
 	}
 
@@ -263,6 +260,8 @@ class entity extends p_base {
 	 * @access protected
 	 */
 	public function get_data() {
+		// First, walk though the data and convert any entities to references.
+		array_walk_recursive($this->data, array($this, 'entity_to_reference'));
 		return $this->data;
 	}
 
