@@ -20,7 +20,7 @@ defined('P_RUN') or die('Direct access prohibited');
  * Some notes about saving entities in other entity's variables:
  *
  * The entity class uses references to store an entity in another entity's
- * variable. The reference is stored as an array with the values:
+ * variable or array. The reference is stored as an array with the values:
  *
  * - 0 => The string 'pines_entity_reference'
  * - 1 => The reference entity's GUID.
@@ -32,13 +32,13 @@ defined('P_RUN') or die('Direct access prohibited');
  * entity and save to storage.
  *
  * When an entity is loaded, it does not request its referenced entities from
- * the entity manager. This is done the first time the variable is accessed. The
- * referenced entity is then stored in a cache, so if it is altered elsewhere,
- * then accessed again through the variable, the changes will *not* be there.
- * Therefore, you should take great care when accessing entities from multiple
- * variables. If you might be using a referenced entity again later in the code
- * execution (after some other processing occurs), it's recommended to call
- * clear_cache().
+ * the entity manager. This is done the first time the variable/array is
+ * accessed. The referenced entity is then stored in a cache, so if it is
+ * altered elsewhere, then accessed again through the variable, the changes will
+ * *not* be there. Therefore, you should take great care when accessing entities
+ * from multiple variables. If you might be using a referenced entity again
+ * later in the code execution (after some other processing occurs), it's
+ * recommended to call clear_cache().
  *
  * @package Pines
  */
@@ -107,7 +107,7 @@ class entity extends p_base {
 	 * you access the variable normally.
 	 *
 	 * @param string $name The name of the variable.
-	 * @return mixed The value of the variable or null if it does not exist.
+	 * @return mixed The value of the variable or nothing if it doesn't exist.
 	 * @access protected
 	 */
 	public function &__get($name) {
@@ -122,9 +122,16 @@ class entity extends p_base {
 		}
 		// If it's not an entity, return the regular value.
 		if (array_key_exists($name, $this->data)) {
-			return $this->data[$name];
+			if (is_array($this->data[$name])) {
+				// But, if it's an array, check all the values for references, and change them.
+				$get_value = $this->data[$name];
+				array_walk($get_value, array($this, 'reference_to_entity'));
+				return $get_value;
+			} else {
+				// If it's not an array, just return it.
+				return $this->data[$name];
+			}
 		}
-		return null;
 	}
 
 	/**
@@ -165,7 +172,12 @@ class entity extends p_base {
 				unset($this->entity_cache[$name]);
 			// Store the actual value passed.
 			$save_value = $value;
+			// If the variable is an array, look through it and change entities to references.
+			if (is_array($save_value)) {
+				array_walk_recursive($save_value, array($this, 'entity_to_reference'));
+			}
 		}
+		
 		return ($this->data[$name] = $save_value);
 	}
 
@@ -227,6 +239,21 @@ class entity extends p_base {
 	}
 
 	/**
+	 * Check if an item is an entity, and if it is, convert it to a reference.
+	 *
+	 * @param mixed $item The item to check.
+	 * @param mixed $key Unused.
+	 */
+	private function entity_to_reference(&$item, $key) {
+		if (is_a($item, "entity") && isset($item->guid)) {
+			// This is an entity, so we should put it in the entity cache.
+			$this->entity_cache["reference_guid: {$item->guid}"] = $item;
+			// Make a reference to the entity (its GUID) and the class the entity was loaded as.
+			$item = array('pines_entity_reference', $item->guid, get_class($item));
+		}
+	}
+
+	/**
 	 * Used to retrieve the data array.
 	 *
 	 * This should only be used by the entity manager to save the data array
@@ -280,6 +307,26 @@ class entity extends p_base {
 			}
 		}
 		return ($this->data = $data);
+	}
+
+	/**
+	 * Check if an item is a reference, and if it is, convert it to an entity.
+	 *
+	 * This function will recurse into deeper arrays.
+	 *
+	 * @param mixed $item The item to check.
+	 * @param mixed $key Unused.
+	 */
+	private function reference_to_entity(&$item, $key) {
+		global $config;
+		if (is_array($item) && $item[0] === 'pines_entity_reference') {
+			if (!isset($this->entity_cache["reference_guid: {$item[1]}"])) {
+				$this->entity_cache["reference_guid: {$item[1]}"] = $config->entity_manager->get_entity($item[1], array(), $item[2]);
+			}
+			$item = $this->entity_cache["reference_guid: {$item[1]}"];
+		} elseif (is_array($item)) {
+			array_walk($item, array($this, 'reference_to_entity'));
+		}
 	}
 
 	/**
