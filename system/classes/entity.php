@@ -154,16 +154,19 @@ class entity extends p_base {
 	 */
 	public function __set($name, $value) {
 		if (is_a($value, "entity") && isset($value->guid)) {
-			// This is an entity, so we don't want to store it in our own data array.
+			// This is an entity, so we don't want to store it in our data array.
 			$this->entity_cache[$name] = $value;
 			// Store a reference to the entity (its GUID) and the class the entity was loaded as.
-			$value = array('pines_entity_reference', $value->guid, get_class($value));
+			// We don't want to manipulate $value itself, because it could be a variable that the program is still using.
+			$save_value = array('pines_entity_reference', $value->guid, get_class($value));
 		} else {
 			// This is not an entity, so if it was one, delete the cached entity.
 			if (isset($this->entity_cache[$name]))
 				unset($this->entity_cache[$name]);
+			// Store the actual value passed.
+			$save_value = $value;
 		}
-		return ($this->data[$name] = $value);
+		return ($this->data[$name] = $save_value);
 	}
 
 	/**
