@@ -193,13 +193,24 @@
 		var rows = $(this);
 		this.each(function(){
 			var cur_row = $(this);
-			
+
 			if (cur_row.hasClass("parent")) {
 				var children = cur_row.siblings("."+cur_row.attr("title"));
 				rows = rows.add(children.pgrid_add_descendent_rows());
 			}
 		});
 		return rows;
+	};
+	$.fn.pgrid_get_value = function(column) {
+		// Only works on one row.
+		var cur_row = $(this).eq(0);
+		return cur_row.find("td.col_"+column+" div.ui-pgrid-table-cell-text").html();
+	};
+	$.fn.pgrid_set_value = function(column, value) {
+		this.each(function(){
+			var cur_row = $(this);
+			cur_row.find("td.col_"+column+" div.ui-pgrid-table-cell-text").html(value);
+		});
 	};
 	$.fn.pgrid_export_state = function() {
 		var pgrid = this.get(0);
@@ -384,7 +395,7 @@
 								function(){
 									$(this).removeClass("ui-state-hover");
 								}
-							));
+								));
 						}
 					});
 				}
@@ -689,10 +700,10 @@
 						cur_row.siblings("."+cur_row.attr("title"))
 						.children() //("td:first-child")
 						.css("padding-left", (cur_left_padding+10)+"px");
-						//.slice(0, -1)
-						//.prepend("<span style=\"font-family: Arial, sans-serif; font-size: 85%; font-weight: lighter; vertical-align: top;\">├ </span>")
-						//.end().slice(-1)
-						//.prepend("<span style=\"font-family: Arial, sans-serif; font-size: 85%; font-weight: lighter; vertical-align: top;\">└ </span>");
+					//.slice(0, -1)
+					//.prepend("<span style=\"font-family: Arial, sans-serif; font-size: 85%; font-weight: lighter; vertical-align: top;\">├ </span>")
+					//.end().slice(-1)
+					//.prepend("<span style=\"font-family: Arial, sans-serif; font-size: 85%; font-weight: lighter; vertical-align: top;\">└ </span>");
 					}
 					cur_row.prepend("<td class=\"ui-pgrid-table-expander\"></td>")
 					.append("<td class=\"ui-pgrid-table-cell-scrollspace\"></td>");
@@ -927,7 +938,13 @@
 			pgrid.pgrid_table_viewport = pgrid.pgrid_table_container.parent();
 			pgrid.pgrid_table_viewport.height(pgrid.pgrid_view_height);
 			if (pgrid.pgrid_view_height != "auto") {
-				pgrid.pgrid_table_container.css({position: "absolute", top: "0", bottom: "0", left: "0", right: "0"});
+				pgrid.pgrid_table_container.css({
+					position: "absolute",
+					top: "0",
+					bottom: "0",
+					left: "0",
+					right: "0"
+				});
 			}
 
 			/* -- Toolbar -- */
@@ -1040,13 +1057,35 @@
 							function(){
 								$(this).removeClass("ui-state-hover");
 							}
-						);
+							);
 						if (val.double_click) {
 							pgrid.pgrid_double_click_tb = function() {
 								cur_button.click();
 							};
 						}
 						toolbar.append(cur_button);
+					} else if (val.type == "text") {
+						var wrapper = $("<div />").addClass("ui-pgrid-toolbar-text");
+						if (val.extra_class)
+							wrapper.addClass(val.extra_class);
+						if (val.label) {
+							wrapper.append($("<span>"+val.label+"</span>").addClass("ui-pgrid-toolbar-text-label"));
+						}
+						var cur_text = $("<input type=\"text\" />").addClass("ui-state-default ui-corner-all");
+						if (!val.dont_prevent_default) {
+							cur_text.keydown(function(e){
+								if (e.keyCode == 13)
+									e.preventDefault();
+							});
+						}
+						if (val.attributes) {
+							cur_text.attr(val.attributes);
+						}
+						wrapper.append(cur_text);
+						toolbar.append(wrapper);
+						if (val.load) {
+							val.load(cur_text);
+						}
 					} else if (val.type == "separator") {
 						toolbar.append(
 							$("<div />").addClass("ui-pgrid-toolbar-sep ui-state-default")
@@ -1089,7 +1128,7 @@
 									function(){
 										$(this).removeClass("ui-state-hover");
 									}
-								)));
+									)));
 						})
 						);
 				}
@@ -1143,7 +1182,7 @@
 								function(){
 									$(this).removeClass("ui-state-hover");
 								}
-							));
+								));
 							footer_pager.append($("<button>&lt; Prev</button>").addClass("ui-state-default ui-corner-all").click(function(){
 								pgrid.pageprev();
 							}).hover(
@@ -1153,7 +1192,7 @@
 								function(){
 									$(this).removeClass("ui-state-hover");
 								}
-							));
+								));
 							footer_pager.append($("<div />").addClass("ui-pgrid-footer-pager-button-container"));
 							footer_pager.append($("<button>Next &gt;</button>").addClass("ui-state-default ui-corner-all").click(function(){
 								pgrid.pagenext();
@@ -1164,7 +1203,7 @@
 								function(){
 									$(this).removeClass("ui-state-hover");
 								}
-							));
+								));
 							footer_pager.append($("<button>End &gt;&gt;</button>").addClass("ui-state-default ui-corner-all").click(function(){
 								pgrid.pageend();
 							}).hover(
@@ -1174,7 +1213,7 @@
 								function(){
 									$(this).removeClass("ui-state-hover");
 								}
-							));
+								));
 							footer_pager.append($("<span> Page <span class=\"page_number\">1</span> of <span class=\"page_total\">1</span></span>"));
 						})
 						);

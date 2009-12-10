@@ -65,6 +65,12 @@
 .ui-pgrid-toolbar .ui-pgrid-toolbar-button div {
 	padding: 1px;
 }
+.ui-pgrid-toolbar .ui-pgrid-toolbar-text {
+	float: left;
+	cursor: default;
+	padding: 3px;
+	margin: 1px;
+}
 
 /* Footer
 ----------------------------------*/
