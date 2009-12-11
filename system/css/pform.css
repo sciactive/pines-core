@@ -59,6 +59,10 @@
 	float: none;
 	margin-left: 5px; /* Margin between inputs and labels. */
 }
+.pform div.element .field.full_width {
+	display: block;
+	margin-left: 205px; /* Width of labels. */
+}
 .pform div.buttons {
 	clear: both;
 	padding-left: 185px; /* Width of labels + margin to inputs - button spacing. */
