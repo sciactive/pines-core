@@ -8,7 +8,7 @@
  */
 
 (function($) {
-	$.fn.pgrid_add = function(rows) {
+	$.fn.pgrid_add = function(rows, row_callback) {
 		if (!rows)
 			return this;
 		this.each(function(){
@@ -18,10 +18,12 @@
 			var new_rows = false;
 			$.each(rows, function(){
 				var cur_row = this;
-				var jq_row = $("<tr />").attr("title", cur_row.key).addClass(cur_row.classes).each(function(){
+				var jq_row = $("<tr />").attr("title", String(cur_row.key)).addClass(cur_row.classes ? cur_row.classes : "").each(function(){
 					var this_row = $(this);
+					if (!cur_row.values)
+						return;
 					$.each(cur_row.values, function(){
-						this_row.append($("<td>"+this+"</td>"));
+						this_row.append($("<td>"+String(this)+"</td>"));
 					});
 				});
 				pgrid.find("tbody tr.ui-pgrid-table-row-spacer").before(jq_row);
@@ -41,6 +43,9 @@
 			pgrid.paginate(true);
 			pgrid.make_page_buttons();
 			pgrid.update_selected();
+
+			if (row_callback)
+				new_rows.each(row_callback);
 		});
 		return this;
 	};
@@ -761,10 +766,12 @@
 							// Calculate the current column number. Don't need to add 1 because of the expander column.
 							var cur_col = cur_cell.prevAll().length;
 							// Wrap the contents and add the column class to the cell.
-							cur_cell.wrapInner($("<div />").addClass("ui-pgrid-table-cell-text")).addClass("col_"+cur_col);
+							var cell_text = $("<div />").addClass("ui-pgrid-table-cell-text");
+							cell_text.append(cur_cell.html());
+							cur_cell.addClass("col_"+cur_col).empty().append(cell_text);
 							// If this table is resizable, we need its cells to have a width of 1px;
 							if (pgrid.pgrid_resize_cols) {
-								cur_cell.children(".ui-pgrid-table-cell-text").addClass("ui-pgrid-table-sized-cell");
+								cell_text.addClass("ui-pgrid-table-sized-cell");
 							}
 						}
 					});
@@ -1059,7 +1066,13 @@
 							}
 							);
 						if (val.double_click) {
+							// Save any previous double click functions.
+							if (pgrid.pgrid_double_click_tb)
+								var _old_double_click_tb = pgrid.pgrid_double_click_tb;
 							pgrid.pgrid_double_click_tb = function() {
+								// Call any previous double click functions.
+								if (_old_double_click_tb)
+									_old_double_click_tb();
 								cur_button.click();
 							};
 						}

@@ -147,6 +147,7 @@
 .picon_22x22_mimetypes_text-x-script {background-image: url("22x22/mimetypes/text-x-script.png");}
 .picon_22x22_mimetypes_x-office-document-template {background-image: url("22x22/mimetypes/x-office-document-template.png");}
 .picon_22x22_animations_process-working {background-image: url("22x22/animations/process-working.png");}
+.picon_22x22_animations_throbber {background-image: url("22x22/animations/throbber.gif");}
 .picon_22x22_emotes_face-smile-big {background-image: url("22x22/emotes/face-smile-big.png");}
 .picon_22x22_emotes_face-crying {background-image: url("22x22/emotes/face-crying.png");}
 .picon_22x22_emotes_face-kiss {background-image: url("22x22/emotes/face-kiss.png");}
@@ -405,6 +406,7 @@
 .picon_32x32_mimetypes_text-x-script {background-image: url("32x32/mimetypes/text-x-script.png");}
 .picon_32x32_mimetypes_x-office-document-template {background-image: url("32x32/mimetypes/x-office-document-template.png");}
 .picon_32x32_animations_process-working {background-image: url("32x32/animations/process-working.png");}
+.picon_32x32_animations_throbber {background-image: url("32x32/animations/throbber.gif");}
 .picon_32x32_emotes_face-smile-big {background-image: url("32x32/emotes/face-smile-big.png");}
 .picon_32x32_emotes_face-crying {background-image: url("32x32/emotes/face-crying.png");}
 .picon_32x32_emotes_face-kiss {background-image: url("32x32/emotes/face-kiss.png");}
@@ -658,6 +660,7 @@
 .picon_16x16_filesystems_gnome-fs-bookmark-missing {background-image: url("16x16/filesystems/gnome-fs-bookmark-missing.png");}
 .picon_16x16_filesystems_gnome-fs-bookmark {background-image: url("16x16/filesystems/gnome-fs-bookmark.png");}
 .picon_16x16_animations_process-working {background-image: url("16x16/animations/process-working.png");}
+.picon_16x16_animations_throbber {background-image: url("16x16/animations/throbber.gif");}
 .picon_16x16_emotes_face-smile-big {background-image: url("16x16/emotes/face-smile-big.png");}
 .picon_16x16_emotes_face-crying {background-image: url("16x16/emotes/face-crying.png");}
 .picon_16x16_emotes_face-kiss {background-image: url("16x16/emotes/face-kiss.png");}
