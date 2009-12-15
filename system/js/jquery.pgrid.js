@@ -956,12 +956,12 @@
 
 			/* -- Toolbar -- */
 			if (pgrid.pgrid_toolbar) {
-				var toolbar = $("<div />").addClass("ui-pgrid-toolbar ui-helper-clearfix");
+				var toolbar = $("<div />").addClass("ui-pgrid-toolbar");
 
 				$.each(pgrid.pgrid_toolbar_contents, function(key, val){
 					if (val.type == "button") {
-						var cur_button = $("<div />").addClass("ui-pgrid-toolbar-button ui-state-default ui-corner-all").append(
-							$("<div><span>"+val.text+"</span></div>").each(function(){
+						var cur_button = $("<span />").addClass("ui-pgrid-toolbar-button ui-state-default ui-corner-all").append(
+							$("<span><span>"+val.text+"</span></span>").each(function(){
 								if (val.extra_class)
 									$(this).addClass(val.extra_class);
 							})
@@ -1078,7 +1078,7 @@
 						}
 						toolbar.append(cur_button);
 					} else if (val.type == "text") {
-						var wrapper = $("<div />").addClass("ui-pgrid-toolbar-text");
+						var wrapper = $("<span />").addClass("ui-pgrid-toolbar-text");
 						if (val.extra_class)
 							wrapper.addClass(val.extra_class);
 						if (val.label) {
@@ -1101,9 +1101,10 @@
 						}
 					} else if (val.type == "separator") {
 						toolbar.append(
-							$("<div />").addClass("ui-pgrid-toolbar-sep ui-state-default")
+							$("<span />").addClass("ui-pgrid-toolbar-sep ui-state-default")
 							);
 					}
+					toolbar.append("<span class=\"ui-pgrid-toolbar-spacer\"> </span>");
 				});
 
 				pgrid.pgrid_widget.prepend(toolbar);

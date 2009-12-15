@@ -45,31 +45,35 @@
 /* Toolbar
 ----------------------------------*/
 .ui-pgrid-toolbar {
-	padding: 1px;
+	padding: 2px;
 	margin: 0;
 	font-weight: normal;
+	line-height: 2em;
 }
 .ui-pgrid-toolbar .ui-pgrid-toolbar-sep {
-	float: left;
 	height: 1em;
 	width: 0;
-	padding: 5px 0;
+	padding: .3em 0;
 	margin: 1px 2px;
 }
 .ui-pgrid-toolbar .ui-pgrid-toolbar-button {
-	float: left;
 	cursor: default;
 	padding: 3px;
 	margin: 1px;
 }
 .ui-pgrid-toolbar .ui-pgrid-toolbar-button div {
 	padding: 1px;
+	white-space: pre;
 }
 .ui-pgrid-toolbar .ui-pgrid-toolbar-text {
-	float: left;
 	cursor: default;
 	padding: 3px;
 	margin: 1px;
+	white-space: pre;
+}
+.ui-pgrid-toolbar .ui-pgrid-toolbar-spacer {
+	font-size: 0;
+	line-height: 0;
 }
 
 /* Footer

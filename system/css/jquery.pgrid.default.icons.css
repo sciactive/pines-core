@@ -12,6 +12,6 @@
 	background-color: transparent;
 	background-repeat: no-repeat;
 	background-position: center left;
-	padding-left: 17px !important;
+	padding: 1px 1px 1px 17px !important;
 	min-height: 14px;
 }
