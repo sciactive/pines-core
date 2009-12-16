@@ -8,14 +8,19 @@ A list of things to complete before the initial release of Pines:
 +Installer/Package Manager.
 +More dependency checker types. (Version, PHP abilities, other components...)
 +Fix com_newsletter.
-+Pines Grid caption and summary support.
 +Improve menu system to be fully customizeable. (XML menu definitions.)
 +Full SAWASC implementation for better security.
 	(http://sawasc.sciactive.com/)
 +More log entries.
+--------------------------------------------------------------------------------
+
+Possible future faetures:
+--------------------------------------------------------------------------------
++Entity locking.
++Pines Grid caption and summary support.
++New templates / Improve Pines template. (Maybe use XSL instead of PHP.)
 +Possibly change structure to dirs (models, control, views) to
 	replace single files for MVC. (Use glob function to find files.)
-+New templates / Improve Pines template. (Maybe use XSL instead of PHP.)
 +(2.0 Probably) Pines Entity Exchange (com_pex, for easily combining two
 	installation's entities, using hooks, effectively creating a DB mirror)
 --------------------------------------------------------------------------------
