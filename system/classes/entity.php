@@ -252,17 +252,18 @@ class entity extends p_base {
 	}
 
 	/**
-	 * Perform a less strict comparison of this entity to another.
+	 * Perform a more strict comparison of this entity to another.
 	 *
 	 * In order to return true, this and $object must meet the following
 	 * criteria:
 	 *
 	 * - They must be entities.
 	 * - They must have equal GUIDs. (Or both can have no GUID.)
-	 * - If they have no GUIDs, their data must be equal.
+	 * - They must be instances of the same class.
+	 * - Their data must be equal.
 	 *
-	 * Use this instead of the == operator when the entity's data may have
-	 * been changed, but you only care if it is the same entity.
+	 * Use this instead of the == operator, because the cached entity data
+	 * causes == to return false when it should return true.
 	 *
 	 * @param mixed $object The object to compare.
 	 * @return bool True or false.
@@ -271,12 +272,14 @@ class entity extends p_base {
 		if (!is_a($object, 'entity'))
 			return false;
 		if (isset($this->guid) || isset($object->guid)) {
-			return ($this->guid == $object->guid);
-		} else {
-			$ob_data = $object->get_data();
-			$my_data = $this->get_data();
-			return ($ob_data == $my_data);
+			if ($this->guid != $object->guid)
+				return false;
 		}
+		if (get_class($object) != get_class($this))
+			return false;
+		$ob_data = $object->get_data();
+		$my_data = $this->get_data();
+		return ($ob_data == $my_data);
 	}
 
 	/**
@@ -315,18 +318,17 @@ class entity extends p_base {
 	}
 
 	/**
-	 * Perform a more strict comparison of this entity to another.
+	 * Perform a less strict comparison of this entity to another.
 	 *
 	 * In order to return true, this and $object must meet the following
 	 * criteria:
 	 *
 	 * - They must be entities.
 	 * - They must have equal GUIDs. (Or both can have no GUID.)
-	 * - They must be instances of the same class.
-	 * - Their data must be equal.
+	 * - If they have no GUIDs, their data must be equal.
 	 *
-	 * Use this instead of the == operator, because the cached entity data
-	 * causes == to return false when it should return true.
+	 * Use this instead of the == operator when the entity's data may have
+	 * been changed, but you only care if it is the same entity.
 	 *
 	 * @param mixed $object The object to compare.
 	 * @return bool True or false.
@@ -335,14 +337,12 @@ class entity extends p_base {
 		if (!is_a($object, 'entity'))
 			return false;
 		if (isset($this->guid) || isset($object->guid)) {
-			if ($this->guid != $object->guid)
-				return false;
+			return ($this->guid == $object->guid);
+		} else {
+			$ob_data = $object->get_data();
+			$my_data = $this->get_data();
+			return ($ob_data == $my_data);
 		}
-		if (get_class($object) != get_class($this))
-			return false;
-		$ob_data = $object->get_data();
-		$my_data = $this->get_data();
-		return ($ob_data == $my_data);
 	}
 
 	/**
