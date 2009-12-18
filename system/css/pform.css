@@ -25,7 +25,7 @@
 	clear: left;
 	padding-bottom: 15px;
 }
-.pform div.heading, .pform div.full_width {
+.pform div.heading, .pform div.element.full_width {
 	width: 100%;
 }
 .pform div.heading {
