@@ -61,8 +61,8 @@ foreach ($temp_classes as $cur_class) {
 }
 unset($temp_classes);
 
-require_once('load.php');
-$config_array = require('configure.php');
+require_once('system/load.php');
+$config_array = require('system/configure.php');
 fill_object($config_array, $config);
 unset($config_array);
 
@@ -136,7 +136,7 @@ foreach ($config->components as $cur_component) {
 $config->hook->hook_object($config, '$config->');
 
 // Load the display controller.
-require_once('display.php');
+require_once('system/display.php');
 
 // Load the hooks for $page.
 $config->hook->hook_object($page, '$page->');
@@ -149,7 +149,7 @@ foreach ($config->components as $cur_component) {
 }
 
 // Load some common functions.
-include_once('common.php');
+include_once('system/common.php');
 
 // Load any post or get vars for our component/action.
 $config->request_component = clean_filename($_REQUEST['option']);
@@ -158,10 +158,28 @@ $config->request_action = clean_filename($_REQUEST['action']);
 // URL Rewriting Engine (Simple, eh?)
 // The values from URL rewriting override any post or get vars, so don't submit
 // forms to a url you shouldn't.
+// /index.php/user/edituser/id-35/ -> /index.php?option=com_user&action=edituser&id=35
 if ( $config->url_rewriting ) {
-	$args_array = explode('/', substr($_SERVER['PHP_SELF'], strlen($_SERVER['SCRIPT_NAME'])));
-	if ( isset($args_array[1]) ) $config->request_component = ($args_array[1] == 'system' ? $args_array[1] : 'com_'.$args_array[1]);
-	if ( isset($args_array[2]) ) $config->request_action = $args_array[2];
+	// Get an array of the pseudo directories from the URI.
+	$args_array = explode('/',
+		// Get rid of index.php/ at the beginning, and / at the end.
+		preg_replace('/(^index\.php\/)|(\/$)/', '', substr(
+			substr($_SERVER['REQUEST_URI'], 0,
+				// Use the whole string, or if there's a query part, subtract that.
+				strlen($_SERVER['REQUEST_URI']) - (strlen($_SERVER['QUERY_STRING']) ? strlen($_SERVER['QUERY_STRING']) + 1 : 0)
+			),
+			// This takes off the path to Pines.
+			strlen($config->rela_location)
+		))
+	);
+	if ( !empty($args_array[0]) ) $config->request_component = ($args_array[0] == 'system' ? $args_array[0] : 'com_'.$args_array[0]);
+	if ( !empty($args_array[1]) ) $config->request_action = $args_array[1];
+	$arg_count = count($args_array);
+	for ($i = 2; $i < $arg_count; $i++) {
+		$_REQUEST[preg_replace('/-.*$/', '', $args_array[$i])] = preg_replace('/^[^-]*-/', '', $args_array[$i]);
+	}
+	unset($i);
+	unset($arg_count);
 	unset($args_array);
 }
 
