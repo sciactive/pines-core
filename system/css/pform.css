@@ -65,10 +65,12 @@
 }
 .pform div.buttons {
 	clear: both;
+	padding-bottom: 0;
 	padding-left: 185px; /* Width of labels + margin to inputs - button spacing. */
 }
 .pform div.buttons .button {
 	margin-left: 20px; /* Button spacing. */
+	margin-bottom: 10px;
 }
 /* ----------- Two Columns ----------- */
 .pform_twocol, .pform_twocol fieldset {
