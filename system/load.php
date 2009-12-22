@@ -15,10 +15,10 @@ defined('P_RUN') or die('Direct access prohibited');
  *
  * This object is used to hold everything from Pines' settings, to component
  * functions. Components' configure.php files will be parsed into $config under
- * the name of their component. Such as $config->com_xmlparser. Components
- * should put their own classes under $config, using their name with run_
- * instead of com_. For example, com_xmlparser should put its class in
- * $config->run_xmlparser, though it is not strictly necessary to do this.
+ * the name of their component. Such as $config->com_xmlparser. Components'
+ * classes will be automatically loaded into $config under their name with run_
+ * instead of com_ when the variable is first used. For example, com_xmlparser
+ * will be loaded the first time $config->run_xmlparser is accessed.
  *
  * $config also holds Pines' standard classes, which include:
  *
@@ -31,6 +31,14 @@ defined('P_RUN') or die('Direct access prohibited');
  * - user_manager - Manages users.
  * - ability_manager - Manages users' abilities.
  * - editor - Provides a content editor.
+ *
+ * When you want your component to be one of Pines' standard classes, place a
+ * string with the name of your component's class into the appropriate variable.
+ *
+ * For example, if you are designing a log manager called com_email_logs, use
+ * this in your load.php file:
+ *
+ * $config->log_manager = 'com_email_logs';
  *
  * @global dynamic_config $config
  */

@@ -60,6 +60,8 @@ class hook_override__NAMEHERE_ {
 	}*/
 
 	function &__get($name) {
+		if (isset($this->_p_object->$name))
+			return $this->_p_object->$name;
 		if (method_exists($this->_p_object, '__get')) {
 			$args = func_get_args();
 			return call_user_func_array(array($this->_p_object, '__get'), $args);
@@ -68,6 +70,8 @@ class hook_override__NAMEHERE_ {
 	}
 
 	function __set($name, $value) {
+		if (isset($this->_p_object->$name))
+			return $this->_p_object->$name = $value;
 		if (method_exists($this->_p_object, '__set')) {
 			$args = func_get_args();
 			return call_user_func_array(array($this->_p_object, '__set'), $args);

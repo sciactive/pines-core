@@ -11,14 +11,93 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 /**
- * An empty class for arbitrary data.
+ * A dynamic loading object.
  *
- * You should not use p_base to hold arbitrary data. Using a separate class for
- * this purpose allows a vendor to extend the config objects without extending
- * other objects, like components, modules, etc.
+ * Component classes will be automatically loaded into their variables beginning
+ * with run_. In other words, when you call $config->run_xmlparser->parse(), if
+ * $config->run_xmlparser is empty, the com_xmlparser class will attempt to be
+ * loaded for it.
  *
  * @package Pines
  */
-class dynamic_config extends p_base { }
+class dynamic_config extends p_base {
+	var $standard_classes = array();
+	/**
+	 * Retrieve a variable.
+	 *
+	 * You do not need to explicitly call this method. It is called by PHP when
+	 * you access the variable normally.
+	 * 
+	 * This function will try to load a component's class into any variables
+	 * beginning with run_.
+	 *
+	 * @param string $name The name of the variable.
+	 * @return mixed The value of the variable or nothing if it doesn't exist.
+	 */
+	public function &__get($name) {
+		if (preg_match('/^run_/', $name)) {
+			$new_name = preg_replace('/^run_/', 'com_', $name);
+			try {
+				$this->$name = new $new_name;
+				return $this->$name;
+			} catch (Exception $e) {
+				return;
+			}
+		}
+		if (in_array($name, array('configurator', 'log_manager', 'entity_manager', 'db_manager', 'user_manager', 'ability_manager', 'editor')) && isset($this->standard_classes[$name])) {
+			$this->$name = new $this->standard_classes[$name];
+			return $this->$name;
+		}
+	}
+
+	/**
+	 * Checks whether a variable is set.
+	 *
+	 * You do not need to explicitly call this method. It is called by PHP when
+	 * you access the variable normally.
+	 *
+	 * This functions checks whether a class can be loaded for class variables.
+	 *
+	 * @param string $name The name of the variable.
+	 * @return bool
+	 */
+	public function __isset($name) {
+		global $config;
+		if (preg_match('/^run_/', $name)) {
+			$new_name = preg_replace('/^run_/', 'com_', $name);
+			if (class_exists($new_name))
+				return true;
+			if (is_array($config->class_files) && isset($config->class_files[$new_name]))
+				return true;
+			return false;
+		}
+		if (in_array($name, array('configurator', 'log_manager', 'entity_manager', 'db_manager', 'user_manager', 'ability_manager', 'editor')) && isset($this->standard_classes[$name])) {
+			return isset($this->standard_classes[$name]);
+		}
+		return false;
+	}
+
+	/**
+	 * Sets a variable.
+	 *
+	 * You do not need to explicitly call this method. It is called by PHP when
+	 * you access the variable normally.
+	 * 
+	 * This function catches any standard system classes, so they don't get set
+	 * to the name of their class. This allows them to be dynamically loaded
+	 * when they are first called.
+	 *
+	 * @param string $name The name of the variable.
+	 * @param string $value The value of the variable.
+	 * @return mixed The value of the variable.
+	 */
+	public function __set($name, $value) {
+		if (in_array($name, array('configurator', 'log_manager', 'entity_manager', 'db_manager', 'user_manager', 'ability_manager', 'editor')) && is_string($value)) {
+			return $this->standard_classes[$name] = $value;
+		} else {
+			return $this->$name = $value;
+		}
+	}
+}
 
 ?>

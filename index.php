@@ -55,7 +55,6 @@ define('P_EXEC_TIME', microtime(true));
 define('P_SCRIPT_TIMING', false);
 
 if (P_SCRIPT_TIMING) {
-	echo '<h1>Pines Script Timing</h1><p>Times are measured in seconds.</p><pre>';
 	ob_start();
 	/**
 	 * Print a message for Pines Script Timing.
@@ -64,18 +63,20 @@ if (P_SCRIPT_TIMING) {
 	 * @param bool $print_now Whether to print the page now.
 	 */
 	function pines_print_time($message, $print_now = false) {
-		static $output;
-		$output .= ob_get_contents() or '';
+		static $time_output;
+		static $script_output;
+		$script_output .= ob_get_contents() or '';
 		ob_clean();
 		$microtime = microtime(true);
-		printf(str_pad($message, 30).'%F<br />', ($microtime - $GLOBALS['p_last_time']));
-		ob_flush();
+		$time_output .= sprintf(str_pad($message, 30).'%F<br />', ($microtime - $GLOBALS['p_last_time']));
 		$GLOBALS['p_last_time'] = $microtime;
 		if ($print_now) {
+			echo '<h1>Pines Script Timing</h1><p>Times are measured in seconds.</p><pre>';
+			echo $time_output;
 			printf('--------------------<br />'.str_pad('Script Run', 30).'%F</pre><br />', ($microtime - P_EXEC_TIME));
 			ob_flush();
-			echo 'Here is the page\'s output:<br />';
-			echo $output;
+			echo 'Here is the page\'s output (it may have been mangled during rendering):<br />';
+			echo $script_output;
 			ob_flush();
 		}
 	}
@@ -136,13 +137,30 @@ if ( file_exists("components/") ) {
 if (P_SCRIPT_TIMING) pines_print_time('Find Component Classes');
 
 // Load component classes.
+/**
+ * List of class files for autoloading classes.
+ * @var $config->class_files
+ */
+$config->class_files = array();
 foreach ($config->components as $cur_component) {
 	if ( is_dir("components/$cur_component/classes/") ) {
 		$temp_classes = pines_scandir("components/$cur_component/classes/");
 		foreach ($temp_classes as $cur_class) {
-			include_once("components/$cur_component/classes/$cur_class");
+			$config->class_files[preg_replace('/\.php$/', '', $cur_class)] = "components/$cur_component/classes/$cur_class";
 		}
 		unset($temp_classes);
+	}
+}
+/**
+ * Load a class file.
+ *
+ * @param string $class_name The class name.
+ */
+function __autoload($class_name) {
+	global $config;
+	if (key_exists($class_name, $config->class_files)) {
+		include_once($config->class_files[$class_name]);
+		if (P_SCRIPT_TIMING) pines_print_time("Load [$class_name]");
 	}
 }
 if (P_SCRIPT_TIMING) pines_print_time('Load Component Classes');
@@ -160,7 +178,7 @@ foreach ($config->components as $cur_component) {
 	if ( file_exists("components/$cur_component/configure.php") ) {
 		$config_array = include("components/$cur_component/configure.php");
 		if (is_array($config_array)) {
-			$config->$cur_component = new dynamic_config;
+			$config->$cur_component = new p_base;
 			fill_object($config_array, $config->$cur_component);
 		}
 		unset($config_array);
