@@ -45,6 +45,43 @@ define('P_BASE_PATH', dirname(__FILE__));
  * The name of our index file.
  */
 define('P_INDEX', basename($_SERVER['SCRIPT_FILENAME']));
+/**
+ * The microtime when the script started executing.
+ */
+define('P_EXEC_TIME', microtime(true));
+/**
+ * When this is set to true, the times between script stages will be printed.
+ */
+define('P_SCRIPT_TIMING', false);
+
+if (P_SCRIPT_TIMING) {
+	echo '<h1>Pines Script Timing</h1><p>Times are measured in seconds.</p><pre>';
+	ob_start();
+	/**
+	 * Print a message for Pines Script Timing.
+	 *
+	 * @param string $message The message.
+	 * @param bool $print_now Whether to print the page now.
+	 */
+	function pines_print_time($message, $print_now = false) {
+		static $output;
+		$output .= ob_get_contents() or '';
+		ob_clean();
+		$microtime = microtime(true);
+		printf(str_pad($message, 30).'%F<br />', ($microtime - $GLOBALS['p_last_time']));
+		ob_flush();
+		$GLOBALS['p_last_time'] = $microtime;
+		if ($print_now) {
+			printf('--------------------<br />'.str_pad('Script Run', 30).'%F</pre><br />', ($microtime - P_EXEC_TIME));
+			ob_flush();
+			echo 'Here is the page\'s output:<br />';
+			echo $output;
+			ob_flush();
+		}
+	}
+	$GLOBALS['p_last_time'] = P_EXEC_TIME;
+	pines_print_time('Script Timing Start');
+}
 
 // Strip magic quotes.
 if (get_magic_quotes_gpc()) {
@@ -52,6 +89,7 @@ if (get_magic_quotes_gpc()) {
 	pines_stripslashes_array_recursive($_POST);
 	pines_stripslashes_array_recursive($_REQUEST);
 	pines_stripslashes_array_recursive($_COOKIE);
+	if (P_SCRIPT_TIMING) pines_print_time('Strip Request Slashes');
 }
 
 // Load system classes.
@@ -60,11 +98,13 @@ foreach ($temp_classes as $cur_class) {
 	include_once("system/classes/$cur_class");
 }
 unset($temp_classes);
+if (P_SCRIPT_TIMING) pines_print_time('Load System Classes');
 
 require_once('system/load.php');
 $config_array = require('system/configure.php');
 fill_object($config_array, $config);
 unset($config_array);
+if (P_SCRIPT_TIMING) pines_print_time('Load System Config');
 
 // Check the offline mode, and load the offline page if enabled.
 if ($config->offline_mode) {
@@ -93,6 +133,7 @@ if ( file_exists("components/") ) {
 			$config->all_components[$cur_key] = substr($cur_value, 1);
 	}
 }
+if (P_SCRIPT_TIMING) pines_print_time('Find Component Classes');
 
 // Load component classes.
 foreach ($config->components as $cur_component) {
@@ -104,6 +145,7 @@ foreach ($config->components as $cur_component) {
 		unset($temp_classes);
 	}
 }
+if (P_SCRIPT_TIMING) pines_print_time('Load Component Classes');
 
 // Now that all classes are loaded, we can start the session manager. This
 // allows variables to keep their classes over sessions.
@@ -124,6 +166,7 @@ foreach ($config->components as $cur_component) {
 		unset($config_array);
 	}
 }
+if (P_SCRIPT_TIMING) pines_print_time('Load Component Config');
 
 // Load the configuration for our components. This shouldn't require any sort of
 // functionality, like entity or user management.
@@ -131,15 +174,19 @@ foreach ($config->components as $cur_component) {
 	if ( file_exists("components/$cur_component/load.php") )
 		include_once("components/$cur_component/load.php");
 }
+if (P_SCRIPT_TIMING) pines_print_time('Load Component Loaders');
 
 // Load the hooks for $config.
 $config->hook->hook_object($config, '$config->');
+if (P_SCRIPT_TIMING) pines_print_time('Hook $config');
 
 // Load the display controller.
 require_once('system/display.php');
+if (P_SCRIPT_TIMING) pines_print_time('Load Display Controller');
 
 // Load the hooks for $page.
 $config->hook->hook_object($page, '$page->');
+if (P_SCRIPT_TIMING) pines_print_time('Hook $page');
 
 // Load the common files. This should set up the models for each component,
 // which the actions should then use to manipulate actual data.
@@ -147,9 +194,11 @@ foreach ($config->components as $cur_component) {
 	if ( file_exists("components/$cur_component/common.php") )
 		include_once("components/$cur_component/common.php");
 }
+if (P_SCRIPT_TIMING) pines_print_time('Load Component Common');
 
 // Load some common functions.
 include_once('system/common.php');
+if (P_SCRIPT_TIMING) pines_print_time('Load System Common');
 
 // Load any post or get vars for our component/action.
 $config->request_component = clean_filename($_REQUEST['option']);
@@ -160,16 +209,16 @@ $config->request_action = clean_filename($_REQUEST['action']);
 // forms to a url you shouldn't.
 // /index.php/user/edituser/id-35/ -> /index.php?option=com_user&action=edituser&id=35
 if ( $config->url_rewriting ) {
-	// Get an array of the pseudo directories from the URI.
+// Get an array of the pseudo directories from the URI.
 	$args_array = explode('/',
 		// Get rid of index.php/ at the beginning, and / at the end.
 		preg_replace('/(^index\.php\/)|(\/$)/', '', substr(
-			substr($_SERVER['REQUEST_URI'], 0,
-				// Use the whole string, or if there's a query part, subtract that.
-				strlen($_SERVER['REQUEST_URI']) - (strlen($_SERVER['QUERY_STRING']) ? strlen($_SERVER['QUERY_STRING']) + 1 : 0)
-			),
-			// This takes off the path to Pines.
-			strlen($config->rela_location)
+		substr($_SERVER['REQUEST_URI'], 0,
+		// Use the whole string, or if there's a query part, subtract that.
+		strlen($_SERVER['REQUEST_URI']) - (strlen($_SERVER['QUERY_STRING']) ? strlen($_SERVER['QUERY_STRING']) + 1 : 0)
+		),
+		// This takes off the path to Pines.
+		strlen($config->rela_location)
 		))
 	);
 	if ( !empty($args_array[0]) ) $config->request_component = ($args_array[0] == 'system' ? $args_array[0] : 'com_'.$args_array[0]);
@@ -186,25 +235,30 @@ if ( $config->url_rewriting ) {
 // Fill in any empty request vars.
 if ( empty($config->request_component) ) $config->request_component = $config->default_component;
 if ( empty($config->request_action) ) $config->request_action = 'default';
+if (P_SCRIPT_TIMING) pines_print_time('Get Requested Action');
 
 // Call the action specified.
 if ( action($config->request_component, $config->request_action) === 'error_404' ) {
 	header('HTTP/1.0 404 Not Found', true, 404);
 	$error_page = new module('system', 'error_404', 'content');
 }
+if (P_SCRIPT_TIMING) pines_print_time('Run Requested Action');
 
 // Load the final display stuff. This includes menu entries.
 foreach ($config->components as $cur_component) {
 	if ( file_exists("components/$cur_component/display.php") )
 		include_once("components/$cur_component/display.php");
 }
+if (P_SCRIPT_TIMING) pines_print_time('Load Component Displays');
 
 // Render the page.
 $page->render();
+if (P_SCRIPT_TIMING) pines_print_time('Render Page');
 
 // If there's still a database connection, close it.
 if ( isset($config->db_manager) )
 	$config->db_manager->disconnect();
+if (P_SCRIPT_TIMING) pines_print_time('Close Any Database', true);
 
 /**
  * Fill an object with the data from a configuration array.
