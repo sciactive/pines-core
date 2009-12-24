@@ -43,7 +43,7 @@
 	margin-bottom: 5px;
 }
 .pform div.element .label, .pform div.element .note {
-	width: 200px; /* Width of labels. */
+	width: 160px; /* Width of labels. */
 	float: left;
 }
 .pform div.element .note {
@@ -53,7 +53,7 @@
 	color: #555;
 }
 .pform div.element .group {
-	 margin-left: 200px; /* Same as width of labels. */
+	 margin-left: 160px; /* Same as width of labels. */
 }
 .pform div.element .field, .pform div.buttons .button {
 	float: none;
@@ -61,12 +61,12 @@
 }
 .pform div.element .field.full_width {
 	display: block;
-	margin-left: 205px; /* Width of labels. */
+	margin-left: 165px; /* Width of labels + margin between inputs and labels. */
 }
 .pform div.buttons {
 	clear: both;
 	padding-bottom: 0;
-	padding-left: 185px; /* Width of labels + margin to inputs - button spacing. */
+	padding-left: 145px; /* Width of labels + margin to inputs - button spacing. */
 }
 .pform div.buttons .button {
 	margin-left: 20px; /* Button spacing. */
