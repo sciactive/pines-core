@@ -163,7 +163,6 @@ function __autoload($class_name) {
 		if (P_SCRIPT_TIMING) pines_print_time("Load [$class_name]");
 	}
 }
-if (P_SCRIPT_TIMING) pines_print_time('Load Component Classes');
 
 // Now that all classes are loaded, we can start the session manager. This
 // allows variables to keep their classes over sessions.
@@ -186,6 +185,10 @@ foreach ($config->components as $cur_component) {
 }
 if (P_SCRIPT_TIMING) pines_print_time('Load Component Config');
 
+// Load the hooks for $config.
+$config->hook->hook_object($config, '$config->');
+if (P_SCRIPT_TIMING) pines_print_time('Hook $config');
+
 // Load the configuration for our components. This shouldn't require any sort of
 // functionality, like entity or user management.
 foreach ($config->components as $cur_component) {
@@ -193,10 +196,6 @@ foreach ($config->components as $cur_component) {
 		include_once("components/$cur_component/load.php");
 }
 if (P_SCRIPT_TIMING) pines_print_time('Load Component Loaders');
-
-// Load the hooks for $config.
-$config->hook->hook_object($config, '$config->');
-if (P_SCRIPT_TIMING) pines_print_time('Hook $config');
 
 // Load the display controller.
 require_once('system/display.php');

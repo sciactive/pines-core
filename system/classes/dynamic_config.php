@@ -36,16 +36,20 @@ class dynamic_config extends p_base {
 	 */
 	public function &__get($name) {
 		if (preg_match('/^run_/', $name)) {
+			global $config;
 			$new_name = preg_replace('/^run_/', 'com_', $name);
 			try {
 				$this->$name = new $new_name;
+				$config->hook->hook_object($this->$name, "\$config->{$name}->");
 				return $this->$name;
 			} catch (Exception $e) {
 				return;
 			}
 		}
 		if (in_array($name, array('configurator', 'log_manager', 'entity_manager', 'db_manager', 'user_manager', 'ability_manager', 'editor')) && isset($this->standard_classes[$name])) {
+			global $config;
 			$this->$name = new $this->standard_classes[$name];
+			$config->hook->hook_object($this->$name, "\$config->{$name}->");
 			return $this->$name;
 		}
 	}
