@@ -193,6 +193,8 @@
 				pnotify.container.css("min-height", opts.pnotify_min_height);
 			}
 
+			pnotify.pnotify_history = opts.pnotify_history;
+
 			pnotify.hide();
 			
 			var body_data = body.data("pnotify");
@@ -219,7 +221,7 @@
 						$(this).removeClass("ui-state-hover");
 					}).click(function(){
 						$.each(body_data, function(){
-							if (this.pnotify_display)
+							if (this.pnotify_history && this.pnotify_display)
 								this.pnotify_display();
 						});
 					}));
@@ -228,8 +230,14 @@
 					}, function(){
 						$(this).removeClass("ui-state-hover");
 					}).click(function(){
-						if (body_data[body_data.length - 1] && body_data[body_data.length - 1].pnotify_display)
-							body_data[body_data.length - 1].pnotify_display();
+						var i = 1;
+						while (!body_data[body_data.length - i] || !body_data[body_data.length - i].pnotify_history) {
+							if (body_data.length - i == 0)
+								return;
+							i++;
+						}
+						if (body_data[body_data.length - i].pnotify_display)
+							body_data[body_data.length - i].pnotify_display();
 					}));
 
 					var handle = $("<span></span>").addClass("ui-pnotify-history-pulldown ui-icon ui-icon-grip-dotted-horizontal").mouseenter(function(){
@@ -252,7 +260,7 @@
 	});
 
 	$.pnotify.defaults = {
-		// Display a pull down menu to redisplay previous notices.
+		// Display a pull down menu to redisplay previous notices, and place this notice in the history.
 		pnotify_history: true,
 		// Width of the notice.
 		pnotify_width: "300px",
