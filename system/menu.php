@@ -2,6 +2,8 @@
 /**
  * Pines' menu XML.
  *
+ * This is not used yet.
+ *
  * @package Pines
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
@@ -32,26 +34,6 @@ defined('P_RUN') or die('Direct access prohibited');
 			<entry>
 				<name>Components</name>
 				<href>/configure/list</href>
-			</entry>
-		</entry>
-		<entry>
-			<name>Customers</name>
-			<depends>
-				<ability>com_customer/managecustomers|com_customer/new</ability>
-			</depends>
-			<entry>
-				<name>Customers</name>
-				<href>/customer/listcustomers</href>
-				<depends>
-					<ability>com_customer/managecustomers</ability>
-				</depends>
-			</entry>
-			<entry>
-				<name>New Customer</name>
-				<href>/customer/newcustomer</href>
-				<depends>
-					<ability>com_customer/new</ability>
-				</depends>
 			</entry>
 		</entry>
 		<entry>
@@ -101,17 +83,17 @@ defined('P_RUN') or die('Direct access prohibited');
 				</depends>
 			</entry>
 			<entry>
-				<name>Groups</name>
-				<href>/user/managegroups</href>
-				<depends>
-					<ability>com_user/manageg</ability>
-				</depends>
-			</entry>
-			<entry>
 				<name>New User</name>
 				<href>/user/newuser</href>
 				<depends>
 					<ability>com_user/new</ability>
+				</depends>
+			</entry>
+			<entry>
+				<name>Groups</name>
+				<href>/user/managegroups</href>
+				<depends>
+					<ability>com_user/manageg</ability>
 				</depends>
 			</entry>
 			<entry>
@@ -124,7 +106,7 @@ defined('P_RUN') or die('Direct access prohibited');
 		</entry>
 		<entry>
 			<name>My Account</name>
-			<href>/user/edituser?id=me</href>
+			<href>/user/editself</href>
 			<depends>
 				<ability>com_user/self</ability>
 			</depends>
