@@ -7,6 +7,7 @@ A list of things to complete before the initial release of Pines:
 --------------------------------------------------------------------------------
 +Installer/Package Manager.
 +More dependency checker types. (Version, PHP abilities, other components...)
++Use entity references in com_user.
 +Fix com_newsletter.
 +Improve menu system to be fully customizeable. (XML menu definitions.)
 +Full SAWASC implementation for better security.
