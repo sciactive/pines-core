@@ -8,14 +8,14 @@ A list of things to complete before the initial release of Pines:
 +Installer/Package Manager.
 +More dependency checker types. (Version, PHP abilities, other components...)
 +Use entity references in com_user.
-+Fix com_newsletter.
-+Improve menu system to be fully customizeable. (XML menu definitions.)
-+Full SAWASC implementation for better security.
++Fix and improve com_newsletter.
++Improve menu system to be fully customizeable. (XML or JSON menu definitions.)
++Full SAWASC A implementation for better security.
 	(http://sawasc.sciactive.com/)
 +More log entries.
 --------------------------------------------------------------------------------
 
-Possible future faetures:
+Possible future features:
 --------------------------------------------------------------------------------
 +Entity locking.
 +Pines Grid caption and summary support.
