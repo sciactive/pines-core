@@ -105,6 +105,7 @@ require_once('system/load.php');
 $config_array = require('system/configure.php');
 fill_object($config_array, $config);
 unset($config_array);
+date_default_timezone_set($config->timezone);
 if (P_SCRIPT_TIMING) pines_print_time('Load System Config');
 
 // Check the offline mode, and load the offline page if enabled.

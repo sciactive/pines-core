@@ -97,12 +97,19 @@ return array (
   ),
   12 =>
   array (
+	'name' => 'timezone',
+	'cname' => 'System Timezone',
+	'description' => 'The timezone the system should use as its default. User\'s timezones will default to this.',
+	'value' => date_default_timezone_get(),
+  ),
+  13 =>
+  array (
 	'name' => 'program_title',
 	'cname' => 'Program Name',
 	'description' => 'The program\'s internal name.',
 	'value' => 'Pines',
   ),
-  13 =>
+  14 =>
   array (
 	'name' => 'program_version',
 	'cname' => 'Program Version',
