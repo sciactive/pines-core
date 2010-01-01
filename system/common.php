@@ -148,6 +148,25 @@ function gatekeeper($ability = NULL, $user = NULL) {
 }
 
 /**
+ * Formats a date using the DateTime class.
+ *
+ * @param int $timestamp The timestamp to format.
+ * @param string $format The format to use.
+ * @param DateTimeZone $timezone The timezone to use for formatting. Defaults to date_default_timezone_get().
+ * @return string The formatted date.
+ */
+function pines_date_format($timestamp, $timezone = null, $format = 'Y-m-d H:i T') {
+	global $config;
+	$date = new DateTime(gmdate('c', $timestamp));
+	if (!is_null($timezone)) {
+		$date->setTimezone($timezone);
+	} else {
+		$date->setTimezone(new DateTimeZone(date_default_timezone_get()));
+	}
+	return $date->format($format);
+}
+
+/**
  * Shortcut to $config->depend->check().
  *
  * @uses $config->depend->check() Forwards parameters and returns the result.
