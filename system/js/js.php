@@ -14,6 +14,17 @@
 
 header('Content-Type: text/javascript');
 
+$mod_date = 0;
+foreach(array('common.js', 'json2.js', 'jquery.min.js', 'jquery-ui.min.js', 'jquery.pnotify.js') as $cur_file) {
+	$cur_mod_date = filemtime($cur_file);
+	$mod_date = $mod_date > $cur_mod_date ? $mod_date : $cur_mod_date;
+}
+
+if (array_key_exists('HTTP_IF_MODIFIED_SINCE', $_SERVER) && $mod_date <= strtotime(preg_replace('/;.*$/', '', $_SERVER["HTTP_IF_MODIFIED_SINCE"]))) {
+	header('x', TRUE, 304);
+	exit;
+}
+
 $exclude = explode(' ', $_REQUEST['exclude']);
 
 $output =
@@ -35,6 +46,12 @@ $output =
 //$output = preg_replace('/[ \t]{2,}/m', " ", $output);
 // Compress multiple new lines.
 //$output = preg_replace('/\n\s*\n/m', "\n", $output);
+
+header('Content-Length: '.strlen($output));
+header('Cache-Control: public');
+header('Pragma:');
+header('Expires: '.date('r', strtotime('+3 days')));
+header('Last-Modified: '.date('r', $mod_date));
 
 echo $output;
 
