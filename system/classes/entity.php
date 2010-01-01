@@ -390,6 +390,28 @@ class entity extends p_base {
 	}
 
 	/**
+	 * Refresh the entity from storage.
+	 *
+	 * If the entity has been deleted from storage, the database cannot be
+	 * reached, or a database error occurs, refresh() will return 0.
+	 *
+	 * @return bool|int False if the entity has no GUID, 0 if it can't be refreshed, true on success.
+	 */
+	public function refresh() {
+		if (!is_int($this->guid))
+			return false;
+		global $config;
+		$refresh = $config->entity_manager->get_entity($this->guid, null, get_class($this));
+		if (is_null($refresh))
+			return 0;
+		$this->parent = $refresh->parent;
+		$this->tags = $refresh->tags;
+		$this->entity_cache = array();
+		$this->put_data($refresh->get_data());
+		return true;
+	}
+
+	/**
 	 * Remove one or more tags.
 	 *
 	 * @param mixed $tag,... List or array of tags.
