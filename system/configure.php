@@ -36,7 +36,7 @@ return array (
   array (
 	'name' => 'offline_mode',
 	'cname' => 'Offline Mode',
-	'description' => 'In offline mode, the system will not be accessible, and simply display the offline message. To disable offline mode, you will need to edit "configure.php" in the Pines directory. Under the array named "offline_mode", change the value to false.',
+	'description' => 'In offline mode, the system will not be accessible, and simply display the offline message. To disable offline mode, you will need to edit "system/configure.php" in the Pines directory. Under the array named "offline_mode", change the value to false.',
 	'value' => false,
   ),
   4 =>
