@@ -87,7 +87,7 @@ class entity extends p_base {
 	 * @var array
 	 * @access protected
 	 */
-	 protected $entity_cache = array();
+	protected $entity_cache = array();
 
 	/**
 	 * Add one or more tags. (Same as add_tag)
