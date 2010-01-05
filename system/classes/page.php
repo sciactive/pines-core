@@ -22,23 +22,11 @@ class page extends p_base {
 	 */
 	protected $title = '';
 	/**
-	 * The head section of the page.
-	 * @var string $head
-	 * @access protected
-	 */
-	protected $head = '';
-	/**
-	 * The body section of the page.
+	 * The content of the page.
 	 * @var string $content
 	 * @access protected
 	 */
 	protected $content = '';
-	/**
-	 * The footer at the bottom of the page.
-	 * @var string $footer
-	 * @access protected
-	 */
-	protected $footer = '';
 	/**
 	 * The content which will override the entire page.
 	 * @var string $override_doc
@@ -111,24 +99,6 @@ class page extends p_base {
 		} else {
 			return $config->option_title;
 		}
-	}
-	
-	/**
-	 * Append text to the head section of the page.
-	 *
-	 * @param string $add_head Text to append.
-	 */
-	public function head($add_head) {
-		$this->head .= $add_head;
-	}
-	
-	/**
-	 * Get the head section of the page.
-	 *
-	 * @return string The head section.
-	 */
-	public function get_head() {
-		return $this->head;
 	}
 	
 	/**
@@ -231,24 +201,6 @@ class page extends p_base {
 			}
 			return false;
 		}
-	}
-	
-	/**
-	 * Append text to the footer of the page.
-	 *
-	 * @param string $add_footer Text to append.
-	 */
-	public function footer($add_footer) {
-		$this->footer .= $add_footer;
-	}
-	
-	/**
-	 * Get the footer of the page.
-	 *
-	 * @return string The footer.
-	 */
-	public function get_footer() {
-		return $this->footer;
 	}
 	
 	/**
