@@ -330,7 +330,7 @@ class entity extends p_base {
 	 * Use this instead of the == operator when the entity's data may have
 	 * been changed, but you only care if it is the same entity.
 	 *
-     * @todo Check tags too.
+	 * @todo Check tags too.
 	 * @param mixed $object The object to compare.
 	 * @return bool True or false.
 	 */

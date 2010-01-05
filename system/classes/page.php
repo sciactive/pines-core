@@ -232,7 +232,7 @@ class page extends p_base {
 	 *
 	 * @global mixed Declare all globals in the function so they are available in the template.
 	 * @uses page::$override
-     * @return string The page's rendered content.
+	 * @return string The page's rendered content.
 	 */
 	public function render() {
 		// Make all globals accessible, so the template file can use them.
@@ -244,7 +244,7 @@ class page extends p_base {
 			require("templates/{$config->current_template}/template.php");
 		}
 		$this->content = ob_get_clean();
-        return $this->content;
+		return $this->content;
 	}
 	
 	/**
