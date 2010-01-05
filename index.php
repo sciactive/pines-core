@@ -270,7 +270,7 @@ foreach ($config->components as $cur_component) {
 if (P_SCRIPT_TIMING) pines_print_time('Load Component Displays');
 
 // Render the page.
-$page->render();
+echo $page->render();
 if (P_SCRIPT_TIMING) pines_print_time('Render Page');
 
 // If there's still a database connection, close it.

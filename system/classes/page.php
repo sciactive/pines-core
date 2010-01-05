@@ -168,28 +168,6 @@ class page extends p_base {
 	}
 	
 	/**
-	 * Append text to the body of the page.
-	 *
-	 * This may not be supported by some templates, so try to avoid using it. It
-	 * may also appear in any part of the body. You can use a module with the
-	 * system/false view instead.
-	 *
-	 * @param string $add_content Text to append.
-	 */
-	public function content($add_content) {
-		$this->content .= $add_content;
-	}
-	
-	/**
-	 * Get the text appended to the body of the page.
-	 *
-	 * @return string The body text.
-	 */
-	public function get_content() {
-		return $this->content;
-	}
-	
-	/**
 	 * Attach a module to a position on the page.
 	 *
 	 * The $order parameter is not guaranteed, and will be ignored if that place
@@ -294,32 +272,27 @@ class page extends p_base {
 	}
 	
 	/**
-	 * Render the page.
+	 * Renders the page.
 	 *
 	 * It will require() the template.php file in the current template. However,
-	 * render() will display the result of get_override_doc() if $page->override
+	 * render() will return the result of get_override_doc() if $page->override
 	 * is true.
 	 *
 	 * @global mixed Declare all globals in the function so they are available in the template.
 	 * @uses page::$override
+     * @return string The page's rendered content.
 	 */
 	public function render() {
-		/* This behavior can be achieved using head positioned modules.
-		// Render each module. This will fill in the head section of the page.
-		foreach ($this->modules as $cur_position) {
-			foreach ($cur_position as $cur_module) {
-				$cur_module->render();
-			}
-		}
-		 */
-		
 		// Make all globals accessible, so the template file can use them.
 		foreach ($GLOBALS as $key => $val) { global $$key; }
+		ob_start();
 		if ( $this->override ) {
 			echo $this->get_override_doc();
 		} else {
 			require("templates/{$config->current_template}/template.php");
 		}
+		$this->content = ob_get_clean();
+        return $this->content;
 	}
 	
 	/**
