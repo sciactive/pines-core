@@ -273,11 +273,6 @@ if (P_SCRIPT_TIMING) pines_print_time('Load Component Displays');
 echo $page->render();
 if (P_SCRIPT_TIMING) pines_print_time('Render Page');
 
-// If there's still a database connection, close it.
-if ( isset($config->db_manager) )
-	$config->db_manager->disconnect();
-if (P_SCRIPT_TIMING) pines_print_time('Close Any Database', true);
-
 /**
  * Fill an object with the data from a configuration array.
  *
