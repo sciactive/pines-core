@@ -157,7 +157,7 @@ class entity extends p_base {
 	 * @access protected
 	 */
 	public function __set($name, $value) {
-		if (is_a($value, "entity") && isset($value->guid)) {
+		if (is_a($value, 'entity') && isset($value->guid)) {
 			// This is an entity, so we don't want to store it in our data array.
 			$this->entity_cache[$name] = $value;
 			// Store a reference to the entity (its GUID) and the class the entity was loaded as.
@@ -243,7 +243,7 @@ class entity extends p_base {
 	 * @access private
 	 */
 	private function entity_to_reference(&$item, $key) {
-		if (is_a($item, "entity") && isset($item->guid)) {
+		if (is_a($item, 'entity') && isset($item->guid)) {
 			// This is an entity, so we should put it in the entity cache.
 			$this->entity_cache["reference_guid: {$item->guid}"] = $item;
 			// Make a reference to the entity (its GUID) and the class the entity was loaded as.
@@ -330,6 +330,7 @@ class entity extends p_base {
 	 * Use this instead of the == operator when the entity's data may have
 	 * been changed, but you only care if it is the same entity.
 	 *
+     * @todo Check tags too.
 	 * @param mixed $object The object to compare.
 	 * @return bool True or false.
 	 */
