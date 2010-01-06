@@ -23,7 +23,7 @@ class hook_override__NAMEHERE_ extends hook_override {
 	 * Used to store the overridden class.
 	 * @var mixed $_p_object
 	 */
-	private $_p_object = null;
+	protected $_p_object = null;
 	/**
 	 * Used to store the prefix (the object's variable name).
 	 * @var string $_p_prefix
@@ -61,7 +61,7 @@ class hook_override__NAMEHERE_ extends hook_override {
 
 	function &__get($name) {
 		if (isset($this->_p_object->$name))
-			return $this->_p_object->$name;
+			return $val =& $this->_p_object->$name;
 		if (method_exists($this->_p_object, '__get')) {
 			$args = func_get_args();
 			return call_user_func_array(array($this->_p_object, '__get'), $args);

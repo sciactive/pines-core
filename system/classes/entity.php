@@ -123,7 +123,6 @@ class entity extends p_base {
 	 *
 	 * @param string $name The name of the variable.
 	 * @return mixed The value of the variable or nothing if it doesn't exist.
-	 * @access protected
 	 */
 	public function &__get($name) {
 		global $config;
@@ -154,7 +153,6 @@ class entity extends p_base {
 	 *
 	 * @param string $name The name of the variable.
 	 * @return bool
-	 * @access protected
 	 */
 	public function __isset($name) {
 		return isset($this->data[$name]);
@@ -169,7 +167,6 @@ class entity extends p_base {
 	 * @param string $name The name of the variable.
 	 * @param string $value The value of the variable.
 	 * @return mixed The value of the variable.
-	 * @access protected
 	 */
 	public function __set($name, $value) {
 		if ((is_a($value, 'entity') || is_a($value, 'hook_override')) && isset($value->guid)) {
@@ -204,7 +201,6 @@ class entity extends p_base {
 	 * you access the variable normally.
 	 *
 	 * @param string $name The name of the variable.
-	 * @access protected
 	 */
 	public function __unset($name) {
 		if (isset($this->entity_cache[$name]))
