@@ -204,10 +204,10 @@ class hook {
 				$code .= "\tglobal \$config;\n";
 				$code .= "\t\$arguments = debug_backtrace(false);\n";
 				$code .= "\t\$arguments = \$arguments[0]['args'];\n";
-				$code .= "\t\$arguments = \$config->hook->run_callbacks(\$this->_p_prefix.'$fname', \$arguments, 'before');\n";
+				$code .= "\t\$arguments = \$config->hook->run_callbacks(\$this->_p_prefix.'$fname', \$arguments, 'before', \$this->_p_object);\n";
 				$code .= "\tif (\$arguments !== false) {\n";
 				$code .= "\t\t\$return = call_user_func_array(array(\$this->_p_object, '$fname'), \$arguments);\n";
-				$code .= "\t\t\$return = \$config->hook->run_callbacks(\$this->_p_prefix.'$fname', array(\$return), 'after');\n";
+				$code .= "\t\t\$return = \$config->hook->run_callbacks(\$this->_p_prefix.'$fname', array(\$return), 'after', \$this->_p_object);\n";
 				$code .= "\t\tif (is_array(\$return))\n";
 				$code .= "\t\t\treturn \$return[0];\n";
 				$code .= "\t}\n";
@@ -231,13 +231,14 @@ class hook {
 	 * @param string $name The name of the hook.
 	 * @param array $arguments An array of arguments to be passed to the callbacks.
 	 * @param string $type The type of callbacks to run. 'before', 'after', or 'all'.
+	 * @param mixed $object The object on which the hook was called.
 	 * @return array|bool The array of arguments returned by the last callback or FALSE if a callback returned it.
 	 */
-	function run_callbacks($name, $arguments = array(), $type = 'all') {
+	function run_callbacks($name, $arguments = array(), $type = 'all', $object = null) {
 		foreach ($this->callbacks as $cur_callback) {
-			if ($cur_callback[0] == $name) {
+			if ($cur_callback[0] == $name || $cur_callback[0] == 'all') {
 				if (($type == 'all' && $cur_callback[1] != 0) || ($type == 'before' && $cur_callback[1] < 0) || ($type == 'after' && $cur_callback[1] > 0)) {
-					$arguments = call_user_func_array($cur_callback[2], array($arguments, $name));
+					$arguments = call_user_func_array($cur_callback[2], array($arguments, $name, $object));
 					if ($arguments === false) return false;
 				}
 			}

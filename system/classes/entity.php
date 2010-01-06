@@ -95,9 +95,24 @@ class entity extends p_base {
 	 * @param mixed $tag,... List or array of tags.
 	 */
 	public function __construct() {
+		global $config;
 		$args = func_get_args();
 		if (!empty($args))
 			call_user_func_array(array($this, 'add_tag'), $args);
+	}
+
+	/**
+	 * Create a new instance.
+	 */
+	public static function factory() {
+		global $config;
+		$class = get_class();
+		$entity = new $class;
+		$config->hook->hook_object($entity, $class.'->', false);
+		$args = func_get_args();
+		if (!empty($args))
+			call_user_func_array(array($entity, 'add_tag'), $args);
+		return $entity;
 	}
 
 	/**
