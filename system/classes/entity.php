@@ -172,12 +172,12 @@ class entity extends p_base {
 	 * @access protected
 	 */
 	public function __set($name, $value) {
-		if (is_a($value, 'entity') && isset($value->guid)) {
+		if ((is_a($value, 'entity') || is_a($value, 'hook_override')) && isset($value->guid)) {
 			// This is an entity, so we don't want to store it in our data array.
 			$this->entity_cache[$name] = $value;
 			// Store a reference to the entity (its GUID) and the class the entity was loaded as.
 			// We don't want to manipulate $value itself, because it could be a variable that the program is still using.
-			$save_value = array('pines_entity_reference', $value->guid, get_class($value));
+			$save_value = $value->to_reference();
 		} else {
 			// This is not an entity, so if it was one, delete the cached entity.
 			if (isset($this->entity_cache[$name]))
@@ -191,6 +191,10 @@ class entity extends p_base {
 		}
 		
 		return ($this->data[$name] = $save_value);
+	}
+
+	public function to_reference() {
+		return array('pines_entity_reference', $this->guid, get_class($this));
 	}
 
 	/**
@@ -258,11 +262,11 @@ class entity extends p_base {
 	 * @access private
 	 */
 	private function entity_to_reference(&$item, $key) {
-		if (is_a($item, 'entity') && isset($item->guid)) {
+		if ((is_a($item, 'entity') || is_a($item, 'hook_override')) && isset($item->guid)) {
 			// This is an entity, so we should put it in the entity cache.
 			$this->entity_cache["reference_guid: {$item->guid}"] = $item;
 			// Make a reference to the entity (its GUID) and the class the entity was loaded as.
-			$item = array('pines_entity_reference', $item->guid, get_class($item));
+			$item = $item->to_reference();
 		}
 	}
 
@@ -350,7 +354,7 @@ class entity extends p_base {
 	 * @return bool True or false.
 	 */
 	public function is(&$object) {
-		if (!is_a($object, 'entity'))
+		if (!(is_a($object, 'entity') || is_a($object, 'hook_override')))
 			return false;
 		if (isset($this->guid) || isset($object->guid)) {
 			return ($this->guid == $object->guid);

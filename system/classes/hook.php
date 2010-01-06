@@ -181,12 +181,13 @@ class hook {
 		
 		$class_name = get_class($object);
 		if (!class_exists("hook_override_$class_name")) {
+			include_once('system/classes/hook_override.php');
 			$reflection = new ReflectionObject($object);
 			$methods = $reflection->getMethods();
 			$code = '';
 			foreach ($methods as $cur_method) {
 				$fname = $cur_method->getName();
-				if (in_array($fname, array('_p_get', '_p_set', '_p_unset', '__construct', '__destruct', '__get', '__set', '__isset', '__unset', '__toString', '__invoke', '__set_state', '__clone'))) continue;
+				if (in_array($fname, array('_p_get', '_p_set', '_p_unset', '__construct', '__destruct', '__get', '__set', '__isset', '__unset', '__toString', '__invoke', '__set_state', '__clone', '__sleep'))) continue;
 				$fprefix = $cur_method->isStatic() ? 'static ' : '';
 				$params = $cur_method->getParameters();
 				$param_array = array();
@@ -213,7 +214,7 @@ class hook {
 				$code .= "\t}\n";
 				$code .= "}\n\n";
 			}
-			$include = str_replace(array('_NAMEHERE_', '//#CODEHERE#', '<?php', '?>'), array($class_name, $code, '', ''), file_get_contents('system/classes/hook_override.php'));
+			$include = str_replace(array('_NAMEHERE_', '//#CODEHERE#', '<?php', '?>'), array($class_name, $code, '', ''), file_get_contents('system/classes/hook_override_extend.php'));
 			eval ($include);
 		}
 
