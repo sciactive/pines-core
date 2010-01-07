@@ -65,9 +65,9 @@ class hook_override__NAMEHERE_ extends hook_override {
 			return $val =& $this->_p_object->$name;
 		if (method_exists($this->_p_object, '__get')) {
 			$args = func_get_args();
-			return call_user_func_array(array($this->_p_object, '__get'), $args);
+			return $val =& call_user_func_array(array($this->_p_object, '__get'), $args);
 		}
-		return call_user_func_array(array($this->_p_object, '_p_get'), array($name, $_SESSION['secret']));
+		return $val =& call_user_func_array(array($this->_p_object, '_p_get'), array($name, $_SESSION['secret']));
 	}
 
 	function __set($name, $value) {
