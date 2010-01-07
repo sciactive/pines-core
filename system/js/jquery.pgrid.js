@@ -390,7 +390,7 @@
 				if (pgrid.pgrid_paginate && pgrid.pgrid_footer) {
 					pgrid.pgrid_widget.find(".ui-pgrid-footer .ui-pgrid-footer-pager-button-container").html("").each(function(){
 						for (var cur_page = 0; cur_page < pgrid.pgrid_pages; cur_page++) {
-							$(this).append($("<button>"+(cur_page+1)+"</button>").addClass("ui-state-default ui-corner-all").click(function(){
+							$(this).append($("<button>"+(cur_page+1)+"</button>").attr("type", "button").addClass("ui-state-default ui-corner-all").click(function(){
 								pgrid.pagenum(parseInt($(this).text()) - 1);
 								return false;
 							}).hover(
@@ -1133,7 +1133,7 @@
 									pgrid.do_filter($(this).val());
 								})
 								).append(
-								$("<button>X</button>").addClass("ui-state-default ui-corner-all").click(function(){
+								$("<button>X</button>").attr("type", "button").addClass("ui-state-default ui-corner-all").click(function(){
 									$(this).prev("input").val("").keyup().focus();
 								}).hover(
 									function(){
@@ -1144,7 +1144,7 @@
 									}
 									)));
 						})
-						);
+					);
 				}
 			}
 			// Filter the grid.
@@ -1187,7 +1187,7 @@
 									display_number.val(pgrid.pgrid_perpage);
 								})
 								).append(" "));
-							footer_pager.append($("<button>&lt;&lt; Start</button>").addClass("ui-state-default ui-corner-all").click(function(){
+							footer_pager.append($("<button>&lt;&lt; Start</button>").attr("type", "button").addClass("ui-state-default ui-corner-all").click(function(){
 								pgrid.pagestart();
 							}).hover(
 								function(){
@@ -1197,7 +1197,7 @@
 									$(this).removeClass("ui-state-hover");
 								}
 								));
-							footer_pager.append($("<button>&lt; Prev</button>").addClass("ui-state-default ui-corner-all").click(function(){
+							footer_pager.append($("<button>&lt; Prev</button>").attr("type", "button").addClass("ui-state-default ui-corner-all").click(function(){
 								pgrid.pageprev();
 							}).hover(
 								function(){
@@ -1208,7 +1208,7 @@
 								}
 								));
 							footer_pager.append($("<div />").addClass("ui-pgrid-footer-pager-button-container"));
-							footer_pager.append($("<button>Next &gt;</button>").addClass("ui-state-default ui-corner-all").click(function(){
+							footer_pager.append($("<button>Next &gt;</button>").attr("type", "button").addClass("ui-state-default ui-corner-all").click(function(){
 								pgrid.pagenext();
 							}).hover(
 								function(){
@@ -1218,7 +1218,7 @@
 									$(this).removeClass("ui-state-hover");
 								}
 								));
-							footer_pager.append($("<button>End &gt;&gt;</button>").addClass("ui-state-default ui-corner-all").click(function(){
+							footer_pager.append($("<button>End &gt;&gt;</button>").attr("type", "button").addClass("ui-state-default ui-corner-all").click(function(){
 								pgrid.pageend();
 							}).hover(
 								function(){
