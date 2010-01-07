@@ -333,6 +333,27 @@ class entity extends p_base {
 	}
 
 	/**
+	 * Check whether this entity is in an array.
+	 *
+	 * If $strict is false, is() is used to compare. If $strict is true,
+	 * equals() is used.
+	 *
+	 * @param array $array The array to search.
+	 * @param bool $strict Whether to use stronger comparison.
+	 * @return bool True if the entity is in the array, false if it isn't or if $array is not an array.
+	 */
+	public function in_array($array, $strict = false) {
+		$found = false;
+		if (!is_array($array))
+			return false;
+		foreach ($array as $cur_entity) {
+			if ($strict ? $this->equals($cur_entity) : $this->is($cur_entity))
+				$found = true;
+		}
+		return $found;
+	}
+
+	/**
 	 * Perform a less strict comparison of this entity to another.
 	 *
 	 * In order to return true, this and $object must meet the following
