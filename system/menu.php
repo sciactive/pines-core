@@ -84,7 +84,7 @@ defined('P_RUN') or die('Direct access prohibited');
 			</entry>
 			<entry>
 				<name>New User</name>
-				<href>/user/newuser</href>
+				<href>/user/edituser</href>
 				<depends>
 					<ability>com_user/new</ability>
 				</depends>
@@ -98,7 +98,7 @@ defined('P_RUN') or die('Direct access prohibited');
 			</entry>
 			<entry>
 				<name>New Group</name>
-				<href>/user/newgroup</href>
+				<href>/user/editgroup</href>
 				<depends>
 					<ability>com_user/newg</ability>
 				</depends>
@@ -127,14 +127,14 @@ defined('P_RUN') or die('Direct access prohibited');
 		</depends>
 		<entry>
 			<name>New User</name>
-			<href>/user/newuser</href>
+			<href>/user/edituser</href>
 			<depends>
 				<ability>com_user/newuser</ability>
 			</depends>
 		</entry>
 		<entry>
 			<name>New Group</name>
-			<href>/user/newgroup</href>
+			<href>/user/editgroup</href>
 			<depends>
 				<ability>com_user/newgroup</ability>
 			</depends>
