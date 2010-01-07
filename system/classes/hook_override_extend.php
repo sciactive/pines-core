@@ -60,7 +60,8 @@ class hook_override__NAMEHERE_ extends hook_override {
 	}*/
 
 	function &__get($name) {
-		if (isset($this->_p_object->$name))
+		$vars = get_object_vars($this->_p_object);
+		if (key_exists($name, $vars))
 			return $val =& $this->_p_object->$name;
 		if (method_exists($this->_p_object, '__get')) {
 			$args = func_get_args();
@@ -70,7 +71,8 @@ class hook_override__NAMEHERE_ extends hook_override {
 	}
 
 	function __set($name, $value) {
-		if (isset($this->_p_object->$name))
+		$vars = get_object_vars($this->_p_object);
+		if (key_exists($name, $vars))
 			return $this->_p_object->$name = $value;
 		if (method_exists($this->_p_object, '__set')) {
 			$args = func_get_args();
@@ -92,7 +94,7 @@ class hook_override__NAMEHERE_ extends hook_override {
 	}
 
 	function __toString() {
-		return "{$this->_p_object}";
+		return (string) $this->_p_object;
 	}
 
 	function __invoke() {
