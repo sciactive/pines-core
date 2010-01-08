@@ -107,16 +107,15 @@ class hook_override__NAMEHERE_ extends hook_override {
 	}
 
 	function __clone() {
+		// TODO: Test this. Make sure cloning works properly.
 		if (method_exists($this->_p_object, '__clone')) {
 			$args = func_get_args();
-			return call_user_func_array(array($this->_p_object, '__clone'), $args);
+			$new_object = call_user_func_array(array($this->_p_object, '__clone'), $args);
+			$config->hook->hook_object($new_object, get_class($new_object), false);
+			return $new_object;
 		} else {
-			return clone $this->_p_object;
+			return clone $this;
 		}
-	}
-
-	function __sleep() {
-		return serialize($this->_p_object);
 	}
 
 //#CODEHERE#
