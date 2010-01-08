@@ -44,9 +44,8 @@
 						this.css("top", next+"px");
 					}
 				}
-				if (display != "none") {
+				if (display != "none")
 					next += this.height() + 10;
-				}
 			});
 		},
 		pnotify: function(options) {
@@ -63,9 +62,8 @@
 			}
 
 			if (opts.pnotify_before_init) {
-				if (opts.pnotify_before_init(opts) === false) {
+				if (opts.pnotify_before_init(opts) === false)
 					return null;
-				}
 			}
 			
 			var pnotify = $("<div />").addClass("ui-widget ui-helper-clearfix ui-pnotify");
@@ -107,16 +105,14 @@
 			};
 
 			pnotify.pnotify_queue_position = function() {
-				if (timer) {
+				if (timer)
 					clearTimeout(timer);
-				}
 				timer = setTimeout($.pnotify_position_all, 10);
 			};
 
 			pnotify.pnotify_display = function() {
-				if (pnotify.parent().get()) {
+				if (pnotify.parent().get())
 					pnotify.pnotify_init();
-				}
 				if (opts.pnotify_before_open)
 					opts.pnotify_before_open(pnotify);
 				pnotify.pnotify_queue_position();
@@ -126,9 +122,8 @@
 						opts.pnotify_after_open(pnotify);
 				
 					// Now set it to hide.
-					if (opts.pnotify_hide) {
+					if (opts.pnotify_hide)
 						pnotify.pnotify_queue_remove();
-					}
 				});
 			};
 
@@ -149,9 +144,8 @@
 			};
 
 			pnotify.pnotify_cancel_remove = function() {
-				if (pnotify.timer) {
+				if (pnotify.timer)
 					window.clearTimeout(pnotify.timer);
-				}
 			};
 
 			pnotify.pnotify_queue_remove = function() {
@@ -181,17 +175,17 @@
 
 			if (typeof opts.pnotify_text == "string") {
 				var text = $("<span />").addClass("ui-pnotify-text");
+				if (opts.pnotify_insert_brs)
+					opts.pnotify_text = opts.pnotify_text.replace("\n", "<br />");
 				text.html(opts.pnotify_text);
 				pnotify.container.append(text);
 			}
 
-			if (typeof opts.pnotify_width == "string") {
+			if (typeof opts.pnotify_width == "string")
 				pnotify.css("width", opts.pnotify_width);
-			}
 
-			if (typeof opts.pnotify_min_height == "string") {
+			if (typeof opts.pnotify_min_height == "string")
 				pnotify.container.css("min-height", opts.pnotify_min_height);
-			}
 
 			pnotify.pnotify_history = opts.pnotify_history;
 
@@ -283,6 +277,8 @@
 		// Delay in milliseconds before the notice disappears.
 		pnotify_delay: 8000,
 		// Remove the notice from the DOM after it disappears.
-		pnotify_remove: true
+		pnotify_remove: true,
+		// Change new lines to br tags.
+		pnotify_insert_brs: true
 	};
 })(jQuery);
