@@ -15,10 +15,13 @@
 		pnotify_remove_all: function () {
 			var body = $("body");
 			var body_data = body.data("pnotify");
-			$.each(body_data, function(){
-				if (this.pnotify_remove)
-					this.pnotify_remove();
-			});
+			/* POA: Added null-check */
+			if (body_data && body_data.length) {
+				$.each(body_data, function(){
+					if (this.pnotify_remove)
+						this.pnotify_remove();
+				});
+			}
 		},
 		pnotify_position_all: function () {
 			timer = null;
