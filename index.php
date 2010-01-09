@@ -159,6 +159,20 @@ foreach ($config->components as $cur_component) {
  */
 function __autoload($class_name) {
 	global $config;
+	// When session_start() tries to recover hooked objects, we need to make
+	// sure their equivalent hooked classes exist.
+	if (strpos($class_name, 'hook_override_') === 0) {
+		$trace = debug_backtrace();
+		// But the hook object will check if a hooked class exists before
+		// hooking it, so we don't want to create an extra object each time.
+		if ($trace[1]['function'] == 'class_exists')
+			return;
+		$new_class = preg_replace('/^hook_override_/', '', $class_name);
+		$new_object = new $new_class;
+		$config->hook->hook_object($new_object, get_class($new_object).'->', false);
+		unset($new_object);
+		return;
+	}
 	if (key_exists($class_name, $config->class_files)) {
 		include_once($config->class_files[$class_name]);
 		if (P_SCRIPT_TIMING) pines_print_time("Load [$class_name]");
