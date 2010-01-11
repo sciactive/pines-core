@@ -244,7 +244,7 @@ if ( $config->url_rewriting ) {
 // Get an array of the pseudo directories from the URI.
 	$args_array = explode('/',
 		// Get rid of index.php/ at the beginning, and / at the end.
-		preg_replace('/(^index\.php\/)|(\/$)/', '', substr(
+		preg_replace('/(^index\.php\/?)|(\/$)/', '', substr(
 		substr($_SERVER['REQUEST_URI'], 0,
 		// Use the whole string, or if there's a query part, subtract that.
 		strlen($_SERVER['REQUEST_URI']) - (strlen($_SERVER['QUERY_STRING']) ? strlen($_SERVER['QUERY_STRING']) + 1 : 0)
