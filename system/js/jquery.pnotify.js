@@ -8,10 +8,7 @@
  */
 
 (function($) {
-	var first_top;
-	var history_handle_top;
-	var timer;
-	var orig_right_pos;
+	var first_top, first_right, history_handle_top, timer;
 	$.extend({
 		pnotify_remove_all: function () {
 			var body = $("body");
@@ -27,61 +24,58 @@
 		pnotify_position_all: function () {
 			timer = null;
 			var body = $("body");
-			var next = first_top;
-			var posright;
+			var nexttop = first_top;
+			var nextright = first_right;
 			var addwidth = 0;
 			var body_data = body.data("pnotify");
 			$.each(body_data, function(){
-				var postop;
-				var display = this.css("display");
-				var animate = {};
-				if (display != "none") {
+				if (this.css("display") != "none") {
+					var postop, posright, animate = {};
 					// Calculate the top value, disregarding the scroll, since position=fixed.
 					postop = this.offset().top - $(window).scrollTop();
-					if (!first_top) {
+					// Remember the topmost position, so the first visible notice goes there.
+					if (typeof first_top == "undefined") {
 						first_top = postop;
-						next = first_top;
+						nexttop = first_top;
 					}
 					if (typeof window.innerHeight != "undefined") {
-						if (typeof posright == "undefined") {
-							// Remember the rightmost position, so the first visible notice goes there.
-							if (typeof orig_right_pos == "undefined") {
-								orig_right_pos = parseInt(this.css("right"));
-								if (isNaN(orig_right_pos))
-									orig_right_pos = 18;
-							}
-							posright = orig_right_pos;
+						posright = parseInt(this.css("right"));
+						if (isNaN(posright))
+							posright = 18;
+						// Remember the rightmost position, so the first visible notice goes there.
+						if (typeof first_right == "undefined") {
+							first_right = posright;
+							nextright = first_right;
 						}
 						// Check that we're not below the bottom of the page.
-						if (next + this.height() > window.innerHeight) {
+						if (nexttop + this.height() > window.innerHeight) {
 							// If we are, we need to go back to the top, and over to the left.
-							next = first_top;
-							posright += addwidth + 10;
+							nexttop = first_top;
+							nextright += addwidth + 10;
 							addwidth = 0;
 						}
 						// Animate if we're moving to the right.
-						if (posright < parseInt(this.css("right"))) {
-							animate.right = posright+"px";
+						if (nextright < posright) {
+							animate.right = nextright+"px";
 						} else {
-							this.css("right", posright+"px");
+							this.css("right", nextright+"px");
 						}
-						// Keep track of the widest notice in the row.
+						// Keep track of the widest notice in the column, so we can push the next column.
 						if (this.outerWidth(true) > addwidth)
 							addwidth = this.width();
 					}
-				}
-				if (next) {
-					// Animate if we're moving up or to the right.
-					if (postop > next || animate.right) {
-						animate.top = next+"px";
-					} else {
-						this.css("top", next+"px");
+					if (nexttop) {
+						// Animate if we're moving up or to the right.
+						if (postop > nexttop || animate.right) {
+							animate.top = nexttop+"px";
+						} else {
+							this.css("top", nexttop+"px");
+						}
 					}
+					if (animate.top || animate.right)
+						this.animate(animate, {duration: 500, queue: false});
+					nexttop += this.height() + 10;
 				}
-				if (animate.top || animate.right)
-					this.animate(animate, {duration: 500, queue: false});
-				if (display != "none")
-					next += this.height() + 10;
 			});
 		},
 		pnotify: function(options) {
@@ -117,15 +111,17 @@
 				} else {
 					opts = $.extend({}, opts, options);
 				}
-				if (opts.pnotify_title) {
-					var title = pnotify.container.find(".ui-pnotify-title");
-					title.html(opts.pnotify_title);
+				if (typeof opts.pnotify_title == "string") {
+					pnotify.title_container.html(opts.pnotify_title).show("fast");
+				} else if (opts.pnotify_title === false) {
+					pnotify.title_container.hide("fast");
 				}
-				if (opts.pnotify_text) {
-					var text = pnotify.container.find(".ui-pnotify-text");
+				if (typeof opts.pnotify_text == "string") {
 					if (opts.pnotify_insert_brs)
 						opts.pnotify_text = opts.pnotify_text.replace("\n", "<br />");
-					text.html(opts.pnotify_text);
+					pnotify.text_container.html(opts.pnotify_text).show("fast");
+				} else if (opts.pnotify_text === false) {
+					pnotify.text_container.hide("fast");
 				}
 				pnotify.pnotify_history = opts.pnotify_history;
 				if (opts.pnotify_type != old_opts.pnotify_type) {
@@ -317,19 +313,19 @@
 				pnotify.container.append(icon);
 			}
 
-			if (typeof opts.pnotify_title == "string") {
-				var title = $("<span />").addClass("ui-pnotify-title");
-				title.html(opts.pnotify_title);
-				pnotify.container.append(title);
-			}
+			pnotify.title_container = $("<span />").addClass("ui-pnotify-title");
+			pnotify.title_container.html(opts.pnotify_title);
+			pnotify.container.append(pnotify.title_container);
+			if (typeof opts.pnotify_title != "string")
+				pnotify.title_container.hide();
 
-			if (typeof opts.pnotify_text == "string") {
-				var text = $("<span />").addClass("ui-pnotify-text");
-				if (opts.pnotify_insert_brs)
-					opts.pnotify_text = opts.pnotify_text.replace("\n", "<br />");
-				text.html(opts.pnotify_text);
-				pnotify.container.append(text);
-			}
+			pnotify.text_container = $("<span />").addClass("ui-pnotify-text");
+			if (opts.pnotify_insert_brs && typeof opts.pnotify_text == "string")
+				opts.pnotify_text = opts.pnotify_text.replace("\n", "<br />");
+			pnotify.text_container.html(opts.pnotify_text);
+			pnotify.container.append(pnotify.text_container);
+			if (typeof opts.pnotify_text != "string")
+				pnotify.text_container.hide();
 
 			if (typeof opts.pnotify_width == "string")
 				pnotify.css("width", opts.pnotify_width);
