@@ -152,13 +152,15 @@ function gatekeeper($ability = NULL, $user = NULL) {
  *
  * @param int $timestamp The timestamp to format.
  * @param string $format The format to use.
- * @param DateTimeZone $timezone The timezone to use for formatting. Defaults to date_default_timezone_get().
+ * @param DateTimeZone|string $timezone The timezone to use for formatting. Defaults to date_default_timezone_get().
  * @return string The formatted date.
  */
 function pines_date_format($timestamp, $timezone = null, $format = 'Y-m-d H:i T') {
 	global $config;
 	$date = new DateTime(gmdate('c', $timestamp));
 	if (!is_null($timezone)) {
+		if (is_string($timezone))
+			$timezone = new DateTimeZone($timezone);
 		$date->setTimezone($timezone);
 	} else {
 		$date->setTimezone(new DateTimeZone(date_default_timezone_get()));
