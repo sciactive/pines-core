@@ -11,6 +11,7 @@
 	var first_top;
 	var history_handle_top;
 	var timer;
+	var orig_right_pos;
 	$.extend({
 		pnotify_remove_all: function () {
 			var body = $("body");
@@ -27,11 +28,13 @@
 			timer = null;
 			var body = $("body");
 			var next = first_top;
+			var posright;
+			var addwidth = 0;
 			var body_data = body.data("pnotify");
-			// TODO: Maybe do horizontal positioning here too. Use top % screenheight for top value.
 			$.each(body_data, function(){
 				var postop;
 				var display = this.css("display");
+				var animate = {};
 				if (display != "none") {
 					// Calculate the top value, disregarding the scroll, since position=fixed.
 					postop = this.offset().top - $(window).scrollTop();
@@ -39,14 +42,44 @@
 						first_top = postop;
 						next = first_top;
 					}
+					if (typeof window.innerHeight != "undefined") {
+						if (typeof posright == "undefined") {
+							// Remember the rightmost position, so the first visible notice goes there.
+							if (typeof orig_right_pos == "undefined") {
+								orig_right_pos = parseInt(this.css("right"));
+								if (isNaN(orig_right_pos))
+									orig_right_pos = 18;
+							}
+							posright = orig_right_pos;
+						}
+						// Check that we're not below the bottom of the page.
+						if (next + this.height() > window.innerHeight) {
+							// If we are, we need to go back to the top, and over to the left.
+							next = first_top;
+							posright += addwidth + 10;
+							addwidth = 0;
+						}
+						// Animate if we're moving to the right.
+						if (posright < parseInt(this.css("right"))) {
+							animate.right = posright+"px";
+						} else {
+							this.css("right", posright+"px");
+						}
+						// Keep track of the widest notice in the row.
+						if (this.outerWidth(true) > addwidth)
+							addwidth = this.width();
+					}
 				}
 				if (next) {
-					if (postop > next) {
-						this.animate({top: next+"px"}, {duration: 500, queue: false});
+					// Animate if we're moving up or to the right.
+					if (postop > next || animate.right) {
+						animate.top = next+"px";
 					} else {
 						this.css("top", next+"px");
 					}
 				}
+				if (animate.top || animate.right)
+					this.animate(animate, {duration: 500, queue: false});
 				if (display != "none")
 					next += this.height() + 10;
 			});
@@ -70,10 +103,69 @@
 			}
 			
 			var pnotify = $("<div />").addClass("ui-widget ui-helper-clearfix ui-pnotify");
+			pnotify.opts = opts;
 			pnotify.container = $("<div />").addClass("ui-corner-all ui-pnotify-container");
 			pnotify.append(pnotify.container);
 
 			pnotify.pnotify_version = "1.0.0";
+
+			pnotify.pnotify = function(options) {
+				// Update the notice.
+				var old_opts = opts;
+				if (typeof options == "string") {
+					opts.pnotify_text = options;
+				} else {
+					opts = $.extend({}, opts, options);
+				}
+				if (opts.pnotify_title) {
+					var title = pnotify.container.find(".ui-pnotify-title");
+					title.html(opts.pnotify_title);
+				}
+				if (opts.pnotify_text) {
+					var text = pnotify.container.find(".ui-pnotify-text");
+					if (opts.pnotify_insert_brs)
+						opts.pnotify_text = opts.pnotify_text.replace("\n", "<br />");
+					text.html(opts.pnotify_text);
+				}
+				pnotify.pnotify_history = opts.pnotify_history;
+				if (opts.pnotify_type != old_opts.pnotify_type) {
+					// Change to the new type.
+					if (opts.pnotify_type == "error") {
+						pnotify.container.addClass("ui-state-error").removeClass("ui-state-highlight");
+					} else if (opts.pnotify_type == "notice") {
+						pnotify.container.addClass("ui-state-highlight").removeClass("ui-state-error");
+					}
+				}
+				if ((opts.pnotify_notice_icon != old_opts.pnotify_notice_icon && opts.pnotify_type == "notice") ||
+					(opts.pnotify_error_icon != old_opts.pnotify_error_icon && opts.pnotify_type == "error") ||
+					(opts.pnotify_type != old_opts.pnotify_type)) {
+					// Remove any old icon.
+					pnotify.container.find(".ui-pnotify-icon").remove();
+					if ((opts.pnotify_notice_icon && opts.pnotify_type == "notice") || (opts.pnotify_error_icon && opts.pnotify_type == "error")) {
+						// Build the new icon.
+						var icon = $("<div />").addClass("ui-pnotify-icon");
+						icon.append($("<span />").addClass(opts.pnotify_type == "notice" ? opts.pnotify_notice_icon : opts.pnotify_error_icon));
+						pnotify.container.prepend(icon);
+					}
+				}
+				// Update the width.
+				if (opts.pnotify_width != old_opts.pnotify_width && typeof opts.pnotify_width == "string")
+					pnotify.animate({width: opts.pnotify_width});
+				// Update the minimum height.
+				if (opts.pnotify_min_height != old_opts.pnotify_min_height && typeof opts.pnotify_min_height == "string")
+					pnotify.container.animate({minHeight: opts.pnotify_min_height});
+				// Update the opacity.
+				if (opts.pnotify_opacity != old_opts.pnotify_opacity)
+					pnotify.fadeTo(opts.pnotify_animate_speed, opts.pnotify_opacity);
+				if (!opts.pnotify_hide) {
+					pnotify.pnotify_cancel_remove();
+				} else if (!old_opts.pnotify_hide) {
+					pnotify.pnotify_queue_remove();
+				}
+				pnotify.opts = opts;
+				pnotify.pnotify_queue_position();
+				return pnotify;
+			}
 
 			pnotify.pnotify_init = function() {
 				body.append(pnotify);
@@ -116,11 +208,14 @@
 			pnotify.pnotify_display = function() {
 				if (pnotify.parent().get())
 					pnotify.pnotify_init();
-				if (opts.pnotify_before_open)
-					opts.pnotify_before_open(pnotify);
+				if (opts.pnotify_before_open) {
+					if (opts.pnotify_before_open(pnotify) === false)
+						return;
+				}
 				pnotify.pnotify_queue_position();
-				// First show it, then set its opacity to 0, then fade into the set opacity.
-				pnotify.show().fadeTo(0, 0).fadeTo(opts.pnotify_fade_speed, opts.pnotify_opacity, function(){
+				// First show it, then set its opacity, then hide it.
+				pnotify.show().fadeTo(0, opts.pnotify_opacity).hide();
+				pnotify.animate_in(function(){
 					if (opts.pnotify_after_open)
 						opts.pnotify_after_open(pnotify);
 				
@@ -131,19 +226,71 @@
 			};
 
 			pnotify.pnotify_remove = function() {
-				if (opts.pnotify_before_close)
-					opts.pnotify_before_close(pnotify);
 				if (pnotify.timer) {
 					window.clearTimeout(pnotify.timer);
 					pnotify.timer = null;
 				}
-				pnotify.fadeOut(opts.pnotify_fade_speed, function(){
-					if (opts.pnotify_after_close)
-						opts.pnotify_after_close(pnotify);
+				if (opts.pnotify_before_close) {
+					if (opts.pnotify_before_close(pnotify) === false)
+						return;
+				}
+				pnotify.animate_out(function(){
+					if (opts.pnotify_after_close) {
+						if (opts.pnotify_after_close(pnotify) === false)
+							return;
+					}
 					pnotify.pnotify_queue_position();
 					if (opts.pnotify_remove)
 						pnotify.remove();
 				});
+			};
+
+			pnotify.animate_in = function(callback){
+				var animation;
+				if (typeof opts.pnotify_animation.effect_in != "undefined") {
+					animation = opts.pnotify_animation.effect_in;
+				} else {
+					animation = opts.pnotify_animation;
+				}
+				if (animation == "none") {
+					pnotify.show();
+					callback();
+				} else if (animation == "show") {
+					pnotify.show(opts.pnotify_animate_speed, callback);
+				} else if (animation == "fade") {
+					pnotify.show().fadeTo(0, 0).fadeTo(opts.pnotify_animate_speed, opts.pnotify_opacity, callback);
+				} else if (animation == "slide") {
+					pnotify.slideDown(opts.pnotify_animate_speed, callback);
+				} else if (typeof animation == "function") {
+					animation("in", callback, pnotify);
+				} else {
+					if (pnotify.effect)
+						pnotify.effect(animation, {}, opts.pnotify_animate_speed, callback);
+				}
+			};
+
+			pnotify.animate_out = function(callback){
+				var animation;
+				if (typeof opts.pnotify_animation.effect_out != "undefined") {
+					animation = opts.pnotify_animation.effect_out;
+				} else {
+					animation = opts.pnotify_animation;
+				}
+				if (animation == "none") {
+					pnotify.hide();
+					callback();
+				} else if (animation == "show") {
+					pnotify.hide(opts.pnotify_animate_speed, callback);
+				} else if (animation == "fade") {
+					pnotify.fadeOut(opts.pnotify_animate_speed, callback);
+				} else if (animation == "slide") {
+					pnotify.slideUp(opts.pnotify_animate_speed, callback);
+				} else if (typeof animation == "function") {
+					animation("out", callback, pnotify);
+				} else {
+					if (pnotify.effect)
+						pnotify.effect(animation, {}, opts.pnotify_animate_speed, callback);
+				}
 			};
 
 			pnotify.pnotify_cancel_remove = function() {
@@ -269,8 +416,10 @@
 		pnotify_notice_icon: "ui-icon ui-icon-info",
 		// The icon class to use if type is error.
 		pnotify_error_icon: "ui-icon ui-icon-alert",
-		// Speed at which the notice fades in and out. "slow", "def", "fast" or number of milliseconds.
-		pnotify_fade_speed: "slow",
+		// The animation to use when displaying and hiding the notice. "none", "show", "fade", and "slide" are built in to jQuery. Others require jQuery UI. Use an object with effect_in and effect_out to use different effects.
+		pnotify_animation: "fade",
+		// Speed at which the notice fades or animates in and out. "slow", "def" or "normal", "fast" or number of milliseconds.
+		pnotify_animate_speed: "slow",
 		// Opacity to fade to.
 		pnotify_opacity: 1,
 		// Provide a button for the user to manually close a notice.
