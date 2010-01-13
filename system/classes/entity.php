@@ -130,7 +130,7 @@ class entity extends p_base {
 		if (array_key_exists($name, $this->entity_cache)) {
 			if ($this->entity_cache[$name] === 0) {
 				// The entity hasn't been loaded yet, so load it now.
-				$this->entity_cache[$name] = $config->entity_manager->get_entity($this->data[$name][1], array(), $this->data[$name][2]);
+				$this->entity_cache[$name] = $config->entity_manager->get_entity(array('guid' => $this->data[$name][1], 'class' => $this->data[$name][2]));
 			}
 			return $this->entity_cache[$name];
 		}
@@ -418,7 +418,7 @@ class entity extends p_base {
 		global $config;
 		if (is_array($item) && $item[0] === 'pines_entity_reference') {
 			if (!isset($this->entity_cache["reference_guid: {$item[1]}"])) {
-				$this->entity_cache["reference_guid: {$item[1]}"] = $config->entity_manager->get_entity($item[1], array(), $item[2]);
+				$this->entity_cache["reference_guid: {$item[1]}"] = $config->entity_manager->get_entity(array('guid' => $item[1], 'class' => $item[2]));
 			}
 			$item = $this->entity_cache["reference_guid: {$item[1]}"];
 		} elseif (is_array($item)) {
@@ -438,7 +438,7 @@ class entity extends p_base {
 		if (!is_int($this->guid))
 			return false;
 		global $config;
-		$refresh = $config->entity_manager->get_entity($this->guid, null, get_class($this));
+		$refresh = $config->entity_manager->get_entity(array('guid' => $this->guid, 'class' => get_class($this)));
 		if (is_null($refresh))
 			return 0;
 		$this->parent = $refresh->parent;
