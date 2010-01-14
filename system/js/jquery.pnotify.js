@@ -161,7 +161,7 @@
 				pnotify.opts = opts;
 				pnotify.pnotify_queue_position();
 				return pnotify;
-			}
+			};
 
 			pnotify.pnotify_init = function() {
 				body.append(pnotify);
@@ -372,7 +372,7 @@
 					}).click(function(){
 						var i = 1;
 						while (!body_data[body_data.length - i] || !body_data[body_data.length - i].pnotify_history) {
-							if (body_data.length - i == 0)
+							if (body_data.length - i === 0)
 								return;
 							i++;
 						}
@@ -381,7 +381,7 @@
 					}));
 
 					var handle = $("<span></span>").addClass("ui-pnotify-history-pulldown ui-icon ui-icon-grip-dotted-horizontal").mouseenter(function(){
-						body_history.animate({top: "0"}, {duration: 100, queue: false})
+						body_history.animate({top: "0"}, {duration: 100, queue: false});
 					});
 					body_history.append(handle);
 					history_handle_top = handle.offset().top + 2;

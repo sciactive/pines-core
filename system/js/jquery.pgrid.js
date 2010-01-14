@@ -105,7 +105,7 @@
 			});
 			return_array = $.merge(return_array, [{
 				key: (typeof cur_title == "undefined" ? "" : cur_title),
-				classes: (typeof cur_class == "undefined" ? "" : cur_class.replace(/\bui-[a-z0-9 -]+/, "")),
+				classes: (typeof cur_class == "undefined" ? "" : cur_class.replace(/\bui-[a-z0-9 \-]+/, "")),
 				values: value_array
 			}]);
 		});
@@ -379,11 +379,11 @@
 				// Change the records shown per page.
 				pgrid.pgrid_page = 0;
 				pgrid.pgrid_perpage = new_per_page;
-				if (pgrid.pgrid_perpage == 0)
+				if (pgrid.pgrid_perpage === 0)
 					pgrid.pgrid_perpage = 1;
 				pgrid.paginate();
 				pgrid.make_page_buttons();
-			}
+			};
 
 			pgrid.make_page_buttons = function() {
 				// Make a button in the footer to jump to each page.
@@ -400,7 +400,7 @@
 								function(){
 									$(this).removeClass("ui-state-hover");
 								}
-								));
+							));
 						}
 					});
 				}
@@ -505,7 +505,6 @@
 						pgrid.pgrid_filter = filter;
 					if (pgrid.pgrid_filter.length > 0) {
 						var filter_arr = pgrid.pgrid_filter.toLowerCase().split(" ");
-						var i;
 						// Disable all rows, then iterate them and match.
 						pgrid.find("tbody tr:not(.ui-pgrid-table-row-spacer)").addClass("ui-helper-hidden").each(function(){
 							var cur_row = $(this);
@@ -517,7 +516,7 @@
 							});
 							var match = true;
 							// Go through each search term and if any doesn't match, flag the row as a non-match.
-							for (i in filter_arr) {
+							for (var i in filter_arr) {
 								if (cur_text.indexOf(filter_arr[i]) == -1) {
 									match = false;
 								}
@@ -670,10 +669,10 @@
 			};
 
 			pgrid.do_col_hiding = function(loading) {
-				var cur_col;
 				pgrid.find("th:not(.ui-pgrid-table-expander, .ui-pgrid-table-cell-scrollspace), td:not(.ui-pgrid-table-expander, .ui-pgrid-table-cell-scrollspace)").show();
 				pgrid.pgrid_header_select.find("input").attr("checked", true);
-				for (cur_col in pgrid.pgrid_hidden_cols) {
+				for (var cur_col in pgrid.pgrid_hidden_cols) {
+					if (isNaN(cur_col)) continue;
 					pgrid.pgrid_header_select.find("input.ui-pgrid-table-col-hider-"+pgrid.pgrid_hidden_cols[cur_col]).removeAttr("checked");
 					pgrid.find(".col_"+pgrid.pgrid_hidden_cols[cur_col]).hide();
 				}
@@ -967,7 +966,7 @@
 							})
 							).click(function(e){
 							var selected_rows = (val.return_all_rows ? pgrid.find("tbody tr:not(.ui-helper-hidden, .ui-pgrid-table-row-spacer)") : pgrid.find("tbody tr.ui-pgrid-table-row-selected"));
-							if (!val.selection_optional && !val.select_all && !val.select_none && selected_rows.length == 0) {
+							if (!val.selection_optional && !val.select_all && !val.select_none && selected_rows.length === 0) {
 								alert("Please make a selection before performing this operation.");
 								return false;
 							}
@@ -980,7 +979,7 @@
 									if (!confirm("Are you sure you want to perform the operation \""+val.text+"\" on all items?")) {
 										return false;
 									}
-								} else if (selected_rows.length == 0) {
+								} else if (selected_rows.length === 0) {
 									if (!confirm("Are you sure you want to perform the operation \""+val.text+"\"?")) {
 										return false;
 									}
@@ -1043,8 +1042,8 @@
 									});
 								});
 								parsed_url = parsed_url.replace("#title#", cur_title);
-								var i = 0;
-								for (i in cur_cols_text) {
+								for (var i in cur_cols_text) {
+									if (isNaN(i)) continue;
 									parsed_url = parsed_url.replace("#col_"+i+"#", cur_cols_text[i]);
 								}
 								if (val.new_window) {
@@ -1116,12 +1115,10 @@
 			if (pgrid.pgrid_footer) {
 				var footer = $("<div />").addClass("ui-pgrid-footer ui-widget-header ui-corner-bottom ui-helper-clearfix");
 				pgrid.pgrid_widget.append(footer);
-			}
 
-			// Provide filtering controls.
-			if (pgrid.pgrid_filtering) {
-				// Add filtering controls to the grid's footer.
-				if (pgrid.pgrid_footer) {
+				// Provide filtering controls.
+				if (pgrid.pgrid_filtering) {
+					// Add filtering controls to the grid's footer.
 					footer.append(
 						$("<div />").addClass("ui-pgrid-footer-filter-container").each(function(){
 							$(this).append($("<span>Filter: </span>").append(
@@ -1153,7 +1150,7 @@
 			}
 
 			// Sort the grid.
-			if (pgrid.pgrid_sort_col != false) {
+			if (!isNaN(pgrid.pgrid_sort_col)) {
 				// Since the order is switched if the column is already set, we need to set the order to the opposite.
 				// This also works as a validator. Anything other than "desc" will become "asc" when it's switched.
 				if (pgrid.pgrid_sort_ord == "desc") {
