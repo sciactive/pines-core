@@ -284,7 +284,7 @@ class entity extends p_base {
 	 * @return bool True or false.
 	 */
 	public function equals(&$object) {
-		if (!is_a($object, 'entity'))
+		if (!is_a($object, 'entity') || is_a($item, 'hook_override'))
 			return false;
 		if (isset($this->guid) || isset($object->guid)) {
 			if ($this->guid != $object->guid)
