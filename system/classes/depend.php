@@ -42,6 +42,7 @@ class depend extends p_base {
 	function __construct() {
 		global $config;
 		$this->checkers['ability'] = array($this, 'check_ability');
+		$this->checkers['component'] = array($this, 'check_component');
 		$this->checkers['option'] = array($this, 'check_option');
 		$this->checkers['action'] = array($this, 'check_action');
 	}
@@ -93,6 +94,22 @@ class depend extends p_base {
 		if (preg_match('/[!&|()]/', $value))
 			return $this->simple_parse($value, array($config->depend, 'check_action'));
 		return $config->action == $value || $config->request_action == $value;
+	}
+
+	/**
+	 * Check if a component is installed and enabled.
+	 *
+	 * Uses simple_parse() to provide simple logic.
+	 *
+	 * @uses $config->components
+	 * @param string $value The value to check.
+	 * @return bool The result of the component check.
+	 */
+	function check_component($value) {
+		global $config;
+		if (preg_match('/[!&|()]/', $value))
+			return $this->simple_parse($value, array($config->depend, 'check_component'));
+		return in_array($value, $config->components);
 	}
 
 	/**
