@@ -343,14 +343,13 @@ class entity extends p_base {
 	 * @return bool True if the entity is in the array, false if it isn't or if $array is not an array.
 	 */
 	public function in_array($array, $strict = false) {
-		$found = false;
 		if (!is_array($array))
 			return false;
 		foreach ($array as $cur_entity) {
 			if ($strict ? $this->equals($cur_entity) : $this->is($cur_entity))
-				$found = true;
+				return true;
 		}
-		return $found;
+		return false;
 	}
 
 	/**

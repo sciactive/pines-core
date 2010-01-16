@@ -50,34 +50,38 @@ define('P_INDEX', basename($_SERVER['SCRIPT_FILENAME']));
  */
 define('P_EXEC_TIME', microtime(true));
 /**
- * When this is set to true, the times between script stages will be printed.
+ * When this is set to true, the times between script stages will be displayed.
  */
 define('P_SCRIPT_TIMING', false);
 
 if (P_SCRIPT_TIMING) {
-	ob_start();
 	/**
-	 * Print a message for Pines Script Timing.
+	 * Display a message for Pines Script Timing.
+	 *
+	 * Messages will be displayed in the FireBug console, if available, or an
+	 * alert() if not.
 	 *
 	 * @param string $message The message.
 	 * @param bool $print_now Whether to print the page now.
 	 */
 	function pines_print_time($message, $print_now = false) {
 		static $time_output;
-		static $script_output;
-		$script_output .= ob_get_contents() or '';
-		ob_clean();
 		$microtime = microtime(true);
-		$time_output .= sprintf(str_pad($message, 30).'%F<br />', ($microtime - $GLOBALS['p_last_time']));
+		$time_output .= sprintf(str_pad($message, 40).'%F\n', ($microtime - $GLOBALS['p_last_time']));
 		$GLOBALS['p_last_time'] = $microtime;
 		if ($print_now) {
-			echo '<h1>Pines Script Timing</h1><p>Times are measured in seconds.</p><pre>';
+			echo '<script type="text/javascript">
+(function(message){
+	if (console.log) {
+		console.log(message);
+	} else {
+		alert(message);
+	}
+})("';
+			echo 'Pines Script Timing\n\nTimes are measured in seconds.\n';
 			echo $time_output;
-			printf('--------------------<br />'.str_pad('Script Run', 30).'%F</pre><br />', ($microtime - P_EXEC_TIME));
-			ob_flush();
-			echo 'Here is the page\'s output (it may have been mangled during rendering):<br />';
-			echo $script_output;
-			ob_flush();
+			printf('--------------------\n'.str_pad('Script Run', 40).'%F', ($microtime - P_EXEC_TIME));
+			echo '");</script>';
 		}
 	}
 	$GLOBALS['p_last_time'] = P_EXEC_TIME;
@@ -285,7 +289,7 @@ if (P_SCRIPT_TIMING) pines_print_time('Load Component Displays');
 
 // Render the page.
 echo $page->render();
-if (P_SCRIPT_TIMING) pines_print_time('Render Page');
+if (P_SCRIPT_TIMING) pines_print_time('Render Page', true);
 
 /**
  * Fill an object with the data from a configuration array.
