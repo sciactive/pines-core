@@ -10,10 +10,8 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if (!gatekeeper()) {
+if (!gatekeeper())
 	$config->user_manager->punt_user("You don't have necessary permission.");
-	return;
-}
 
 header('Content-Type: text/csv');
 header('Content-Disposition: attachment; filename="'.$_REQUEST['filename'].'.csv" size='.strlen($_REQUEST['content']));

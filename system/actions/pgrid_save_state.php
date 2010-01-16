@@ -10,10 +10,9 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if (!gatekeeper()) {
+if (!gatekeeper())
 	$config->user_manager->punt_user("You don't have necessary permission.");
-	return;
-}
+
 $cur_state = $_REQUEST['state'];
 $cur_view = $_REQUEST['view'];
 if (isset($_SESSION['user'])) {
