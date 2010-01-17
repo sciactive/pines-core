@@ -148,6 +148,28 @@ function gatekeeper($ability = NULL, $user = NULL) {
 }
 
 /**
+ * Shortcut to $config->user_manager->punt_user().
+ *
+ * The punt_user() function should be defined in whatever component is taking
+ * over user management. punt_user() must always end the execution of the
+ * script. If there is no user management component, the user is directed to the
+ * home page and the script terminates.
+ *
+ * @uses $config->user_manager->punt_user() Forwards parameters and returns the result.
+ * @param string $message An optional message to display to the user.
+ * @param string $url An optional URL to be included in the query data of the redirection url.
+ * @return bool The result is returned if there is a user management component, otherwise it returns true.
+ */
+function punt_user($message = NULL, $url = NULL) {
+	global $config;
+	if (is_null($config->user_manager)) {
+		header("Location: ".pines_url());
+		exit($message);
+	}
+	$config->user_manager->punt_user($message, $url);
+}
+
+/**
  * Formats a date using the DateTime class.
  *
  * @param int $timestamp The timestamp to format.

@@ -73,9 +73,8 @@ class module extends p_base {
 	function __construct($component, $view, $position = null, $order = null) {
 		$this->component = $component;
 		$this->view = $view;
-		if ( !is_null($position) ) {
+		if ( !is_null($position) )
 			return $this->attach($position, $order);
-		}
 	}
 
 	/**

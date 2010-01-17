@@ -182,9 +182,8 @@ class entity extends p_base {
 			// Store the actual value passed.
 			$save_value = $value;
 			// If the variable is an array, look through it and change entities to references.
-			if (is_array($save_value)) {
+			if (is_array($save_value))
 				array_walk_recursive($save_value, array($this, 'entity_to_reference'));
-			}
 		}
 		
 		return ($this->data[$name] = $save_value);
@@ -325,9 +324,8 @@ class entity extends p_base {
 			$tag_array = func_get_args();
 		}
 		foreach ($tag_array as $tag) {
-			if ( !is_array($this->tags) || !in_array($tag, $this->tags) ) {
+			if ( !is_array($this->tags) || !in_array($tag, $this->tags) )
 				return false;
-			}
 		}
 		return true;
 	}
@@ -394,10 +392,14 @@ class entity extends p_base {
 	public function put_data($data) {
 		if (!is_array($data))
 			$data = array();
+		// Erase the entity cache.
+		$this->entity_cache = array();
 		foreach($data as $name => $value) {
 			if (is_array($value) && $value[0] === 'pines_entity_reference') {
-				// Don't load the entity yet, but make the entry in the array, so we know it is an entity reference.
-				// This will speed up retrieving entities with lots of references, especially recursive references.
+				// Don't load the entity yet, but make the entry in the array,
+				// so we know it is an entity reference. This will speed up
+				// retrieving entities with lots of references, especially
+				// recursive references.
 				$this->entity_cache[$name] = 0;
 			}
 		}
@@ -442,7 +444,6 @@ class entity extends p_base {
 			return 0;
 		$this->parent = $refresh->parent;
 		$this->tags = $refresh->tags;
-		$this->entity_cache = array();
 		$this->put_data($refresh->get_data());
 		return true;
 	}

@@ -5,9 +5,8 @@ Read the INSTALL file for installation instructions.
 
 A list of things to complete before the initial release of Pines:
 --------------------------------------------------------------------------------
-+Change edit actions to keep users without abilities from providing an ID.
 +Installer/Package Manager.
-+More dependency checker types. (Version, PHP abilities, other components...)
++More dependency checker types. (Version, PHP abilities...)
 +Use entity references in com_user.
 +Fix and improve com_newsletter.
 +Improve menu system to be fully customizeable. (XML or JSON menu definitions.)
