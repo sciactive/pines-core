@@ -78,9 +78,8 @@
 			});
 		} else {
 			var pgrid = this.closest(".ui-pgrid-table").get(0);
-			if (pgrid) {
+			if (pgrid)
 				pgrid = pgrid.pines_grid;
-			}
 			if (!pgrid)
 				return this;
 			this.each(function(){
@@ -92,9 +91,8 @@
 	};
 	$.fn.pgrid_export_rows = function(rows) {
 		var return_array = [];
-		if (!rows) {
+		if (!rows)
 			rows = this;
-		}
 		$.each(rows, function(){
 			var cur_row = $(this);
 			var cur_title = cur_row.attr("title");
@@ -116,14 +114,12 @@
 		if (!keysorrows) {
 			keysorrows = this;
 			pgrid = keysorrows.closest(".ui-pgrid-table").get(0);
-			if (pgrid && pgrid.pines_grid) {
+			if (pgrid && pgrid.pines_grid)
 				pgrid = pgrid.pines_grid;
-			}
 		} else {
 			pgrid = this.get(0);
-			if (pgrid && pgrid.pines_grid) {
+			if (pgrid && pgrid.pines_grid)
 				pgrid = pgrid.pines_grid;
-			}
 		}
 		if (!pgrid)
 			return this;
@@ -147,14 +143,12 @@
 		if (!rows) {
 			rows = this;
 			pgrid = rows.closest(".ui-pgrid-table").get(0);
-			if (pgrid && pgrid.pines_grid) {
+			if (pgrid && pgrid.pines_grid)
 				pgrid = pgrid.pines_grid;
-			}
 		} else {
 			pgrid = this.get(0);
-			if (pgrid && pgrid.pines_grid) {
+			if (pgrid && pgrid.pines_grid)
 				pgrid = pgrid.pines_grid;
-			}
 		}
 		if (!pgrid)
 			return this;
@@ -219,9 +213,8 @@
 	};
 	$.fn.pgrid_export_state = function() {
 		var pgrid = this.get(0);
-		if (pgrid && pgrid.pines_grid) {
+		if (pgrid && pgrid.pines_grid)
 			pgrid = pgrid.pines_grid;
-		}
 		if (pgrid.jquery)
 			return pgrid.export_state();
 		return false;
@@ -321,19 +314,16 @@
 				pgrid.do_filter(pgrid.pgrid_filter);
 				pgrid.do_sort();
 				pgrid.do_col_hiding();
-				if (pgrid.pgrid_footer && pgrid.pgrid_filtering) {
+				if (pgrid.pgrid_footer && pgrid.pgrid_filtering)
 					footer.find(".ui-pgrid-footer-filter-container span:first-child input").val(pgrid.pgrid_filter);
-				}
-				if (pgrid.pgrid_footer && pgrid.pgrid_paginate) {
+				if (pgrid.pgrid_footer && pgrid.pgrid_paginate)
 					footer.find(".ui-pgrid-footer-pager-container span:first-child input").val(pgrid.pgrid_perpage);
-				}
 			};
 
 			// When the grid's state changes, call the provided function, passing the current state.
 			pgrid.state_changed = function() {
-				if (pgrid.pgrid_state_change) {
+				if (pgrid.pgrid_state_change)
 					return pgrid.pgrid_state_change(pgrid.export_state());
-				}
 				return null;
 			};
 
@@ -488,9 +478,8 @@
 					// And their children.
 					pgrid.show_children(elempage);
 					// Update the page number and count in the footer.
-					if (pgrid.pgrid_footer) {
+					if (pgrid.pgrid_footer)
 						pgrid.pgrid_widget.find(".ui-pgrid-footer .page_number").html(pgrid.pgrid_page+1).end().find(".page_total").html(pgrid.pgrid_pages);
-					}
 				}
 				// Restripe the rows, since they may have changed. (Even if pagination isn't enabled.)
 				pgrid.do_stripes();
@@ -517,9 +506,8 @@
 							var match = true;
 							// Go through each search term and if any doesn't match, flag the row as a non-match.
 							for (var i in filter_arr) {
-								if (cur_text.indexOf(filter_arr[i]) == -1) {
+								if (cur_text.indexOf(filter_arr[i]) == -1)
 									match = false;
-								}
 							}
 							// If all search terms were found, enable the row and its parents.
 							if (match) {
@@ -571,6 +559,12 @@
 
 			pgrid.do_sort = function(column_class, loading) {
 				if (pgrid.pgrid_sortable) {
+					if (column_class) {
+						// If the column class is like "col_1", filter it to an int.
+						if (typeof column_class == "string")
+							column_class = column_class.replace(/\D/g, "");
+						column_class = parseInt(column_class);
+					}
 					// If they click the header again, change to descending order.
 					if (pgrid.pgrid_sort_col == column_class && !loading) {
 						if (pgrid.pgrid_sort_ord == "asc") {
@@ -586,8 +580,8 @@
 					}
 
 					// Stylize the currently sorted column.
-					pgrid.find("tbody td").removeClass("ui-pgrid-table-cell-sorted");
-					var cols = pgrid.find("tbody td."+pgrid.pgrid_sort_col).addClass("ui-pgrid-table-cell-sorted");
+					pgrid.find("tbody td.ui-pgrid-table-cell-sorted").removeClass("ui-pgrid-table-cell-sorted");
+					var cols = pgrid.find("tbody td.col_"+pgrid.pgrid_sort_col).addClass("ui-pgrid-table-cell-sorted");
 
 					// Stylize the currently sorted column header. (According to order.)
 					pgrid.find("thead th span.ui-icon")
@@ -596,9 +590,9 @@
 					.removeClass("ui-icon-triangle-1-s")
 					.removeClass("ui-icon-triangle-1-n");
 					if (pgrid.pgrid_sort_ord == "asc") {
-						pgrid.find("thead th."+pgrid.pgrid_sort_col+" span.ui-icon").addClass("ui-pgrid-table-header-sorted-desc ui-icon-triangle-1-n");
+						pgrid.find("thead th.col_"+pgrid.pgrid_sort_col+" span.ui-icon").addClass("ui-pgrid-table-header-sorted-desc ui-icon-triangle-1-n");
 					} else {
-						pgrid.find("thead th."+pgrid.pgrid_sort_col+" span.ui-icon").addClass("ui-pgrid-table-header-sorted-asc ui-icon-triangle-1-s");
+						pgrid.find("thead th.col_"+pgrid.pgrid_sort_col+" span.ui-icon").addClass("ui-pgrid-table-header-sorted-asc ui-icon-triangle-1-s");
 					}
 
 					// Is this column only numbers, or is there a string?
@@ -610,7 +604,7 @@
 
 					// Calculate their sort keys and store them in their DOM objects.
 					$.each(rows, function(index, row) {
-						row.sortKey = $(row).children("td."+pgrid.pgrid_sort_col).contents().text().toUpperCase(); //.replace("├ ", "").replace("└ ", "").toUpperCase();
+						row.sortKey = $(row).children("td.col_"+pgrid.pgrid_sort_col).contents().text().toUpperCase(); //.replace("├ ", "").replace("└ ", "").toUpperCase();
 						// If this column contains only numbers (currency formatting included), parse it as floats.
 						if (!is_str) {
 							// Strip non numerical characters except for the decimal separator. Replace that with a period, then parse it.
@@ -624,9 +618,8 @@
 						return 0;
 					});
 					// Since we're prepending the rows to the tbody, we need to reverse the order if it's ascending.
-					if (pgrid.pgrid_sort_ord == "asc") {
+					if (pgrid.pgrid_sort_ord == "asc")
 						rows.reverse();
-					}
 					// Insert the rows into the tbody in the correct order.
 					$.each(rows, function(index, row) {
 						pgrid.children('tbody').prepend(row);
@@ -748,9 +741,8 @@
 						});
 						// Prevent the browser from selecting text if the user is holding a modifier key.
 						cur_row.mousedown(function(e){
-							if (e.ctrlKey || e.shiftKey) {
+							if (e.ctrlKey || e.shiftKey)
 								return false;
-							}
 							return true;
 						});
 					}
@@ -769,9 +761,8 @@
 							cell_text.append(cur_cell.html());
 							cur_cell.addClass("col_"+cur_col).empty().append(cell_text);
 							// If this table is resizable, we need its cells to have a width of 1px;
-							if (pgrid.pgrid_resize_cols) {
+							if (pgrid.pgrid_resize_cols)
 								cell_text.addClass("ui-pgrid-table-sized-cell");
-							}
 						}
 					});
 					if (cur_row.hasClass("child")) {
@@ -896,14 +887,13 @@
 					if (resizing_header) {
 						resizing_header = false;
 					} else {
-						pgrid.do_sort("col_"+cur_col);
+						pgrid.do_sort(cur_col);
 					}
 				});
 
 				// If this table is resizable, we need its cells to have a width of 1px;
-				if (pgrid.pgrid_resize_cols) {
+				if (pgrid.pgrid_resize_cols)
 					cur_text.addClass("ui-pgrid-table-sized-cell");
-				}
 			});
 
 			// Add an expander and scrollspace column to the header.
@@ -976,17 +966,14 @@
 							}
 							if (val.confirm) {
 								if (val.return_all_rows) {
-									if (!confirm("Are you sure you want to perform the operation \""+val.text+"\" on all items?")) {
+									if (!confirm("Are you sure you want to perform the operation \""+val.text+"\" on all items?"))
 										return false;
-									}
 								} else if (selected_rows.length === 0) {
-									if (!confirm("Are you sure you want to perform the operation \""+val.text+"\"?")) {
+									if (!confirm("Are you sure you want to perform the operation \""+val.text+"\"?"))
 										return false;
-									}
 								} else {
-									if (!confirm("Are you sure you want to perform the operation \""+val.text+"\" on the "+selected_rows.length+" currently selected item(s)?")) {
+									if (!confirm("Are you sure you want to perform the operation \""+val.text+"\" on the "+selected_rows.length+" currently selected item(s)?"))
 										return false;
-									}
 								}
 							}
 							if (val.select_all) {
@@ -1005,9 +992,8 @@
 								var row_data = "";
 								if (val.pass_csv || val.pass_csv_with_headers) {
 									// Pass a CSV of the selected rows, instead of a jQuery object.
-									if (val.pass_csv_with_headers) {
+									if (val.pass_csv_with_headers)
 										selected_rows = pgrid.find("thead tr").add(selected_rows);
-									}
 									selected_rows.each(function() {
 										// Turn each cell into a CSV cell.
 										$(this).children(":not(.ui-pgrid-table-expander, .ui-pgrid-table-cell-scrollspace)").each(function(){
@@ -1063,7 +1049,7 @@
 							function(){
 								$(this).removeClass("ui-state-hover");
 							}
-							);
+						);
 						if (val.double_click) {
 							// Save any previous double click functions.
 							if (pgrid.pgrid_double_click_tb)
@@ -1080,9 +1066,8 @@
 						var wrapper = $("<span />").addClass("ui-pgrid-toolbar-text");
 						if (val.extra_class)
 							wrapper.addClass(val.extra_class);
-						if (val.label) {
+						if (val.label)
 							wrapper.append($("<span>"+val.label+"</span>").addClass("ui-pgrid-toolbar-text-label"));
-						}
 						var cur_text = $("<input type=\"text\" />").addClass("ui-state-default ui-corner-all");
 						if (!val.dont_prevent_default) {
 							cur_text.keydown(function(e){
@@ -1090,14 +1075,12 @@
 									e.preventDefault();
 							});
 						}
-						if (val.attributes) {
+						if (val.attributes)
 							cur_text.attr(val.attributes);
-						}
 						wrapper.append(cur_text);
 						toolbar.append(wrapper);
-						if (val.load) {
+						if (val.load)
 							val.load(cur_text);
-						}
 					} else if (val.type == "separator") {
 						toolbar.append(
 							$("<span />").addClass("ui-pgrid-toolbar-sep ui-state-default")
@@ -1122,35 +1105,40 @@
 					footer.append(
 						$("<div />").addClass("ui-pgrid-footer-filter-container").each(function(){
 							$(this).append($("<span>Filter: </span>").append(
-								$("<input />").addClass("ui-state-default ui-corner-all").attr({
-									type: "text",
-									value: pgrid.pgrid_filter,
-									size: "10"
-								}).keyup(function(){
-									pgrid.do_filter($(this).val());
-								})
+									$("<input />").addClass("ui-state-default ui-corner-all").attr({
+										type: "text",
+										value: pgrid.pgrid_filter,
+										size: "10"
+									}).keyup(function(){
+										pgrid.do_filter($(this).val());
+									})
 								).append(
-								$("<button>X</button>").attr("type", "button").addClass("ui-state-default ui-corner-all").click(function(){
-									$(this).prev("input").val("").keyup().focus();
-								}).hover(
-									function(){
-										$(this).addClass("ui-state-hover");
-									},
-									function(){
-										$(this).removeClass("ui-state-hover");
-									}
-									)));
+									$("<button>X</button>").attr("type", "button").addClass("ui-state-default ui-corner-all").click(function(){
+										$(this).prev("input").val("").keyup().focus();
+									}).hover(
+										function(){
+											$(this).addClass("ui-state-hover");
+										},
+										function(){
+											$(this).removeClass("ui-state-hover");
+										}
+									)
+								)
+							);
 						})
 					);
 				}
 			}
 			// Filter the grid.
-			if (pgrid.pgrid_filter != "") {
+			if (pgrid.pgrid_filter != "")
 				pgrid.do_filter(pgrid.pgrid_filter, true);
-			}
 
 			// Sort the grid.
-			if (!isNaN(pgrid.pgrid_sort_col)) {
+			if (pgrid.pgrid_sort_col) {
+				// If the sort column is like "col_1", filter it to an int.
+				if (typeof pgrid.pgrid_sort_col == "string")
+					pgrid.pgrid_sort_col = pgrid.pgrid_sort_col.replace(/\D/g, "");
+				pgrid.pgrid_sort_col = parseInt(pgrid.pgrid_sort_col);
 				// Since the order is switched if the column is already set, we need to set the order to the opposite.
 				// This also works as a validator. Anything other than "desc" will become "asc" when it's switched.
 				if (pgrid.pgrid_sort_ord == "desc") {
@@ -1232,9 +1220,8 @@
 				// Perform the pagination and update the controls' text.
 				pgrid.paginate(true);
 				// Make page buttons in the footer.
-				if (pgrid.pgrid_footer) {
+				if (pgrid.pgrid_footer)
 					pgrid.make_page_buttons();
-				}
 			}
 
 			// Make selected and total record counters.
@@ -1244,12 +1231,11 @@
 					footer.append(
 						$("<div />").addClass("ui-pgrid-footer-count-container").each(function(){
 							var footer_counter = $(this);
-							if (pgrid.pgrid_select) {
+							if (pgrid.pgrid_select)
 								footer_counter.append($("<span><span class=\"ui-pgrid-footer-count-select\">0</span> selected of </span>"));
-							}
 							footer_counter.append($("<span><span class=\"ui-pgrid-footer-count-total\">0</span> total.</span>"));
 						})
-						);
+					);
 					// Update the selected and total count.
 					pgrid.update_selected();
 				}
@@ -1303,7 +1289,7 @@
 		pgrid_resize_cols: true,
 		// Allow records to be sorted.
 		pgrid_sortable: true,
-		// The default sorted column. (false, or "col_1", etc.)
+		// The default sorted column. (false, or column number)
 		pgrid_sort_col: false,
 		// The default sort order. ("asc" or "desc")
 		pgrid_sort_ord: "asc",
