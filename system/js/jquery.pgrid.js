@@ -380,17 +380,16 @@
 				if (pgrid.pgrid_paginate && pgrid.pgrid_footer) {
 					pgrid.pgrid_widget.find(".ui-pgrid-footer .ui-pgrid-footer-pager-button-container").html("").each(function(){
 						for (var cur_page = 0; cur_page < pgrid.pgrid_pages; cur_page++) {
-							$(this).append($("<button>"+(cur_page+1)+"</button>").attr("type", "button").addClass("ui-state-default ui-corner-all").click(function(){
-								pgrid.pagenum(parseInt($(this).text()) - 1);
-								return false;
-							}).hover(
-								function(){
+							$(this).append(
+								$("<button type=\"button\">"+(cur_page+1)+"</button>").addClass("ui-state-default ui-corner-all").click(function(){
+									pgrid.pagenum(parseInt($(this).text()) - 1);
+									return false;
+								}).hover(function(){
 									$(this).addClass("ui-state-hover");
-								},
-								function(){
+								}, function(){
 									$(this).removeClass("ui-state-hover");
-								}
-							));
+								})
+							);
 						}
 					});
 				}
@@ -697,10 +696,10 @@
 						cur_row.siblings("."+cur_row.attr("title"))
 						.children() //("td:first-child")
 						.css("padding-left", (cur_left_padding+10)+"px");
-					//.slice(0, -1)
-					//.prepend("<span style=\"font-family: Arial, sans-serif; font-size: 85%; font-weight: lighter; vertical-align: top;\">├ </span>")
-					//.end().slice(-1)
-					//.prepend("<span style=\"font-family: Arial, sans-serif; font-size: 85%; font-weight: lighter; vertical-align: top;\">└ </span>");
+						//.slice(0, -1)
+						//.prepend("<span style=\"font-family: Arial, sans-serif; font-size: 85%; font-weight: lighter; vertical-align: top;\">├ </span>")
+						//.end().slice(-1)
+						//.prepend("<span style=\"font-family: Arial, sans-serif; font-size: 85%; font-weight: lighter; vertical-align: top;\">└ </span>");
 					}
 					cur_row.prepend("<td class=\"ui-pgrid-table-expander\"></td>")
 					.append("<td class=\"ui-pgrid-table-cell-scrollspace\"></td>");
@@ -741,9 +740,7 @@
 						});
 						// Prevent the browser from selecting text if the user is holding a modifier key.
 						cur_row.mousedown(function(e){
-							if (e.ctrlKey || e.shiftKey)
-								return false;
-							return true;
+							return !(e.ctrlKey || e.shiftKey);
 						});
 					}
 					// Get table cells ready.
@@ -950,10 +947,10 @@
 				$.each(pgrid.pgrid_toolbar_contents, function(key, val){
 					if (val.type == "button") {
 						var cur_button = $("<span />").addClass("ui-pgrid-toolbar-button ui-state-default ui-corner-all").append(
-							$("<span><span>"+val.text+"</span></span>").each(function(){
-								if (val.extra_class)
-									$(this).addClass(val.extra_class);
-							})
+								$("<span><span>"+val.text+"</span></span>").each(function(){
+									if (val.extra_class)
+										$(this).addClass(val.extra_class);
+								})
 							).click(function(e){
 							var selected_rows = (val.return_all_rows ? pgrid.find("tbody tr:not(.ui-helper-hidden, .ui-pgrid-table-row-spacer)") : pgrid.find("tbody tr.ui-pgrid-table-row-selected"));
 							if (!val.selection_optional && !val.select_all && !val.select_none && selected_rows.length === 0) {
@@ -1042,14 +1039,11 @@
 						}).mousedown(function(){
 							// Prevent text selection;
 							return false;
-						}).hover(
-							function(e){
-								$(this).addClass("ui-state-hover");
-							},
-							function(){
-								$(this).removeClass("ui-state-hover");
-							}
-						);
+						}).hover(function(e){
+							$(this).addClass("ui-state-hover");
+						}, function(){
+							$(this).removeClass("ui-state-hover");
+						});
 						if (val.double_click) {
 							// Save any previous double click functions.
 							if (pgrid.pgrid_double_click_tb)
@@ -1084,7 +1078,7 @@
 					} else if (val.type == "separator") {
 						toolbar.append(
 							$("<span />").addClass("ui-pgrid-toolbar-sep ui-state-default")
-							);
+						);
 					}
 					toolbar.append("<span class=\"ui-pgrid-toolbar-spacer\"> </span>");
 				});
@@ -1113,16 +1107,13 @@
 										pgrid.do_filter($(this).val());
 									})
 								).append(
-									$("<button>X</button>").attr("type", "button").addClass("ui-state-default ui-corner-all").click(function(){
+									$("<button type=\"button\">X</button>").addClass("ui-state-default ui-corner-all").click(function(){
 										$(this).prev("input").val("").keyup().focus();
-									}).hover(
-										function(){
-											$(this).addClass("ui-state-hover");
-										},
-										function(){
-											$(this).removeClass("ui-state-hover");
-										}
-									)
+									}).hover(function(){
+										$(this).addClass("ui-state-hover");
+									}, function(){
+										$(this).removeClass("ui-state-hover");
+									})
 								)
 							);
 						})
@@ -1171,51 +1162,39 @@
 									pgrid.set_per_page(Math.abs(parseInt(display_number.val())));
 									display_number.val(pgrid.pgrid_perpage);
 								})
-								).append(" "));
-							footer_pager.append($("<button>&lt;&lt; Start</button>").attr("type", "button").addClass("ui-state-default ui-corner-all").click(function(){
+							).append(" "));
+							footer_pager.append($("<button type=\"button\">&lt;&lt; Start</button>").addClass("ui-state-default ui-corner-all").click(function(){
 								pgrid.pagestart();
-							}).hover(
-								function(){
-									$(this).addClass("ui-state-hover");
-								},
-								function(){
-									$(this).removeClass("ui-state-hover");
-								}
-								));
-							footer_pager.append($("<button>&lt; Prev</button>").attr("type", "button").addClass("ui-state-default ui-corner-all").click(function(){
+							}).hover(function(){
+								$(this).addClass("ui-state-hover");
+							}, function(){
+								$(this).removeClass("ui-state-hover");
+							}));
+							footer_pager.append($("<button type=\"button\">&lt; Prev</button>").addClass("ui-state-default ui-corner-all").click(function(){
 								pgrid.pageprev();
-							}).hover(
-								function(){
-									$(this).addClass("ui-state-hover");
-								},
-								function(){
-									$(this).removeClass("ui-state-hover");
-								}
-								));
+							}).hover(function(){
+								$(this).addClass("ui-state-hover");
+							}, function(){
+								$(this).removeClass("ui-state-hover");
+							}));
 							footer_pager.append($("<div />").addClass("ui-pgrid-footer-pager-button-container"));
-							footer_pager.append($("<button>Next &gt;</button>").attr("type", "button").addClass("ui-state-default ui-corner-all").click(function(){
+							footer_pager.append($("<button type=\"button\">Next &gt;</button>").addClass("ui-state-default ui-corner-all").click(function(){
 								pgrid.pagenext();
-							}).hover(
-								function(){
-									$(this).addClass("ui-state-hover");
-								},
-								function(){
-									$(this).removeClass("ui-state-hover");
-								}
-								));
-							footer_pager.append($("<button>End &gt;&gt;</button>").attr("type", "button").addClass("ui-state-default ui-corner-all").click(function(){
+							}).hover(function(){
+								$(this).addClass("ui-state-hover");
+							}, function(){
+								$(this).removeClass("ui-state-hover");
+							}));
+							footer_pager.append($("<button type=\"button\">End &gt;&gt;</button>").addClass("ui-state-default ui-corner-all").click(function(){
 								pgrid.pageend();
-							}).hover(
-								function(){
-									$(this).addClass("ui-state-hover");
-								},
-								function(){
-									$(this).removeClass("ui-state-hover");
-								}
-								));
+							}).hover(function(){
+								$(this).addClass("ui-state-hover");
+							}, function(){
+								$(this).removeClass("ui-state-hover");
+							}));
 							footer_pager.append($("<span> Page <span class=\"page_number\">1</span> of <span class=\"page_total\">1</span></span>"));
 						})
-						);
+					);
 				}
 				// Perform the pagination and update the controls' text.
 				pgrid.paginate(true);
