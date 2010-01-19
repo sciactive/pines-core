@@ -161,7 +161,7 @@ class module extends p_base {
 	 * @param string $model The model to use.
 	 * @return string The module's rendered content.
 	 */
-	function render($model) {
+	function render($model = 'module') {
 		global $config, $page;
 
 		// Get content from the view.
