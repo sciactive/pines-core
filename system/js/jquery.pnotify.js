@@ -9,9 +9,10 @@
 
 (function($) {
 	var first_top, first_right, history_handle_top, timer;
+	var body;
+	var jwindow;
 	$.extend({
 		pnotify_remove_all: function () {
-			var body = $("body");
 			var body_data = body.data("pnotify");
 			/* POA: Added null-check */
 			if (body_data && body_data.length) {
@@ -22,17 +23,21 @@
 			}
 		},
 		pnotify_position_all: function () {
+			if (timer)
+				clearTimeout(timer);
 			timer = null;
-			var body = $("body");
 			var nexttop = first_top;
 			var nextright = first_right;
 			var addwidth = 0;
 			var body_data = body.data("pnotify");
+			if (!body_data || !body_data.length)
+				return;
 			$.each(body_data, function(){
 				if (this.css("display") != "none") {
-					var postop, posright, animate = {};
+					var postop, posright;
+					var animate = {};
 					// Calculate the top value, disregarding the scroll, since position=fixed.
-					postop = this.offset().top - $(window).scrollTop();
+					postop = this.offset().top - jwindow.scrollTop();
 					// Remember the topmost position, so the first visible notice goes there.
 					if (typeof first_top == "undefined") {
 						first_top = postop;
@@ -79,7 +84,11 @@
 			});
 		},
 		pnotify: function(options) {
-			var body = $("body");
+			if (!body)
+				body = $("body");
+			if (!jwindow)
+				jwindow = $(window);
+
 			var closer;
 			
 			// Build main options.
@@ -96,9 +105,9 @@
 					return null;
 			}
 			
-			var pnotify = $("<div />").addClass("ui-widget ui-helper-clearfix ui-pnotify");
+			var pnotify = $("<div />", {"class": "ui-widget ui-helper-clearfix ui-pnotify"});
 			pnotify.opts = opts;
-			pnotify.container = $("<div />").addClass("ui-corner-all ui-pnotify-container");
+			pnotify.container = $("<div />", {"class": "ui-corner-all ui-pnotify-container"});
 			pnotify.append(pnotify.container);
 
 			pnotify.pnotify_version = "1.0.0";
@@ -124,23 +133,18 @@
 					pnotify.text_container.hide("fast");
 				}
 				pnotify.pnotify_history = opts.pnotify_history;
-				if (opts.pnotify_type != old_opts.pnotify_type) {
-					// Change to the new type.
-					if (opts.pnotify_type == "error") {
-						pnotify.container.addClass("ui-state-error").removeClass("ui-state-highlight");
-					} else if (opts.pnotify_type == "notice") {
-						pnotify.container.addClass("ui-state-highlight").removeClass("ui-state-error");
-					}
-				}
+				// Change the notice type.
+				if (opts.pnotify_type != old_opts.pnotify_type)
+					pnotify.container.toggleClass("ui-state-error ui-state-highlight");
 				if ((opts.pnotify_notice_icon != old_opts.pnotify_notice_icon && opts.pnotify_type == "notice") ||
 					(opts.pnotify_error_icon != old_opts.pnotify_error_icon && opts.pnotify_type == "error") ||
 					(opts.pnotify_type != old_opts.pnotify_type)) {
 					// Remove any old icon.
-					pnotify.container.find(".ui-pnotify-icon").remove();
+					pnotify.container.find("div.ui-pnotify-icon").remove();
 					if ((opts.pnotify_notice_icon && opts.pnotify_type == "notice") || (opts.pnotify_error_icon && opts.pnotify_type == "error")) {
 						// Build the new icon.
-						var icon = $("<div />").addClass("ui-pnotify-icon");
-						icon.append($("<span />").addClass(opts.pnotify_type == "notice" ? opts.pnotify_notice_icon : opts.pnotify_error_icon));
+						var icon = $("<div />", {"class": "ui-pnotify-icon"});
+						icon.append($("<span />", {"class": opts.pnotify_type == "notice" ? opts.pnotify_notice_icon : opts.pnotify_error_icon}));
 						pnotify.container.prepend(icon);
 					}
 				}
@@ -180,8 +184,8 @@
 
 				if (opts.pnotify_closer) {
 					if (closer) closer.remove();
-					closer = $("<div />").addClass("ui-pnotify-closer").css("cursor", "pointer");
-					closer.append($("<span />").addClass("ui-icon ui-icon-circle-close"));
+					closer = $("<div />", {"class": "ui-pnotify-closer", "css": {"cursor": "pointer"}});
+					closer.append($("<span />", {"class": "ui-icon ui-icon-circle-close"}));
 					closer.click(function(){
 						pnotify.pnotify_remove();
 					});
@@ -301,25 +305,21 @@
 				}, (isNaN(opts.pnotify_delay) ? 0 : opts.pnotify_delay));
 			};
 
-			if (opts.pnotify_type == "error") {
-				pnotify.container.addClass("ui-state-error");
-			} else if (opts.pnotify_type == "notice") {
-				pnotify.container.addClass("ui-state-highlight");
-			}
+			pnotify.container.addClass(opts.pnotify_type == "error" ? "ui-state-error" : "ui-state-highlight");
 
-			if ((opts.pnotify_notice_icon && opts.pnotify_type == "notice") || (opts.pnotify_error_icon && opts.pnotify_type == "error")) {
-				var icon = $("<div />").addClass("ui-pnotify-icon");
-				icon.append($("<span />").addClass(opts.pnotify_type == "notice" ? opts.pnotify_notice_icon : opts.pnotify_error_icon));
+			if ((opts.pnotify_error_icon && opts.pnotify_type == "error") || (opts.pnotify_notice_icon)) {
+				var icon = $("<div />", {"class": "ui-pnotify-icon"});
+				icon.append($("<span />", {"class": opts.pnotify_type == "error" ? opts.pnotify_error_icon : opts.pnotify_notice_icon}));
 				pnotify.container.append(icon);
 			}
 
-			pnotify.title_container = $("<span />").addClass("ui-pnotify-title");
+			pnotify.title_container = $("<span />", {"class": "ui-pnotify-title"});
 			pnotify.title_container.html(opts.pnotify_title);
 			pnotify.container.append(pnotify.title_container);
 			if (typeof opts.pnotify_title != "string")
 				pnotify.title_container.hide();
 
-			pnotify.text_container = $("<span />").addClass("ui-pnotify-text");
+			pnotify.text_container = $("<span />", {"class": "ui-pnotify-text"});
 			if (opts.pnotify_insert_brs && typeof opts.pnotify_text == "string")
 				opts.pnotify_text = opts.pnotify_text.replace("\n", "<br />");
 			pnotify.text_container.html(opts.pnotify_text);
@@ -339,7 +339,7 @@
 			
 			var body_data = body.data("pnotify");
 			if (typeof body_data != "object")
-				body_data = Array();
+				body_data = [];
 			body_data = $.merge(body_data, [pnotify]);
 			body.data("pnotify", body_data);
 
@@ -351,45 +351,56 @@
 			if (opts.pnotify_history) {
 				var body_history = body.data("pnotify_history");
 				if (typeof body_history == "undefined") {
-					body_history = $("<div />").addClass("ui-pnotify-history-container ui-state-default ui-corner-bottom");
+					body_history = $("<div />", {"class": "ui-pnotify-history-container ui-state-default ui-corner-bottom"});
 					body.append(body_history);
 					
-					body_history.append($("<div>Redisplay</div>").addClass("ui-pnotify-history-header"));
-					body_history.append($("<button>All</button>").addClass("ui-pnotify-history-all ui-state-default ui-corner-all").hover(function(){
-						$(this).addClass("ui-state-hover");
-					}, function(){
-						$(this).removeClass("ui-state-hover");
-					}).click(function(){
-						$.each(body_data, function(){
-							if (this.pnotify_history && this.pnotify_display)
-								this.pnotify_display();
-						});
-					}));
-					body_history.append($("<button>Last</button>").addClass("ui-pnotify-history-last ui-state-default ui-corner-all").hover(function(){
-						$(this).addClass("ui-state-hover");
-					}, function(){
-						$(this).removeClass("ui-state-hover");
-					}).click(function(){
-						var i = 1;
-						while (!body_data[body_data.length - i] || !body_data[body_data.length - i].pnotify_history) {
-							if (body_data.length - i === 0)
-								return;
-							i++;
-						}
-						if (body_data[body_data.length - i].pnotify_display)
-							body_data[body_data.length - i].pnotify_display();
+					body_history.append($("<div />", {"class": "ui-pnotify-history-header", "text": "Redisplay"}))
+					.append($("<button />", {
+							"class": "ui-pnotify-history-all ui-state-default ui-corner-all",
+							"type": "button",
+							"text": "All",
+							"hover": function(){
+								$(this).toggleClass("ui-state-hover");
+							},
+							"click": function(){
+								$.each(body_data, function(){
+									if (this.pnotify_history && this.pnotify_display)
+										this.pnotify_display();
+								});
+							}
+					}))
+					.append($("<button />", {
+							"class": "ui-pnotify-history-last ui-state-default ui-corner-all",
+							"type": "button",
+							"text": "Last",
+							"hover": function(){
+								$(this).toggleClass("ui-state-hover");
+							},
+							"click": function(){
+								var i = 1;
+								while (!body_data[body_data.length - i] || !body_data[body_data.length - i].pnotify_history) {
+									if (body_data.length - i === 0)
+										return;
+									i++;
+								}
+								if (body_data[body_data.length - i].pnotify_display)
+									body_data[body_data.length - i].pnotify_display();
+							}
 					}));
 
-					var handle = $("<span></span>").addClass("ui-pnotify-history-pulldown ui-icon ui-icon-grip-dotted-horizontal").mouseenter(function(){
-						body_history.animate({top: "0"}, {duration: 100, queue: false});
+					var handle = $("<span />", {
+						"class": "ui-pnotify-history-pulldown ui-icon ui-icon-grip-dotted-horizontal",
+						"mouseenter": function(){
+							body_history.animate({top: "0"}, {duration: 100, queue: false});
+						}
 					});
 					body_history.append(handle);
 					history_handle_top = handle.offset().top + 2;
 
 					body_history.mouseleave(function(){
 						body_history.animate({top: "-"+history_handle_top+"px"}, {duration: 100, queue: false});
-					});
-					body_history.css({top: "-"+history_handle_top+"px"});
+					})
+					.css({top: "-"+history_handle_top+"px"});
 
 					body.data("pnotify_history", body_history);
 				}
