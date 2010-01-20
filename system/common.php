@@ -173,8 +173,8 @@ function punt_user($message = NULL, $url = NULL) {
  * Formats a date using the DateTime class.
  *
  * @param int $timestamp The timestamp to format.
+ * @param DateTimeZone|string|null $timezone The timezone to use for formatting. Defaults to date_default_timezone_get().
  * @param string $format The format to use.
- * @param DateTimeZone|string $timezone The timezone to use for formatting. Defaults to date_default_timezone_get().
  * @return string The formatted date.
  */
 function pines_date_format($timestamp, $timezone = null, $format = 'Y-m-d H:i T') {
