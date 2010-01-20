@@ -106,9 +106,25 @@
 			}
 
 			// Create our widget.
+			// Stop animation, reset the removal timer, and show the close
+			// button when the user mouses over.
 			var pnotify = $("<div />", {
 				"class": "ui-widget ui-helper-clearfix ui-pnotify",
-				"css": {"display": "none"}
+				"css": {"display": "none"},
+				"mouseenter": function(){
+					// If it's animating out, animate back in really quick.
+					if (animating == "out") {
+						pnotify.stop(true);
+						pnotify.css("height", "auto").animate({"width": opts.pnotify_width, "opacity": opts.pnotify_opacity}, "fast");
+					}
+					if (opts.pnotify_hide) pnotify.pnotify_cancel_remove();
+					if (opts.pnotify_closer) pnotify.closer.show();
+				},
+				"mouseleave": function(){
+					if (opts.pnotify_hide) pnotify.pnotify_queue_remove();
+					pnotify.closer.hide();
+					$.pnotify_position_all();
+				}
 			});
 			pnotify.opts = opts;
 			// Create a container for the notice contents.
@@ -126,6 +142,7 @@
 				} else {
 					opts = $.extend({}, opts, options);
 				}
+				pnotify.opts = opts;
 				if (typeof opts.pnotify_title == "string") {
 					pnotify.title_container.html(opts.pnotify_title).show("fast");
 				} else if (opts.pnotify_title === false) {
@@ -168,7 +185,6 @@
 				} else if (!old_opts.pnotify_hide) {
 					pnotify.pnotify_queue_remove();
 				}
-				pnotify.opts = opts;
 				pnotify.pnotify_queue_position();
 				return pnotify;
 			};
@@ -250,24 +266,11 @@
 					pnotify.show();
 					callback();
 				} else if (animation == "show") {
-					if (pnotify.css("display") != "none") {
-						// If the notice was stopped during hide, animate it in.
-						pnotify.css("height", "auto").animate({"width": opts.pnotify_width, "opacity": opts.pnotify_opacity}, opts.pnotify_animate_speed, callback);
-					} else {
-						// Else use jQuery's show.
-						pnotify.show(opts.pnotify_animate_speed, callback);
-					}
+					pnotify.show(opts.pnotify_animate_speed, callback);
 				} else if (animation == "fade") {
 					pnotify.show().fadeTo(opts.pnotify_animate_speed, opts.pnotify_opacity, callback);
 				} else if (animation == "slide") {
-					if (pnotify.css("display") != "none") {
-						// If the notice was stopped during hide, set its height.
-						pnotify.css("height", "auto");
-						callback();
-					} else {
-						// Else use jQuery's slideDown.
-						pnotify.slideDown(opts.pnotify_animate_speed, callback);
-					}
+					pnotify.slideDown(opts.pnotify_animate_speed, callback);
 				} else if (typeof animation == "function") {
 					animation("in", callback, pnotify);
 				} else {
@@ -317,26 +320,6 @@
 					pnotify.pnotify_remove();
 				}, (isNaN(opts.pnotify_delay) ? 0 : opts.pnotify_delay));
 			};
-
-			// Stop animation, reset the removal timer, and show the close
-			// button when the user mouses over.
-			pnotify.hover(function(){
-				// If it's animating out, animate back in really quick.
-				if (animating == "out") {
-					pnotify.stop(true);
-					var old_speed = opts.pnotify_animate_speed;
-					opts.pnotify_animate_speed = "fast";
-					pnotify.animate_in(function(){
-						opts.pnotify_animate_speed = old_speed;
-					});
-				}
-				if (opts.pnotify_hide) pnotify.pnotify_cancel_remove();
-				if (opts.pnotify_closer) pnotify.closer.show();
-			}, function(){
-				if (opts.pnotify_hide) pnotify.pnotify_queue_remove();
-				pnotify.closer.hide();
-				$.pnotify_position_all();
-			});
 
 			// Provide a button to close the notice.
 			pnotify.closer = $("<div />", {
