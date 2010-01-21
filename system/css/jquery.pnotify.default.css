@@ -11,10 +11,15 @@
 .ui-pnotify {
 	top: 18px;
 	right: 18px;
-	position: fixed;
+	position: absolute;
 	height: auto;
 	/* Ensure that the notices are on top of everything else. */
 	z-index: 9999;
+}
+
+/* This hides position: fixed from IE6, which doesn't understand it. */
+html > body .ui-pnotify {
+	position: fixed;
 }
 
 .ui-pnotify-container {
@@ -52,6 +57,7 @@
 	position: absolute;
 	top: 0;
 	right: 18px;
+	width: 70px;
 	border-top: none;
 	/* Ensure that the history container is on top of the notices. */
 	z-index: 10000;

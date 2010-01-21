@@ -390,10 +390,10 @@
 						"mouseleave": function(){
 							body_history.animate({top: "-"+history_handle_top+"px"}, {duration: 100, queue: false});
 						}
-					}).append($("<div />", {"class": "ui-pnotify-history-header", "text": "Redisplay"}))
+					})
+					.append($("<div />", {"class": "ui-pnotify-history-header", "text": "Redisplay"}))
 					.append($("<button />", {
 							"class": "ui-pnotify-history-all ui-state-default ui-corner-all",
-							"type": "button",
 							"text": "All",
 							"hover": function(){
 								$(this).toggleClass("ui-state-hover");
@@ -404,11 +404,11 @@
 									if (this.pnotify_history && this.pnotify_display)
 										this.pnotify_display();
 								});
+								return false;
 							}
 					}))
 					.append($("<button />", {
 							"class": "ui-pnotify-history-last ui-state-default ui-corner-all",
-							"type": "button",
 							"text": "Last",
 							"hover": function(){
 								$(this).toggleClass("ui-state-hover");
@@ -418,11 +418,12 @@
 								var i = 1;
 								while (!body_data[body_data.length - i] || !body_data[body_data.length - i].pnotify_history) {
 									if (body_data.length - i === 0)
-										return;
+										return false;
 									i++;
 								}
 								if (body_data[body_data.length - i].pnotify_display)
 									body_data[body_data.length - i].pnotify_display();
+								return false;
 							}
 					}))
 					.appendTo(body);
