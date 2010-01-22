@@ -109,7 +109,7 @@
 			// Stop animation, reset the removal timer, and show the close
 			// button when the user mouses over.
 			var pnotify = $("<div />", {
-				"class": "ui-widget ui-helper-clearfix ui-pnotify",
+				"class": "ui-widget ui-helper-clearfix ui-pnotify "+opts.pnotify_addclass,
 				"css": {"display": "none"},
 				"mouseenter": function(){
 					// If it's animating out, animate back in really quick.
@@ -143,17 +143,25 @@
 					opts = $.extend({}, opts, options);
 				}
 				pnotify.opts = opts;
-				if (typeof opts.pnotify_title == "string") {
-					pnotify.title_container.html(opts.pnotify_title).show("fast");
-				} else if (opts.pnotify_title === false) {
-					pnotify.title_container.hide("fast");
+				// Update the additional classes.
+				if (opts.pnotify_addclass === false) {
+					pnotify.removeClass(old_opts.pnotify_addclass);
+				} else if (opts.pnotify_addclass !== old_opts.pnotify_addclass) {
+					pnotify.removeClass(old_opts.pnotify_addclass).addClass(opts.pnotify_addclass);
 				}
-				if (typeof opts.pnotify_text == "string") {
+				// Update the title.
+				if (opts.pnotify_title === false) {
+					pnotify.title_container.hide("fast");
+				} else if (opts.pnotify_title !== old_opts.pnotify_title) {
+					pnotify.title_container.html(opts.pnotify_title).show("fast");
+				}
+				// Update the text.
+				if (opts.pnotify_text === false) {
+					pnotify.text_container.hide("fast");
+				} else if (opts.pnotify_text !== old_opts.pnotify_text) {
 					if (opts.pnotify_insert_brs)
 						opts.pnotify_text = opts.pnotify_text.replace("\n", "<br />");
 					pnotify.text_container.html(opts.pnotify_text).show("fast");
-				} else if (opts.pnotify_text === false) {
-					pnotify.text_container.hide("fast");
 				}
 				pnotify.pnotify_history = opts.pnotify_history;
 				// Change the notice type.
@@ -172,13 +180,13 @@
 					}
 				}
 				// Update the width.
-				if (opts.pnotify_width != old_opts.pnotify_width && typeof opts.pnotify_width == "string")
+				if (opts.pnotify_width !== old_opts.pnotify_width)
 					pnotify.animate({width: opts.pnotify_width});
 				// Update the minimum height.
-				if (opts.pnotify_min_height != old_opts.pnotify_min_height && typeof opts.pnotify_min_height == "string")
+				if (opts.pnotify_min_height !== old_opts.pnotify_min_height)
 					pnotify.container.animate({minHeight: opts.pnotify_min_height});
 				// Update the opacity.
-				if (opts.pnotify_opacity != old_opts.pnotify_opacity)
+				if (opts.pnotify_opacity !== old_opts.pnotify_opacity)
 					pnotify.fadeTo(opts.pnotify_animate_speed, opts.pnotify_opacity);
 				if (!opts.pnotify_hide) {
 					pnotify.pnotify_cancel_remove();
@@ -454,6 +462,8 @@
 	});
 
 	$.pnotify.defaults = {
+		// Additional classes to be added to the notice. (For custom styling.)
+		pnotify_addclass: "",
 		// Display a pull down menu to redisplay previous notices, and place the notice in the history.
 		pnotify_history: true,
 		// Width of the notice.
