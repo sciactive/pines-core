@@ -335,6 +335,7 @@
 				"css": {"cursor": "pointer", "display": "none"},
 				"click": function(){
 					pnotify.pnotify_remove();
+					pnotify.closer.hide();
 				}
 			})
 			.append($("<span />", {"class": "ui-icon ui-icon-circle-close"}))
