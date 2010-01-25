@@ -13,9 +13,9 @@ $this->title = 'Error 404';
 $this->note = 'Page not Found.';
 ?>
 <p>The page you requested cannot be found on this server.</p>
-<p>Suggestions:
+<div>Suggestions:
 	<ul>
 		<li>Check the spelling of the address you requested.</li>
 		<li>If you are still having problems, please <a href="<?php echo pines_url(); ?>">visit the homepage.</a></li>
 	</ul>
-</p>
+</div>
