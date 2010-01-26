@@ -219,6 +219,17 @@ function pines_log() {
 }
 
 /**
+ * Formats a phone number using regular expressions.
+ *
+ * @param string $phone The phone number to format.
+ * @return string The formatted phone number.
+ */
+function pines_phone_format($phone = '1234567890') {
+	$return = preg_replace('/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/','($1$2$3) $4$5$6-$7$8$9$10 x$11',$phone);
+	return preg_replace('/\D*$/', '', $return);
+}
+
+/**
  * Shortcut to $config->template->url().
  *
  * @uses $config->template->url() Forwards parameters and returns the result.
