@@ -58,7 +58,7 @@ return array (
 	'name' => 'option_copyright_notice',
 	'cname' => 'Copyright Notice',
 	'description' => 'The copyright notice at the bottom of each page.',
-	'value' => '&copy; 2009 Hunter Perrin. All Rights Reserved. Powered by <a href="http://pines.sourceforge.net/" onclick="window.open(this.href); return false;">Pines</a>.',
+	'value' => '&copy; 2010 Hunter Perrin. All Rights Reserved. Powered by <a href="http://pines.sourceforge.net/" onclick="window.open(this.href); return false;">Pines</a>.',
   ),
   7 =>
   array (
