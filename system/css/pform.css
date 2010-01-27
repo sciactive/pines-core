@@ -68,6 +68,11 @@
 	padding-bottom: 0;
 	padding-left: 145px; /* Width of labels + margin to inputs - button spacing. */
 }
+.pform div.buttons.centered {
+	width: 100%;
+	padding-left: 0;
+	text-align: center;
+}
 .pform div.buttons .button {
 	margin-left: 20px; /* Button spacing. */
 	margin-bottom: 10px;
