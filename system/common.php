@@ -179,7 +179,7 @@ function punt_user($message = NULL, $url = NULL) {
  */
 function pines_date_format($timestamp, $timezone = null, $format = 'Y-m-d H:i T') {
 	global $config;
-	$date = new DateTime(gmdate('c', $timestamp));
+	$date = new DateTime(gmdate('c', (string) $timestamp));
 	if (!is_null($timezone)) {
 		if (is_string($timezone))
 			$timezone = new DateTimeZone($timezone);
@@ -219,13 +219,15 @@ function pines_log() {
 }
 
 /**
- * Formats a phone number using regular expressions.
+ * Formats a phone number.
  *
  * @param string $phone The phone number to format.
  * @return string The formatted phone number.
  */
-function pines_phone_format($phone = '1234567890') {
-	$return = preg_replace('/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/','($1$2$3) $4$5$6-$7$8$9$10 x$11',$phone);
+function pines_phone_format($phone) {
+	if (is_null($phone))
+		return '';
+	$return = preg_replace('/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/', '($1$2$3) $4$5$6-$7$8$9$10 x$11', (string) $phone);
 	return preg_replace('/\D*$/', '', $return);
 }
 
