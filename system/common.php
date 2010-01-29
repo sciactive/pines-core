@@ -179,7 +179,7 @@ function punt_user($message = NULL, $url = NULL) {
  */
 function pines_date_format($timestamp, $timezone = null, $format = 'Y-m-d H:i T') {
 	global $config;
-	$date = new DateTime(gmdate('c', (string) $timestamp));
+	$date = new DateTime(gmdate('c', (int) $timestamp));
 	if (!is_null($timezone)) {
 		if (is_string($timezone))
 			$timezone = new DateTimeZone($timezone);
