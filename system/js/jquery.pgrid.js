@@ -692,9 +692,9 @@
 				jq_rows.each(function(){
 					var cur_row = $(this);
 					if (cur_row.hasClass("parent")) {
-						var cur_left_padding = parseInt(cur_row.children("td:first-child").css("padding-left"));
+						var cur_left_padding = parseInt(cur_row.children("td:not(.ui-pgrid-table-expander)").first().css("padding-left"));
 						cur_row.siblings("."+cur_row.attr("title"))
-						.children() //("td:first-child")
+						.children(":not(.ui-pgrid-table-expander)") //("td:first-child")
 						.css("padding-left", (cur_left_padding+10)+"px");
 						//.slice(0, -1)
 						//.prepend("<span style=\"font-family: Arial, sans-serif; font-size: 85%; font-weight: lighter; vertical-align: top;\">├ </span>")
