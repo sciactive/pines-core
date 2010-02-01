@@ -691,18 +691,18 @@
 				// Add an expander and scrollspace column to the rows, add hover events, and give child rows indentation.
 				jq_rows.each(function(){
 					var cur_row = $(this);
+					cur_row.prepend("<td class=\"ui-pgrid-table-expander\"></td>")
+					.append("<td class=\"ui-pgrid-table-cell-scrollspace\"></td>");
 					if (cur_row.hasClass("parent")) {
 						var cur_left_padding = parseInt(cur_row.children("td:not(.ui-pgrid-table-expander)").first().css("padding-left"));
 						cur_row.siblings("."+cur_row.attr("title"))
-						.children(":not(.ui-pgrid-table-expander)") //("td:first-child")
+						.children("td:not(.ui-pgrid-table-expander, .ui-pgrid-table-cell-scrollspace)") //("td:first-child")
 						.css("padding-left", (cur_left_padding+10)+"px");
 						//.slice(0, -1)
 						//.prepend("<span style=\"font-family: Arial, sans-serif; font-size: 85%; font-weight: lighter; vertical-align: top;\">├ </span>")
 						//.end().slice(-1)
 						//.prepend("<span style=\"font-family: Arial, sans-serif; font-size: 85%; font-weight: lighter; vertical-align: top;\">└ </span>");
 					}
-					cur_row.prepend("<td class=\"ui-pgrid-table-expander\"></td>")
-					.append("<td class=\"ui-pgrid-table-cell-scrollspace\"></td>");
 					// Add some coloring when hovering over rows.
 					if (pgrid.pgrid_row_hover_effect) {
 						// Can't use "hover" because of a bug in Firefox when the mouse moves onto a scrollbar.
