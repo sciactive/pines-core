@@ -434,7 +434,6 @@ class entity extends p_base {
 		$refresh = $config->entity_manager->get_entity(array('guid' => $this->guid, 'class' => get_class($this)));
 		if (is_null($refresh))
 			return 0;
-		$this->parent = $refresh->parent;
 		$this->tags = $refresh->tags;
 		$this->put_data($refresh->get_data());
 		return true;
