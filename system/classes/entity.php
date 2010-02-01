@@ -54,14 +54,6 @@ class entity extends p_base {
 	 */
 	public $guid = null;
 	/**
-	 * The GUID of the parent entity.
-	 *
-	 * You can use this feature to create complex hierarchies of entities.
-	 *
-	 * @var int
-	 */
-	public $parent = null;
-	/**
 	 * Tags are used to classify entities.
 	 *
 	 * Though not sctrictly necessary, it is HIGHLY RECOMMENDED to give every
