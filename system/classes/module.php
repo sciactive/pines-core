@@ -89,9 +89,9 @@ class module extends p_base {
 	 * @return int The order in which the module was placed.
 	 */
 	function attach($position, $order = null) {
-		global $page;
+		global $config;
 		$this->position = $position;
-		$this->order = $page->attach_module($this, $position, $order);
+		$this->order = $config->page->attach_module($this, $position, $order);
 		return $this->order;
 	}
 
@@ -100,11 +100,11 @@ class module extends p_base {
 	 *
 	 * @global page Used to detach a module.
 	 * @uses page::detach_module()
-	 * @return mixed The value of $page->detach_module.
+	 * @return mixed The value of $config->page->detach_module.
 	 */
 	function detach() {
-		global $page;
-		return $page->detach_module($this, $this->position, $this->order);
+		global $config;
+		return $config->page->detach_module($this, $this->position, $this->order);
 	}
 
 	/**
@@ -162,7 +162,7 @@ class module extends p_base {
 	 * @return string The module's rendered content.
 	 */
 	function render($model = 'module') {
-		global $config, $page;
+		global $config;
 
 		// Get content from the view.
 		ob_start();

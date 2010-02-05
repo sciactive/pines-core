@@ -58,4 +58,11 @@ $config->hook = new hook;
  */
 $config->depend = new depend;
 
+/**
+ * The display manager.
+ * 
+ * @global page $config->page
+ */
+$config->page = new page;
+
 ?>

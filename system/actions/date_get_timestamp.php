@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 if (!gatekeeper())
 	punt_user('You don\'t have necessary permission.');
 
-$page->override = true;
+$config->page->override = true;
 
 try {
 	if (empty($_REQUEST['timezone'])) {
@@ -21,9 +21,9 @@ try {
 	} else {
 		$date = new DateTime($_REQUEST['date'], new DateTimeZone($_REQUEST['timezone']));
 	}
-	$page->override_doc($date->format('U'));
+	$config->page->override_doc($date->format('U'));
 } catch (Exception $e) {
-	$page->override_doc('error');
+	$config->page->override_doc('error');
 }
 
 ?>

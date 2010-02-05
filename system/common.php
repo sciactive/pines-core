@@ -22,7 +22,7 @@ if (!function_exists('action')) {
 	 * @return mixed The value returned by the action, or 'error_404' if it doesn't exist.
 	 */
 	function action($component, $action) {
-		global $config, $page;
+		global $config;
 		$action_file = ($component == 'system' ? $component : "components/$component")."/actions/$action.php";
 		$config->component = $component;
 		$config->action = $action;
@@ -96,15 +96,15 @@ if (!function_exists('display_error')) {
 	/**
 	 * Causes the system to report an error to the user.
 	 * 
-	 * This function should be used instead of calling $page->error directly,
-	 * because some admins may wish to log Pines errors, instead of
+	 * This function should be used instead of calling $config->page->error
+	 * directly, because some admins may wish to log Pines errors, instead of
 	 * displaying them.
 	 *
 	 * @param string $error_text Information to display to the user.
 	 */
 	function display_error($error_text) {
-		global $page;
-		$page->error($error_text);
+		global $config;
+		$config->page->error($error_text);
 	}
 }
 
@@ -112,15 +112,15 @@ if (!function_exists('display_notice')) {
 	/**
 	 * Causes the system to report a notice to the user.
 	 * 
-	 * This function should be used instead of calling $page->notice directly,
-	 * because some admins may wish to log Pines notices, instead of
+	 * This function should be used instead of calling $config->page->notice
+	 * directly, because some admins may wish to log Pines notices, instead of
 	 * displaying them.
 	 *
 	 * @param string $notice_text Information to display to the user.
 	 */
 	function display_notice($notice_text) {
-		global $page;
-		$page->notice($notice_text);
+		global $config;
+		$config->page->notice($notice_text);
 	}
 }
 

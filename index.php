@@ -109,6 +109,14 @@ require_once('system/load.php');
 $config_array = require('system/configure.php');
 fill_object($config_array, $config);
 unset($config_array);
+/**
+ * The current template.
+ *
+ * @global string $config->current_template
+ */
+$config->current_template = ( !empty($_REQUEST['template']) && $config->allow_template_override ) ?
+	$_REQUEST['template'] : $config->default_template;
+require_once('templates/'.$config->current_template.'/configure.php');
 date_default_timezone_set($config->timezone);
 if (P_SCRIPT_TIMING) pines_print_time('Load System Config');
 
@@ -211,15 +219,7 @@ foreach ($config->components as $cur_component) {
 	if ( file_exists("components/$cur_component/load.php") )
 		include_once("components/$cur_component/load.php");
 }
-if (P_SCRIPT_TIMING) pines_print_time('Load Component Loaders');
-
-// Load the display controller.
-require_once('system/display.php');
-if (P_SCRIPT_TIMING) pines_print_time('Load Display Controller');
-
-// Load the hooks for $page.
-$config->hook->hook_object($page, '$page->');
-if (P_SCRIPT_TIMING) pines_print_time('Hook $page');
+if (P_SCRIPT_TIMING) pines_print_time('Run Component Loaders');
 
 // Load the common files. This should set up the models for each component,
 // which the actions should then use to manipulate actual data.
@@ -285,7 +285,7 @@ foreach ($config->components as $cur_component) {
 if (P_SCRIPT_TIMING) pines_print_time('Load Component Displays');
 
 // Render the page.
-echo $page->render();
+echo $config->page->render();
 if (P_SCRIPT_TIMING) pines_print_time('Render Page', true);
 
 /**

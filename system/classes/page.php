@@ -227,8 +227,8 @@ class page extends p_base {
 	 * Renders the page.
 	 *
 	 * It will require() the template.php file in the current template. However,
-	 * render() will return the result of get_override_doc() if $page->override
-	 * is true.
+	 * render() will return the result of get_override_doc() if
+	 * $config->page->override is true.
 	 *
 	 * @global mixed Declare all globals in the function so they are available in the template.
 	 * @uses page::$override
