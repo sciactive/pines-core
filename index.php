@@ -113,19 +113,16 @@ date_default_timezone_set($config->timezone);
 if (P_SCRIPT_TIMING) pines_print_time('Load System Config');
 
 // Check the offline mode, and load the offline page if enabled.
-if ($config->offline_mode) {
+if ($config->offline_mode)
 	include('system/offline.php');
-	exit;
-}
 
 /**
  * An array of the enabled components.
  * @global array $config->components
  */
 $config->components = array();
-if ( file_exists("components/") ) {
+if ( file_exists("components/") )
 	$config->components = pines_scandir("components/");
-}
 
 /**
  * An array of all components.
