@@ -87,7 +87,6 @@ class entity extends p_base {
 	 * @param mixed $tag,... List or array of tags.
 	 */
 	public function __construct() {
-		global $config;
 		$args = func_get_args();
 		if (!empty($args))
 			call_user_func_array(array($this, 'add_tag'), $args);
@@ -97,10 +96,10 @@ class entity extends p_base {
 	 * Create a new instance.
 	 */
 	public static function factory() {
-		global $config;
+		global $pines;
 		$class = get_class();
 		$entity = new $class;
-		$config->hook->hook_object($entity, $class.'->', false);
+		$pines->hook->hook_object($entity, $class.'->', false);
 		$args = func_get_args();
 		if (!empty($args))
 			call_user_func_array(array($entity, 'add_tag'), $args);
@@ -117,12 +116,12 @@ class entity extends p_base {
 	 * @return mixed The value of the variable or nothing if it doesn't exist.
 	 */
 	public function &__get($name) {
-		global $config;
+		global $pines;
 		// Check for an entity first.
 		if (array_key_exists($name, $this->entity_cache)) {
 			if ($this->entity_cache[$name] === 0) {
 				// The entity hasn't been loaded yet, so load it now.
-				$this->entity_cache[$name] = $config->entity_manager->get_entity(array('guid' => $this->data[$name][1], 'class' => $this->data[$name][2]));
+				$this->entity_cache[$name] = $pines->entity_manager->get_entity(array('guid' => $this->data[$name][1], 'class' => $this->data[$name][2]));
 			}
 			return $this->entity_cache[$name];
 		}
@@ -237,8 +236,8 @@ class entity extends p_base {
 	 * @return mixed Returns what the entity manager's delete_entity function returns.
 	 */
 	public function delete() {
-		global $config;
-		return $config->entity_manager->delete_entity($this);
+		global $pines;
+		return $pines->entity_manager->delete_entity($this);
 	}
 
 	/**
@@ -408,10 +407,10 @@ class entity extends p_base {
 	 * @access private
 	 */
 	private function reference_to_entity(&$item, $key) {
-		global $config;
+		global $pines;
 		if (is_array($item) && $item[0] === 'pines_entity_reference') {
 			if (!isset($this->entity_cache["reference_guid: {$item[1]}"])) {
-				$this->entity_cache["reference_guid: {$item[1]}"] = $config->entity_manager->get_entity(array('guid' => $item[1], 'class' => $item[2]));
+				$this->entity_cache["reference_guid: {$item[1]}"] = $pines->entity_manager->get_entity(array('guid' => $item[1], 'class' => $item[2]));
 			}
 			$item = $this->entity_cache["reference_guid: {$item[1]}"];
 		} elseif (is_array($item)) {
@@ -430,8 +429,8 @@ class entity extends p_base {
 	public function refresh() {
 		if (!is_int($this->guid))
 			return false;
-		global $config;
-		$refresh = $config->entity_manager->get_entity(array('guid' => $this->guid, 'class' => get_class($this)));
+		global $pines;
+		$refresh = $pines->entity_manager->get_entity(array('guid' => $this->guid, 'class' => get_class($this)));
 		if (is_null($refresh))
 			return 0;
 		$this->tags = $refresh->tags;
@@ -466,8 +465,8 @@ class entity extends p_base {
 	 * @return mixed Returns what the entity manager's save_entity function returns.
 	 */
 	public function save() {
-		global $config;
-		return $config->entity_manager->save_entity($this);
+		global $pines;
+		return $pines->entity_manager->save_entity($this);
 	}
 }
 

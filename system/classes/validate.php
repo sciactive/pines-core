@@ -39,7 +39,6 @@ class validate extends p_base {
 	 * - ssn
 	 */
 	function __construct() {
-		global $config;
 		$this->checkers['required'] = array($this, 'check_required');
 	}
 

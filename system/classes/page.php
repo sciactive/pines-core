@@ -88,16 +88,16 @@ class page extends p_base {
 	 * Get the title of the page.
 	 *
 	 * If the title has not been explicitly set, get_title() uses
-	 * $config->option_title.
+	 * $pines->option_title.
 	 *
 	 * @return string The title.
 	 */
 	public function get_title() {
-		global $config;
+		global $pines;
 		if ( !empty($this->title) ) {
 			return $this->title;
 		} else {
-			return $config->option_title;
+			return $pines->option_title;
 		}
 	}
 	
@@ -228,7 +228,7 @@ class page extends p_base {
 	 *
 	 * It will require() the template.php file in the current template. However,
 	 * render() will return the result of get_override_doc() if
-	 * $config->page->override is true.
+	 * $pines->page->override is true.
 	 *
 	 * @global mixed Declare all globals in the function so they are available in the template.
 	 * @uses page::$override
@@ -241,7 +241,7 @@ class page extends p_base {
 		if ( $this->override ) {
 			echo $this->get_override_doc();
 		} else {
-			require("templates/{$config->current_template}/template.php");
+			require("templates/{$pines->current_template}/template.php");
 		}
 		$this->content = ob_get_clean();
 		return $this->content;

@@ -107,10 +107,10 @@ class hook_override__NAMEHERE_ extends hook_override {
 	}
 
 	function __clone() {
-		global $config;
+		global $pines;
 		// TODO: Test this. Make sure cloning works properly.
 		$new_object = clone $this->_p_object;
-		$config->hook->hook_object($new_object, get_class($new_object).'->', false);
+		$pines->hook->hook_object($new_object, get_class($new_object).'->', false);
 		return $new_object;
 	}
 

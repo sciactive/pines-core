@@ -107,41 +107,41 @@ if (P_SCRIPT_TIMING) pines_print_time('Load System Classes');
 
 require_once('system/load.php');
 $config_array = require('system/configure.php');
-fill_object($config_array, $config);
+fill_object($config_array, $pines);
 unset($config_array);
 /**
  * The current template.
  *
- * @global string $config->current_template
+ * @global string $pines->current_template
  */
-$config->current_template = ( !empty($_REQUEST['template']) && $config->allow_template_override ) ?
-	$_REQUEST['template'] : $config->default_template;
-require_once('templates/'.$config->current_template.'/configure.php');
-date_default_timezone_set($config->timezone);
+$pines->current_template = ( !empty($_REQUEST['template']) && $pines->allow_template_override ) ?
+	$_REQUEST['template'] : $pines->default_template;
+require_once('templates/'.$pines->current_template.'/configure.php');
+date_default_timezone_set($pines->timezone);
 if (P_SCRIPT_TIMING) pines_print_time('Load System Config');
 
 // Check the offline mode, and load the offline page if enabled.
-if ($config->offline_mode)
+if ($pines->offline_mode)
 	include('system/offline.php');
 
 /**
  * An array of the enabled components.
- * @global array $config->components
+ * @global array $pines->components
  */
-$config->components = array();
+$pines->components = array();
 if ( file_exists("components/") )
-	$config->components = pines_scandir("components/");
+	$pines->components = pines_scandir("components/");
 
 /**
  * An array of all components.
- * @global array $config->all_components
+ * @global array $pines->all_components
  */
-$config->all_components = array();
+$pines->all_components = array();
 if ( file_exists("components/") ) {
-	$config->all_components = pines_scandir("components/", 0, null, false);
-	foreach ($config->all_components as $cur_key => $cur_value) {
+	$pines->all_components = pines_scandir("components/", 0, null, false);
+	foreach ($pines->all_components as $cur_key => $cur_value) {
 		if (substr($cur_value, 0, 1) == '.')
-			$config->all_components[$cur_key] = substr($cur_value, 1);
+			$pines->all_components[$cur_key] = substr($cur_value, 1);
 	}
 }
 if (P_SCRIPT_TIMING) pines_print_time('Find Component Classes');
@@ -149,14 +149,14 @@ if (P_SCRIPT_TIMING) pines_print_time('Find Component Classes');
 // Load component classes.
 /**
  * List of class files for autoloading classes.
- * @var $config->class_files
+ * @var $pines->class_files
  */
-$config->class_files = array();
-foreach ($config->components as $cur_component) {
+$pines->class_files = array();
+foreach ($pines->components as $cur_component) {
 	if ( is_dir("components/$cur_component/classes/") ) {
 		$temp_classes = pines_scandir("components/$cur_component/classes/");
 		foreach ($temp_classes as $cur_class) {
-			$config->class_files[preg_replace('/\.php$/', '', $cur_class)] = "components/$cur_component/classes/$cur_class";
+			$pines->class_files[preg_replace('/\.php$/', '', $cur_class)] = "components/$cur_component/classes/$cur_class";
 		}
 		unset($temp_classes);
 	}
@@ -167,7 +167,7 @@ foreach ($config->components as $cur_component) {
  * @param string $class_name The class name.
  */
 function __autoload($class_name) {
-	global $config;
+	global $pines;
 	// When session_start() tries to recover hooked objects, we need to make
 	// sure their equivalent hooked classes exist.
 	if (strpos($class_name, 'hook_override_') === 0) {
@@ -178,12 +178,12 @@ function __autoload($class_name) {
 			return;
 		$new_class = preg_replace('/^hook_override_/', '', $class_name);
 		$new_object = new $new_class;
-		$config->hook->hook_object($new_object, get_class($new_object).'->', false);
+		$pines->hook->hook_object($new_object, get_class($new_object).'->', false);
 		unset($new_object);
 		return;
 	}
-	if (key_exists($class_name, $config->class_files)) {
-		include_once($config->class_files[$class_name]);
+	if (key_exists($class_name, $pines->class_files)) {
+		include_once($pines->class_files[$class_name]);
 		if (P_SCRIPT_TIMING) pines_print_time("Load [$class_name]");
 	}
 }
@@ -197,25 +197,25 @@ session_start();
 $_SESSION['secret'] = rand();
 
 // Load the config for our components.
-foreach ($config->components as $cur_component) {
+foreach ($pines->components as $cur_component) {
 	if ( file_exists("components/$cur_component/configure.php") ) {
 		$config_array = include("components/$cur_component/configure.php");
 		if (is_array($config_array)) {
-			$config->$cur_component = new p_base;
-			fill_object($config_array, $config->$cur_component);
+			$pines->$cur_component = new p_base;
+			fill_object($config_array, $pines->$cur_component);
 		}
 		unset($config_array);
 	}
 }
 if (P_SCRIPT_TIMING) pines_print_time('Load Component Config');
 
-// Load the hooks for $config.
-$config->hook->hook_object($config, '$config->');
-if (P_SCRIPT_TIMING) pines_print_time('Hook $config');
+// Load the hooks for $pines.
+$pines->hook->hook_object($pines, '$pines->');
+if (P_SCRIPT_TIMING) pines_print_time('Hook $pines');
 
 // Load the configuration for our components. This shouldn't require any sort of
 // functionality, like entity or user management.
-foreach ($config->components as $cur_component) {
+foreach ($pines->components as $cur_component) {
 	if ( file_exists("components/$cur_component/load.php") )
 		include_once("components/$cur_component/load.php");
 }
@@ -223,7 +223,7 @@ if (P_SCRIPT_TIMING) pines_print_time('Run Component Loaders');
 
 // Load the common files. This should set up the models for each component,
 // which the actions should then use to manipulate actual data.
-foreach ($config->components as $cur_component) {
+foreach ($pines->components as $cur_component) {
 	if ( file_exists("components/$cur_component/common.php") )
 		include_once("components/$cur_component/common.php");
 }
@@ -234,14 +234,14 @@ include_once('system/common.php');
 if (P_SCRIPT_TIMING) pines_print_time('Load System Common');
 
 // Load any post or get vars for our component/action.
-$config->request_component = clean_filename($_REQUEST['option']);
-$config->request_action = clean_filename($_REQUEST['action']);
+$pines->request_component = clean_filename($_REQUEST['option']);
+$pines->request_action = clean_filename($_REQUEST['action']);
 
 // URL Rewriting Engine (Simple, eh?)
 // The values from URL rewriting override any post or get vars, so don't submit
 // forms to a url you shouldn't.
 // /index.php/user/edituser/id-35/ -> /index.php?option=com_user&action=edituser&id=35
-if ( $config->url_rewriting ) {
+if ( $pines->url_rewriting ) {
 // Get an array of the pseudo directories from the URI.
 	$args_array = explode('/',
 		// Get rid of index.php/ at the beginning, and / at the end.
@@ -251,11 +251,11 @@ if ( $config->url_rewriting ) {
 		strlen($_SERVER['REQUEST_URI']) - (strlen($_SERVER['QUERY_STRING']) ? strlen($_SERVER['QUERY_STRING']) + 1 : 0)
 		),
 		// This takes off the path to Pines.
-		strlen($config->rela_location)
+		strlen($pines->rela_location)
 		))
 	);
-	if ( !empty($args_array[0]) ) $config->request_component = ($args_array[0] == 'system' ? $args_array[0] : 'com_'.$args_array[0]);
-	if ( !empty($args_array[1]) ) $config->request_action = $args_array[1];
+	if ( !empty($args_array[0]) ) $pines->request_component = ($args_array[0] == 'system' ? $args_array[0] : 'com_'.$args_array[0]);
+	if ( !empty($args_array[1]) ) $pines->request_action = $args_array[1];
 	$arg_count = count($args_array);
 	for ($i = 2; $i < $arg_count; $i++) {
 		$_REQUEST[preg_replace('/-.*$/', '', $args_array[$i])] = preg_replace('/^[^-]*-/', '', $args_array[$i]);
@@ -266,26 +266,26 @@ if ( $config->url_rewriting ) {
 }
 
 // Fill in any empty request vars.
-if ( empty($config->request_component) ) $config->request_component = $config->default_component;
-if ( empty($config->request_action) ) $config->request_action = 'default';
+if ( empty($pines->request_component) ) $pines->request_component = $pines->default_component;
+if ( empty($pines->request_action) ) $pines->request_action = 'default';
 if (P_SCRIPT_TIMING) pines_print_time('Get Requested Action');
 
 // Call the action specified.
-if ( action($config->request_component, $config->request_action) === 'error_404' ) {
+if ( action($pines->request_component, $pines->request_action) === 'error_404' ) {
 	header('HTTP/1.0 404 Not Found', true, 404);
 	$error_page = new module('system', 'error_404', 'content');
 }
 if (P_SCRIPT_TIMING) pines_print_time('Run Requested Action');
 
 // Load the final display stuff. This includes menu entries.
-foreach ($config->components as $cur_component) {
+foreach ($pines->components as $cur_component) {
 	if ( file_exists("components/$cur_component/display.php") )
 		include_once("components/$cur_component/display.php");
 }
 if (P_SCRIPT_TIMING) pines_print_time('Load Component Displays');
 
 // Render the page.
-echo $config->page->render();
+echo $pines->page->render();
 if (P_SCRIPT_TIMING) pines_print_time('Render Page', true);
 
 /**

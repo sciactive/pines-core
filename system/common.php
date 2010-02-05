@@ -22,10 +22,10 @@ if (!function_exists('action')) {
 	 * @return mixed The value returned by the action, or 'error_404' if it doesn't exist.
 	 */
 	function action($component, $action) {
-		global $config;
+		global $pines;
 		$action_file = ($component == 'system' ? $component : "components/$component")."/actions/$action.php";
-		$config->component = $component;
-		$config->action = $action;
+		$pines->component = $component;
+		$pines->action = $action;
 		unset($component);
 		unset($action);
 		if ( file_exists($action_file) ) {
@@ -39,12 +39,12 @@ if (!function_exists('action')) {
 	}
 }
 
-if ( isset($config->ability_manager) ) {
+if ( isset($pines->ability_manager) ) {
 	/**
 	 * The system/all ability let's the user perform any action on the system,
 	 * regardless of their other abilities.
 	 */
-	$config->ability_manager->add('system', 'all', 'All Abilities', 'Let user do anything, regardless of whether they have the ability.');
+	$pines->ability_manager->add('system', 'all', 'All Abilities', 'Let user do anything, regardless of whether they have the ability.');
 }
 
 /**
@@ -96,15 +96,15 @@ if (!function_exists('display_error')) {
 	/**
 	 * Causes the system to report an error to the user.
 	 * 
-	 * This function should be used instead of calling $config->page->error
+	 * This function should be used instead of calling $pines->page->error
 	 * directly, because some admins may wish to log Pines errors, instead of
 	 * displaying them.
 	 *
 	 * @param string $error_text Information to display to the user.
 	 */
 	function display_error($error_text) {
-		global $config;
-		$config->page->error($error_text);
+		global $pines;
+		$pines->page->error($error_text);
 	}
 }
 
@@ -112,20 +112,20 @@ if (!function_exists('display_notice')) {
 	/**
 	 * Causes the system to report a notice to the user.
 	 * 
-	 * This function should be used instead of calling $config->page->notice
+	 * This function should be used instead of calling $pines->page->notice
 	 * directly, because some admins may wish to log Pines notices, instead of
 	 * displaying them.
 	 *
 	 * @param string $notice_text Information to display to the user.
 	 */
 	function display_notice($notice_text) {
-		global $config;
-		$config->page->notice($notice_text);
+		global $pines;
+		$pines->page->notice($notice_text);
 	}
 }
 
 /**
- * Shortcut to $config->user_manager->gatekeeper().
+ * Shortcut to $pines->user_manager->gatekeeper().
  *
  * The gatekeeper() function should be defined in whatever component is taking
  * over user management. gatekeeper() without arguments should return false if
@@ -135,38 +135,38 @@ if (!function_exists('display_notice')) {
  * check whether a different user has an ability. This helps user managers use a
  * "login" ability, which can be used to disable an account.
  *
- * @uses $config->user_manager->gatekeeper() Forwards parameters and returns the result.
+ * @uses $pines->user_manager->gatekeeper() Forwards parameters and returns the result.
  * @param string $ability The ability to provide.
  * @param user $user The user to provide.
  * @return bool The result is returned if there is a user management component, otherwise it returns true.
  */
 function gatekeeper($ability = NULL, $user = NULL) {
-	global $config;
-	if (is_null($config->user_manager))
+	global $pines;
+	if (is_null($pines->user_manager))
 		return true;
-	return $config->user_manager->gatekeeper($ability, $user);
+	return $pines->user_manager->gatekeeper($ability, $user);
 }
 
 /**
- * Shortcut to $config->user_manager->punt_user().
+ * Shortcut to $pines->user_manager->punt_user().
  *
  * The punt_user() function should be defined in whatever component is taking
  * over user management. punt_user() must always end the execution of the
  * script. If there is no user management component, the user is directed to the
  * home page and the script terminates.
  *
- * @uses $config->user_manager->punt_user() Forwards parameters and returns the result.
+ * @uses $pines->user_manager->punt_user() Forwards parameters and returns the result.
  * @param string $message An optional message to display to the user.
  * @param string $url An optional URL to be included in the query data of the redirection url.
  * @return bool The result is returned if there is a user management component, otherwise it returns true.
  */
 function punt_user($message = NULL, $url = NULL) {
-	global $config;
-	if (is_null($config->user_manager)) {
+	global $pines;
+	if (is_null($pines->user_manager)) {
 		header("Location: ".pines_url());
 		exit($message);
 	}
-	$config->user_manager->punt_user($message, $url);
+	$pines->user_manager->punt_user($message, $url);
 }
 
 /**
@@ -178,7 +178,6 @@ function punt_user($message = NULL, $url = NULL) {
  * @return string The formatted date.
  */
 function pines_date_format($timestamp, $timezone = null, $format = 'Y-m-d H:i T') {
-	global $config;
 	$date = new DateTime(gmdate('c', (int) $timestamp));
 	if (!is_null($timezone)) {
 		if (is_string($timezone))
@@ -191,31 +190,31 @@ function pines_date_format($timestamp, $timezone = null, $format = 'Y-m-d H:i T'
 }
 
 /**
- * Shortcut to $config->depend->check().
+ * Shortcut to $pines->depend->check().
  *
- * @uses $config->depend->check() Forwards parameters and returns the result.
+ * @uses $pines->depend->check() Forwards parameters and returns the result.
  * @return bool The result is returned from the dependency checker.
  */
 function pines_depend() {
-	global $config;
-	if (is_null($config->depend))
+	global $pines;
+	if (is_null($pines->depend))
 		return true;
 	$args = func_get_args();
-	return call_user_func_array(array($config->depend, 'check'), $args);
+	return call_user_func_array(array($pines->depend, 'check'), $args);
 }
 
 /**
- * Shortcut to $config->log_manager->log().
+ * Shortcut to $pines->log_manager->log().
  *
- * @uses $config->log_manager->log() Forwards parameters and returns the result.
+ * @uses $pines->log_manager->log() Forwards parameters and returns the result.
  * @return bool The result is returned if there is a log management component, otherwise it returns true.
  */
 function pines_log() {
-	global $config;
-	if (is_null($config->log_manager))
+	global $pines;
+	if (is_null($pines->log_manager))
 		return true;
 	$args = func_get_args();
-	return call_user_func_array(array($config->log_manager, 'log'), $args);
+	return call_user_func_array(array($pines->log_manager, 'log'), $args);
 }
 
 /**
@@ -232,17 +231,17 @@ function pines_phone_format($phone) {
 }
 
 /**
- * Shortcut to $config->template->url().
+ * Shortcut to $pines->template->url().
  *
- * @uses $config->template->url() Forwards parameters and returns the result.
+ * @uses $pines->template->url() Forwards parameters and returns the result.
  * @return bool The result is returned if there is a template, otherwise it returns null.
  */
 function pines_url() {
-	global $config;
-	if (is_null($config->template))
+	global $pines;
+	if (is_null($pines->template))
 		return null;
 	$args = func_get_args();
-	return call_user_func_array(array($config->template, 'url'), $args);
+	return call_user_func_array(array($pines->template, 'url'), $args);
 }
 
 ?>

@@ -34,15 +34,15 @@ class template extends p_base {
 	 * @return string The URL in a format to work with the current configuration of Pines.
 	 */
 	function url($component = null, $action = null, $params = array(), $encode_entities = true, $full_location = false) {
-		global $config;
+		global $pines;
 		if ( is_null($params) ) $params = array();
-		if ( $config->allow_template_override && isset($_REQUEST['template']) )
+		if ( $pines->allow_template_override && isset($_REQUEST['template']) )
 			$params['template'] = $_REQUEST['template'];
-		$return = ($full_location) ? $config->full_location : $config->rela_location;
+		$return = ($full_location) ? $pines->full_location : $pines->rela_location;
 		if ( is_null($component) && empty($params) )
 			return $return;
-		if ( $config->url_rewriting ) {
-			if ( !$config->use_htaccess )
+		if ( $pines->url_rewriting ) {
+			if ( !$pines->use_htaccess )
 				$return .= P_INDEX.'/';
 			if ( !is_null($component) ) {
 				// Get rid of 'com_', if it's not the system component.
@@ -60,7 +60,7 @@ class template extends p_base {
 				$return .= ($encode_entities) ? htmlentities($param_return) : $param_return;
 			}
 		} else {
-			$return .= ($config->use_htaccess) ? '?' : P_INDEX.'?';
+			$return .= ($pines->use_htaccess) ? '?' : P_INDEX.'?';
 			if ( !is_null($component) ) {
 				$param_return = "option=$component";
 				if (!is_null($action))

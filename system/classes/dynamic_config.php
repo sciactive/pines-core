@@ -14,8 +14,8 @@ defined('P_RUN') or die('Direct access prohibited');
  * A dynamic loading object.
  *
  * Component classes will be automatically loaded into their variables beginning
- * with run_. In other words, when you call $config->run_xmlparser->parse(), if
- * $config->run_xmlparser is empty, the com_xmlparser class will attempt to be
+ * with run_. In other words, when you call $pines->run_xmlparser->parse(), if
+ * $pines->run_xmlparser is empty, the com_xmlparser class will attempt to be
  * loaded for it.
  *
  * @package Pines
@@ -36,20 +36,20 @@ class dynamic_config extends p_base {
 	 */
 	public function &__get($name) {
 		if (preg_match('/^run_/', $name)) {
-			global $config;
+			global $pines;
 			$new_name = preg_replace('/^run_/', 'com_', $name);
 			try {
 				$this->$name = new $new_name;
-				$config->hook->hook_object($this->$name, "\$config->{$name}->");
+				$pines->hook->hook_object($this->$name, "\$pines->{$name}->");
 				return $this->$name;
 			} catch (Exception $e) {
 				return;
 			}
 		}
 		if (in_array($name, array('configurator', 'log_manager', 'entity_manager', 'db_manager', 'user_manager', 'ability_manager', 'editor')) && isset($this->standard_classes[$name])) {
-			global $config;
+			global $pines;
 			$this->$name = new $this->standard_classes[$name];
-			$config->hook->hook_object($this->$name, "\$config->{$name}->");
+			$pines->hook->hook_object($this->$name, "\$pines->{$name}->");
 			return $this->$name;
 		}
 	}
@@ -66,12 +66,12 @@ class dynamic_config extends p_base {
 	 * @return bool
 	 */
 	public function __isset($name) {
-		global $config;
+		global $pines;
 		if (preg_match('/^run_/', $name)) {
 			$new_name = preg_replace('/^run_/', 'com_', $name);
 			if (class_exists($new_name))
 				return true;
-			if (is_array($config->class_files) && isset($config->class_files[$new_name]))
+			if (is_array($pines->class_files) && isset($pines->class_files[$new_name]))
 				return true;
 			return false;
 		}

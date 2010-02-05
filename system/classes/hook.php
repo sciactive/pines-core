@@ -52,7 +52,7 @@ class hook {
 	 * called multiple times for one hook.
 	 *
 	 * Note: Be careful to avoid recursive callbacks, as they may result in an
-	 * infinite loop. All functions under $config are automatically defined as
+	 * infinite loop. All functions under $pines are automatically defined as
 	 * hooks.
 	 *
 	 * @param string $hook The name of the hook to catch.
@@ -202,13 +202,13 @@ class hook {
 					$param_call_array[] = '$'.$param_name;
 				}
 				$code .= $fprefix."function $fname(".implode(', ', $param_array).") {\n";
-				$code .= "\tglobal \$config;\n";
+				$code .= "\tglobal \$pines;\n";
 				$code .= "\t\$arguments = debug_backtrace(false);\n";
 				$code .= "\t\$arguments = \$arguments[0]['args'];\n";
-				$code .= "\t\$arguments = \$config->hook->run_callbacks(\$this->_p_prefix.'$fname', \$arguments, 'before', \$this->_p_object);\n";
+				$code .= "\t\$arguments = \$pines->hook->run_callbacks(\$this->_p_prefix.'$fname', \$arguments, 'before', \$this->_p_object);\n";
 				$code .= "\tif (\$arguments !== false) {\n";
 				$code .= "\t\t\$return = call_user_func_array(array(\$this->_p_object, '$fname'), \$arguments);\n";
-				$code .= "\t\t\$return = \$config->hook->run_callbacks(\$this->_p_prefix.'$fname', array(\$return), 'after', \$this->_p_object);\n";
+				$code .= "\t\t\$return = \$pines->hook->run_callbacks(\$this->_p_prefix.'$fname', array(\$return), 'after', \$this->_p_object);\n";
 				$code .= "\t\tif (is_array(\$return))\n";
 				$code .= "\t\t\treturn \$return[0];\n";
 				$code .= "\t}\n";

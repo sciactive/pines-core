@@ -89,9 +89,9 @@ class module extends p_base {
 	 * @return int The order in which the module was placed.
 	 */
 	function attach($position, $order = null) {
-		global $config;
+		global $pines;
 		$this->position = $position;
-		$this->order = $config->page->attach_module($this, $position, $order);
+		$this->order = $pines->page->attach_module($this, $position, $order);
 		return $this->order;
 	}
 
@@ -100,11 +100,11 @@ class module extends p_base {
 	 *
 	 * @global page Used to detach a module.
 	 * @uses page::detach_module()
-	 * @return mixed The value of $config->page->detach_module.
+	 * @return mixed The value of $pines->page->detach_module.
 	 */
 	function detach() {
-		global $config;
-		return $config->page->detach_module($this, $this->position, $this->order);
+		global $pines;
+		return $pines->page->detach_module($this, $this->position, $this->order);
 	}
 
 	/**
@@ -162,11 +162,11 @@ class module extends p_base {
 	 * @return string The module's rendered content.
 	 */
 	function render($model = 'module') {
-		global $config;
+		global $pines;
 
 		// Get content from the view.
 		ob_start();
-		$format = $config->template->format;
+		$format = $pines->template->format;
 		while(true) {
 			$filename = (($this->component != 'system') ? 'components/' : '').$this->component.'/views/'.$format.'/'.$this->view.'.php';
 			if (file_exists($filename) || $format == 'all') {
@@ -186,10 +186,10 @@ class module extends p_base {
 
 		// Return the content.
 		ob_start();
-		if (isset($model) && file_exists("templates/{$config->current_template}/models/$model.php")) {
-			require "templates/{$config->current_template}/models/$model.php";
+		if (isset($model) && file_exists("templates/{$pines->current_template}/models/$model.php")) {
+			require "templates/{$pines->current_template}/models/$model.php";
 		} else {
-			require "templates/{$config->current_template}/models/module.php";
+			require "templates/{$pines->current_template}/models/module.php";
 		}
 		$this->content = ob_get_clean();
 		return $this->content;

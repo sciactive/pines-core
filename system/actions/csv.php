@@ -16,7 +16,7 @@ if (!gatekeeper())
 header('Content-Type: text/csv');
 header('Content-Disposition: attachment; filename="'.$_REQUEST['filename'].'.csv" size='.strlen($_REQUEST['content']));
 
-$config->page->override = true;
-$config->page->override_doc($_REQUEST['content']);
+$pines->page->override = true;
+$pines->page->override_doc($_REQUEST['content']);
 
 ?>

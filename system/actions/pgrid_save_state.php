@@ -21,6 +21,6 @@ if (isset($_SESSION['user'])) {
 	$_SESSION['user']->pgrid_saved_states[$cur_view] = $cur_state;
 	$_SESSION['user']->save();
 }
-$config->page->override = true;
+$pines->page->override = true;
 
 ?>

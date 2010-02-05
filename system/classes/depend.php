@@ -16,7 +16,7 @@ defined('P_RUN') or die('Direct access prohibited');
  * To add a dependency checker type, assign a callback to the $checkers array.
  *
  * <code>
- * $config->depend->checkers['my_type'] = array($config->run_my_component, 'my_checking_method');
+ * $pines->depend->checkers['my_type'] = array($pines->run_my_component, 'my_checking_method');
  * </code>
  *
  * Your checker callback should return true if the dependency is satisfied, or
@@ -40,7 +40,7 @@ class depend extends p_base {
 	 * - action (Current or requested action.)
 	 */
 	function __construct() {
-		global $config;
+		global $pines;
 		$this->checkers['ability'] = array($this, 'check_ability');
 		$this->checkers['component'] = array($this, 'check_component');
 		$this->checkers['option'] = array($this, 'check_option');
@@ -73,9 +73,9 @@ class depend extends p_base {
 	 * @return bool The result of the ability check.
 	 */
 	function check_ability($value) {
-		global $config;
+		global $pines;
 		if (preg_match('/[!&|()]/', $value))
-			return $this->simple_parse($value, array($config->depend, 'check_ability'));
+			return $this->simple_parse($value, array($pines->depend, 'check_ability'));
 		return gatekeeper($value);
 	}
 
@@ -84,16 +84,16 @@ class depend extends p_base {
 	 *
 	 * Uses simple_parse() to provide simple logic.
 	 *
-	 * @uses $config->action
-	 * @uses $config->request_action
+	 * @uses $pines->action
+	 * @uses $pines->request_action
 	 * @param string $value The value to check.
 	 * @return bool The result of the action check.
 	 */
 	function check_action($value) {
-		global $config;
+		global $pines;
 		if (preg_match('/[!&|()]/', $value))
-			return $this->simple_parse($value, array($config->depend, 'check_action'));
-		return $config->action == $value || $config->request_action == $value;
+			return $this->simple_parse($value, array($pines->depend, 'check_action'));
+		return $pines->action == $value || $pines->request_action == $value;
 	}
 
 	/**
@@ -101,15 +101,15 @@ class depend extends p_base {
 	 *
 	 * Uses simple_parse() to provide simple logic.
 	 *
-	 * @uses $config->components
+	 * @uses $pines->components
 	 * @param string $value The value to check.
 	 * @return bool The result of the component check.
 	 */
 	function check_component($value) {
-		global $config;
+		global $pines;
 		if (preg_match('/[!&|()]/', $value))
-			return $this->simple_parse($value, array($config->depend, 'check_component'));
-		return in_array($value, $config->components);
+			return $this->simple_parse($value, array($pines->depend, 'check_component'));
+		return in_array($value, $pines->components);
 	}
 
 	/**
@@ -117,16 +117,16 @@ class depend extends p_base {
 	 *
 	 * Uses simple_parse() to provide simple logic.
 	 *
-	 * @uses $config->component
-	 * @uses $config->request_component
+	 * @uses $pines->component
+	 * @uses $pines->request_component
 	 * @param string $value The value to check.
 	 * @return bool The result of the component check.
 	 */
 	function check_option($value) {
-		global $config;
+		global $pines;
 		if (preg_match('/[!&|()]/', $value))
-			return $this->simple_parse($value, array($config->depend, 'check_option'));
-		return $config->component == $value || $config->request_component == $value;
+			return $this->simple_parse($value, array($pines->depend, 'check_option'));
+		return $pines->component == $value || $pines->request_component == $value;
 	}
 
 	/**
@@ -141,7 +141,7 @@ class depend extends p_base {
 	 *
 	 * For example:
 	 * <code>
-	 * simple_parse('!val1&(val2|!val3|(val2&!val4))', array($config->run_my_component, 'my_checking_method'));
+	 * simple_parse('!val1&(val2|!val3|(val2&!val4))', array($pines->run_my_component, 'my_checking_method'));
 	 * </code>
 	 *
 	 * @param string $value The logic statement.
