@@ -16,7 +16,7 @@ defined('P_RUN') or die('Direct access prohibited');
  * To add a dependency checker type, assign a callback to the $checkers array.
  *
  * <code>
- * $pines->depend->checkers['my_type'] = array($pines->run_my_component, 'my_checking_method');
+ * $pines->depend->checkers['my_type'] = array($pines->com_my_component, 'my_checking_method');
  * </code>
  *
  * Your checker callback should return true if the dependency is satisfied, or
@@ -27,7 +27,6 @@ defined('P_RUN') or die('Direct access prohibited');
 class depend extends p_base {
 	/**
 	 * An array of dependency checker callbacks.
-	 *
 	 * @var array $checkers
 	 */
 	public $checkers = array();
@@ -141,7 +140,7 @@ class depend extends p_base {
 	 *
 	 * For example:
 	 * <code>
-	 * simple_parse('!val1&(val2|!val3|(val2&!val4))', array($pines->run_my_component, 'my_checking_method'));
+	 * simple_parse('!val1&(val2|!val3|(val2&!val4))', array($pines->com_my_component, 'my_checking_method'));
 	 * </code>
 	 *
 	 * @param string $value The logic statement.

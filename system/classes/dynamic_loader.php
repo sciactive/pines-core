@@ -22,7 +22,6 @@ defined('P_RUN') or die('Direct access prohibited');
 class dynamic_loader extends p_base {
 	/**
 	 * An array of standard classes.
-	 *
 	 * @var array $standard_classes
 	 */
 	var $standard_classes = array();

@@ -15,8 +15,8 @@ defined('P_RUN') or die('Direct access prohibited');
 
 // Check to see if ptags is already included.
 if (!$GLOBALS['js_ptags_included']) {
-	echo ("<link href=\"{$pines->rela_location}system/css/jquery.ptags.default.css\" media=\"all\" rel=\"stylesheet\" type=\"text/css\" />\n");
-	echo ("<script type=\"text/javascript\" src=\"{$pines->rela_location}system/js/jquery.ptags.js\"></script>\n");
+	echo ("<link href=\"{$pines->config->rela_location}system/css/jquery.ptags.default.css\" media=\"all\" rel=\"stylesheet\" type=\"text/css\" />\n");
+	echo ("<script type=\"text/javascript\" src=\"{$pines->config->rela_location}system/js/jquery.ptags.js\"></script>\n");
 	$GLOBALS['js_ptags_included'] = true;
 }
 

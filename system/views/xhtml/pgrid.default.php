@@ -17,13 +17,13 @@ defined('P_RUN') or die('Direct access prohibited');
 
 // Check to see if the default icons are already included.
 if (!$GLOBALS['js_pgrid_default_icons_included']) {
-	if ($this->icons) echo ("<link href=\"{$pines->rela_location}system/css/jquery.pgrid.default.icons.css\" media=\"all\" rel=\"stylesheet\" type=\"text/css\" />\n");
+	if ($this->icons) echo ("<link href=\"{$pines->config->rela_location}system/css/jquery.pgrid.default.icons.css\" media=\"all\" rel=\"stylesheet\" type=\"text/css\" />\n");
 	$GLOBALS['js_pgrid_default_icons_included'] = true;
 }
 // Check to see if pgrid is already included.
 if (!$GLOBALS['js_pgrid_included']) {
-	echo ("<link href=\"{$pines->rela_location}system/css/jquery.pgrid.default.css\" media=\"all\" rel=\"stylesheet\" type=\"text/css\" />\n");
-	echo ("<script type=\"text/javascript\" src=\"{$pines->rela_location}system/js/jquery.pgrid.js\"></script>\n");
+	echo ("<link href=\"{$pines->config->rela_location}system/css/jquery.pgrid.default.css\" media=\"all\" rel=\"stylesheet\" type=\"text/css\" />\n");
+	echo ("<script type=\"text/javascript\" src=\"{$pines->config->rela_location}system/js/jquery.pgrid.js\"></script>\n");
 	$GLOBALS['js_pgrid_included'] = true;
 }
 

@@ -111,14 +111,14 @@ require_once('system/load.php');
  *
  * @global string $pines->current_template
  */
-$pines->current_template = ( !empty($_REQUEST['template']) && $pines->allow_template_override ) ?
-	$_REQUEST['template'] : $pines->default_template;
+$pines->current_template = ( !empty($_REQUEST['template']) && $pines->config->allow_template_override ) ?
+	$_REQUEST['template'] : $pines->config->default_template;
 $pines->template = $pines->current_template;
-date_default_timezone_set($pines->timezone);
+date_default_timezone_set($pines->config->timezone);
 if (P_SCRIPT_TIMING) pines_print_time('Load System Config');
 
 // Check the offline mode, and load the offline page if enabled.
-if ($pines->offline_mode)
+if ($pines->config->offline_mode)
 	require('system/offline.php');
 
 /**
@@ -241,7 +241,7 @@ $pines->request_action = clean_filename($_REQUEST['action']);
 // The values from URL rewriting override any post or get vars, so don't submit
 // forms to a url you shouldn't.
 // /index.php/user/edituser/id-35/ -> /index.php?option=com_user&action=edituser&id=35
-if ( $pines->url_rewriting ) {
+if ( $pines->config->url_rewriting ) {
 	// Get an array of the pseudo directories from the URI.
 	$args_array = explode('/',
 		// Get rid of index.php/ at the beginning, and / at the end.
@@ -251,7 +251,7 @@ if ( $pines->url_rewriting ) {
 		strlen($_SERVER['REQUEST_URI']) - (strlen($_SERVER['QUERY_STRING']) ? strlen($_SERVER['QUERY_STRING']) + 1 : 0)
 		),
 		// This takes off the path to Pines.
-		strlen($pines->rela_location)
+		strlen($pines->config->rela_location)
 		))
 	);
 	if ( !empty($args_array[0]) ) $pines->request_component = ($args_array[0] == 'system' ? $args_array[0] : 'com_'.$args_array[0]);
@@ -266,7 +266,7 @@ if ( $pines->url_rewriting ) {
 }
 
 // Fill in any empty request vars.
-if ( empty($pines->request_component) ) $pines->request_component = $pines->default_component;
+if ( empty($pines->request_component) ) $pines->request_component = $pines->config->default_component;
 if ( empty($pines->request_action) ) $pines->request_action = 'default';
 if (P_SCRIPT_TIMING) pines_print_time('Get Requested Action');
 

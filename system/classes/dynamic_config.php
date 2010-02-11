@@ -38,8 +38,7 @@ class dynamic_config extends p_base {
 	 * you access the variable normally.
 	 *
 	 * This function will try to load a component's configuration into any
-	 * variables beginning with com_. It will also try to load the template's
-	 * configuration into "template"
+	 * variables beginning with com_ or tpl_.
 	 *
 	 * @param string $name The name of the variable.
 	 * @return mixed The value of the variable or nothing if it doesn't exist.
@@ -54,20 +53,17 @@ class dynamic_config extends p_base {
 					$this->fill_object($config_array, $this->$name);
 				}
 			}
-			return $this->$name;
-		} elseif ($name == 'template') {
-			// Load the config for the template.
-			global $pines;
-			$name = $pines->current_template;
+		} elseif (substr($name, 0, 4) == 'tpl_') {
+			// Load the config for a template.
 			if ( file_exists("templates/$name/configure.php") ) {
 				$config_array = include("templates/$name/configure.php");
 				if (is_array($config_array)) {
-					$this->template = new p_base;
-					$this->fill_object($config_array, $this->template);
+					$this->$name = new p_base;
+					$this->fill_object($config_array, $this->$name);
 				}
 			}
-			return $this->template;
 		}
+		return $this->$name;
 	}
 
 	/**
@@ -88,9 +84,7 @@ class dynamic_config extends p_base {
 				$config_array = include("components/$name/configure.php");
 				return is_array($config_array);
 			}
-		} elseif ($name == 'template') {
-			global $pines;
-			$name = $pines->current_template;
+		} elseif (substr($name, 0, 4) == 'tpl_') {
 			if ( file_exists("templates/$name/configure.php") ) {
 				$config_array = include("templates/$name/configure.php");
 				return is_array($config_array);
@@ -103,15 +97,11 @@ class dynamic_config extends p_base {
 	 * Fill an object with the data from a configuration array.
 	 *
 	 * The configuration array must be formatted correctly. It must contain one
-	 * array per variable, each with the following items:
+	 * array per variable, each with at least the following items:
 	 *
-	 * 'name' : The name of the variable.
-	 *
-	 * 'cname' : A common name for the variable. (A title)
-	 *
-	 * 'description' : A description of the variable.
-	 *
-	 * 'value' : The variable's actual value.
+	 * - name - The variable's name.
+	 * - cname - A common name for the variable. (A title)
+	 * - value - The variable's value.
 	 *
 	 * @param array $config_array The configuration array to process.
 	 * @param mixed &$object The object to which the variables should be added.

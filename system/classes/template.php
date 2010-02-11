@@ -36,13 +36,13 @@ class template extends p_base {
 	function url($component = null, $action = null, $params = array(), $encode_entities = true, $full_location = false) {
 		global $pines;
 		if ( is_null($params) ) $params = array();
-		if ( $pines->allow_template_override && isset($_REQUEST['template']) )
+		if ( $pines->config->allow_template_override && isset($_REQUEST['template']) )
 			$params['template'] = $_REQUEST['template'];
-		$return = ($full_location) ? $pines->full_location : $pines->rela_location;
+		$return = ($full_location) ? $pines->config->full_location : $pines->config->rela_location;
 		if ( is_null($component) && empty($params) )
 			return $return;
-		if ( $pines->url_rewriting ) {
-			if ( !$pines->use_htaccess )
+		if ( $pines->config->url_rewriting ) {
+			if ( !$pines->config->use_htaccess )
 				$return .= P_INDEX.'/';
 			if ( !is_null($component) ) {
 				// Get rid of 'com_', if it's not the system component.
@@ -60,7 +60,7 @@ class template extends p_base {
 				$return .= ($encode_entities) ? htmlentities($param_return) : $param_return;
 			}
 		} else {
-			$return .= ($pines->use_htaccess) ? '?' : P_INDEX.'?';
+			$return .= ($pines->config->use_htaccess) ? '?' : P_INDEX.'?';
 			if ( !is_null($component) ) {
 				$param_return = "option=$component";
 				if (!is_null($action))

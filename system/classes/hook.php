@@ -187,7 +187,8 @@ class hook {
 			$code = '';
 			foreach ($methods as $cur_method) {
 				$fname = $cur_method->getName();
-				if (in_array($fname, array('_p_get', '_p_set', '_p_unset', '__construct', '__destruct', '__get', '__set', '__isset', '__unset', '__toString', '__invoke', '__set_state', '__clone', '__sleep'))) continue;
+				if (in_array($fname, array('_p_get', '_p_set', '_p_unset', '__construct', '__destruct', '__get', '__set', '__isset', '__unset', '__toString', '__invoke', '__set_state', '__clone', '__sleep')))
+					continue;
 				$fprefix = $cur_method->isStatic() ? 'static ' : '';
 				$params = $cur_method->getParameters();
 				$param_array = array();
@@ -195,9 +196,8 @@ class hook {
 				foreach ($params as $cur_param) {
 					$param_name = $cur_param->getName();
 					$param_prefix = $cur_param->isPassedByReference() ? '&' : '';
-					if ($cur_param->isDefaultValueAvailable()) {
+					if ($cur_param->isDefaultValueAvailable())
 						$param_suffix = ' = '.var_export($cur_param->getDefaultValue(), true);
-					}
 					$param_array[] = $param_prefix.'$'.$param_name.$param_suffix;
 					$param_call_array[] = '$'.$param_name;
 				}
