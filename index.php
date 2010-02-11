@@ -116,29 +116,27 @@ unset($config_array);
  */
 $pines->current_template = ( !empty($_REQUEST['template']) && $pines->allow_template_override ) ?
 	$_REQUEST['template'] : $pines->default_template;
-require_once('templates/'.$pines->current_template.'/configure.php');
+$pines->template = $pines->current_template;
 date_default_timezone_set($pines->timezone);
 if (P_SCRIPT_TIMING) pines_print_time('Load System Config');
 
 // Check the offline mode, and load the offline page if enabled.
 if ($pines->offline_mode)
-	include('system/offline.php');
+	require('system/offline.php');
 
 /**
  * An array of the enabled components.
  * @global array $pines->components
  */
 $pines->components = array();
-if ( file_exists("components/") )
-	$pines->components = pines_scandir("components/");
-
 /**
  * An array of all components.
  * @global array $pines->all_components
  */
 $pines->all_components = array();
-if ( file_exists("components/") ) {
-	$pines->all_components = pines_scandir("components/", 0, null, false);
+if ( file_exists('components/') && file_exists('templates/') ) {
+	$pines->components = array_merge(pines_scandir('components/'), pines_scandir('templates/'));
+	$pines->all_components = array_merge(pines_scandir('components/', 0, null, false), pines_scandir('templates/', 0, null, false));
 	foreach ($pines->all_components as $cur_key => $cur_value) {
 		if (substr($cur_value, 0, 1) == '.')
 			$pines->all_components[$cur_key] = substr($cur_value, 1);
@@ -149,18 +147,32 @@ if (P_SCRIPT_TIMING) pines_print_time('Find Component Classes');
 // Load component classes.
 /**
  * List of class files for autoloading classes.
- * @var $pines->class_files
+ *
+ * Note that templates have a classes dir, but the only file loaded from it is
+ * the file of the same name as the template. Also, only the current template's
+ * class is loaded.
+ *
+ * @var array $pines->class_files
  */
 $pines->class_files = array();
 foreach ($pines->components as $cur_component) {
+	if (substr($cur_component, 0, 4) == 'tpl_')
+		continue;
 	if ( is_dir("components/$cur_component/classes/") ) {
 		$temp_classes = pines_scandir("components/$cur_component/classes/");
 		foreach ($temp_classes as $cur_class) {
 			$pines->class_files[preg_replace('/\.php$/', '', $cur_class)] = "components/$cur_component/classes/$cur_class";
 		}
-		unset($temp_classes);
 	}
 }
+unset($temp_classes);
+// This variable name is misleading.
+$cur_component = "templates/{$pines->current_template}/classes/{$pines->current_template}.php";
+// If the current template is missing its class, display the template error page.
+if ( !file_exists($cur_component) )
+	require('system/template_error.php');
+$pines->class_files[$pines->current_template] = $cur_component;
+unset($cur_component);
 /**
  * Load a class file.
  *
@@ -198,6 +210,8 @@ $_SESSION['secret'] = rand();
 
 // Load the config for our components.
 foreach ($pines->components as $cur_component) {
+	if (substr($cur_component, 0, 4) == 'tpl_')
+		continue;
 	if ( file_exists("components/$cur_component/configure.php") ) {
 		$config_array = include("components/$cur_component/configure.php");
 		if (is_array($config_array)) {
@@ -207,6 +221,16 @@ foreach ($pines->components as $cur_component) {
 		unset($config_array);
 	}
 }
+$cur_component = $pines->current_template;
+if ( file_exists("templates/$cur_component/configure.php") ) {
+	$config_array = include("templates/$cur_component/configure.php");
+	if (is_array($config_array)) {
+		$pines->$cur_component = new p_base;
+		fill_object($config_array, $pines->$cur_component);
+	}
+	unset($config_array);
+}
+unset($cur_component);
 if (P_SCRIPT_TIMING) pines_print_time('Load Component Config');
 
 // Load the hooks for $pines.
@@ -216,6 +240,8 @@ if (P_SCRIPT_TIMING) pines_print_time('Hook $pines');
 // Load the configuration for our components. This shouldn't require any sort of
 // functionality, like entity or user management.
 foreach ($pines->components as $cur_component) {
+	if (substr($cur_component, 0, 4) == 'tpl_')
+		continue;
 	if ( file_exists("components/$cur_component/load.php") )
 		include_once("components/$cur_component/load.php");
 }
@@ -224,6 +250,8 @@ if (P_SCRIPT_TIMING) pines_print_time('Run Component Loaders');
 // Load the common files. This should set up the models for each component,
 // which the actions should then use to manipulate actual data.
 foreach ($pines->components as $cur_component) {
+	if (substr($cur_component, 0, 4) == 'tpl_')
+		continue;
 	if ( file_exists("components/$cur_component/common.php") )
 		include_once("components/$cur_component/common.php");
 }
@@ -279,6 +307,8 @@ if (P_SCRIPT_TIMING) pines_print_time('Run Requested Action');
 
 // Load the final display stuff. This includes menu entries.
 foreach ($pines->components as $cur_component) {
+	if (substr($cur_component, 0, 4) == 'tpl_')
+		continue;
 	if ( file_exists("components/$cur_component/display.php") )
 		include_once("components/$cur_component/display.php");
 }

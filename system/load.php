@@ -24,6 +24,7 @@ defined('P_RUN') or die('Direct access prohibited');
  *
  * - hook - Hooking system. (Part of the base system.)
  * - depend - Dependency checker. (Part of the base system.)
+ * - template - The current template's object.
  * - configurator - Manages Pines configuration.
  * - log_manager - Manages logging features.
  * - entity_manager - Manages entities.

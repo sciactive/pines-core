@@ -46,7 +46,7 @@ class dynamic_config extends p_base {
 				return;
 			}
 		}
-		if (in_array($name, array('configurator', 'log_manager', 'entity_manager', 'db_manager', 'user_manager', 'ability_manager', 'editor')) && isset($this->standard_classes[$name])) {
+		if (in_array($name, array('template', 'configurator', 'log_manager', 'entity_manager', 'db_manager', 'user_manager', 'ability_manager', 'editor')) && isset($this->standard_classes[$name])) {
 			global $pines;
 			$this->$name = new $this->standard_classes[$name];
 			$pines->hook->hook_object($this->$name, "\$pines->{$name}->");
@@ -75,9 +75,8 @@ class dynamic_config extends p_base {
 				return true;
 			return false;
 		}
-		if (in_array($name, array('configurator', 'log_manager', 'entity_manager', 'db_manager', 'user_manager', 'ability_manager', 'editor')) && isset($this->standard_classes[$name])) {
-			return isset($this->standard_classes[$name]);
-		}
+		if (in_array($name, array('template', 'configurator', 'log_manager', 'entity_manager', 'db_manager', 'user_manager', 'ability_manager', 'editor')) && isset($this->standard_classes[$name]))
+			return true;
 		return false;
 	}
 
@@ -96,7 +95,7 @@ class dynamic_config extends p_base {
 	 * @return mixed The value of the variable.
 	 */
 	public function __set($name, $value) {
-		if (in_array($name, array('configurator', 'log_manager', 'entity_manager', 'db_manager', 'user_manager', 'ability_manager', 'editor')) && is_string($value)) {
+		if (in_array($name, array('template', 'configurator', 'log_manager', 'entity_manager', 'db_manager', 'user_manager', 'ability_manager', 'editor')) && is_string($value)) {
 			return $this->standard_classes[$name] = $value;
 		} else {
 			return $this->$name = $value;

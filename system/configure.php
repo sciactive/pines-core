@@ -65,7 +65,7 @@ return array (
 	'name' => 'default_template',
 	'cname' => 'Default Template',
 	'description' => 'The default template.',
-	'value' => 'pines',
+	'value' => 'tpl_pines',
   ),
   8 =>
   array (
