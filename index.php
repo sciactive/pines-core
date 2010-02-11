@@ -106,9 +106,6 @@ unset($temp_classes);
 if (P_SCRIPT_TIMING) pines_print_time('Load System Classes');
 
 require_once('system/load.php');
-$config_array = require('system/configure.php');
-fill_object($config_array, $pines);
-unset($config_array);
 /**
  * The current template.
  *
@@ -200,7 +197,7 @@ function __autoload($class_name) {
 	}
 }
 
-// Now that all classes are loaded, we can start the session manager. This
+// Now that all classes can be loaded, we can start the session manager. This
 // allows variables to keep their classes over sessions.
 session_start();
 
@@ -208,36 +205,11 @@ session_start();
 // vars in hook objects.
 $_SESSION['secret'] = rand();
 
-// Load the config for our components.
-foreach ($pines->components as $cur_component) {
-	if (substr($cur_component, 0, 4) == 'tpl_')
-		continue;
-	if ( file_exists("components/$cur_component/configure.php") ) {
-		$config_array = include("components/$cur_component/configure.php");
-		if (is_array($config_array)) {
-			$pines->$cur_component = new p_base;
-			fill_object($config_array, $pines->$cur_component);
-		}
-		unset($config_array);
-	}
-}
-$cur_component = $pines->current_template;
-if ( file_exists("templates/$cur_component/configure.php") ) {
-	$config_array = include("templates/$cur_component/configure.php");
-	if (is_array($config_array)) {
-		$pines->$cur_component = new p_base;
-		fill_object($config_array, $pines->$cur_component);
-	}
-	unset($config_array);
-}
-unset($cur_component);
-if (P_SCRIPT_TIMING) pines_print_time('Load Component Config');
-
 // Load the hooks for $pines.
 $pines->hook->hook_object($pines, '$pines->');
 if (P_SCRIPT_TIMING) pines_print_time('Hook $pines');
 
-// Load the configuration for our components. This shouldn't require any sort of
+// Run the loaders for our components. This shouldn't require any sort of
 // functionality, like entity or user management.
 foreach ($pines->components as $cur_component) {
 	if (substr($cur_component, 0, 4) == 'tpl_')
@@ -247,8 +219,8 @@ foreach ($pines->components as $cur_component) {
 }
 if (P_SCRIPT_TIMING) pines_print_time('Run Component Loaders');
 
-// Load the common files. This should set up the models for each component,
-// which the actions should then use to manipulate actual data.
+// Load the common files. This should set up component-dependent things, such as
+// abilities.
 foreach ($pines->components as $cur_component) {
 	if (substr($cur_component, 0, 4) == 'tpl_')
 		continue;
@@ -270,7 +242,7 @@ $pines->request_action = clean_filename($_REQUEST['action']);
 // forms to a url you shouldn't.
 // /index.php/user/edituser/id-35/ -> /index.php?option=com_user&action=edituser&id=35
 if ( $pines->url_rewriting ) {
-// Get an array of the pseudo directories from the URI.
+	// Get an array of the pseudo directories from the URI.
 	$args_array = explode('/',
 		// Get rid of index.php/ at the beginning, and / at the end.
 		preg_replace('/(^index\.php\/?)|(\/$)/', '', substr(
@@ -305,7 +277,8 @@ if ( action($pines->request_component, $pines->request_action) === 'error_404' )
 }
 if (P_SCRIPT_TIMING) pines_print_time('Run Requested Action');
 
-// Load the final display stuff. This includes menu entries.
+// Load the final display stuff. This should set up things like menu entries,
+// extra modules, etc.
 foreach ($pines->components as $cur_component) {
 	if (substr($cur_component, 0, 4) == 'tpl_')
 		continue;
@@ -317,34 +290,6 @@ if (P_SCRIPT_TIMING) pines_print_time('Load Component Displays');
 // Render the page.
 echo $pines->page->render();
 if (P_SCRIPT_TIMING) pines_print_time('Render Page', true);
-
-/**
- * Fill an object with the data from a configuration array.
- *
- * The configuration array must be formatted correctly. It must contain one
- * array per variable, each with the following items:
- *
- * 'name' : The name of the variable.
- *
- * 'cname' : A common name for the variable. (A title)
- *
- * 'description' : A description of the variable.
- *
- * 'value' : The variable's actual value.
- *
- * @param array $config_array The configuration array to process.
- * @param mixed &$object The object to which the variables should be added.
- * @return bool True on success, false on failure.
- */
-function fill_object($config_array, &$object) {
-	if (!is_array($config_array)) return false;
-	foreach ($config_array as $cur_var) {
-		$name = $cur_var['name'];
-		$value = $cur_var['value'];
-		$object->$name = $value;
-	}
-	return true;
-}
 
 /**
  * Scan a directory and filter the results.

@@ -11,46 +11,62 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 /**
- * A dynamic loading object.
+ * A dynamic config object.
  *
- * Component classes will be automatically loaded into their variables beginning
- * with run_. In other words, when you call $pines->run_xmlparser->parse(), if
- * $pines->run_xmlparser is empty, the com_xmlparser class will attempt to be
- * loaded for it.
+ * Components' configuration will be loaded into their variables. In other
+ * words, when you access $pines->config->com_xmlparser->strict, if
+ * $pines->config->com_xmlparser is empty, the configuration file for
+ * com_xmlparser class will attempt to be loaded into it.
+ *
+ * The "template" variable will load the current template's configuration.
  *
  * @package Pines
  */
 class dynamic_config extends p_base {
-	var $standard_classes = array();
+	/**
+	 * Fill this object with system configuration.
+	 */
+	public function __construct() {
+		$config_array = require('system/configure.php');
+		$this->fill_object($config_array, $this);
+	}
+
 	/**
 	 * Retrieve a variable.
 	 *
 	 * You do not need to explicitly call this method. It is called by PHP when
 	 * you access the variable normally.
-	 * 
-	 * This function will try to load a component's class into any variables
-	 * beginning with run_.
+	 *
+	 * This function will try to load a component's configuration into any
+	 * variables beginning with com_. It will also try to load the template's
+	 * configuration into "template"
 	 *
 	 * @param string $name The name of the variable.
 	 * @return mixed The value of the variable or nothing if it doesn't exist.
 	 */
 	public function &__get($name) {
-		if (preg_match('/^run_/', $name)) {
-			global $pines;
-			$new_name = preg_replace('/^run_/', 'com_', $name);
-			try {
-				$this->$name = new $new_name;
-				$pines->hook->hook_object($this->$name, "\$pines->{$name}->");
-				return $this->$name;
-			} catch (Exception $e) {
-				return;
+		if (substr($name, 0, 4) == 'com_') {
+			// Load the config for a component.
+			if ( file_exists("components/$name/configure.php") ) {
+				$config_array = include("components/$name/configure.php");
+				if (is_array($config_array)) {
+					$this->$name = new p_base;
+					$this->fill_object($config_array, $this->$name);
+				}
 			}
-		}
-		if (in_array($name, array('template', 'configurator', 'log_manager', 'entity_manager', 'db_manager', 'user_manager', 'ability_manager', 'editor')) && isset($this->standard_classes[$name])) {
-			global $pines;
-			$this->$name = new $this->standard_classes[$name];
-			$pines->hook->hook_object($this->$name, "\$pines->{$name}->");
 			return $this->$name;
+		} elseif ($name == 'template') {
+			// Load the config for the template.
+			global $pines;
+			$name = $pines->current_template;
+			if ( file_exists("templates/$name/configure.php") ) {
+				$config_array = include("templates/$name/configure.php");
+				if (is_array($config_array)) {
+					$this->template = new p_base;
+					$this->fill_object($config_array, $this->template);
+				}
+			}
+			return $this->template;
 		}
 	}
 
@@ -60,46 +76,55 @@ class dynamic_config extends p_base {
 	 * You do not need to explicitly call this method. It is called by PHP when
 	 * you access the variable normally.
 	 *
-	 * This functions checks whether a class can be loaded for class variables.
+	 * This functions checks whether configuration can be loaded for a
+	 * component.
 	 *
 	 * @param string $name The name of the variable.
 	 * @return bool
 	 */
 	public function __isset($name) {
-		global $pines;
-		if (preg_match('/^run_/', $name)) {
-			$new_name = preg_replace('/^run_/', 'com_', $name);
-			if (class_exists($new_name))
-				return true;
-			if (is_array($pines->class_files) && isset($pines->class_files[$new_name]))
-				return true;
-			return false;
+		if (substr($name, 0, 4) == 'com_') {
+			if ( file_exists("components/$name/configure.php") ) {
+				$config_array = include("components/$name/configure.php");
+				return is_array($config_array);
+			}
+		} elseif ($name == 'template') {
+			global $pines;
+			$name = $pines->current_template;
+			if ( file_exists("templates/$name/configure.php") ) {
+				$config_array = include("templates/$name/configure.php");
+				return is_array($config_array);
+			}
 		}
-		if (in_array($name, array('template', 'configurator', 'log_manager', 'entity_manager', 'db_manager', 'user_manager', 'ability_manager', 'editor')) && isset($this->standard_classes[$name]))
-			return true;
 		return false;
 	}
 
 	/**
-	 * Sets a variable.
+	 * Fill an object with the data from a configuration array.
 	 *
-	 * You do not need to explicitly call this method. It is called by PHP when
-	 * you access the variable normally.
-	 * 
-	 * This function catches any standard system classes, so they don't get set
-	 * to the name of their class. This allows them to be dynamically loaded
-	 * when they are first called.
+	 * The configuration array must be formatted correctly. It must contain one
+	 * array per variable, each with the following items:
 	 *
-	 * @param string $name The name of the variable.
-	 * @param string $value The value of the variable.
-	 * @return mixed The value of the variable.
+	 * 'name' : The name of the variable.
+	 *
+	 * 'cname' : A common name for the variable. (A title)
+	 *
+	 * 'description' : A description of the variable.
+	 *
+	 * 'value' : The variable's actual value.
+	 *
+	 * @param array $config_array The configuration array to process.
+	 * @param mixed &$object The object to which the variables should be added.
+	 * @return bool True on success, false on failure.
 	 */
-	public function __set($name, $value) {
-		if (in_array($name, array('template', 'configurator', 'log_manager', 'entity_manager', 'db_manager', 'user_manager', 'ability_manager', 'editor')) && is_string($value)) {
-			return $this->standard_classes[$name] = $value;
-		} else {
-			return $this->$name = $value;
+	public function fill_object($config_array, &$object) {
+		if (!is_array($config_array)) return false;
+		foreach ($config_array as $cur_var) {
+			$name = $cur_var['name'];
+			$value = $cur_var['value'];
+			$object->$name = $value;
 		}
+		return true;
 	}
 }
 

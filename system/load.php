@@ -11,21 +11,22 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 /**
- * The main configuration object for Pines.
+ * The main object for Pines.
  *
  * This object is used to hold everything from Pines' settings, to component
- * functions. Components' configure.php files will be parsed into $pines under
- * the name of their component. Such as $pines->com_xmlparser. Components'
- * classes will be automatically loaded into $pines under their name with run_
- * instead of com_ when the variable is first used. For example, com_xmlparser
- * will be loaded the first time $pines->run_xmlparser is accessed.
+ * functions. Components' configure.php files will be parsed into $pines->config
+ * under the name of their component. Such as $pines->config->com_xmlparser.
+ * Components' classes will be automatically loaded into $pines under their name
+ * when the variable is first used. For example, com_xmlparser will be loaded
+ * the first time $pines->com_xmlparser is accessed.
  *
- * $pines also holds Pines' standard classes, which include:
+ * $pines also holds Pines' standard classes/objects, which include:
  *
+ * - config - Configuration. (Part of the base system.)
  * - hook - Hooking system. (Part of the base system.)
  * - depend - Dependency checker. (Part of the base system.)
  * - template - The current template's object.
- * - configurator - Manages Pines configuration.
+ * - configurator - Manages Pines' and components' configuration.
  * - log_manager - Manages logging features.
  * - entity_manager - Manages entities.
  * - db_manager - Manages database connections.
@@ -41,9 +42,16 @@ defined('P_RUN') or die('Direct access prohibited');
  *
  * $pines->log_manager = 'com_email_logs';
  *
- * @global dynamic_config $pines
+ * @global dynamic_loader $pines
  */
-$pines = new dynamic_config;
+$pines = new dynamic_loader;
+
+/**
+ * Pines' and components' configuration.
+ *
+ * @global dynamic_config $pines->config
+ */
+$pines->config = new dynamic_config;
 
 /**
  * The hooking system.
