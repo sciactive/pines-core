@@ -65,9 +65,8 @@
 			ptags.ptags_remove = function(textorarray){
 				$.each((typeof textorarray == "string" ? [textorarray] : textorarray), function(){
 					var i = $.inArray(""+this, ptags.ptags_tags);
-					if (i > -1) {
+					if (i > -1)
 						ptags.ptags_tags.splice(i, 1);
-					}
 				});
 				ptags.ptags_update_val();
 				ptags.ptags_update_tags();
@@ -87,8 +86,7 @@
 			};
 
 			ptags.ptags_update_tags = function(){
-				if (!ptags.ptags_show_tags)
-					return;
+				if (!ptags.ptags_show_tags) return;
 				ptags.ptags_tag_container.children().remove();
 				$.each(ptags.ptags_tags, function(i, val){
 					var tag_box = $("<div />").addClass("ui-state-default ui-corner-all ui-ptags-tag");
@@ -125,29 +123,27 @@
 			ptags.ptags_container = ptags.parent();
 			
 			if (ptags.ptags_input_box) {
-				var input_box = $(ptags.get(0)).clone().val("").keydown(function(eventObject){
-					if (eventObject.keyCode == 13) {
-						ptags.ptags_add(this.value.split(ptags.ptags_delimiter));
-						this.value = "";
+				var input_box = $(ptags.get(0)).clone().val("").keydown(function(e){
+					if (e.keyCode == 13 && !e.shiftKey) {
+						ptags.ptags_add(input_box.val().split(ptags.ptags_delimiter));
+						input_box.val("");
 						return false;
 					}
 				}).blur(function(){
-					if (this.value != "") {
-						ptags.ptags_add(this.value.split(ptags.ptags_delimiter));
-						this.value = "";
+					if (input_box.val() != "") {
+						ptags.ptags_add(input_box.val().split(ptags.ptags_delimiter));
+						input_box.val("");
 					}
 				});
-				if (input_box.attr("id")) {
+				if (input_box.attr("id"))
 					input_box.attr("id", input_box.attr("id") + "_ptags_input");
-				}
-				if (input_box.attr("name")) {
+				if (input_box.attr("name"))
 					input_box.attr("name", input_box.attr("name") + "_ptags_input");
-				}
 				ptags.ptags_container.append(input_box);
 			}
 
 			if (ptags.ptags_current_text) {
-				var tmp_tags_arr = this.value.split(ptags.ptags_delimiter);
+				var tmp_tags_arr = ptags.val().split(ptags.ptags_delimiter);
 				$.merge(ptags.ptags_tags, tmp_tags_arr);
 				ptags.ptags_unique_check();
 				ptags.ptags_update_val();
@@ -155,7 +151,7 @@
 
 			if (ptags.ptags_show_box) {
 				ptags.blur(function(){
-					var tmp_tags_arr = this.value.split(ptags.ptags_delimiter);
+					var tmp_tags_arr = ptags.val().split(ptags.ptags_delimiter);
 					$.merge(ptags.ptags_tags, tmp_tags_arr);
 					ptags.ptags_unique_check();
 					ptags.ptags_update_val();
