@@ -44,6 +44,7 @@ class dynamic_config extends p_base {
 	 * @return mixed The value of the variable or nothing if it doesn't exist.
 	 */
 	public function &__get($name) {
+		global $pines;
 		if (substr($name, 0, 4) == 'com_') {
 			// Load the config for a component.
 			if ( file_exists("components/$name/configure.php") ) {
@@ -79,6 +80,7 @@ class dynamic_config extends p_base {
 	 * @return bool
 	 */
 	public function __isset($name) {
+		global $pines;
 		if (substr($name, 0, 4) == 'com_') {
 			if ( file_exists("components/$name/configure.php") ) {
 				$config_array = include("components/$name/configure.php");
