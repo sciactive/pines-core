@@ -46,7 +46,6 @@
 			
 			ptags.extend(ptags, opts);
 
-			ptags.ptags_pages = null;
 			ptags.ptags_widget = $("<div />");
 			ptags.ptags_container = $("<div />");
 
@@ -59,7 +58,6 @@
 				ptags.ptags_unique_check();
 				ptags.ptags_update_val();
 				ptags.ptags_update_tags();
-
 			};
 
 			ptags.ptags_remove = function(textorarray){
@@ -82,12 +80,12 @@
 			};
 
 			ptags.ptags_update_val = function(){
-				ptags.val(ptags.ptags_tags.join(ptags.ptags_delimiter).replace(/^,|,$/, ""));
+				ptags.val(ptags.ptags_tags.join(ptags.ptags_delimiter));
 			};
 
 			ptags.ptags_update_tags = function(){
 				if (!ptags.ptags_show_tags) return;
-				ptags.ptags_tag_container.children().remove();
+				ptags.ptags_tag_container.empty();
 				$.each(ptags.ptags_tags, function(i, val){
 					var tag_box = $("<div />").addClass("ui-state-default ui-corner-all ui-ptags-tag");
 					tag_box.append($("<div />").addClass("ui-ptags-tag-text").html(val).click(function(){
