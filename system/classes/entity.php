@@ -126,14 +126,11 @@ class entity extends p_base {
 			return $this->entity_cache[$name];
 		}
 		// If it's not an entity, return the regular value.
-		if (array_key_exists($name, $this->data)) {
-			if (is_array($this->data[$name])) {
-				// But, if it's an array, check all the values for entity references, and change them.
-				$get_value = $this->data[$name];
-				array_walk($this->data[$name], array($this, 'reference_to_entity'));
-			}
-			return $this->data[$name];
+		if (is_array($this->data[$name])) {
+			// But, if it's an array, check all the values for entity references, and change them.
+			array_walk($this->data[$name], array($this, 'reference_to_entity'));
 		}
+		return $this->data[$name];
 	}
 
 	/**
@@ -163,7 +160,7 @@ class entity extends p_base {
 		if ((is_a($value, 'entity') || is_a($value, 'hook_override')) && isset($value->guid)) {
 			// This is an entity, so we don't want to store it in our data array.
 			$this->entity_cache[$name] = $value;
-			// Store a reference to the entity (its GUID) and the class the entity was loaded as.
+			// Store a reference to the entity (its GUID and the class it was loaded as).
 			// We don't want to manipulate $value itself, because it could be a variable that the program is still using.
 			$save_value = $value->to_reference();
 		} else {

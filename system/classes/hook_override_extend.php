@@ -60,9 +60,7 @@ class hook_override__NAMEHERE_ extends hook_override {
 	}*/
 
 	function &__get($name) {
-		if (isset($this->_p_object->$name))
-			return $val =& $this->_p_object->$name;
-		return call_user_func_array(array($this->_p_object, '_p_get'), array($name, $_SESSION['secret']));
+		return $val =& $this->_p_object->$name;
 	}
 
 	function __set($name, $value) {
