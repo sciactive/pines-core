@@ -16,6 +16,6 @@ $this->note = 'Page not Found.';
 <div>Suggestions:
 	<ul>
 		<li>Check the spelling of the address you requested.</li>
-		<li>If you are still having problems, please <a href="<?php echo pines_url(); ?>">visit the homepage.</a></li>
+		<li>If you are still having problems, please <a href="<?php echo pines_url(); ?>">visit the homepage</a>.</li>
 	</ul>
 </div>

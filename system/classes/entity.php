@@ -177,10 +177,6 @@ class entity extends p_base {
 		return ($this->data[$name] = $save_value);
 	}
 
-	public function to_reference() {
-		return array('pines_entity_reference', $this->guid, get_class($this));
-	}
-
 	/**
 	 * Unsets a variable.
 	 *
@@ -464,6 +460,15 @@ class entity extends p_base {
 	public function save() {
 		global $pines;
 		return $pines->entity_manager->save_entity($this);
+	}
+
+	/**
+	 * Return a Pines Entity Reference for this entity.
+	 *
+	 * @return array A Pines Entity Reference array.
+	 */
+	public function to_reference() {
+		return array('pines_entity_reference', $this->guid, get_class($this));
 	}
 }
 

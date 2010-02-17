@@ -35,43 +35,12 @@ class hook_override__NAMEHERE_ extends hook_override {
 		$this->_p_prefix = $prefix;
 	}
 
-	/* This shouldn't be hookable, and is called when this class is destroyed.
-	function __destruct() {
-		if (method_exists($this->_p_object, '__destruct')) {
-			$args = func_get_args();
-			return call_user_func_array(array($this->_p_object, '__destruct'), $args);
-		}
-	}
-	*/
-
-	/* These will be created dynamically and are thus hookable.
-	function &__call($name, $arguments) {
-		if (method_exists($this->_p_object, '__call')) {
-			$args = func_get_args();
-			return call_user_func_array(array($this->_p_object, '__call'), $args);
-		}
-	}
-
-	static function &__callStatic($name, $arguments) {
-		if (method_exists($this->_p_object, '__callStatic')) {
-			$args = func_get_args();
-			return forward_static_call_array(array($this->_p_object, '__callStatic'), $args);
-		}
-	}*/
-
 	function &__get($name) {
 		return $val =& $this->_p_object->$name;
 	}
 
 	function __set($name, $value) {
-		$vars = get_object_vars($this->_p_object);
-		if (key_exists($name, $vars))
-			return $this->_p_object->$name = $value;
-		if (method_exists($this->_p_object, '__set')) {
-			$args = func_get_args();
-			return call_user_func_array(array($this->_p_object, '__set'), $args);
-		}
-		return call_user_func_array(array($this->_p_object, '_p_set'), array($name, $value, $_SESSION['secret']));
+		return $this->_p_object->$name = $value;
 	}
 
 	function __isset($name) {
@@ -79,11 +48,7 @@ class hook_override__NAMEHERE_ extends hook_override {
 	}
 
 	function __unset($name) {
-		if (method_exists($this->_p_object, '__unset')) {
-			$args = func_get_args();
-			return call_user_func_array(array($this->_p_object, '__unset'), $args);
-		}
-		return call_user_func_array(array($this->_p_object, '_p_unset'), array($name, $_SESSION['secret']));
+		unset($this->_p_object->$name);
 	}
 
 	function __toString() {

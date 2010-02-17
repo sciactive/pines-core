@@ -201,10 +201,6 @@ function __autoload($class_name) {
 // allows variables to keep their classes over sessions.
 session_start();
 
-// Make a random secret that only this instance knows, so we can pass secret
-// vars in hook objects.
-$_SESSION['secret'] = rand();
-
 // Load the hooks for $pines.
 $pines->hook->hook_object($pines, '$pines->');
 if (P_SCRIPT_TIMING) pines_print_time('Hook $pines');
