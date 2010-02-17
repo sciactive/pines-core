@@ -11,9 +11,10 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 /**
- * An object oriented function/method hooking system.
+ * An object method hooking system.
  *
- * Hooks are used to call specific functions when another function is called.
+ * Hooks are used to call a callback when a method is called and optionally
+ * manipulate the parameters/return values.
  *
  * @package Pines
  */
@@ -39,33 +40,33 @@ class hook extends p_base {
 	/**
 	 * Add a callback.
 	 *
-	 * A callback is called either before a function runs or after. If the
-	 * callback runs before the function and returns false (or causes an error),
-	 * the function will not be run. The callback is passed an array of
-	 * arguments and is expected to return an array of arguments. Callbacks
-	 * before a function are passed the arguments given when the function was
-	 * called, while callbacks after a function are given the return value of
-	 * that function. If the callback neglects to return anything, the function
-	 * being called will not receive/return anything. Even if your callback does
-	 * nothing with the arguments, it should still return them.
+	 * A callback is called either before a method runs or after. If the
+	 * callback runs before the method and returns false (or causes an error),
+	 * the method will not be run. The callback is passed an array of arguments
+	 * and is expected to return an array of arguments. Callbacks before a
+	 * method are passed the arguments given when the method was called, while
+	 * callbacks after a method are passed the return value of that method. If
+	 * the callback neglects to return anything, the method being called will
+	 * not receive/return anything. Even if your callback does nothing with the
+	 * arguments, it should still return them.
 	 *
 	 * If the hook is called explicitly, callbacks defined to run before the
 	 * hook will run immediately followed by callbacks defined to run after.
 	 *
 	 * You can think of the $order as a timeline of functions to call, zero (0)
-	 * being the actual function being hooked.
+	 * being the actual method being hooked.
 	 *
 	 * Additional identical callbacks can be added in order to have a callback
 	 * called multiple times for one hook.
 	 *
 	 * Note: Be careful to avoid recursive callbacks, as they may result in an
-	 * infinite loop. All functions under $pines are automatically defined as
+	 * infinite loop. All methods under $pines are automatically defined as
 	 * hooks.
 	 *
 	 * @param string $hook The name of the hook to catch.
-	 * @param int $order The order can be negative, which will run before the function, or positive, which will run after the function. It cannot be zero.
+	 * @param int $order The order can be negative, which will run before the method, or positive, which will run after the method. It cannot be zero.
 	 * @param callback The callback.
-	 * @return int The ID of the new callback.
+	 * @return array An array containing the IDs of the new callback and all matching callbacks.
 	 */
 	function add_callback($hook, $order, $function) {
 		$callback = array($hook, $order, $function);
@@ -76,7 +77,7 @@ class hook extends p_base {
 	/**
 	 * Add a hook.
 	 *
-	 * A hook is the name of whatever function it should hook onto. You can also
+	 * A hook is the name of whatever method it should hook onto. You can also
 	 * give a hook an arbitrary name, but be wary that it may already exist and
 	 * it may result in your callback being falsely called. In order to reduce
 	 * the chance of this, always use a plus sign (+) in front of arbitrary hook
@@ -88,7 +89,8 @@ class hook extends p_base {
 	function add_hook($name) {
 		if (array_search($name, $this->hooks) === false)
 			$this->hooks[] = $name;
-		return array_keys($this->hooks, $name);
+		$id = array_keys($this->hooks, $name);
+		return $id[0];
 	}
 
 	/**
@@ -160,7 +162,7 @@ class hook extends p_base {
 	/**
 	 * Hook an object.
 	 *
-	 * This hooks all functions defined in the given object.
+	 * This hooks all methods defined in the given object.
 	 *
 	 * @param object &$object The object to hook.
 	 * @param string $prefix The prefix used to call the object's methods. Usually something like "$object->".
@@ -243,8 +245,11 @@ class hook extends p_base {
 	 * @param string $type The type of callbacks to run. 'before', 'after', or 'all'.
 	 * @param mixed $object The object on which the hook was called.
 	 * @return array|bool The array of arguments returned by the last callback or FALSE if a callback returned it.
+	 * @todo Test if this called the callbacks in the correct order.
 	 */
 	function run_callbacks($name, $arguments = array(), $type = 'all', $object = null) {
+		if (!in_array($name, $this->hooks))
+			return $arguments;
 		foreach ($this->callbacks as $cur_callback) {
 			if ($cur_callback[0] == $name || $cur_callback[0] == 'all') {
 				if (($type == 'all' && $cur_callback[1] != 0) || ($type == 'before' && $cur_callback[1] < 0) || ($type == 'after' && $cur_callback[1] > 0)) {
