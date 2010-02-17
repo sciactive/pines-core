@@ -17,7 +17,7 @@ defined('P_RUN') or die('Direct access prohibited');
  *
  * @package Pines
  */
-class hook {
+class hook extends p_base {
 	/**
 	 * An array of the available hooks.
 	 * @var array $hooks
@@ -28,6 +28,13 @@ class hook {
 	 * @var array $callbacks
 	 */
 	protected $callbacks = array();
+
+	private $hook_file;
+
+	function __construct() {
+		include_once('system/classes/hook_override.php');
+		$this->hook_file = file_get_contents('system/classes/hook_override_extend.php');
+	}
 
 	/**
 	 * Add a callback.
@@ -181,7 +188,6 @@ class hook {
 		
 		$class_name = get_class($object);
 		if (!class_exists("hook_override_$class_name")) {
-			include_once('system/classes/hook_override.php');
 			$reflection = new ReflectionObject($object);
 			$methods = $reflection->getMethods();
 			$code = '';
@@ -196,8 +202,11 @@ class hook {
 				foreach ($params as $cur_param) {
 					$param_name = $cur_param->getName();
 					$param_prefix = $cur_param->isPassedByReference() ? '&' : '';
-					if ($cur_param->isDefaultValueAvailable())
+					if ($cur_param->isDefaultValueAvailable()) {
 						$param_suffix = ' = '.var_export($cur_param->getDefaultValue(), true);
+					} else {
+						$param_suffix = '';
+					}
 					$param_array[] = $param_prefix.'$'.$param_name.$param_suffix;
 					$param_call_array[] = '$'.$param_name;
 				}
@@ -214,7 +223,7 @@ class hook {
 				$code .= "\t}\n";
 				$code .= "}\n\n";
 			}
-			$include = str_replace(array('_NAMEHERE_', '//#CODEHERE#', '<?php', '?>'), array($class_name, $code, '', ''), file_get_contents('system/classes/hook_override_extend.php'));
+			$include = str_replace(array('_NAMEHERE_', '//#CODEHERE#', '<?php', '?>'), array($class_name, $code, '', ''), $this->hook_file);
 			eval ($include);
 		}
 

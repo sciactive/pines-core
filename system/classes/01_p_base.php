@@ -11,7 +11,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 /**
- * A base for all classes which need hooking support.
+ * A base for all classes in Pines.
  * @package Pines
  */
 class p_base { }

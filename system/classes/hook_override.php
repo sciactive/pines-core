@@ -15,6 +15,6 @@ defined('P_RUN') or die('Direct access prohibited');
  *
  * @package Pines
  */
-class hook_override { }
+class hook_override extends p_base { }
 
 ?>
