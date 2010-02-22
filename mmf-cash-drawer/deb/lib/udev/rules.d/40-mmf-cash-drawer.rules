@@ -1,0 +1,9 @@
+# udev rules for MMF Cash Drawers
+
+SUBSYSTEM!="usb", GOTO="mmf-cash-drawer_rules_end"
+ACTION!="add", GOTO="mmf-cash-drawer_rules_end"
+
+# MMF Cash Drawer
+ATTRS{manufacturer}=="Aspire Communications", ATTRS{product}=="MMF CASH DRAWER", MODE:="666", GROUP:="@RUN_AS_USER@"
+
+LABEL="mmf-cash-drawer_rules_end"

@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<RDF:RDF xmlns:em="http://www.mozilla.org/2004/em-rdf#"
+         xmlns:NC="http://home.netscape.com/NC-rdf#"
+         xmlns:RDF="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <RDF:Description RDF:about="rdf:#$WHO9O2"
+                   em:id="{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
+                   em:minVersion="3.0"
+                   em:maxVersion="3.6.*" />
+  <RDF:Description RDF:about="urn:mozilla:install-manifest"
+                   em:id="pinescashdrawer@hunter.perrin"
+                   em:name="Pines Cash Drawer"
+                   em:version="1.0"
+                   em:creator="Hunter Perrin"
+                   em:description="An interface between Pines and a cash drawer."
+                   em:homepageURL="http://sciactive.com/">
+    <em:targetApplication RDF:resource="rdf:#$WHO9O2"/>
+  </RDF:Description>
+</RDF:RDF>
