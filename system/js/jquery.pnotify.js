@@ -381,7 +381,7 @@
 
 			// Add the notice to the notice array.
 			var body_data = body.data("pnotify");
-			if (typeof body_data != "object")
+			if (body_data == null || typeof body_data != "object")
 				body_data = [];
 			body_data = $.merge(body_data, [pnotify]);
 			body.data("pnotify", body_data);
