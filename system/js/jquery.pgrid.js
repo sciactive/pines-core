@@ -26,7 +26,7 @@
 						this_row.append($("<td>"+String(this)+"</td>"));
 					});
 				});
-				pgrid.find("tbody tr.ui-pgrid-table-row-spacer").before(jq_row);
+				pgrid.children("tbody").append(jq_row);
 				// Gather all the rows.
 				if (new_rows) {
 					new_rows = new_rows.add(jq_row);
@@ -65,7 +65,7 @@
 						if (typeof cur_keyorrow == "object") {
 							pgrid.mark_for_delete_recursively($(this));
 						} else {
-							pgrid.find("tbody tr[title="+cur_keyorrow+"]:not(.ui-pgrid-table-row-spacer)").each(function(){
+							pgrid.find("tbody tr[title="+cur_keyorrow+"]").each(function(){
 								pgrid.mark_for_delete_recursively($(this));
 							});
 						}
@@ -167,9 +167,9 @@
 				return;
 			var pgrid = this.pines_grid;
 			if (return_rows) {
-				return_rows = return_rows.add(pgrid.find("tbody tr:not(.ui-pgrid-table-row-spacer)"));
+				return_rows = return_rows.add(pgrid.find("tbody tr"));
 			} else {
-				return_rows = pgrid.find("tbody tr:not(.ui-pgrid-table-row-spacer)");
+				return_rows = pgrid.find("tbody tr");
 			}
 		});
 		return return_rows;
@@ -457,8 +457,8 @@
 			pgrid.paginate = function(loading) {
 				if (pgrid.pgrid_paginate) {
 					// Hide all rows.
-					pgrid.find("tbody tr:not(.ui-pgrid-table-row-spacer, .ui-helper-hidden)").addClass("ui-pgrid-table-row-hidden");
-					var elements = pgrid.find("tbody tr:not(.child, .ui-pgrid-table-row-spacer, .ui-helper-hidden)");
+					pgrid.find("tbody tr:not(.ui-helper-hidden)").addClass("ui-pgrid-table-row-hidden");
+					var elements = pgrid.find("tbody tr:not(.child, .ui-helper-hidden)");
 					// Calculate the total number of pages.
 					pgrid.pgrid_pages = Math.ceil(elements.length / pgrid.pgrid_perpage);
 
@@ -494,7 +494,7 @@
 					if (pgrid.pgrid_filter.length > 0) {
 						var filter_arr = pgrid.pgrid_filter.toLowerCase().split(" ");
 						// Disable all rows, then iterate them and match.
-						pgrid.find("tbody tr:not(.ui-pgrid-table-row-spacer)").addClass("ui-helper-hidden").each(function(){
+						pgrid.find("tbody tr").addClass("ui-helper-hidden").each(function(){
 							var cur_row = $(this);
 							var cur_text = "";
 							// Add spaces between cell values, so they're not falsely matched.
@@ -516,7 +516,7 @@
 						});
 					} else {
 						// If the user enters nothing, all records should be shown.
-						pgrid.find("tbody tr:not(.ui-pgrid-table-row-spacer)").removeClass("ui-helper-hidden");
+						pgrid.find("tbody tr").removeClass("ui-helper-hidden");
 					}
 					// Only do this if we're not loading, to speed up initialization.
 					if (!loading) {
@@ -552,7 +552,7 @@
 				// Add striping to odd rows. (Disregarding hidden rows.)
 				if (pgrid.pgrid_stripe_rows) {
 					pgrid.find("tbody tr td").removeClass("ui-pgrid-table-row-striped");
-					pgrid.find("tbody tr:not(.ui-pgrid-table-row-hidden, .ui-pgrid-table-row-spacer, .ui-helper-hidden):odd td:not(.ui-pgrid-table-cell-scrollspace)").addClass("ui-pgrid-table-row-striped");
+					pgrid.find("tbody tr:not(.ui-pgrid-table-row-hidden, .ui-helper-hidden):odd td:not(.ui-pgrid-table-cell-scrollspace)").addClass("ui-pgrid-table-row-striped");
 				}
 			};
 
@@ -598,7 +598,7 @@
 					var is_str = !!cols.contents().text().match(/[^0-9.,¤$€£¥]/);
 
 					// Get all the rows.
-					var jq_rows = pgrid.find("tbody tr:not(.ui-pgrid-table-row-spacer)");
+					var jq_rows = pgrid.find("tbody tr");
 					var rows = jq_rows.get();
 
 					// Calculate their sort keys and store them in their DOM objects.
@@ -638,8 +638,8 @@
 
 			pgrid.update_selected = function() {
 				if (pgrid.pgrid_select) {
-					// Deselect any disabled or incorrect rows. They shouldn't be selected.
-					pgrid.find("tbody tr.ui-helper-hidden.ui-pgrid-table-row-selected, tbody tr.ui-pgrid-table-row-spacer.ui-pgrid-table-row-selected").removeClass("ui-pgrid-table-row-selected").each(function(){
+					// Deselect any disabled rows. They shouldn't be selected.
+					pgrid.find("tbody tr.ui-helper-hidden.ui-pgrid-table-row-selected").removeClass("ui-pgrid-table-row-selected").each(function(){
 						$(this).children(":not(.ui-pgrid-table-cell-scrollspace)").removeClass("ui-state-active");
 					});
 
@@ -655,7 +655,7 @@
 			pgrid.update_count = function() {
 				// Update the table footer.
 				if (pgrid.pgrid_footer && pgrid.pgrid_count) {
-					var all_rows = pgrid.find("tbody tr:not(.ui-pgrid-table-row-spacer, .ui-helper-hidden)");
+					var all_rows = pgrid.find("tbody tr:not(.ui-helper-hidden)");
 					pgrid.pgrid_widget.find(".ui-pgrid-footer .ui-pgrid-footer-count-total").html(all_rows.length);
 				}
 			};
@@ -822,76 +822,70 @@
 				});
 			});
 
+			// Resizing variables.
+			pgrid.resizing_header = false;
+			pgrid.resizing_tempX = 0;
 			// Wrap header contents in a div and provide a resizer.
 			pgrid.find("thead tr th:not(.ui-pgrid-table-expander, .ui-pgrid-table-cell-scrollspace)").each(function(){
 				var cur_header = $(this);
 				// Calculate the current column number.
 				var cur_col = cur_header.prevAll().length + 1;
-				var cur_width = cur_header.width();
-				var resizing_header = false;
-				var resizing_tempX = 0;
-				var resizing_cur_bar;
+
+				var cur_text = $("<div />").addClass("ui-pgrid-table-header-text");
+				// Add a "sortable" class for custom styling.
+				if (pgrid.pgrid_sortable) cur_text.addClass("ui-pgrid-table-header-sortable");
+				// Size the current header. The header text div actually sizes all the cells for a column.
+				cur_text.width(cur_header.width());
 
 				// Wrap the contents and add the column class to the cell.
-				cur_header.wrapInner($("<div />").addClass("ui-pgrid-table-header-text")).addClass("col_"+cur_col).append($("<span />").addClass("ui-icon"));
-				// Make a sizer div to keep all header contents (text, sort icon, sizer handle) on one line.
-				cur_header.append($("<div style=\"clear: both; height: 0pt;\" />").addClass("ui-pgrid-table-header-sizer"));
+				cur_header.wrapInner(cur_text).addClass("col_"+cur_col).append($("<span />").addClass("ui-icon"));
+				cur_text = cur_header.children("div.ui-pgrid-table-header-text");
 
-				var cur_text = cur_header.children(".ui-pgrid-table-header-text");
-				var cur_sizer = cur_header.children(".ui-pgrid-table-header-sizer");
-
-				// Make sure the sizer div has a width.
-				var cur_text_width = cur_text.width();
-				// sizer width (3) + text padding (2) = 5
-				if (cur_text_width > cur_width - 3) {
-					// The resizer handle needs room, or it will be on a new line.
-					cur_sizer.width(cur_text_width + 5);
-				} else {
-					cur_sizer.width(cur_width + 2);
-				}
 				// Provide a column resizer, if set. The cleared div appended to the end will actually size the entire column.
 				if (pgrid.pgrid_resize_cols) {
-					cur_text.after($("<div />").addClass("ui-pgrid-table-header-sizehandle").addClass("ui-state-hover").mousedown(function(e){
-						resizing_header = true;
-						resizing_tempX = e.pageX;
-						resizing_cur_bar = $(this).nextAll(".ui-pgrid-table-header-sizer");
+					// Add a "resizeable" class for custom styling.
+					cur_header.addClass("ui-pgrid-table-header-resizeable").mousedown(function(e){
+						var relx = e.pageX - cur_header.offset().left;
+						// Only start resizing if the user grabs the edge of the box. (And don't resize the expander column.)
+						if ((cur_col == 1 && relx < 4) || (relx > 3 && relx < cur_header.width() - 4))
+							return true;
+						pgrid.resizing_header = true;
+						pgrid.resizing_tempX = e.pageX;
+						// If the user selected the left edge of this box, they want to resize the previous box.
+						if (relx < 4)
+							pgrid.resizing_cur = cur_header.prev().find("div.ui-pgrid-table-header-text");
+						else
+							pgrid.resizing_cur = cur_text;
 						// Prevent the browser from selecting text while the user is resizing a header.
 						return false;
-					}));
-					pgrid.mousemove(function(e){
-						if (resizing_header) {
-							var cur_width = resizing_cur_bar.width();
-							var new_width = cur_width + e.pageX - resizing_tempX;
-							if (new_width < 21) new_width = 21;
-							resizing_cur_bar.width(new_width);
-							resizing_tempX = e.pageX;
-						}
-					})
-					.mouseup(function(){
-						if (resizing_header) {
-							var cur_width = resizing_cur_bar.width();
-							var cur_parent_width = resizing_cur_bar.parent().width();
-							if (cur_width < cur_parent_width)
-								resizing_cur_bar.width(cur_parent_width);
-							resizing_header = false;
-						}
 					});
 				}
 				// Bind to mouseup (not click) on the header to sort it.
 				// If we bind to click, resizing_header will always be false.
-				cur_header.mouseup(function(){
+				cur_text.mouseup(function(){
 					// If we're resizing, don't sort it.
-					if (resizing_header) {
-						resizing_header = false;
+					if (pgrid.resizing_header) {
+						pgrid.resizing_header = false;
 					} else {
 						pgrid.do_sort(cur_col);
 					}
 				});
-
-				// If this table is resizable, we need its cells to have a width of 1px;
-				if (pgrid.pgrid_resize_cols)
-					cur_text.addClass("ui-pgrid-table-sized-cell");
 			});
+			// When the mouse moves over the pgrid, and a column is being resized, set its width.
+			if (pgrid.pgrid_resize_cols) {
+				pgrid.mousemove(function(e){
+					if (pgrid.resizing_header) {
+						var cur_width = pgrid.resizing_cur.width();
+						var new_width = cur_width + e.pageX - pgrid.resizing_tempX;
+						if (new_width > 0) {
+							pgrid.resizing_tempX = e.pageX;
+							pgrid.resizing_cur.width(new_width);
+						}
+					}
+				}).mouseup(function(){
+					pgrid.resizing_header = false;
+				});
+			}
 
 			// Add an expander and scrollspace column to the header.
 			pgrid.find("thead tr").addClass("ui-widget-header").each(function(){
@@ -919,9 +913,6 @@
 			// Now that it's ready, insert the header selector div in the container.
 			pgrid.pgrid_widget.append(pgrid.pgrid_header_select);
 
-
-			// This is used to keep the rows from being sized to fill the rest of the table.
-			pgrid.children("tbody").append($("<tr><td></td></tr>").addClass("ui-pgrid-table-row-spacer"));
 
 			// Wrap the table and its container in a viewport, so we can size it.
 			pgrid.children("thead").css("position", "relative");
@@ -952,7 +943,7 @@
 										$(this).addClass(val.extra_class);
 								})
 							).click(function(e){
-							var selected_rows = (val.return_all_rows ? pgrid.find("tbody tr:not(.ui-helper-hidden, .ui-pgrid-table-row-spacer)") : pgrid.find("tbody tr.ui-pgrid-table-row-selected"));
+							var selected_rows = (val.return_all_rows ? pgrid.find("tbody tr:not(.ui-helper-hidden)") : pgrid.find("tbody tr.ui-pgrid-table-row-selected"));
 							if (!val.selection_optional && !val.select_all && !val.select_none && selected_rows.length === 0) {
 								alert("Please make a selection before performing this operation.");
 								return false;
@@ -975,7 +966,7 @@
 							}
 							if (val.select_all) {
 								if (pgrid.pgrid_select && pgrid.pgrid_multi_select) {
-									pgrid.find("tbody tr:not(.ui-helper-hidden, .ui-pgrid-table-row-spacer)").addClass("ui-pgrid-table-row-selected").children(":not(.ui-pgrid-table-cell-scrollspace)").addClass("ui-state-active");
+									pgrid.find("tbody tr:not(.ui-helper-hidden)").addClass("ui-pgrid-table-row-selected").children(":not(.ui-pgrid-table-cell-scrollspace)").addClass("ui-state-active");
 									pgrid.update_selected();
 								}
 							}
@@ -1269,7 +1260,7 @@
 		// Allow records to be sorted.
 		pgrid_sortable: true,
 		// The default sorted column. (false, or column number)
-		pgrid_sort_col: false,
+		pgrid_sort_col: 1,
 		// The default sort order. ("asc" or "desc")
 		pgrid_sort_ord: "asc",
 		// Decimal seperator. (Used during sorting of numbers.)
@@ -1278,7 +1269,7 @@
 		pgrid_stripe_rows: true,
 		// Add a hover effect to the rows.
 		pgrid_row_hover_effect: true,
-		// Height of the box (view) containing the entries. (Not the entire grid.) (Only works in Firefox.)
+		// Height of the box (viewport) containing the grid. (Not including the toolbar and footer.)
 		pgrid_view_height: "360px",
 		// State change. Gets called whenever the user changes the state of the grid. The state from export_state() will be passed.
 		pgrid_state_change: null

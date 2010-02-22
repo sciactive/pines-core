@@ -139,9 +139,12 @@
 	text-align: left;
 	font-weight: normal;
 	overflow: hidden;
-	height: 100%;
-	padding: 0;
-	cursor: pointer;
+	min-height: 16px;
+	padding: 0 2px;
+}
+.ui-pgrid-table thead th.ui-pgrid-table-header-resizeable {
+	border-right-width: 2px;
+	cursor: e-resize;
 }
 .ui-pgrid-table thead th.ui-icon.ui-pgrid-table-icon-hidden {
 	background-image: none;
@@ -149,9 +152,9 @@
 .ui-pgrid-table thead th .ui-icon {
 	display: block;
 	visibility: hidden;
-	margin: 0 auto;
-	position: relative;
+	position: absolute;
 	top: -6px;
+	cursor: pointer;
 }
 .ui-pgrid-table thead th.ui-pgrid-table-expander .ui-icon {
 	float: none;
@@ -165,27 +168,14 @@
 }
 .ui-pgrid-table thead th .ui-pgrid-table-header-text {
 	float: left;
-	height: 100%;
-	padding: 2px 0 0 2px;
+	padding: 1px 0;
+	cursor: default;
 }
-.ui-pgrid-table thead th .ui-pgrid-table-header-sizehandle {
-	border-width: 0;
-	white-space: normal;
-	cursor: e-resize;
-	float: right;
-	width: 3px;
-	height: 100%;
-	overflow: hidden;
-}
-.ui-pgrid-table thead th .ui-pgrid-table-header-sizer {
-	min-width: 6px;
+.ui-pgrid-table thead th .ui-pgrid-table-header-text.ui-pgrid-table-header-sortable {
+	cursor: pointer;
 }
 .ui-pgrid-table tbody tr.ui-pgrid-table-row-hidden {
 	display: none;
-}
-.ui-pgrid-table tbody tr.ui-pgrid-table-row-spacer {
-	visibility: hidden;
-	height: auto;
 }
 .ui-pgrid-table tbody tr td.ui-pgrid-table-cell-sorted {
 	font-style: italic;
@@ -193,11 +183,11 @@
 .ui-pgrid-table tbody td, .ui-pgrid-table tbody td.ui-state-highlight, .ui-pgrid-table tbody td.ui-state-default, .ui-pgrid-table tbody td.ui-state-hover {
 	border-width: 0 1px 1px 0;
 	border-style: solid;
-	padding: 2px;
+	padding: 2px 4px 2px 2px;
 	overflow: hidden;
 	text-align: left;
 }
-.ui-pgrid-table tbody td.ui-pgrid-table-expander, .ui-pgrid-table thead th.ui-pgrid-table-expander, .ui-pgrid-table .ui-pgrid-table-cell-scrollspace {
+.ui-pgrid-table tbody td.ui-pgrid-table-expander, .ui-pgrid-table thead th.ui-pgrid-table-expander {
 	min-width: 16px;
 	min-height: 16px;
 	width: auto;
