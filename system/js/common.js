@@ -78,7 +78,7 @@ var pines = {
 			pnotify_type: "error",
 			pnotify_title: title ? title : "Error",
 			pnotify_text: String(message).replace("\n", "<br />"),
-			pnotify_notice_icon: iconstyles ? iconstyles : $.pnotify.defaults.pnotify_error_icon
+			pnotify_error_icon: iconstyles ? iconstyles : $.pnotify.defaults.pnotify_error_icon
 		}, otheroptions);
 		return $.pnotify(options);
 	}
