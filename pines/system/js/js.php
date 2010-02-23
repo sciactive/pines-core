@@ -14,26 +14,16 @@
 
 header('Content-Type: text/javascript');
 
-$mod_date = 0;
-foreach(array('common.js', 'jquery.pnotify.js') as $cur_file) {
-	$cur_mod_date = filemtime($cur_file);
-	$mod_date = $mod_date > $cur_mod_date ? $mod_date : $cur_mod_date;
-}
-
-if (array_key_exists('HTTP_IF_MODIFIED_SINCE', $_SERVER) && $mod_date <= strtotime(preg_replace('/;.*$/', '', $_SERVER['HTTP_IF_MODIFIED_SINCE']))) {
+if (array_key_exists('HTTP_IF_MODIFIED_SINCE', $_SERVER) && filemtime('common.js') <= strtotime(preg_replace('/;.*$/', '', $_SERVER['HTTP_IF_MODIFIED_SINCE']))) {
 	header('x', TRUE, 304);
 	exit;
 }
 
-$exclude = explode(' ', $_REQUEST['exclude']);
-
 $output =
-(!in_array('common.js', $exclude) ? file_get_contents('common.js')."\n" : '').
+file_get_contents('common.js')."\n".
 'pines.full_location = "http'.(($_SERVER['HTTPS'] == 'on') ? 's://' : '://').$_SERVER['HTTP_HOST'].substr($_SERVER['PHP_SELF'], 0, strripos($_SERVER['PHP_SELF'], 'system/js/js.php'))."\"\n".
 'pines.rela_location = "'.substr($_SERVER['PHP_SELF'], 0, strripos($_SERVER['PHP_SELF'], 'system/js/js.php'))."\"\n".
-"if(!this.JSON){pines.loadjs(pines.rela_location+\"system/js/json2.js\");}\n".
-//(!in_array('json2.js', $exclude) ? "\n".file_get_contents('json2.js') : '').
-(!in_array('jquery.pnotify.js', $exclude) ? "\n".file_get_contents('jquery.pnotify.js') : '');
+"if(!this.JSON){pines.loadjs(pines.rela_location+\"system/js/json2.js\");}\n";
 
 header('Content-Length: '.strlen($output));
 header('Cache-Control: public');
