@@ -142,6 +142,7 @@
 			// <![CDATA[
 
 			var permanotice;
+			var tooltip;
 			var _alert;
 			var credit_shown = false;
 
@@ -162,6 +163,27 @@
 							pnotify_before_close: null
 						});
 						pnotify.pnotify_queue_remove();
+						return false;
+					}
+				});
+
+				// This notice is used as a tooltip.
+				tooltip = $.pnotify({
+					pnotify_title: "Tooltip",
+					pnotify_text: "I'm not in a stack. I'm positioned like a tooltip with JavaScript.",
+					pnotify_hide: false,
+					pnotify_closer: false,
+					pnotify_history: false,
+					pnotify_animate_speed: 100,
+					pnotify_opacity: .9,
+					pnotify_notice_icon: "ui-icon ui-icon-comment",
+					// Setting stack to false causes Pines Notify to ignore this notice when positioning.
+					pnotify_stack: false,
+					pnotify_before_open: function(pnotify){
+						// This prevents the notice from displaying when it's created.
+						pnotify.pnotify({
+							pnotify_before_open: null
+						});
 						return false;
 					}
 				});
@@ -669,6 +691,7 @@
 				<input value="Bottom Right" onclick="void show_stack_bottomright();" type="button" class="ui-state-default ui-corner-all" />
 				<input value="Custom" onclick="void show_stack_custom();" type="button" class="ui-state-default ui-corner-all" />
 				<input value="Custom2" onclick="void show_stack_custom2();" type="button" class="ui-state-default ui-corner-all" />
+				<input value="Tooltip (Hover Over Me)" onmouseover="tooltip.pnotify_display();" onmousemove="tooltip.css({'top': event.clientY+12, 'left': event.clientX+12});" onmouseout="tooltip.pnotify_remove();" type="button" class="ui-state-default ui-corner-all" />
 			</div>
 
 			<div class="group ui-widget-content ui-corner-all">
