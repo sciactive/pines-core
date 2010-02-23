@@ -15,7 +15,7 @@
 header('Content-Type: text/javascript');
 
 $mod_date = 0;
-foreach(array('common.js', 'jquery.min.js', 'jquery-ui.min.js', 'jquery.pnotify.js') as $cur_file) {
+foreach(array('common.js', 'jquery.pnotify.js') as $cur_file) {
 	$cur_mod_date = filemtime($cur_file);
 	$mod_date = $mod_date > $cur_mod_date ? $mod_date : $cur_mod_date;
 }
@@ -33,8 +33,6 @@ $output =
 'pines.rela_location = "'.substr($_SERVER['PHP_SELF'], 0, strripos($_SERVER['PHP_SELF'], 'system/js/js.php'))."\"\n".
 "if(!this.JSON){pines.loadjs(pines.rela_location+\"system/js/json2.js\");}\n".
 //(!in_array('json2.js', $exclude) ? "\n".file_get_contents('json2.js') : '').
-(!in_array('jquery.min.js', $exclude) ? "\n".file_get_contents('jquery.min.js') : '').
-(!in_array('jquery-ui.min.js', $exclude) ? "\n".file_get_contents('jquery-ui.min.js') : '').
 (!in_array('jquery.pnotify.js', $exclude) ? "\n".file_get_contents('jquery.pnotify.js') : '');
 
 header('Content-Length: '.strlen($output));
