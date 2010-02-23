@@ -57,6 +57,8 @@
 				font-size: 75% !important;
 			}
 
+			/* Change the default position of the notices, to allow room for the
+			   theme switcher widget. */
 			.ui-pnotify {
 				top: 35px;
 				right: 15px;
@@ -102,6 +104,37 @@
 			.ui-pnotify.custom .icon {
 				width: 33px;
 				height: 33px;
+			}
+
+			/* Alternate stack initial positioning. */
+			.ui-pnotify.stack-topleft {
+				top: 15px;
+				left: 15px;
+				right: auto;
+			}
+			.ui-pnotify.stack-bottomleft {
+				bottom: 15px;
+				left: 15px;
+				top: auto;
+				right: auto;
+			}
+			/* This one is done through code, to show how it is done. Look down
+			   at the stack_bottomright variable in the JavaScript below. */
+			.ui-pnotify.stack-bottomright {
+				/* These are just CSS default values to reset the pnotify CSS. */
+				right: auto;
+				top: auto;
+			}
+			.ui-pnotify.stack-custom {
+				top: 20%;
+				left: 20%;
+				right: auto;
+			}
+			.ui-pnotify.stack-custom2 {
+				top: auto;
+				left: auto;
+				bottom: 20%;
+				right: 20%;
 			}
 			/* ]]> */
 		</style>
@@ -173,13 +206,13 @@
 				// Make a loader.
 				var loader = $.pnotify({
 					pnotify_title: "Fake Load",
-					pnotify_text: "<div id=\"progress_bar\" />",
+					pnotify_text: "<div class=\"progress_bar\" />",
 					pnotify_notice_icon: 'icon picon_16x16_animations_throbber',
 					pnotify_hide: false,
 					pnotify_closer: false,
 					pnotify_history: false,
 					pnotify_before_open: function(pnotify){
-						progress = pnotify.find("#progress_bar");
+						progress = pnotify.find("div.progress_bar");
 						progress.progressbar({value: cur_value});
 						// Pretend to do something.
 						var timer = setInterval(function(){
@@ -256,6 +289,82 @@
 				}
 			}
 
+			/*********** Custom Stacks ***********
+			 * A stack is an object which Pines Notify uses to determine where
+			 * to position notices. A stack has two mandatory variables, dir1
+			 * and dir2. dir1 is the first direction in which the notices are
+			 * stacked. When the notices run out of room in the window, they
+			 * will move over in the direction specified by dir2. The directions
+			 * can be "up", "down", "right", or "left". Stacks are independent
+			 * of each other, so a stack doesn't know and doesn't care if it
+			 * overlaps (and blocks) another stack. The default stack, which can
+			 * be changed like any other default, goes down, then left. Stack
+			 * objects are used and manipulated by Pines Notify, and therefore,
+			 * should be a variable when passed. So, calling something like
+			 *
+			 * $.pnotify({pnotify_stack: {"dir1": "down", "dir2": "left"}});
+			 *
+			 * will NOT work. It will create a notice, but that notice will be
+			 * in its own stack and may overlap other notices.
+			 */
+			var stack_topleft = {"dir1": "down", "dir2": "right"};
+			var stack_bottomleft = {"dir1": "up", "dir2": "right"};
+			var stack_custom = {"dir1": "right", "dir2": "down"};
+			var stack_custom2 = {"dir1": "left", "dir2": "up"};
+			/*********** Positioned Stack ***********
+			 * This stack is initially positioned through code instead of CSS.
+			 * This is done through two extra variables. firstpos1 and firstpos2
+			 * are pixel values, relative to a viewport edge. dir1 and dir2,
+			 * respectively, determine which edge. It is calculated as follows:
+			 *
+			 * - dir = "up" - firstpos is relative to the bottom of viewport.
+			 * - dir = "down" - firstpos is relative to the top of viewport.
+			 * - dir = "right" - firstpos is relative to the left of viewport.
+			 * - dir = "left" - firstpos is relative to the right of viewport.
+			 */
+			var stack_bottomright = {"dir1": "up", "dir2": "left", "firstpos1": 15, "firstpos2": 15};
+
+			function show_stack_topleft() {
+				$.pnotify({
+					pnotify_title: "Over Here",
+					pnotify_text: "Check me out. I'm in a different stack.",
+					pnotify_addclass: "stack-topleft",
+					pnotify_stack: stack_topleft
+				});
+			};
+			function show_stack_bottomleft() {
+				$.pnotify({
+					pnotify_title: "Over Here",
+					pnotify_text: "Check me out. I'm in a different stack.",
+					pnotify_addclass: "stack-bottomleft",
+					pnotify_stack: stack_bottomleft
+				});
+			};
+			function show_stack_bottomright() {
+				$.pnotify({
+					pnotify_title: "Over Here",
+					pnotify_text: "Check me out. I'm in a different stack.",
+					pnotify_addclass: "stack-bottomright",
+					pnotify_stack: stack_bottomright
+				});
+			};
+			function show_stack_custom() {
+				$.pnotify({
+					pnotify_title: "Over Here",
+					pnotify_text: "Check me out. I'm in a different stack.",
+					pnotify_addclass: "stack-custom",
+					pnotify_stack: stack_custom
+				});
+			};
+			function show_stack_custom2() {
+				$.pnotify({
+					pnotify_title: "Over Here",
+					pnotify_text: "Check me out. I'm in a different stack.",
+					pnotify_addclass: "stack-custom2",
+					pnotify_stack: stack_custom2
+				});
+			};
+
 			// ]]>
 		</script>
 		<!-- Pines Form (For the form notice.) -->
@@ -293,14 +402,15 @@
 		<div class="wrapper ui-widget-content ui-corner-all ui-helper-clearfix">
 			<div id="header"><h1>Pines</h1></div>
 			<h2>Pines Notify jQuery Plugin</h2>
-			<p style="margin: 0;">The Pines Notify plugin was developed by Hunter Perrin as part of <a href="http://sourceforge.net/projects/pines/">Pines</a>. Pines Notify's features include:</p>
+			<p style="margin: 0;">The Pines Notify plugin was written by Hunter Perrin as part of <a href="http://sourceforge.net/projects/pines/">Pines</a>. Pines Notify's features include:</p>
 			<div style="float: left; margin-right: 10px;">
 				<ul style="padding-left: 20px;">
 					<li>Automatic hiding with visual effects.</li>
 					<li>Sticky (no automatic hiding) notices.</li>
 					<li>Optional hide button.</li>
 					<li>Supports dynamically updating text, title, icon, type...</li>
-					<li>Callbacks for various events, with ability to cancel events.</li>
+					<li>Control which direction the notices will stack.</li>
+					<li>Custom stacks allow sets of notices to stack independently.</li>
 				</ul>
 			</div>
 			<div style="float: left; margin-right: 10px;">
@@ -310,13 +420,14 @@
 					<li>Supports Pines icons, jQuery UI icons, or any CSS based icons.</li>
 					<li>Supports custom classes for individual notice styling.</li>
 					<li>Standard and custom effects.</li>
+					<li>Integration with jQuery UI.</li>
 				</ul>
 			</div>
 			<div style="float: left; margin-right: 10px;">
 				<ul style="padding-left: 20px;">
+					<li>Callbacks for various events, with ability to cancel events.</li>
 					<li>History viewer allows user to review previous notices.</li>
 					<li><a href="http://validator.w3.org/check?uri=referer">XHTML 1.0 Strict compliance.</a></li>
-					<li>Integration with jQuery UI.</li>
 				</ul>
 			</div>
 			<p style="clear: both;">Try out different themes using the selector in the top right corner of this page.</p>
@@ -454,17 +565,23 @@
 							<p>Just an example.</p>
 						</div>
 						<div class="element">
-							<label><span class="label">Username</span>
-							<input class="field ui-widget-content" type="text" name="username" /></label>
+							<label>
+								<span class="label">Username</span>
+								<input class="field ui-widget-content" type="text" name="username" />
+							</label>
 						</div>
 						<div class="element">
-							<label><span class="label">Password</span>
-							<input class="field ui-widget-content" type="password" name="password" /></label>
+							<label>
+								<span class="label">Password</span>
+								<input class="field ui-widget-content" type="password" name="password" />
+							</label>
 						</div>
 						<div class="element">
-							<label><span class="label">Remember Me</span>
-							<span class="note">Lasts for 2 weeks.</span>
-							<input class="field ui-widget-content" type="checkbox" name="remember" /></label>
+							<label>
+								<span class="label">Remember Me</span>
+								<span class="note">Lasts for 2 weeks.</span>
+								<input class="field ui-widget-content" type="checkbox" name="remember" />
+							</label>
 						</div>
 						<div class="element buttons centered">
 							<input class="button ui-state-default ui-corner-all ui-priority-primary" type="submit" name="submit" value="Submit" />
@@ -542,6 +659,16 @@
 						return false;
 					}
 				});" type="button" class="ui-state-default ui-corner-all" />
+			</div>
+
+			<div class="group ui-widget-content ui-corner-all">
+				Custom Stacks:
+				<br />
+				<input value="Top Left" onclick="void show_stack_topleft();" type="button" class="ui-state-default ui-corner-all" />
+				<input value="Bottom Left" onclick="void show_stack_bottomleft();" type="button" class="ui-state-default ui-corner-all" />
+				<input value="Bottom Right" onclick="void show_stack_bottomright();" type="button" class="ui-state-default ui-corner-all" />
+				<input value="Custom" onclick="void show_stack_custom();" type="button" class="ui-state-default ui-corner-all" />
+				<input value="Custom2" onclick="void show_stack_custom2();" type="button" class="ui-state-default ui-corner-all" />
 			</div>
 
 			<div class="group ui-widget-content ui-corner-all">
@@ -696,11 +823,11 @@
 							&lt;/div&gt;<br />
 							&lt;div class="<strong>ui-pnotify-icon</strong>"&gt;
 							<div style="margin: 0; clear: both; padding-left: 10px;">
-									&lt;span class="ui-icon ui-icon-info"&gt;&lt;/span&gt;
+								&lt;span class="ui-icon ui-icon-info"&gt;&lt;/span&gt;
 							</div>
 							&lt;/div&gt;<br />
-							&lt;span class="<strong>ui-pnotify-title</strong>"&gt;Pines Notify&lt;/span&gt;<br />
-							&lt;span class="<strong>ui-pnotify-text</strong>"&gt;Welcome to Pines Notify.&lt;/span&gt;
+							&lt;div class="<strong>ui-pnotify-title</strong>"&gt;Pines Notify&lt;/div&gt;<br />
+							&lt;div class="<strong>ui-pnotify-text</strong>"&gt;Welcome to Pines Notify.&lt;/div&gt;
 						</div>
 						&lt;/div&gt;
 					</div>
