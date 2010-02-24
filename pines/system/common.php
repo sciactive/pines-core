@@ -23,12 +23,14 @@ if (!function_exists('action')) {
 	 */
 	function action($component, $action) {
 		global $pines;
+		$component = clean_filename($component);
+		$action = clean_filename($action);
 		$action_file = ($component == 'system' ? $component : "components/$component")."/actions/$action.php";
-		$pines->component = $component;
-		$pines->action = $action;
-		unset($component);
-		unset($action);
 		if ( file_exists($action_file) ) {
+			$pines->component = $component;
+			$pines->action = $action;
+			unset($component);
+			unset($action);
 			/**
 			 * Run the action's file.
 			 */
