@@ -184,6 +184,12 @@
 					pnotify_notice_icon: "ui-icon ui-icon-comment",
 					// Setting stack to false causes Pines Notify to ignore this notice when positioning.
 					pnotify_stack: false,
+					pnotify_after_init: function(pnotify){
+						// Remove the notice if the user mouses over it.
+						pnotify.mouseout(function(){
+							pnotify.pnotify_remove();
+						});
+					},
 					pnotify_before_open: function(pnotify){
 						// This prevents the notice from displaying when it's created.
 						pnotify.pnotify({
@@ -288,6 +294,7 @@
 							options.pnotify_closer = true;
 							options.pnotify_notice_icon = 'icon picon_16x16_emblems_emblem-default';
 							options.pnotify_opacity = 1;
+							options.pnotify_shadow = true;
 							options.pnotify_width = $.pnotify.defaults.pnotify_width;
 							//options.pnotify_min_height = "300px";
 						}
@@ -451,11 +458,12 @@
 					<li>Supports Pines icons, jQuery UI icons, or any CSS based icons.</li>
 					<li>Supports custom classes for individual notice styling.</li>
 					<li>Standard and custom effects.</li>
-					<li>Integration with jQuery UI.</li>
+					<li>Optional drop shadows.</li>
 				</ul>
 			</div>
 			<div style="float: left; margin-right: 10px;">
 				<ul style="padding-left: 20px;">
+					<li>Integration with jQuery UI.</li>
 					<li>Callbacks for various events, with ability to cancel events.</li>
 					<li>History viewer allows user to review previous notices.</li>
 					<li><a href="http://validator.w3.org/check?uri=referer">XHTML 1.0 Strict compliance.</a></li>
@@ -650,6 +658,12 @@
 					pnotify_text: 'There\'s an error, but no one cares.',
 					pnotify_type: 'error',
 					pnotify_opacity: .8
+				});" type="button" class="ui-state-default ui-corner-all" />
+				<input value="Shadow Error" onclick="$.pnotify({
+					pnotify_title: 'Shadow Error',
+					pnotify_text: 'I have a shadow. It makes me pop out!',
+					pnotify_type: 'error',
+					pnotify_shadow: true
 				});" type="button" class="ui-state-default ui-corner-all" />
 				<br style="margin-bottom: 5px;" />
 				<input value="Pines Icon Error" onclick="$.pnotify({
@@ -850,6 +864,9 @@
 			<div>
 				<div style="margin: 0; clear: both; padding-left: 10px;">
 					&lt;div class="<strong>ui-pnotify</strong> ui-widget ui-helper-clearfix" style="width: 300px; opacity: 1; display: block; right: 15px; top: 15px;"&gt;
+					<div style="margin: 0; clear: both; padding-left: 10px;">
+						&lt;div class="<strong>ui-pnotify-shadow</strong> ui-widget-shadow"&gt; &lt;/div&gt; <small>(This div only appears when shadow is turned on.)</small>
+					</div>
 					<div style="margin: 0; clear: both; padding-left: 10px;">
 						&lt;div class="<strong>ui-pnotify-container</strong> ui-corner-all ui-state-highlight" style="min-height: 16px;"&gt;
 						<div style="margin: 0; clear: both; padding-left: 10px;">
