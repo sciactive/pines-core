@@ -19,15 +19,14 @@ CREATE TABLE IF NOT EXISTS `pin_com_entity_data` (
   `id` bigint(20) NOT NULL auto_increment,
   `guid` bigint(20) NOT NULL,
   `name` text NOT NULL,
-  `value` text NOT NULL,
+  `value` longtext NOT NULL,
   PRIMARY KEY  (`id`),
-  KEY `id_guid` (`guid`)
+  KEY `id_guid` (`guid`),
+  KEY `id_name` (`name`(65536))
 ) AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `pin_com_entity_entities` (
   `guid` bigint(20) NOT NULL auto_increment,
-  `parent` bigint(20) default NULL,
   `tags` text,
-  PRIMARY KEY  (`guid`),
-  KEY `id_parent` (`parent`)
+  PRIMARY KEY  (`guid`)
 ) AUTO_INCREMENT=1 ;
