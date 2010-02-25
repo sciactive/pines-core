@@ -158,12 +158,17 @@
 					pnotify_before_close: function(pnotify){
 						// You can access the notice's options with this. It is read only.
 						//pnotify.opts.pnotify_text;
-						pnotify.pnotify({
-							pnotify_text: "Enjoy your stay.",
-							pnotify_before_close: null
-						});
-						pnotify.pnotify_queue_remove();
-						return false;
+
+						// You could change the notices text before allowing it
+						// to close with something like this:
+						//pnotify.pnotify({
+						//	pnotify_text: "Enjoy your stay.",
+						//	pnotify_before_close: null
+						//});
+						//pnotify.pnotify_queue_remove();
+						//return false;
+
+						pnotify.pnotify({pnotify_text: "Enjoy your stay."});
 					}
 				});
 
@@ -194,7 +199,11 @@
 					$(this).removeClass('ui-state-hover');
 				});
 
-				$('#switcher').themeswitcher();
+				if ($.fn.themeswitcher) {
+					$('#switcher').themeswitcher();
+				} else {
+					$('#switcher').html("Couldn't load theme switcher widget.")
+				}
 			});
 
 			function show_rich() {
