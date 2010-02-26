@@ -243,7 +243,8 @@ class entity extends p_base {
 	private function entity_to_reference(&$item, $key) {
 		if ((is_a($item, 'entity') || is_a($item, 'hook_override')) && isset($item->guid)) {
 			// This is an entity, so we should put it in the entity cache.
-			$this->entity_cache["reference_guid: {$item->guid}"] = $item;
+			if (!isset($this->entity_cache["reference_guid: {$item->guid}"]))
+				$this->entity_cache["reference_guid: {$item->guid}"] = clone $item;
 			// Make a reference to the entity (its GUID) and the class the entity was loaded as.
 			$item = $item->to_reference();
 		}
@@ -401,13 +402,14 @@ class entity extends p_base {
 	 */
 	private function reference_to_entity(&$item, $key) {
 		global $pines;
-		if (is_array($item) && $item[0] === 'pines_entity_reference') {
-			if (!isset($this->entity_cache["reference_guid: {$item[1]}"])) {
-				$this->entity_cache["reference_guid: {$item[1]}"] = $pines->entity_manager->get_entity(array('guid' => $item[1], 'class' => $item[2]));
+		if (is_array($item)) {
+			if ($item[0] === 'pines_entity_reference') {
+				if (!isset($this->entity_cache["reference_guid: {$item[1]}"]))
+					$this->entity_cache["reference_guid: {$item[1]}"] = $pines->entity_manager->get_entity(array('guid' => $item[1], 'class' => $item[2]));
+				$item = $this->entity_cache["reference_guid: {$item[1]}"];
+			} else {
+				array_walk($item, array($this, 'reference_to_entity'));
 			}
-			$item = $this->entity_cache["reference_guid: {$item[1]}"];
-		} elseif (is_array($item)) {
-			array_walk($item, array($this, 'reference_to_entity'));
 		}
 	}
 
