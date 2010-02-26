@@ -16,17 +16,17 @@ USE `pines`;
 /* GRANT ALL PRIVILEGES ON `pines`.* TO 'pines'@'localhost'; */
 
 CREATE TABLE IF NOT EXISTS `pin_com_entity_data` (
-  `id` bigint(20) NOT NULL auto_increment,
   `guid` bigint(20) NOT NULL,
   `name` text NOT NULL,
   `value` longtext NOT NULL,
-  PRIMARY KEY  (`id`),
-  KEY `id_guid` (`guid`),
-  KEY `id_name` (`name`(65536))
-) AUTO_INCREMENT=1 ;
+  PRIMARY KEY (`guid`,`name`(980))
+) ;
 
 CREATE TABLE IF NOT EXISTS `pin_com_entity_entities` (
-  `guid` bigint(20) NOT NULL auto_increment,
+  `guid` bigint(20) NOT NULL AUTO_INCREMENT,
   `tags` text,
-  PRIMARY KEY  (`guid`)
+  `varlist` text,
+  PRIMARY KEY (`guid`),
+  KEY `id_tags` (`tags`(1000)),
+  KEY `id_varlist` (`varlist`(1000))
 ) AUTO_INCREMENT=1 ;
