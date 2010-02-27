@@ -168,7 +168,6 @@
 	visibility: visible;
 }
 .ui-pgrid-table thead th .ui-pgrid-table-header-text {
-	float: left;
 	padding: 1px 0;
 	cursor: default;
 }

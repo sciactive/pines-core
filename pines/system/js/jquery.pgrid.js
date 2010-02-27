@@ -818,8 +818,6 @@
 				var cur_text = $("<div />").addClass("ui-pgrid-table-header-text");
 				// Add a "sortable" class for custom styling.
 				if (pgrid.pgrid_sortable) cur_text.addClass("ui-pgrid-table-header-sortable");
-				// Size the current header. The header text div actually sizes all the cells for a column.
-				cur_text.width(cur_header.width());
 
 				// Wrap the contents and add the column class to the cell.
 				cur_header.wrapInner(cur_text).addClass("col_"+(index+1)).append($("<span />").addClass("ui-icon"));

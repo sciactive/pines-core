@@ -469,7 +469,7 @@
 					var tbody = test_div.find("tbody");
 					var row = tbody.children("tr").remove();
 					for (var i=1; i<=row_count; i++)
-						row.clone().find("td.column").html("#"+i).end().appendTo(tbody);
+						row.clone().find("td.row").html(i).end().appendTo(tbody);
 				}
 
 				function gridify_table() {
@@ -487,10 +487,10 @@
 			<div id="test4_skel" style="display: none;">
 				<table>
 					<thead>
-						<tr><th>Column</th><th>Header 1</th><th>Header 2</th><th>Header 3</th><th>Header 4</th><th>Header 5</th><th>Data</th></tr>
+						<tr><th>Row</th><th>Header 1</th><th>Header 2</th><th>Header 3</th><th>Header 4</th><th>Header 5</th><th>Data</th></tr>
 					</thead>
 					<tbody>
-						<tr><td class="column"></td><td>I'm in cell 1.</td><td>I'm in cell 2.</td><td>I'm in cell 3.</td><td>I'm in cell 4.</td><td>I'm in cell 5.</td><td>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec non lobortis nisl. Sed at nunc odio, vitae lacinia est.</td></tr>
+						<tr><td class="row"></td><td>I'm in cell 1.</td><td>I'm in cell 2.</td><td>I'm in cell 3.</td><td>I'm in cell 4.</td><td>I'm in cell 5.</td><td>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec non lobortis nisl. Sed at nunc odio, vitae lacinia est.</td></tr>
 					</tbody>
 				</table>
 			</div>
