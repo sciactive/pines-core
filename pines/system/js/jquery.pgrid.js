@@ -65,7 +65,7 @@
 						if (typeof cur_keyorrow == "object") {
 							pgrid.mark_for_delete_recursively($(this));
 						} else {
-							pgrid.find("tbody tr[title="+cur_keyorrow+"]").each(function(){
+							pgrid.children("tbody").children("tr[title="+cur_keyorrow+"]").each(function(){
 								pgrid.mark_for_delete_recursively($(this));
 							});
 						}
@@ -77,7 +77,7 @@
 				pgrid.delete_marked();
 			});
 		} else {
-			var pgrid = this.closest(".ui-pgrid-table").get(0);
+			var pgrid = this.closest("table.ui-pgrid-table").get(0);
 			if (pgrid)
 				pgrid = pgrid.pines_grid;
 			if (!pgrid)
@@ -126,10 +126,10 @@
 		if (!keysorrows.jquery) {
 			if (typeof keysorrows != "object")
 				return this;
-			keysorrows = pgrid.find("tbody tr").filter("tr[title='" + keysorrows.join("'], tr[title='") + "']");
+			keysorrows = pgrid.children("tbody").children("tr[title='" + keysorrows.join("'], tr[title='") + "']");
 		}
 		if (pgrid.pgrid_select) {
-			if ((pgrid.find("tr.ui-pgrid-table-row-selected").length || keysorrows.length > 1) && !pgrid.pgrid_multi_select)
+			if ((pgrid.children("tbody").children("tr.ui-pgrid-table-row-selected").length || keysorrows.length > 1) && !pgrid.pgrid_multi_select)
 				return this;
 			$.each(keysorrows, function(){
 				var cur_row = $(this);
@@ -142,7 +142,7 @@
 		var pgrid = null;
 		if (!rows) {
 			rows = this;
-			pgrid = rows.closest(".ui-pgrid-table").get(0);
+			pgrid = rows.closest("table.ui-pgrid-table").get(0);
 			if (pgrid && pgrid.pines_grid)
 				pgrid = pgrid.pines_grid;
 		} else {
@@ -167,9 +167,9 @@
 				return;
 			var pgrid = this.pines_grid;
 			if (return_rows) {
-				return_rows = return_rows.add(pgrid.find("tbody tr"));
+				return_rows = return_rows.add(pgrid.children("tbody").children("tr"));
 			} else {
-				return_rows = pgrid.find("tbody tr");
+				return_rows = pgrid.children("tbody").children("tr");
 			}
 		});
 		return return_rows;
@@ -181,35 +181,29 @@
 				return;
 			var pgrid = this.pines_grid;
 			if (return_rows) {
-				return_rows = return_rows.add(pgrid.find("tbody tr.ui-pgrid-table-row-selected"));
+				return_rows = return_rows.add(pgrid.children("tbody").children("tr.ui-pgrid-table-row-selected"));
 			} else {
-				return_rows = pgrid.find("tbody tr.ui-pgrid-table-row-selected");
+				return_rows = pgrid.children("tbody").children("tr.ui-pgrid-table-row-selected");
 			}
 		});
 		return return_rows;
 	};
 	$.fn.pgrid_add_descendent_rows = function() {
 		var rows = $(this);
-		this.each(function(){
+		this.filter("tr.parent").each(function(){
 			var cur_row = $(this);
-
-			if (cur_row.hasClass("parent")) {
-				var children = cur_row.siblings("."+cur_row.attr("title"));
-				rows = rows.add(children.pgrid_add_descendent_rows());
-			}
+			var children = cur_row.siblings("."+cur_row.attr("title"));
+			rows = rows.add(children.pgrid_add_descendent_rows());
 		});
 		return rows;
 	};
 	$.fn.pgrid_get_value = function(column) {
 		// Only works on one row.
 		var cur_row = $(this).eq(0);
-		return cur_row.find("td.col_"+column+" div.ui-pgrid-table-cell-text").html();
+		return cur_row.children("td.col_"+column).html();
 	};
 	$.fn.pgrid_set_value = function(column, value) {
-		this.each(function(){
-			var cur_row = $(this);
-			cur_row.find("td.col_"+column+" div.ui-pgrid-table-cell-text").html(value);
-		});
+		this.children("td.col_"+column).html(value);
 	};
 	$.fn.pgrid_export_state = function() {
 		var pgrid = this.get(0);
@@ -232,13 +226,9 @@
 		var opts = $.extend({}, $.fn.pgrid.defaults, options);
 
 		// Iterate and gridify each matched element.
-		var all_elements = this;
-		all_elements.each(function() {
+		this.filter("table:not(.ui-pgrid-table)").each(function() {
 			var pgrid = $(this);
 			pgrid.pgrid_version = "1.0.0";
-			
-			// Check for the pgrid class. If it has it, we've already gridified this table.
-			if (pgrid.hasClass("ui-pgrid-table")) return true;
 			
 			pgrid.extend(pgrid, opts);
 
@@ -321,9 +311,9 @@
 				pgrid.do_sort();
 				pgrid.do_col_hiding();
 				if (pgrid.pgrid_footer && pgrid.pgrid_filtering)
-					footer.find(".ui-pgrid-footer-filter-container span:first-child input").val(pgrid.pgrid_filter);
+					pgrid.footer.children("div.ui-pgrid-footer-filter-container").find("span:first-child input").val(pgrid.pgrid_filter);
 				if (pgrid.pgrid_footer && pgrid.pgrid_paginate)
-					footer.find(".ui-pgrid-footer-pager-container span:first-child input").val(pgrid.pgrid_perpage);
+					pgrid.footer.children("div.ui-pgrid-footer-pager-container").find("span:first-child input").val(pgrid.pgrid_perpage);
 			};
 
 			// When the grid's state changes, call the provided function, passing the current state.
@@ -384,49 +374,47 @@
 			pgrid.make_page_buttons = function() {
 				// Make a button in the footer to jump to each page.
 				if (pgrid.pgrid_paginate && pgrid.pgrid_footer) {
-					pgrid.pgrid_widget.find(".ui-pgrid-footer .ui-pgrid-footer-pager-button-container").html("").each(function(){
-						for (var cur_page = 0; cur_page < pgrid.pgrid_pages; cur_page++) {
-							$(this).append(
-								$("<button type=\"button\">"+(cur_page+1)+"</button>").addClass("ui-state-default ui-corner-all").click(function(){
-									pgrid.pagenum(parseInt($(this).text()) - 1);
-									return false;
-								}).hover(function(){
-									$(this).addClass("ui-state-hover");
-								}, function(){
-									$(this).removeClass("ui-state-hover");
-								})
-							);
-						}
-					});
+					var button_container = pgrid.footer.find("div.ui-pgrid-footer-pager-button-container");
+					var buttons = button_container.children();
+					if (pgrid.pgrid_pages < buttons.length) {
+						buttons.filter("button:eq("+pgrid.pgrid_pages+"), button:gt("+pgrid.pgrid_pages+")").remove();
+						return;
+					}
+					for (var cur_page = buttons.length; cur_page < pgrid.pgrid_pages; cur_page++) {
+						button_container.append(
+							$("<button type=\"button\">"+(cur_page+1)+"</button>").addClass("ui-state-default ui-corner-all").click(function(){
+								pgrid.pagenum(parseInt($(this).text()) - 1);
+								return false;
+							}).hover(function(){
+								$(this).addClass("ui-state-hover");
+							}, function(){
+								$(this).removeClass("ui-state-hover");
+							})
+						);
+					}
 				}
 			};
 
 			pgrid.hide_children = function(jq_rows) {
 				// For each row, hide its children.
-				jq_rows.each(function() {
+				jq_rows.filter("tr.parent").each(function() {
 					var cur_row = $(this);
-					if (cur_row.hasClass("parent")) {
-						cur_row.siblings("."+cur_row.attr("title")).addClass("ui-pgrid-table-row-hidden").each(function(){
-							// And its descendants, if it's a parent.
-							var this_row = $(this);
-							if (this_row.hasClass("parent"))
-								pgrid.hide_children(this_row);
-						});
-					}
+					cur_row.siblings("."+cur_row.attr("title")).addClass("ui-pgrid-table-row-hidden").filter("tr.parent").each(function(){
+						// And its descendants, if it's a parent.
+						pgrid.hide_children($(this));
+					});
 				});
 			};
 
 			pgrid.show_children = function(jq_rows) {
 				// For each row, unhide its children. (If it's expanded.)
-				jq_rows.each(function() {
+				jq_rows.filter("tr.parent.ui-pgrid-table-row-expanded").each(function() {
 					var cur_row = $(this);
 					// If this row is expanded, its children should be shown.
-					if (cur_row.hasClass("parent") && cur_row.hasClass("ui-pgrid-table-row-expanded")) {
-						cur_row.siblings("."+cur_row.attr("title")).removeClass("ui-pgrid-table-row-hidden").each(function(){
-							// And its descendants.
-							pgrid.show_children($(this));
-						});
-					}
+					cur_row.siblings("."+cur_row.attr("title")).removeClass("ui-pgrid-table-row-hidden").filter("tr.parent.ui-pgrid-table-row-expanded").each(function(){
+						// And its descendants.
+						pgrid.show_children($(this));
+					});
 				});
 			};
 
@@ -452,7 +440,7 @@
 			};
 
 			pgrid.delete_marked = function() {
-				pgrid.find("tbody tr.ui-pgrid-table-row-marked-for-deletion").remove();
+				pgrid.children("tbody").children("tr.ui-pgrid-table-row-marked-for-deletion").remove();
 				pgrid.do_sort(false, true);
 				pgrid.do_filter(false, true);
 				pgrid.paginate(true);
@@ -462,11 +450,9 @@
 
 			pgrid.paginate = function(loading) {
 				if (pgrid.pgrid_paginate) {
-					// Hide all rows.
-					pgrid.find("tbody tr:not(.ui-helper-hidden)").addClass("ui-pgrid-table-row-hidden");
-					var elements = pgrid.find("tbody tr:not(.child, .ui-helper-hidden)");
+					var all_rows = pgrid.children("tbody").children("tr:not(.child, .ui-helper-hidden)");
 					// Calculate the total number of pages.
-					pgrid.pgrid_pages = Math.ceil(elements.length / pgrid.pgrid_perpage);
+					pgrid.pgrid_pages = Math.ceil(all_rows.length / pgrid.pgrid_perpage);
 
 					// If the current page is past the last page, set it to the last page,
 					// and if it's before the first page, set it to the first page.
@@ -477,53 +463,46 @@
 					}
 
 					// Select all the rows on the current page.
-					var elempage = elements.slice(pgrid.pgrid_page * pgrid.pgrid_perpage, (pgrid.pgrid_page * pgrid.pgrid_perpage) + pgrid.pgrid_perpage);
+					var elempage = all_rows.slice(pgrid.pgrid_page * pgrid.pgrid_perpage, (pgrid.pgrid_page * pgrid.pgrid_perpage) + pgrid.pgrid_perpage);
 					// Unhide them.
 					elempage.removeClass("ui-pgrid-table-row-hidden");
+					elempage.first().prevAll("tr:not(.ui-helper-hidden)").addClass("ui-pgrid-table-row-hidden");
+					elempage.last().nextAll("tr:not(.ui-helper-hidden)").addClass("ui-pgrid-table-row-hidden");
 					// And their children.
 					pgrid.show_children(elempage);
 					// Update the page number and count in the footer.
 					if (pgrid.pgrid_footer)
-						pgrid.pgrid_widget.find(".ui-pgrid-footer .page_number").html(pgrid.pgrid_page+1).end().find(".page_total").html(pgrid.pgrid_pages);
+						pgrid.footer.find("span.page_number").html(pgrid.pgrid_page+1).end().find("span.page_total").html(pgrid.pgrid_pages);
 				}
-				// Restripe the rows, since they may have changed. (Even if pagination isn't enabled.)
-				pgrid.do_stripes();
 				// The grid's state has probably changed.
 				if (!loading) pgrid.state_changed();
 			};
-
-			pgrid.do_filter = function(filter, loading) {
-				// Filter if filtering is allowed, or if this is an initial filter.
-				if (pgrid.pgrid_filtering || loading) {
-					if (typeof filter == "string")
-						pgrid.pgrid_filter = filter;
-					if (pgrid.pgrid_filter.length > 0) {
-						var filter_arr = pgrid.pgrid_filter.toLowerCase().split(" ");
-						// Disable all rows, then iterate them and match.
-						pgrid.find("tbody tr").addClass("ui-helper-hidden").each(function(){
-							var cur_row = $(this);
-							var cur_text = "";
-							// Add spaces between cell values, so they're not falsely matched.
-							// ex: "mest" would match the cells "James" and "Teacher" if they were concatenated.
-							cur_row.contents().each(function(){
-								cur_text += " "+$(this).text().toLowerCase();
-							});
-							var match = true;
-							// Go through each search term and if any doesn't match, flag the row as a non-match.
-							for (var i in filter_arr) {
-								if (cur_text.indexOf(filter_arr[i]) == -1)
-									match = false;
-							}
-							// If all search terms were found, enable the row and its parents.
-							if (match) {
-								cur_row.removeClass("ui-helper-hidden");
-								pgrid.enable_parents(cur_row);
-							}
-						});
-					} else {
-						// If the user enters nothing, all records should be shown.
-						pgrid.find("tbody tr").removeClass("ui-helper-hidden");
-					}
+			
+			pgrid.filter_timed = function(row, loading) {
+				var cur_text = "";
+				// Add spaces between cell values, so they're not falsely matched.
+				// ex: "mest" would match the cells "James" and "Teacher" if they were concatenated.
+				row.children().each(function(){
+					cur_text += " "+this.textContent.toLowerCase().replace(/[^\w]/, "");
+				});
+				var match = true;
+				// Go through each search term and if any doesn't match, flag the row as a non-match.
+				for (var i in pgrid.filter_arr) {
+					if (cur_text.indexOf(pgrid.filter_arr[i]) == -1)
+						match = false;
+				}
+				// If all search terms were found, enable the row and its parents.
+				if (!match) {
+					row.addClass("ui-helper-hidden");
+				} else {
+					row.removeClass("ui-helper-hidden");
+					pgrid.enable_parents(row);
+				}
+				var next = row.next();
+				if (next.length) {
+					pgrid.filter_timer = window.setTimeout(pgrid.filter_timed, 0, next, loading);
+				} else {
+					pgrid.filter_timer = null;
 					// Only do this if we're not loading, to speed up initialization.
 					if (!loading) {
 						// Paginate, since we may have disabled rows.
@@ -536,30 +515,48 @@
 				}
 			};
 
-			pgrid.enable_parents = function(jq_rows) {
-				// For each row, enable all the rows ancestors.
-				jq_rows.each(function() {
-					var cur_row = $(this);
-					if (cur_row.hasClass("child")) {
-						// Go through each parent to check if it's the row's parent.
-						cur_row.siblings(".parent").each(function(){
-							var cur_test_row = $(this);
-							if (cur_row.hasClass(cur_test_row.attr("title"))) {
-								cur_test_row.removeClass("ui-helper-hidden");
-								// Enable this row's ancestors too.
-								pgrid.enable_parents(cur_test_row);
-							}
-						});
+			pgrid.do_filter = function(filter, loading) {
+				// Filter if filtering is allowed, or if this is an initial filter.
+				if (pgrid.pgrid_filtering || loading) {
+					if (pgrid.filter_timer)
+						window.clearTimeout(pgrid.filter_timer);
+					if (typeof filter == "string")
+						pgrid.pgrid_filter = filter;
+					if (pgrid.pgrid_filter.length > 0) {
+						pgrid.filter_arr = pgrid.pgrid_filter.toLowerCase().split(" ");
+						// Disable all rows, then iterate them and match.
+						pgrid.filter_timer = window.setTimeout(pgrid.filter_timed, 0, pgrid.children("tbody").children("tr:first-child"), loading);
+						//pgrid.filter_timer = window.setTimeout(pgrid.filter_timed, 0, pgrid.children("tbody").children().addClass("ui-helper-hidden").first(), loading);
+					} else {
+						// If the user enters nothing, all records should be shown.
+						pgrid.children("tbody").children().removeClass("ui-helper-hidden");
+						// Only do this if we're not loading, to speed up initialization.
+						if (!loading) {
+							// Paginate, since we may have disabled rows.
+							pgrid.paginate();
+							// Make new page buttons, since the enabled record total may have changed.
+							pgrid.make_page_buttons();
+							// Update the selected items, and the record counts.
+							pgrid.update_selected();
+						}
 					}
-				});
+				}
 			};
 
-			pgrid.do_stripes = function() {
-				// Add striping to odd rows. (Disregarding hidden rows.)
-				if (pgrid.pgrid_stripe_rows) {
-					pgrid.find("tbody tr td").removeClass("ui-pgrid-table-row-striped");
-					pgrid.find("tbody tr:not(.ui-pgrid-table-row-hidden, .ui-helper-hidden):odd td").addClass("ui-pgrid-table-row-striped");
-				}
+			pgrid.enable_parents = function(jq_rows) {
+				// For each row, enable all the row's ancestors.
+				jq_rows.filter("tr.child").each(function() {
+					var cur_row = $(this);
+					// Go through each parent to check if it's the row's parent.
+					cur_row.siblings("tr.parent").each(function(){
+						var cur_test_row = $(this);
+						if (cur_row.hasClass(cur_test_row.attr("title"))) {
+							cur_test_row.removeClass("ui-helper-hidden");
+							// Enable this row's ancestors too.
+							pgrid.enable_parents(cur_test_row);
+						}
+					});
+				});
 			};
 
 			pgrid.do_sort = function(column_class, loading) {
@@ -627,9 +624,9 @@
 					if (pgrid.pgrid_sort_ord == "desc")
 						rows.reverse();
 					// Insert the rows into the tbody in the correct order.
-					pgrid.children('tbody').append(rows);
+					pgrid.children("tbody").append(rows);
 					// Place children under their parents.
-					jq_rows.filter(".parent").each(function(){
+					jq_rows.filter("tr.parent").each(function(){
 						var cur_row = $(this);
 						cur_row.after(cur_row.siblings("."+cur_row.attr("title")));
 					});
@@ -642,12 +639,12 @@
 			pgrid.update_selected = function() {
 				if (pgrid.pgrid_select) {
 					// Deselect any disabled rows. They shouldn't be selected.
-					pgrid.find("tbody tr.ui-helper-hidden.ui-pgrid-table-row-selected").removeClass("ui-pgrid-table-row-selected").removeClass("ui-state-active");
+					pgrid.children("tbody").children("tr.ui-helper-hidden.ui-pgrid-table-row-selected").removeClass("ui-pgrid-table-row-selected").removeClass("ui-state-active");
 
 					// Update the table footer.
 					if (pgrid.pgrid_footer && pgrid.pgrid_count) {
-						var selected_rows = pgrid.find("tbody tr.ui-pgrid-table-row-selected");
-						pgrid.pgrid_widget.find(".ui-pgrid-footer .ui-pgrid-footer-count-select").html(selected_rows.length);
+						var selected_rows = pgrid.children("tbody").children("tr.ui-pgrid-table-row-selected").length;
+						pgrid.footer.find("span.ui-pgrid-footer-count-select").html(selected_rows);
 					}
 				}
 				pgrid.update_count();
@@ -656,19 +653,28 @@
 			pgrid.update_count = function() {
 				// Update the table footer.
 				if (pgrid.pgrid_footer && pgrid.pgrid_count) {
-					var all_rows = pgrid.find("tbody tr:not(.ui-helper-hidden)");
-					pgrid.pgrid_widget.find(".ui-pgrid-footer .ui-pgrid-footer-count-total").html(all_rows.length);
+					var all_rows = pgrid.children("tbody").children("tr:not(.ui-helper-hidden)").length;
+					pgrid.footer.find("span.ui-pgrid-footer-count-total").html(all_rows);
 				}
 			};
 
 			pgrid.do_col_hiding = function(loading) {
-				var all_cells = pgrid.find("thead th:not(.ui-pgrid-table-expander), tbody td:not(.ui-pgrid-table-expander)").show();
+				var h_rows = pgrid.children("thead").children();
+				var b_rows = pgrid.children("tbody").children();
+				if (!loading) {
+					// First unhide all hidden columns.
+					h_rows.children("th:hidden").each(function(){
+						var cur_header = $(this).show();
+						b_rows.children("td.col_"+cur_header.prevAll().length).show();
+					});
+				}
 				var checkboxes = pgrid.pgrid_header_select.children().children();
 				checkboxes.attr("checked", true);
 				for (var cur_col in pgrid.pgrid_hidden_cols) {
 					if (isNaN(cur_col)) continue;
 					checkboxes.filter(".ui-pgrid-table-col-hider-"+pgrid.pgrid_hidden_cols[cur_col]).removeAttr("checked");
-					all_cells.filter(".col_"+pgrid.pgrid_hidden_cols[cur_col]).hide();
+					h_rows.children("th.col_"+pgrid.pgrid_hidden_cols[cur_col]).hide();
+					b_rows.children("td.col_"+pgrid.pgrid_hidden_cols[cur_col]).hide();
 				}
 				// The grid's state has probably changed.
 				if (!loading) pgrid.state_changed();
@@ -677,21 +683,26 @@
 			pgrid.hide_col = function(number) {
 				if (pgrid.pgrid_hidden_cols.indexOf(number) == -1) {
 					pgrid.pgrid_hidden_cols.push(number);
-					pgrid.do_col_hiding();
+					pgrid.pgrid_header_select.children().children(".ui-pgrid-table-col-hider-"+number).removeAttr("checked");
+					pgrid.children("thead").children().children("th.col_"+number).hide();
+					pgrid.children("tbody").children().children("td.col_"+number).hide();
+					pgrid.state_changed();
 				}
 			};
 
 			pgrid.show_col = function(number) {
 				if (pgrid.pgrid_hidden_cols.indexOf(number) != -1) {
 					pgrid.pgrid_hidden_cols.splice(pgrid.pgrid_hidden_cols.indexOf(number), 1);
-					pgrid.do_col_hiding();
+					pgrid.pgrid_header_select.children().children(".ui-pgrid-table-col-hider-"+number).attr("checked", true);
+					pgrid.children("thead").children().children("th.col_"+number).show();
+					pgrid.children("tbody").children().children("td.col_"+number).show();
+					pgrid.state_changed();
 				}
 			};
 
 			pgrid.init_rows = function(jq_rows) {
 				if (!jq_rows) return;
 				// Get table cells ready.
-				// Wrap cell contents in a div, so we can resize and sort them correctly.
 				var new_classes;
 				// If this table is resizable, we need its cells to have a width of 1px;
 				if (pgrid.pgrid_resize_cols)
@@ -704,62 +715,25 @@
 					cur_children.addClass(new_classes+" col_"+i);
 					cur_children = cur_children.next();
 				}
-				//jq_rows.children().wrapInner($("<div class=\""+new_classes+"\" />"));
-				// Add an expander and scrollspace column to the rows, add hover events, and give child rows indentation.
+				// Add an expander to the rows, add hover events, and give child rows indentation.
 				jq_rows.prepend("<td class=\"ui-pgrid-table-expander\"></td>");
-				// Add some coloring when hovering over rows.
-				if (pgrid.pgrid_row_hover_effect) {
-					// Can't use "hover" because of a bug in Firefox when the mouse moves onto a scrollbar.
-					jq_rows.mouseover(function(){
-						$(this).addClass("ui-state-hover");
-					}).mouseout(function(){
-						$(this).removeClass("ui-state-hover");
-					});
-				}
-				// Bind to click for selecting records. Double click for double click action.
-				if (pgrid.pgrid_select) {
-					jq_rows.click(function(e){
-						if ($(e.target).parent().andSelf().hasClass("ui-pgrid-table-expander")) return;
-						var cur_row = $(this);
-						if (!pgrid.pgrid_multi_select || (!e.ctrlKey && !e.shiftKey)) {
-							cur_row.siblings().removeClass("ui-pgrid-table-row-selected").removeClass("ui-state-active");
-						} else if (e.shiftKey) {
-							cur_row.prevUntil(".ui-pgrid-table-row-selected").addClass("ui-pgrid-table-row-selected ui-state-active");
-						}
-						if (e.ctrlKey) {
-							cur_row.toggleClass("ui-pgrid-table-row-selected").toggleClass("ui-state-active");
-						} else {
-							cur_row.addClass("ui-pgrid-table-row-selected ui-state-active");
-						}
-						pgrid.update_selected();
-					}).dblclick(function(e){
-						if ($(e.target).hasClass("ui-pgrid-table-expander")) return;
-						$(this).addClass("ui-pgrid-table-row-selected ui-state-active");
-						if (pgrid.pgrid_double_click)
-							pgrid.pgrid_double_click(e, pgrid.children("tbody").children("tr.ui-pgrid-table-row-selected"));
-						if (pgrid.pgrid_double_click_tb)
-							pgrid.pgrid_double_click_tb();
-					}).mousedown(function(e){
-						// Prevent the browser from selecting text if the user is holding a modifier key.
-						return !(e.ctrlKey || e.shiftKey);
-					});
-				}
 				// Add some styling.
 				jq_rows.addClass("ui-state-default");
-
-				jq_rows.filter(".parent").each(function(){
+				// Style children.
+				pgrid.init_children(jq_rows.filter("tr.parent:not(.child)"));
+				// Hide children.
+				jq_rows.filter("tr.child").addClass("ui-pgrid-table-row-hidden");
+			};
+			
+			pgrid.init_children = function(jq_rows) {
+				if (!jq_rows.length) return;
+				jq_rows.each(function(){
 					// Indent children.
-					// TODO: Fix this.
 					var cur_row = $(this);
-					var cur_children = cur_row.children();
-					var cur_left_padding = parseInt(cur_children.first().css("padding-left"));
-					cur_row.siblings("."+cur_row.attr("title"))
-					.children("td:not(.ui-pgrid-table-expander)") //("td:first-child")
-					.css("padding-left", (cur_left_padding+10)+"px");
-					//.slice(0, -1)
-					//.prepend("<span style=\"font-family: Arial, sans-serif; font-size: 85%; font-weight: lighter; vertical-align: top;\">├ </span>")
-					//.end().slice(-1)
-					//.prepend("<span style=\"font-family: Arial, sans-serif; font-size: 85%; font-weight: lighter; vertical-align: top;\">└ </span>");
+					var cur_padding = parseInt(cur_row.children("td:last-child").css("padding-left"));
+					pgrid.init_children(cur_row.siblings("."+cur_row.attr("title")).each(function(){
+						$(this).children("td:not(.ui-pgrid-table-expander)").css("padding-left", (cur_padding+10)+"px");
+					}).filter("tr.parent"));
 				}).children("td.ui-pgrid-table-expander").append($("<span />").addClass("ui-icon ui-icon-triangle-1-e")).click(function(){
 					// Bind to expander's click to toggle its children.
 					var cur_expander = $(this);
@@ -773,11 +747,46 @@
 						cur_expander.children("span.ui-icon").removeClass("ui-icon-triangle-1-e").addClass("ui-icon-triangle-1-s");
 						pgrid.show_children(cur_working_row);
 					}
-					pgrid.do_stripes();
 				});
-				// Hide children.
-				jq_rows.filter(".child").addClass("ui-pgrid-table-row-hidden");
 			};
+			
+			// Add some coloring when hovering over rows.
+			if (pgrid.pgrid_row_hover_effect) {
+				// Can't use "hover" because of a bug in Firefox when the mouse moves onto a scrollbar.
+				pgrid.children("tbody").delegate("tr", "mouseover", function(){
+					$(this).addClass("ui-state-hover");
+				}).delegate("tr", "mouseout", function(){
+					$(this).removeClass("ui-state-hover");
+				});
+			}
+			// Bind to click for selecting records. Double click for double click action.
+			if (pgrid.pgrid_select) {
+				pgrid.children("tbody").delegate("tr", "click", function(e){
+					if ($(e.target).parent().andSelf().hasClass("ui-pgrid-table-expander")) return;
+					var cur_row = $(this);
+					if (!pgrid.pgrid_multi_select || (!e.ctrlKey && !e.shiftKey)) {
+						cur_row.siblings().removeClass("ui-pgrid-table-row-selected").removeClass("ui-state-active");
+					} else if (e.shiftKey) {
+						cur_row.prevUntil(".ui-pgrid-table-row-selected").addClass("ui-pgrid-table-row-selected ui-state-active");
+					}
+					if (e.ctrlKey) {
+						cur_row.toggleClass("ui-pgrid-table-row-selected").toggleClass("ui-state-active");
+					} else {
+						cur_row.addClass("ui-pgrid-table-row-selected ui-state-active");
+					}
+					pgrid.update_selected();
+				}).delegate("tr", "dblclick", function(e){
+					if ($(e.target).hasClass("ui-pgrid-table-expander")) return;
+					$(this).addClass("ui-pgrid-table-row-selected ui-state-active");
+					if (pgrid.pgrid_double_click)
+						pgrid.pgrid_double_click(e, pgrid.children("tbody").children("tr.ui-pgrid-table-row-selected"));
+					if (pgrid.pgrid_double_click_tb)
+						pgrid.pgrid_double_click_tb();
+				}).delegate("tr", "mousedown", function(e){
+					// Prevent the browser from selecting text if the user is holding a modifier key.
+					return !(e.ctrlKey || e.shiftKey);
+				});
+			}
 
 			// Select the thead rows.
 			var h_rows = pgrid.children("thead").children();
@@ -892,9 +901,9 @@
 
 			// Wrap the table and its container in a viewport, so we can size it.
 			pgrid.pgrid_table_viewport = $("<div class=\"ui-pgrid-table-viewport ui-widget-content\" />");
-			pgrid.pgrid_table_container.wrapAll(pgrid.pgrid_table_viewport);
+			pgrid.pgrid_table_container.appendTo(pgrid.pgrid_table_viewport);
 			// Reset the object.
-			pgrid.pgrid_table_viewport = pgrid.pgrid_table_container.parent();
+			//pgrid.pgrid_table_viewport = pgrid.pgrid_table_container.parent();
 			pgrid.pgrid_table_viewport.height(pgrid.pgrid_view_height);
 			if (pgrid.pgrid_view_height != "auto") {
 				pgrid.pgrid_table_container.css({
@@ -908,7 +917,7 @@
 
 			/* -- Toolbar -- */
 			if (pgrid.pgrid_toolbar) {
-				var toolbar = $("<div />").addClass("ui-pgrid-toolbar");
+				pgrid.toolbar = $("<div />").addClass("ui-pgrid-toolbar");
 
 				$.each(pgrid.pgrid_toolbar_contents, function(key, val){
 					if (val.type == "button") {
@@ -1021,7 +1030,7 @@
 								cur_button.click();
 							};
 						}
-						toolbar.append(cur_button);
+						pgrid.toolbar.append(cur_button);
 					} else if (val.type == "text") {
 						var wrapper = $("<span />").addClass("ui-pgrid-toolbar-text");
 						if (val.extra_class)
@@ -1038,15 +1047,15 @@
 						if (val.attributes)
 							cur_text.attr(val.attributes);
 						wrapper.append(cur_text);
-						toolbar.append(wrapper);
+						pgrid.toolbar.append(wrapper);
 						if (val.load)
 							val.load(cur_text);
 					} else if (val.type == "separator") {
-						toolbar.append(
+						pgrid.toolbar.append(
 							$("<span />").addClass("ui-pgrid-toolbar-sep ui-state-default")
 						);
 					}
-					toolbar.append("<span class=\"ui-pgrid-toolbar-spacer\"> </span>");
+					pgrid.toolbar.append("<span class=\"ui-pgrid-toolbar-spacer\"> </span>");
 				});
 
 			}
@@ -1054,12 +1063,12 @@
 			/* -- Footer -- */
 			// Build a footer to place some utilities.
 			if (pgrid.pgrid_footer) {
-				var footer = $("<div />").addClass("ui-pgrid-footer ui-widget-header ui-corner-bottom ui-helper-clearfix");
+				pgrid.footer = $("<div />").addClass("ui-pgrid-footer ui-widget-header ui-corner-bottom ui-helper-clearfix");
 
 				// Provide filtering controls.
 				if (pgrid.pgrid_filtering) {
 					// Add filtering controls to the grid's footer.
-					footer.append(
+					pgrid.footer.append(
 						$("<div />").addClass("ui-pgrid-footer-filter-container").each(function(){
 							$(this).append($("<span>Filter: </span>").append(
 									$("<input />").addClass("ui-state-default ui-corner-all").attr({
@@ -1112,7 +1121,7 @@
 			if (pgrid.pgrid_paginate) {
 				// Add pagination controls to the grid's footer.
 				if (pgrid.pgrid_footer) {
-					footer.append(
+					pgrid.footer.append(
 						$("<div />").addClass("ui-pgrid-footer-pager-container").each(function(){
 							var footer_pager = $(this);
 							footer_pager.append($("<span>Display #</span>").append(
@@ -1161,13 +1170,16 @@
 				}
 				// Perform the pagination and update the controls' text.
 				pgrid.paginate(true);
+				// Make page buttons in the footer.
+				if (pgrid.pgrid_footer)
+					pgrid.make_page_buttons();
 			}
 
 			// Make selected and total record counters.
 			if (pgrid.pgrid_footer) {
 				if (pgrid.pgrid_count) {
 					// Make a counter.
-					footer.append(
+					pgrid.footer.append(
 						$("<div />").addClass("ui-pgrid-footer-count-container").each(function(){
 							var footer_counter = $(this);
 							if (pgrid.pgrid_select)
@@ -1175,33 +1187,28 @@
 							footer_counter.append($("<span><span class=\"ui-pgrid-footer-count-total\">0</span> total.</span>"));
 						})
 					);
+					// Update the selected and total count.
+					pgrid.update_selected();
 				}
 			}
 
 			// Put the toolbar into the DOM.
-			if (pgrid.pgrid_toolbar) {
-				pgrid.pgrid_widget.append(toolbar);
-				toolbar.wrap($("<div />").addClass("ui-pgrid-toolbar-container ui-widget-header ui-corner-top"));
-			}
+			if (pgrid.pgrid_toolbar)
+				pgrid.pgrid_widget.append($("<div />").addClass("ui-pgrid-toolbar-container ui-widget-header ui-corner-top").append(pgrid.toolbar));
 			// Put the grid back into the DOM.
 			pgrid.pgrid_widget.append(pgrid.pgrid_table_viewport);
 			// Put the footer into the DOM.
-			if (pgrid.pgrid_footer) {
-				pgrid.pgrid_widget.append(footer);
-				// Make page buttons in the footer.
-				if (pgrid.pgrid_paginate)
-					pgrid.make_page_buttons();
-				// Update the selected and total count.
-				pgrid.update_selected();
-			}
+			if (pgrid.pgrid_footer)
+				pgrid.pgrid_widget.append(pgrid.footer);
 			// Put the header selector into the DOM.
 			pgrid.pgrid_widget.append(pgrid.pgrid_header_select);
 
 			// Save the pgrid object in the DOM, so we can access it.
-			pgrid.get().pines_grid = pgrid;
+			this.pines_grid = pgrid;
+
 		});
 
-		return all_elements;
+		return this;
 	};
 
 	var pgrid_encode_uri = function(text){
@@ -1251,8 +1258,6 @@
 		pgrid_sort_ord: "asc",
 		// Decimal seperator. (Used during sorting of numbers.)
 		pgrid_decimal_sep: ".",
-		// Stripe alternating rows.
-		pgrid_stripe_rows: true,
 		// Add a hover effect to the rows.
 		pgrid_row_hover_effect: true,
 		// Height of the box (viewport) containing the grid. (Not including the toolbar and footer.)

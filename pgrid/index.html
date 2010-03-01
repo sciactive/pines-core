@@ -469,7 +469,7 @@
 					var tbody = test_div.find("tbody");
 					var row = tbody.children("tr").remove();
 					for (var i=1; i<=row_count; i++)
-						row.clone().find("td.row").html(i).end().appendTo(tbody);
+						row.clone().find("td.row").html("#"+i).end().appendTo(tbody);
 				}
 
 				function gridify_table() {
