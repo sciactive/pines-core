@@ -585,35 +585,36 @@
 					}
 
 					// Stylize the currently sorted column.
-					pgrid.find("tbody td.ui-pgrid-table-cell-sorted").removeClass("ui-pgrid-table-cell-sorted");
-					var cols = pgrid.find("tbody td.col_"+pgrid.pgrid_sort_col).addClass("ui-pgrid-table-cell-sorted");
+					pgrid.children("tbody").children("td.ui-pgrid-table-cell-sorted").removeClass("ui-pgrid-table-cell-sorted");
+					var cols = pgrid.children("tbody").children("td.col_"+pgrid.pgrid_sort_col).addClass("ui-pgrid-table-cell-sorted");
 
 					// Stylize the currently sorted column header. (According to order.)
-					pgrid.find("thead th span.ui-icon")
+					pgrid.children("thead").find("th span.ui-icon")
 					.removeClass("ui-pgrid-table-header-sorted-asc")
 					.removeClass("ui-pgrid-table-header-sorted-desc")
 					.removeClass("ui-icon-triangle-1-s")
 					.removeClass("ui-icon-triangle-1-n");
 					if (pgrid.pgrid_sort_ord == "asc") {
-						pgrid.find("thead th.col_"+pgrid.pgrid_sort_col+" span.ui-icon").addClass("ui-pgrid-table-header-sorted-desc ui-icon-triangle-1-n");
+						pgrid.children("thead").find("th.col_"+pgrid.pgrid_sort_col+" span.ui-icon").addClass("ui-pgrid-table-header-sorted-desc ui-icon-triangle-1-n");
 					} else {
-						pgrid.find("thead th.col_"+pgrid.pgrid_sort_col+" span.ui-icon").addClass("ui-pgrid-table-header-sorted-asc ui-icon-triangle-1-s");
+						pgrid.children("thead").find("th.col_"+pgrid.pgrid_sort_col+" span.ui-icon").addClass("ui-pgrid-table-header-sorted-asc ui-icon-triangle-1-s");
 					}
 
 					// Is this column only numbers, or is there a string?
-					var is_str = !!cols.contents().text().match(/[^0-9.,¤$€£¥]/);
+					var is_str = !!cols.contents().text().match(/[^0-9.,¤$€£¥#]/);
 
 					// Get all the rows.
-					var jq_rows = pgrid.find("tbody tr");
+					var jq_rows = pgrid.children("tbody").children("tr");
 					var rows = jq_rows.get();
 
 					// Calculate their sort keys and store them in their DOM objects.
 					$.each(rows, function(index, row) {
-						row.sortKey = $(row).children("td.col_"+pgrid.pgrid_sort_col).contents().text().toUpperCase(); //.replace("├ ", "").replace("└ ", "").toUpperCase();
-						// If this column contains only numbers (currency formatting included), parse it as floats.
-						if (!is_str) {
+						if (is_str) {
+							row.sortKey = row.children[pgrid.pgrid_sort_col].textContent.toUpperCase(); //.replace("├ ", "").replace("└ ", "").toUpperCase();
+						} else {
+							// If this column contains only numbers (currency signs and # included), parse it as floats.
 							// Strip non numerical characters except for the decimal separator. Replace that with a period, then parse it.
-							row.sortKey = parseFloat(row.sortKey.replace((new RegExp("[^0-9"+pgrid.pgrid_decimal_sep+"]", "g")), "").replace(pgrid.pgrid_decimal_sep, "."));
+							row.sortKey = parseFloat(row.children[pgrid.pgrid_sort_col].textContent.replace((new RegExp("[^0-9"+pgrid.pgrid_decimal_sep+"]", "g")), "").replace(pgrid.pgrid_decimal_sep, "."));
 						}
 					});
 					// Sort them by their keys.
@@ -622,23 +623,19 @@
 						if (a.sortKey > b.sortKey) return 1;
 						return 0;
 					});
-					// Since we're prepending the rows to the tbody, we need to reverse the order if it's ascending.
-					if (pgrid.pgrid_sort_ord == "asc")
+					// We need to reverse the order if it's descending.
+					if (pgrid.pgrid_sort_ord == "desc")
 						rows.reverse();
 					// Insert the rows into the tbody in the correct order.
-					$.each(rows, function(index, row) {
-						pgrid.children('tbody').prepend(row);
-					});
+					pgrid.children('tbody').append(rows);
 					// Place children under their parents.
 					jq_rows.filter(".parent").each(function(){
 						var cur_row = $(this);
 						cur_row.after(cur_row.siblings("."+cur_row.attr("title")));
 					});
-					// Only do this if we're not loading, to speed up initialization.
-					if (!loading) {
-						// Paginate, since we changed the order.
+					// Paginate, since we changed the order, but only if we're not loading, to speed up initialization.
+					if (!loading)
 						pgrid.paginate();
-					}
 				}
 			};
 
