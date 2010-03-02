@@ -523,6 +523,7 @@
 										// Update the selected items, and the record counts.
 										pgrid.update_selected();
 									}
+									return;
 								}
 								var cur_text = "";
 								var row = filter_rows.first();
