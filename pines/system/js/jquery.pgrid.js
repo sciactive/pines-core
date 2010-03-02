@@ -376,6 +376,7 @@
 				if (pgrid.pgrid_paginate && pgrid.pgrid_footer) {
 					var button_container = pgrid.footer.find("div.ui-pgrid-footer-pager-button-container");
 					var buttons = button_container.children();
+					if (pgrid.pgrid_pages == buttons.length) return;
 					if (pgrid.pgrid_pages < buttons.length) {
 						buttons.filter("button:eq("+pgrid.pgrid_pages+"), button:gt("+pgrid.pgrid_pages+")").remove();
 						return;
@@ -399,7 +400,7 @@
 				// For each row, hide its children.
 				jq_rows.filter("tr.parent").each(function() {
 					var cur_row = $(this);
-					cur_row.siblings("."+cur_row.attr("title")).addClass("ui-pgrid-table-row-hidden").filter("tr.parent").each(function(){
+					cur_row.siblings("tr."+cur_row.attr("title")).addClass("ui-pgrid-table-row-hidden").filter("tr.parent").each(function(){
 						// And its descendants, if it's a parent.
 						pgrid.hide_children($(this));
 					});
@@ -411,7 +412,7 @@
 				jq_rows.filter("tr.parent.ui-pgrid-table-row-expanded").each(function() {
 					var cur_row = $(this);
 					// If this row is expanded, its children should be shown.
-					cur_row.siblings("."+cur_row.attr("title")).removeClass("ui-pgrid-table-row-hidden").filter("tr.parent.ui-pgrid-table-row-expanded").each(function(){
+					cur_row.siblings("tr."+cur_row.attr("title")+".ui-pgrid-table-row-hidden").removeClass("ui-pgrid-table-row-hidden").filter("tr.parent.ui-pgrid-table-row-expanded").each(function(){
 						// And its descendants.
 						pgrid.show_children($(this));
 					});
@@ -465,9 +466,9 @@
 					// Select all the rows on the current page.
 					var elempage = all_rows.slice(pgrid.pgrid_page * pgrid.pgrid_perpage, (pgrid.pgrid_page * pgrid.pgrid_perpage) + pgrid.pgrid_perpage);
 					// Unhide them.
-					elempage.removeClass("ui-pgrid-table-row-hidden");
-					elempage.first().prevAll("tr:not(.ui-helper-hidden)").addClass("ui-pgrid-table-row-hidden");
-					elempage.last().nextAll("tr:not(.ui-helper-hidden)").addClass("ui-pgrid-table-row-hidden");
+					elempage.filter(".ui-pgrid-table-row-hidden").removeClass("ui-pgrid-table-row-hidden");
+					elempage.first().prevAll("tr:not(.ui-helper-hidden, .ui-pgrid-table-row-hidden)").addClass("ui-pgrid-table-row-hidden");
+					elempage.last().nextAll("tr:not(.ui-helper-hidden, .ui-pgrid-table-row-hidden)").addClass("ui-pgrid-table-row-hidden");
 					// And their children.
 					pgrid.show_children(elempage);
 					// Update the page number and count in the footer.
@@ -477,59 +478,84 @@
 				// The grid's state has probably changed.
 				if (!loading) pgrid.state_changed();
 			};
-			
-			pgrid.filter_timed = function(row, loading) {
-				var cur_text = "";
-				// Add spaces between cell values, so they're not falsely matched.
-				// ex: "mest" would match the cells "James" and "Teacher" if they were concatenated.
-				row.children().each(function(){
-					cur_text += " "+this.textContent.toLowerCase().replace(/[^\w]/, "");
-				});
-				var match = true;
-				// Go through each search term and if any doesn't match, flag the row as a non-match.
-				for (var i in pgrid.filter_arr) {
-					if (cur_text.indexOf(pgrid.filter_arr[i]) == -1)
-						match = false;
-				}
-				// If all search terms were found, enable the row and its parents.
-				if (!match) {
-					row.addClass("ui-helper-hidden");
-				} else {
-					row.removeClass("ui-helper-hidden");
-					pgrid.enable_parents(row);
-				}
-				var next = row.next();
-				if (next.length) {
-					pgrid.filter_timer = window.setTimeout(pgrid.filter_timed, 0, next, loading);
-				} else {
-					pgrid.filter_timer = null;
-					// Only do this if we're not loading, to speed up initialization.
-					if (!loading) {
-						// Paginate, since we may have disabled rows.
-						pgrid.paginate();
-						// Make new page buttons, since the enabled record total may have changed.
-						pgrid.make_page_buttons();
-						// Update the selected items, and the record counts.
-						pgrid.update_selected();
-					}
-				}
-			};
 
 			pgrid.do_filter = function(filter, loading) {
 				// Filter if filtering is allowed, or if this is an initial filter.
 				if (pgrid.pgrid_filtering || loading) {
 					if (pgrid.filter_timer)
-						window.clearTimeout(pgrid.filter_timer);
+						window.clearInterval(pgrid.filter_timer);
 					if (typeof filter == "string")
 						pgrid.pgrid_filter = filter;
 					if (pgrid.pgrid_filter.length > 0) {
-						pgrid.filter_arr = pgrid.pgrid_filter.toLowerCase().split(" ");
-						// Disable all rows, then iterate them and match.
-						pgrid.filter_timer = window.setTimeout(pgrid.filter_timed, 0, pgrid.children("tbody").children("tr:first-child"), loading);
-						//pgrid.filter_timer = window.setTimeout(pgrid.filter_timed, 0, pgrid.children("tbody").children().addClass("ui-helper-hidden").first(), loading);
+						var filter_arr = pgrid.pgrid_filter.toLowerCase().split(" ");
+						// Find any rows that might match using a simple DOM search.
+						var filter_rows = pgrid.children("tbody")
+						.children("tr:not(.ui-helper-hidden)").addClass("ui-helper-hidden").end()
+						.children("tr").filter(function(){
+							var cur_text = this.textContent.toLowerCase();
+							for (var i in filter_arr) {
+								if (cur_text.indexOf(filter_arr[i]) == -1)
+									return false;
+							}
+							return true;
+						}).removeClass("ui-helper-hidden");
+						if (!loading) {
+							// Paginate, since we may have disabled rows.
+							pgrid.paginate();
+							// Make new page buttons, since the enabled record total may have changed.
+							pgrid.make_page_buttons();
+						}
+						// If the filter is only 1 letter, the basic search is fine.
+						if (pgrid.pgrid_filter.length > 1) {
+							// Now iterate through the possibel matches and match with the full search.
+							// Using an interval allows the user to use their browser while it's searching.
+							pgrid.filter_timer = window.setInterval(function(){
+								if (!filter_rows || !filter_rows.length) {
+									window.clearInterval(pgrid.filter_timer);
+									pgrid.filter_timer = null;
+									filter_rows = null;
+									// Only do this if we're not loading, to speed up initialization.
+									if (!loading) {
+										// Paginate, since we may have disabled rows.
+										pgrid.paginate();
+										// Make new page buttons, since the enabled record total may have changed.
+										pgrid.make_page_buttons();
+										// Update the selected items, and the record counts.
+										pgrid.update_selected();
+									}
+								}
+								var cur_text = "";
+								var row = filter_rows.first();
+								filter_rows = filter_rows.slice(1);
+								// Add spaces between cell values, so they're not falsely matched.
+								// ex: "mest" would match the cells "James" and "Teacher" if they were concatenated.
+								row.children("td.ui-pgrid-table-cell-text").each(function(){
+									cur_text += " "+this.textContent.toLowerCase();
+								});
+								// Go through each search term and if any one doesn't match, hide the row.
+								for (var i in filter_arr) {
+									if (cur_text.indexOf(filter_arr[i]) == -1) {
+										if (row.is(":visible")) {
+											row.addClass("ui-helper-hidden");
+											if (!loading) {
+												// Paginate, since we may have disabled rows.
+												pgrid.paginate();
+												// Make new page buttons, since the enabled record total may have changed.
+												pgrid.make_page_buttons();
+											}
+										} else {
+											row.addClass("ui-helper-hidden");
+										}
+										return;
+									}
+								}
+								if (row.hasClass("child"))
+									pgrid.enable_parents(row);
+							}, 0);
+						}
 					} else {
 						// If the user enters nothing, all records should be shown.
-						pgrid.children("tbody").children().removeClass("ui-helper-hidden");
+						pgrid.children("tbody").children("tr.ui-helper-hidden").removeClass("ui-helper-hidden");
 						// Only do this if we're not loading, to speed up initialization.
 						if (!loading) {
 							// Paginate, since we may have disabled rows.
