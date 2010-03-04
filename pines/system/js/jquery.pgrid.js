@@ -28,11 +28,10 @@
 				});
 				pgrid.children("tbody").append(jq_row);
 				// Gather all the rows.
-				if (new_rows) {
+				if (new_rows)
 					new_rows = new_rows.add(jq_row);
-				} else {
+				else
 					new_rows = jq_row;
-				}
 			});
 			// The rows need to be initialized after they've all been added, for child indentation.
 			pgrid.init_rows(new_rows);
@@ -55,11 +54,11 @@
 				var pgrid = this.pines_grid;
 				if (!pgrid)
 					return;
-				if (keysorrows.jquery) {
+				if (keysorrows.jquery)
 					keysorrows.each(function(){
 						pgrid.mark_for_delete_recursively($(this));
 					});
-				} else {
+				else
 					$.each(keysorrows, function(){
 						var cur_keyorrow = this;
 						if (typeof cur_keyorrow == "object") {
@@ -71,7 +70,6 @@
 						}
 
 					});
-				}
 				// Delete the rows we just marked for deletion.
 				// Marking them for deletion first prevents errors when selecting children.
 				pgrid.delete_marked();
@@ -166,11 +164,10 @@
 			if (!this.pines_grid.jquery)
 				return;
 			var pgrid = this.pines_grid;
-			if (return_rows) {
-				return_rows = return_rows.add(pgrid.children("tbody").children("tr"));
-			} else {
-				return_rows = pgrid.children("tbody").children("tr");
-			}
+			if (return_rows)
+				return_rows = return_rows.add(pgrid.children("tbody").children());
+			else
+				return_rows = pgrid.children("tbody").children();
 		});
 		return return_rows;
 	};
@@ -180,11 +177,10 @@
 			if (!this.pines_grid.jquery)
 				return;
 			var pgrid = this.pines_grid;
-			if (return_rows) {
+			if (return_rows)
 				return_rows = return_rows.add(pgrid.children("tbody").children("tr.ui-pgrid-table-row-selected"));
-			} else {
+			else
 				return_rows = pgrid.children("tbody").children("tr.ui-pgrid-table-row-selected");
-			}
 		});
 		return return_rows;
 	};
@@ -374,7 +370,7 @@
 			pgrid.make_page_buttons = function() {
 				// Make a button in the footer to jump to each page.
 				if (pgrid.pgrid_paginate && pgrid.pgrid_footer) {
-					var button_container = pgrid.footer.find("div.ui-pgrid-footer-pager-button-container");
+					var button_container = pgrid.footer.children("div.ui-pgrid-footer-pager-container").children("div.ui-pgrid-footer-pager-button-container");
 					var buttons = button_container.children();
 					if (pgrid.pgrid_pages == buttons.length) return;
 					if (pgrid.pgrid_pages < buttons.length) {
@@ -386,10 +382,6 @@
 							$("<button type=\"button\">"+(cur_page+1)+"</button>").addClass("ui-state-default ui-corner-all").click(function(){
 								pgrid.pagenum(parseInt($(this).text()) - 1);
 								return false;
-							}).hover(function(){
-								$(this).addClass("ui-state-hover");
-							}, function(){
-								$(this).removeClass("ui-state-hover");
 							})
 						);
 					}
@@ -428,11 +420,10 @@
 						cur_row.siblings("."+cur_title).each(function(){
 							// And its descendants, if it's a parent.
 							var this_row = $(this);
-							if (this_row.hasClass("parent")) {
+							if (this_row.hasClass("parent"))
 								pgrid.mark_for_delete_recursively(this_row);
-							} else {
+							else
 								this_row.addClass("ui-pgrid-table-row-marked-for-deletion");
-							}
 						});
 					}
 					// Then itself.
@@ -457,11 +448,10 @@
 
 					// If the current page is past the last page, set it to the last page,
 					// and if it's before the first page, set it to the first page.
-					if (pgrid.pgrid_page + 1 > pgrid.pgrid_pages) {
+					if (pgrid.pgrid_page + 1 > pgrid.pgrid_pages)
 						pgrid.pgrid_page = pgrid.pgrid_pages - 1;
-					} else if ((pgrid.pgrid_page == -1) && (pgrid.pgrid_pages > 0)) {
+					else if ((pgrid.pgrid_page == -1) && (pgrid.pgrid_pages > 0))
 						pgrid.pgrid_page = 0;
-					}
 
 					// Select all the rows on the current page.
 					var elempage = all_rows.slice(pgrid.pgrid_page * pgrid.pgrid_perpage, (pgrid.pgrid_page * pgrid.pgrid_perpage) + pgrid.pgrid_perpage);
@@ -491,7 +481,7 @@
 						// Find any rows that might match using a simple DOM search.
 						var filter_rows = pgrid.children("tbody")
 						.children("tr:not(.ui-helper-hidden)").addClass("ui-helper-hidden").end()
-						.children("tr").filter(function(){
+						.children().filter(function(){
 							var cur_text = this.textContent.toLowerCase();
 							for (var i in filter_arr) {
 								if (cur_text.indexOf(filter_arr[i]) == -1)
@@ -544,9 +534,8 @@
 												// Make new page buttons, since the enabled record total may have changed.
 												pgrid.make_page_buttons();
 											}
-										} else {
+										} else
 											row.addClass("ui-helper-hidden");
-										}
 										return;
 									}
 								}
@@ -595,12 +584,11 @@
 						column_class = parseInt(column_class);
 					}
 					// If they click the header again, change to descending order.
-					if (pgrid.pgrid_sort_col == column_class && !loading) {
-						if (pgrid.pgrid_sort_ord == "asc") {
+					if (!loading && pgrid.pgrid_sort_col == column_class) {
+						if (pgrid.pgrid_sort_ord == "asc")
 							pgrid.pgrid_sort_ord = "desc";
-						} else {
+						else
 							pgrid.pgrid_sort_ord = "asc";
-						}
 					} else {
 						if (column_class) {
 							pgrid.pgrid_sort_col = column_class;
@@ -608,37 +596,37 @@
 						}
 					}
 
-					// Stylize the currently sorted column.
-					pgrid.children("tbody").children("td.ui-pgrid-table-cell-sorted").removeClass("ui-pgrid-table-cell-sorted");
-					var cols = pgrid.children("tbody").children("td.col_"+pgrid.pgrid_sort_col).addClass("ui-pgrid-table-cell-sorted");
-
 					// Stylize the currently sorted column header. (According to order.)
-					pgrid.children("thead").find("th span.ui-icon")
+					var headers = pgrid.children("thead").children().children();
+					headers.children("span.ui-pgrid-table-header-sorted-asc, span.ui-pgrid-table-header-sorted-desc")
 					.removeClass("ui-pgrid-table-header-sorted-asc")
 					.removeClass("ui-pgrid-table-header-sorted-desc")
 					.removeClass("ui-icon-triangle-1-s")
 					.removeClass("ui-icon-triangle-1-n");
-					if (pgrid.pgrid_sort_ord == "asc") {
-						pgrid.children("thead").find("th.col_"+pgrid.pgrid_sort_col+" span.ui-icon").addClass("ui-pgrid-table-header-sorted-desc ui-icon-triangle-1-n");
-					} else {
-						pgrid.children("thead").find("th.col_"+pgrid.pgrid_sort_col+" span.ui-icon").addClass("ui-pgrid-table-header-sorted-asc ui-icon-triangle-1-s");
-					}
+					if (pgrid.pgrid_sort_ord == "asc")
+						headers.filter("th.col_"+pgrid.pgrid_sort_col).children("span.ui-icon").addClass("ui-pgrid-table-header-sorted-desc ui-icon-triangle-1-n");
+					else
+						headers.filter("th.col_"+pgrid.pgrid_sort_col).children("span.ui-icon").addClass("ui-pgrid-table-header-sorted-asc ui-icon-triangle-1-s");
+
+					// Get all the rows.
+					var all_rows = pgrid.children("tbody").children();
+					all_rows.children("td.ui-pgrid-table-cell-sorted").removeClass("ui-pgrid-table-cell-sorted");
+					// Stylize the currently sorted column.
+					var cols = all_rows.children("td.col_"+pgrid.pgrid_sort_col).addClass("ui-pgrid-table-cell-sorted");
 
 					// Is this column only numbers, or is there a string?
 					var is_str = !!cols.contents().text().match(/[^0-9.,¤$€£¥#]/);
 
-					// Get all the rows.
-					var jq_rows = pgrid.children("tbody").children("tr");
-					var rows = jq_rows.get();
+					var rows = all_rows.get();
 
 					// Calculate their sort keys and store them in their DOM objects.
-					$.each(rows, function(index, row) {
+					$.each(rows, function() {
 						if (is_str) {
-							row.sortKey = row.children[pgrid.pgrid_sort_col].textContent.toUpperCase(); //.replace("├ ", "").replace("└ ", "").toUpperCase();
+							this.sortKey = this.children[pgrid.pgrid_sort_col].textContent.toUpperCase(); //.replace("├ ", "").replace("└ ", "").toUpperCase();
 						} else {
 							// If this column contains only numbers (currency signs and # included), parse it as floats.
 							// Strip non numerical characters except for the decimal separator. Replace that with a period, then parse it.
-							row.sortKey = parseFloat(row.children[pgrid.pgrid_sort_col].textContent.replace((new RegExp("[^0-9"+pgrid.pgrid_decimal_sep+"]", "g")), "").replace(pgrid.pgrid_decimal_sep, "."));
+							this.sortKey = parseFloat(this.children[pgrid.pgrid_sort_col].textContent.replace((new RegExp("[^0-9"+pgrid.pgrid_decimal_sep+"]", "g")), "").replace(pgrid.pgrid_decimal_sep, "."));
 						}
 					});
 					// Sort them by their keys.
@@ -653,7 +641,7 @@
 					// Insert the rows into the tbody in the correct order.
 					pgrid.children("tbody").append(rows);
 					// Place children under their parents.
-					jq_rows.filter("tr.parent").each(function(){
+					all_rows.filter("tr.parent").each(function(){
 						var cur_row = $(this);
 						cur_row.after(cur_row.siblings("."+cur_row.attr("title")));
 					});
@@ -669,20 +657,16 @@
 					pgrid.children("tbody").children("tr.ui-helper-hidden.ui-pgrid-table-row-selected").removeClass("ui-pgrid-table-row-selected").removeClass("ui-state-active");
 
 					// Update the table footer.
-					if (pgrid.pgrid_footer && pgrid.pgrid_count) {
-						var selected_rows = pgrid.children("tbody").children("tr.ui-pgrid-table-row-selected").length;
-						pgrid.footer.find("span.ui-pgrid-footer-count-select").html(selected_rows);
-					}
+					if (pgrid.pgrid_footer && pgrid.pgrid_count)
+						pgrid.footer.children("div.ui-pgrid-footer-count-container").find("span.ui-pgrid-footer-count-select").html(pgrid.children("tbody").children("tr.ui-pgrid-table-row-selected").length);
 				}
 				pgrid.update_count();
 			};
 
 			pgrid.update_count = function() {
 				// Update the table footer.
-				if (pgrid.pgrid_footer && pgrid.pgrid_count) {
-					var all_rows = pgrid.children("tbody").children("tr:not(.ui-helper-hidden)").length;
-					pgrid.footer.find("span.ui-pgrid-footer-count-total").html(all_rows);
-				}
+				if (pgrid.pgrid_footer && pgrid.pgrid_count)
+					pgrid.footer.children("div.ui-pgrid-footer-count-container").find("span.ui-pgrid-footer-count-total").html(pgrid.children("tbody").children("tr:not(.ui-helper-hidden)").length);
 			};
 
 			pgrid.do_col_hiding = function(loading) {
@@ -791,16 +775,14 @@
 				pgrid.children("tbody").delegate("tr", "click", function(e){
 					if ($(e.target).parent().andSelf().hasClass("ui-pgrid-table-expander")) return;
 					var cur_row = $(this);
-					if (!pgrid.pgrid_multi_select || (!e.ctrlKey && !e.shiftKey)) {
+					if (!pgrid.pgrid_multi_select || (!e.ctrlKey && !e.shiftKey))
 						cur_row.siblings().removeClass("ui-pgrid-table-row-selected").removeClass("ui-state-active");
-					} else if (e.shiftKey) {
+					else if (e.shiftKey)
 						cur_row.prevUntil(".ui-pgrid-table-row-selected").addClass("ui-pgrid-table-row-selected ui-state-active");
-					}
-					if (e.ctrlKey) {
+					if (e.ctrlKey)
 						cur_row.toggleClass("ui-pgrid-table-row-selected").toggleClass("ui-state-active");
-					} else {
+					else
 						cur_row.addClass("ui-pgrid-table-row-selected ui-state-active");
-					}
 					pgrid.update_selected();
 				}).delegate("tr", "dblclick", function(e){
 					if ($(e.target).hasClass("ui-pgrid-table-expander")) return;
@@ -824,11 +806,10 @@
 				pgrid.pgrid_header_select.append($("<label></label>")
 					.addClass("ui-state-default ui-corner-all")
 					.append($("<input type=\"checkbox\" />").change(function(e){
-						if (e.target.checked) {
+						if (e.target.checked)
 							pgrid.show_col(index+1);
-						} else {
+						else
 							pgrid.hide_col(index+1);
-						}
 					}).addClass("ui-pgrid-table-col-hider-"+(index+1)))
 					.append(cur_header.text()));
 			});
@@ -844,48 +825,47 @@
 			// Resizing variables.
 			pgrid.resizing_header = false;
 			pgrid.resizing_tempX = 0;
-			// Wrap header contents in a div and provide a resizer.
-			h_rows.children("th:not(.ui-pgrid-table-expander)").each(function(index){
-				var cur_header = $(this);
-
-				var cur_text = $("<div />").addClass("ui-pgrid-table-header-text");
-				// Add a "sortable" class for custom styling.
-				if (pgrid.pgrid_sortable) cur_text.addClass("ui-pgrid-table-header-sortable");
-
-				// Wrap the contents and add the column class to the cell.
-				cur_header.wrapInner(cur_text).addClass("col_"+(index+1)).append($("<span />").addClass("ui-icon"));
-				cur_text = cur_header.children("div.ui-pgrid-table-header-text");
-
-				// Provide a column resizer, if set. The cleared div appended to the end will actually size the entire column.
-				if (pgrid.pgrid_resize_cols) {
-					// Add a "resizeable" class for custom styling.
-					cur_header.addClass("ui-pgrid-table-header-resizeable").mousedown(function(e){
-						var relx = e.pageX - cur_header.offset().left;
-						// Only start resizing if the user grabs the edge of the box. (And don't resize the expander column.)
-						if ((index == 0 && relx < 4) || (relx > 3 && relx < cur_header.width() - 4))
-							return true;
-						pgrid.resizing_header = true;
-						pgrid.resizing_tempX = e.pageX;
-						// If the user selected the left edge of this box, they want to resize the previous box.
-						if (relx < 4)
-							pgrid.resizing_cur = cur_header.prev().find("div.ui-pgrid-table-header-text");
-						else
-							pgrid.resizing_cur = cur_text;
-						// Prevent the browser from selecting text while the user is resizing a header.
-						return false;
-					});
-				}
+			// Wrap header text in a div.
+			var cur_text = $("<div />").addClass("ui-pgrid-table-header-text");
+			// Add a "sortable" class for custom styling.
+			if (pgrid.pgrid_sortable) cur_text.addClass("ui-pgrid-table-header-sortable");
+			var h_headers = h_rows.children("th:not(.ui-pgrid-table-expander)")
+			.mouseup(function(){
 				// Bind to mouseup (not click) on the header to sort it.
 				// If we bind to click, resizing_header will always be false.
-				cur_text.mouseup(function(){
-					// If we're resizing, don't sort it.
-					if (pgrid.resizing_header) {
-						pgrid.resizing_header = false;
-					} else {
-						pgrid.do_sort(index+1);
-					}
+				// If we're resizing, don't sort it.
+				if (pgrid.resizing_header)
+					pgrid.resizing_header = false;
+				else
+					pgrid.do_sort($(this).prevAll().length);
+			})
+			.wrapInner(cur_text)
+			.append($("<span />").addClass("ui-icon"));
+			// Provide column resizing, if set. The header's text div will actually size the entire column.
+			if (pgrid.pgrid_resize_cols) {
+				// Add a "resizeable" class for custom styling.
+				h_headers.addClass("ui-pgrid-table-header-resizeable").mousedown(function(e){
+					var cur_header = $(this);
+					var relx = e.pageX - cur_header.offset().left;
+					// Only start resizing if the user grabs the edge of the box. (And don't resize the expander column.)
+					if ((relx < 4 && cur_header.hasClass("ui-pgrid-table-expander")) || (relx > 3 && relx < cur_header.width() - 4))
+						return true;
+					pgrid.resizing_header = true;
+					pgrid.resizing_tempX = e.pageX;
+					// If the user selected the left edge of this box, they want to resize the previous box.
+					if (relx < 4)
+						pgrid.resizing_cur = cur_header.prev().children("div.ui-pgrid-table-header-text");
+					else
+						pgrid.resizing_cur = cur_header.children("div.ui-pgrid-table-header-text");
+					// Prevent the browser from selecting text while the user is resizing a header.
+					return false;
 				});
+			}
+			h_headers.each(function(index){
+				// Add the column class to the cell.
+				$(this).addClass("col_"+(index+1));
 			});
+			delete h_headers;
 			// When the mouse moves over the pgrid, and a column is being resized, set its width.
 			if (pgrid.pgrid_resize_cols) {
 				pgrid.pgrid_widget.mousemove(function(e){
@@ -903,21 +883,21 @@
 			}
 
 			// Add an expander column to the header.
-			h_rows.addClass("ui-widget-header").each(function(){
-				$(this).prepend($("<th class=\"ui-icon ui-pgrid-table-icon-hidden ui-pgrid-table-expander\"><div style=\"width: 16px; visibility: hidden;\">+</div></th>").click(function(e){
-					// Show the header selector.
-					var offset = pgrid.pgrid_widget.offset();
-					pgrid.pgrid_header_select.css({
-						left: (e.pageX - offset.left - 5),
-						top: (e.pageY - offset.top - 5)
-					});
-					pgrid.pgrid_header_select.fadeIn("fast");
-				}).mouseover(function(){
-					$(this).removeClass("ui-pgrid-table-icon-hidden").addClass("ui-icon-triangle-1-s");
-				}).mouseout(function(){
-					$(this).addClass("ui-pgrid-table-icon-hidden").removeClass("ui-icon-triangle-1-s");
-				}));
-			});
+			h_rows.addClass("ui-widget-header").prepend($("<th class=\"ui-icon ui-pgrid-table-icon-hidden ui-pgrid-table-expander\"><div style=\"width: 16px; visibility: hidden;\">+</div></th>").click(function(e){
+				// Show the header selector.
+				var offset = pgrid.pgrid_widget.offset();
+				pgrid.pgrid_header_select.css({
+					left: (e.pageX - offset.left - 5),
+					top: (e.pageY - offset.top - 5)
+				});
+				pgrid.pgrid_header_select.fadeIn("fast");
+			}).mouseover(function(){
+				$(this).removeClass("ui-pgrid-table-icon-hidden").addClass("ui-icon-triangle-1-s");
+			}).mouseout(function(){
+				$(this).addClass("ui-pgrid-table-icon-hidden").removeClass("ui-icon-triangle-1-s");
+			}));
+
+			delete h_rows;
 
 			// Initialize the rows.
 			pgrid.init_rows(pgrid.children("tbody").children());
@@ -929,7 +909,7 @@
 			// Wrap the table and its container in a viewport, so we can size it.
 			pgrid.pgrid_table_viewport = $("<div class=\"ui-pgrid-table-viewport ui-widget-content\" />");
 			pgrid.pgrid_table_container.appendTo(pgrid.pgrid_table_viewport);
-			// Reset the object.
+			// Reset the object. (Not needed anymore.)
 			//pgrid.pgrid_table_viewport = pgrid.pgrid_table_container.parent();
 			pgrid.pgrid_table_viewport.height(pgrid.pgrid_view_height);
 			if (pgrid.pgrid_view_height != "auto") {
@@ -954,7 +934,7 @@
 										$(this).addClass(val.extra_class);
 								})
 							).click(function(e){
-							var selected_rows = (val.return_all_rows ? pgrid.find("tbody tr:not(.ui-helper-hidden)") : pgrid.find("tbody tr.ui-pgrid-table-row-selected"));
+							var selected_rows = (val.return_all_rows ? pgrid.children("tbody").children("tr:not(.ui-helper-hidden)") : pgrid.children("tbody").children("tr.ui-pgrid-table-row-selected"));
 							if (!val.selection_optional && !val.select_all && !val.select_none && selected_rows.length === 0) {
 								alert("Please make a selection before performing this operation.");
 								return false;
@@ -977,13 +957,13 @@
 							}
 							if (val.select_all) {
 								if (pgrid.pgrid_select && pgrid.pgrid_multi_select) {
-									pgrid.find("tbody tr:not(.ui-helper-hidden)").addClass("ui-pgrid-table-row-selected ui-state-active");
+									pgrid.children("tbody").children("tr:not(.ui-helper-hidden)").addClass("ui-pgrid-table-row-selected ui-state-active");
 									pgrid.update_selected();
 								}
 							}
 							if (val.select_none) {
 								if (pgrid.pgrid_select) {
-									pgrid.find("tbody tr").removeClass("ui-pgrid-table-row-selected").removeClass("ui-state-active");
+									pgrid.children("tbody").children().removeClass("ui-pgrid-table-row-selected").removeClass("ui-state-active");
 									pgrid.update_selected();
 								}
 							}
@@ -992,10 +972,10 @@
 								if (val.pass_csv || val.pass_csv_with_headers) {
 									// Pass a CSV of the selected rows, instead of a jQuery object.
 									if (val.pass_csv_with_headers)
-										selected_rows = pgrid.find("thead tr").add(selected_rows);
+										selected_rows = pgrid.children("thead").children().add(selected_rows);
 									selected_rows.each(function() {
 										// Turn each cell into a CSV cell.
-										$(this).children(":not(.ui-pgrid-table-expander)").each(function(){
+										$(this).children("td:not(.ui-pgrid-table-expander)").each(function(){
 											var cur_cell = $(this);
 											row_data += "\""+cur_cell.contents().text().replace("\"", "\"\"")+"\"";
 											// Add a comma, if there is another cell.
@@ -1016,14 +996,13 @@
 								var cur_cols_text = [];
 								selected_rows.each(function(){
 									var cur_row = $(this);
-									var cur_cells = cur_row.children(":not(.ui-pgrid-table-expander)");
+									var cur_cells = cur_row.children("td:not(.ui-pgrid-table-expander)");
 									cur_title += (cur_title.length ? val.delimiter : "") + pgrid_encode_uri(cur_row.attr("title"));
 									cur_cells.each(function(i){
-										if (!cur_cols_text[i+1]) {
+										if (!cur_cols_text[i+1])
 											cur_cols_text[i+1] = pgrid_encode_uri($(this).contents().text());
-										} else {
+										else
 											cur_cols_text[i+1] += val.delimiter + pgrid_encode_uri($(this).contents().text());
-										}
 									});
 								});
 								parsed_url = parsed_url.replace("#title#", cur_title);
@@ -1031,17 +1010,16 @@
 									if (isNaN(i)) continue;
 									parsed_url = parsed_url.replace("#col_"+i+"#", cur_cols_text[i]);
 								}
-								if (val.new_window) {
+								if (val.new_window)
 									return window.open(parsed_url);
-								} else {
+								else
 									return (window.location = parsed_url);
-								}
 							}
 							return true;
 						}).mousedown(function(){
 							// Prevent text selection;
 							return false;
-						}).hover(function(e){
+						}).hover(function(){
 							$(this).addClass("ui-state-hover");
 						}, function(){
 							$(this).removeClass("ui-state-hover");
@@ -1090,7 +1068,11 @@
 			/* -- Footer -- */
 			// Build a footer to place some utilities.
 			if (pgrid.pgrid_footer) {
-				pgrid.footer = $("<div />").addClass("ui-pgrid-footer ui-widget-header ui-corner-bottom ui-helper-clearfix");
+				pgrid.footer = $("<div />").addClass("ui-pgrid-footer ui-widget-header ui-corner-bottom ui-helper-clearfix").delegate("button", "mouseenter", function(){
+					$(this).addClass("ui-state-hover");
+				}).delegate("button", "mouseleave", function(){
+					$(this).removeClass("ui-state-hover");
+				});
 
 				// Provide filtering controls.
 				if (pgrid.pgrid_filtering) {
@@ -1108,10 +1090,6 @@
 								).append(
 									$("<button type=\"button\">X</button>").addClass("ui-state-default ui-corner-all").click(function(){
 										$(this).prev("input").val("").keyup().focus();
-									}).hover(function(){
-										$(this).addClass("ui-state-hover");
-									}, function(){
-										$(this).removeClass("ui-state-hover");
 									})
 								)
 							);
@@ -1131,11 +1109,10 @@
 				pgrid.pgrid_sort_col = parseInt(pgrid.pgrid_sort_col);
 				// Since the order is switched if the column is already set, we need to set the order to the opposite.
 				// This also works as a validator. Anything other than "desc" will become "asc" when it's switched.
-				if (pgrid.pgrid_sort_ord == "desc") {
+				if (pgrid.pgrid_sort_ord == "desc")
 					pgrid.pgrid_sort_ord = "asc";
-				} else {
+				else
 					pgrid.pgrid_sort_ord = "desc";
-				}
 				// Store the real sortable value in a temp val, and make sure it's true while we sort initially.
 				var tmp_col_val = pgrid.pgrid_sortable;
 				pgrid.pgrid_sortable = true;
@@ -1164,32 +1141,16 @@
 							).append(" "));
 							footer_pager.append($("<button type=\"button\">&lt;&lt; Start</button>").addClass("ui-state-default ui-corner-all").click(function(){
 								pgrid.pagestart();
-							}).hover(function(){
-								$(this).addClass("ui-state-hover");
-							}, function(){
-								$(this).removeClass("ui-state-hover");
 							}));
 							footer_pager.append($("<button type=\"button\">&lt; Prev</button>").addClass("ui-state-default ui-corner-all").click(function(){
 								pgrid.pageprev();
-							}).hover(function(){
-								$(this).addClass("ui-state-hover");
-							}, function(){
-								$(this).removeClass("ui-state-hover");
 							}));
 							footer_pager.append($("<div />").addClass("ui-pgrid-footer-pager-button-container"));
 							footer_pager.append($("<button type=\"button\">Next &gt;</button>").addClass("ui-state-default ui-corner-all").click(function(){
 								pgrid.pagenext();
-							}).hover(function(){
-								$(this).addClass("ui-state-hover");
-							}, function(){
-								$(this).removeClass("ui-state-hover");
 							}));
 							footer_pager.append($("<button type=\"button\">End &gt;&gt;</button>").addClass("ui-state-default ui-corner-all").click(function(){
 								pgrid.pageend();
-							}).hover(function(){
-								$(this).addClass("ui-state-hover");
-							}, function(){
-								$(this).removeClass("ui-state-hover");
 							}));
 							footer_pager.append($("<span> Page <span class=\"page_number\">1</span> of <span class=\"page_total\">1</span></span>"));
 						})
@@ -1232,18 +1193,16 @@
 
 			// Save the pgrid object in the DOM, so we can access it.
 			this.pines_grid = pgrid;
-
 		});
 
 		return this;
 	};
 
 	var pgrid_encode_uri = function(text){
-		if (encodeURIComponent) {
+		if (encodeURIComponent)
 			return encodeURIComponent(text);
-		} else {
+		else
 			return escape(text);
-		}
 	};
 
 	$.fn.pgrid.defaults = {
