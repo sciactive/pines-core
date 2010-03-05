@@ -67,10 +67,12 @@ class hook extends p_base {
 	 * @param int $order The order can be negative, which will run before the method, or positive, which will run after the method. It cannot be zero.
 	 * @param callback The callback.
 	 * @return array An array containing the IDs of the new callback and all matching callbacks.
+	 * @uses hook::sort_callbacks() To resort the callback array in the correct order.
 	 */
 	function add_callback($hook, $order, $function) {
 		$callback = array($hook, $order, $function);
 		$this->callbacks[] = $callback;
+		uasort($this->callbacks, array($this, 'sort_callbacks'));
 		return array_keys($this->callbacks, $callback);
 	}
 
@@ -245,7 +247,6 @@ class hook extends p_base {
 	 * @param string $type The type of callbacks to run. 'before', 'after', or 'all'.
 	 * @param mixed $object The object on which the hook was called.
 	 * @return array|bool The array of arguments returned by the last callback or FALSE if a callback returned it.
-	 * @todo Test if this called the callbacks in the correct order.
 	 */
 	function run_callbacks($name, $arguments = array(), $type = 'all', $object = null) {
 		if (!in_array($name, $this->hooks))
@@ -259,6 +260,23 @@ class hook extends p_base {
 			}
 		}
 		return $arguments;
+	}
+
+	/**
+	 * Sort function for callback sorting.
+	 *
+	 * This assures that callbacks are executed in the correct order. Callback
+	 * IDs are preserved as long as uasort() is used.
+	 *
+	 * @param array $a The first callback in the comparison.
+	 * @param arary $b The second callback in the comparison.
+	 * @return int 0 for equal, -1 for less than, 1 for greater than.
+	 * @access private
+	 */
+	private function sort_callbacks($a, $b) {
+		if ($a[1] == $b[1])
+			return 0;
+		return ($a[1] < $b[1]) ? -1 : 1;
 	}
 }
 
