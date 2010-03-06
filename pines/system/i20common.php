@@ -2,8 +2,8 @@
 /**
  * Common functions used in Pines.
  * 
- * These are often overriden by components, which is why this file needs to be
- * parsed after the components' common files.
+ * These can be overriden by components, which is why this file starts with 20.
+ * It's loaded along with the components' init files.
  *
  * @package Pines
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html
