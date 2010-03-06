@@ -10,18 +10,6 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-/* ------ DEPRECATED ------ */
-// Run the loaders for our components. This shouldn't require any sort of
-// functionality, like entity or user management.
-foreach ($pines->components as $cur_component) {
-	if (substr($cur_component, 0, 4) == 'tpl_')
-		continue;
-	if ( file_exists("components/$cur_component/load.php") )
-		include_once("components/$cur_component/load.php");
-}
-if (P_SCRIPT_TIMING) pines_print_time('Run Component Loaders');
-/* ------ END ------ */
-
 /**
  * Sort by only the file's name.
  *
@@ -51,17 +39,5 @@ foreach ($_p_cominit as $_p_cur_cominit) {
 	include($_p_cur_cominit);
 }
 if (P_SCRIPT_TIMING) pines_print_time('Init Components');
-
-/* ------ DEPRECATED ------ */
-// Load the common files. This should set up component-dependent things, such as
-// abilities.
-foreach ($pines->components as $cur_component) {
-	if (substr($cur_component, 0, 4) == 'tpl_')
-		continue;
-	if ( file_exists("components/$cur_component/common.php") )
-		include_once("components/$cur_component/common.php");
-}
-if (P_SCRIPT_TIMING) pines_print_time('Load Component Common');
-/* ------ END ------ */
 
 ?>
