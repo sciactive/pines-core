@@ -38,12 +38,14 @@ $pines->all_components = array();
 if ( file_exists('components/') && file_exists('templates/') ) {
 	$pines->components = array_merge(pines_scandir('components/'), pines_scandir('templates/'));
 	$pines->all_components = array_merge(pines_scandir('components/', 0, null, false), pines_scandir('templates/', 0, null, false));
-	foreach ($pines->all_components as $cur_key => $cur_value) {
+	foreach ($pines->all_components as &$cur_value) {
 		if (substr($cur_value, 0, 1) == '.')
-			$pines->all_components[$cur_key] = substr($cur_value, 1);
+			$cur_value = substr($cur_value, 1);
 	}
+	unset($cur_value);
+	sort($pines->components);
+	sort($pines->all_components);
 }
-if (P_SCRIPT_TIMING) pines_print_time('Find Component Classes');
 
 // Load component classes.
 /**
@@ -66,6 +68,7 @@ unset($temp_classes);
 if ( !file_exists("templates/{$pines->current_template}/classes/{$pines->current_template}.php") )
 	require('system/template_error.php');
 $pines->class_files[$pines->current_template] = "templates/{$pines->current_template}/classes/{$pines->current_template}.php";
+if (P_SCRIPT_TIMING) pines_print_time('Find Component Classes');
 /**
  * Load a class file.
  *
