@@ -15,13 +15,13 @@ return array(
 		'name' => 'full_location',
 		'cname' => 'Full Location',
 		'description' => 'The URL of this Pines installation. End this path with a slash!',
-		'value' => 'http'.(($_SERVER["HTTPS"] == "on") ? 's://' : '://').$_SERVER['HTTP_HOST'].substr($_SERVER['PHP_SELF'], 0, strripos($_SERVER['PHP_SELF'], 'index.php')),
+		'value' => 'http'.(($_SERVER["HTTPS"] == "on") ? 's://' : '://').$_SERVER['HTTP_HOST'].substr($_SERVER['PHP_SELF'], 0, strripos($_SERVER['PHP_SELF'], P_INDEX)),
 	),
 	array(
 		'name' => 'rela_location',
 		'cname' => 'Relative Location',
 		'description' => 'The URL location of Pines relative to your server root. If it is in the root of the server, just put a slash (/). End this path with a slash!',
-		'value' => substr($_SERVER['PHP_SELF'], 0, strripos($_SERVER['PHP_SELF'], 'index.php')),
+		'value' => substr($_SERVER['PHP_SELF'], 0, strripos($_SERVER['PHP_SELF'], P_INDEX)),
 	),
 	array(
 		'name' => 'setting_upload',

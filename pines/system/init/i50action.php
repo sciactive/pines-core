@@ -22,13 +22,13 @@ if ( $pines->config->url_rewriting ) {
 	// Get an array of the pseudo directories from the URI.
 	$args_array = explode('/',
 		// Get rid of index.php/ at the beginning, and / at the end.
-		preg_replace('/(^index\.php\/?)|(\/$)/', '', substr(
-		substr($_SERVER['REQUEST_URI'], 0,
-		// Use the whole string, or if there's a query part, subtract that.
-		strlen($_SERVER['REQUEST_URI']) - (strlen($_SERVER['QUERY_STRING']) ? strlen($_SERVER['QUERY_STRING']) + 1 : 0)
-		),
-		// This takes off the path to Pines.
-		strlen($pines->config->rela_location)
+		preg_replace('/(^'.preg_quote(P_INDEX).'\/?)|(\/$)/', '', substr(
+			substr($_SERVER['REQUEST_URI'], 0,
+				// Use the whole string, or if there's a query part, subtract that.
+				strlen($_SERVER['REQUEST_URI']) - (strlen($_SERVER['QUERY_STRING']) ? strlen($_SERVER['QUERY_STRING']) + 1 : 0)
+			),
+			// This takes off the path to Pines.
+			strlen($pines->config->rela_location)
 		))
 	);
 	if ( !empty($args_array[0]) ) $pines->request_component = ($args_array[0] == 'system' ? $args_array[0] : 'com_'.$args_array[0]);
