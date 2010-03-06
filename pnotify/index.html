@@ -345,7 +345,7 @@
 			 * will NOT work. It will create a notice, but that notice will be
 			 * in its own stack and may overlap other notices.
 			 */
-			var stack_topleft = {"dir1": "down", "dir2": "right"};
+			var stack_topleft = {"dir1": "down", "dir2": "right", "push": "top"};
 			var stack_bottomleft = {"dir1": "up", "dir2": "right"};
 			var stack_custom = {"dir1": "right", "dir2": "down"};
 			var stack_custom2 = {"dir1": "left", "dir2": "up"};
@@ -714,7 +714,7 @@
 			<div class="group ui-widget-content ui-corner-all">
 				Custom Stacks:
 				<br />
-				<input value="Top Left" onclick="void show_stack_topleft();" type="button" class="ui-state-default ui-corner-all" />
+				<input value="Top Left (Pushes to Stack Top)" onclick="void show_stack_topleft();" type="button" class="ui-state-default ui-corner-all" />
 				<input value="Bottom Left" onclick="void show_stack_bottomleft();" type="button" class="ui-state-default ui-corner-all" />
 				<input value="Bottom Right" onclick="void show_stack_bottomright();" type="button" class="ui-state-default ui-corner-all" />
 				<input value="Custom" onclick="void show_stack_custom();" type="button" class="ui-state-default ui-corner-all" />
