@@ -23,10 +23,10 @@ defined('P_RUN') or die('Direct access prohibited');
  * @return array|false The array of filenames on success, false on failure.
  */
 function pines_scandir($directory, $sorting_order = 0, $context = null, $hide_dot_files = true) {
-	if (is_null($context)) {
-		if (!($return = scandir($directory, $sorting_order))) return false;
-	} else {
+	if (isset($context)) {
 		if (!($return = scandir($directory, $sorting_order, $context))) return false;
+	} else {
+		if (!($return = scandir($directory, $sorting_order))) return false;
 	}
 	foreach ($return as $cur_key => $cur_name) {
 		if ( (stripos($cur_name, '.') === 0 && $hide_dot_files) || (in_array($cur_name, array('index.html', '.', '..', '.svn'))) )
