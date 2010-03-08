@@ -22,6 +22,9 @@ if (get_magic_quotes_gpc()) {
 // Load system classes.
 $temp_classes = pines_scandir("system/classes/");
 foreach ($temp_classes as $cur_class) {
+	/**
+	 * Include each system class.
+	 */
 	include_once("system/classes/$cur_class");
 }
 unset($temp_classes);
