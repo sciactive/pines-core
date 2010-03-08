@@ -51,7 +51,7 @@ return array(
 		'name' => 'option_copyright_notice',
 		'cname' => 'Copyright Notice',
 		'description' => 'The copyright notice at the bottom of each page.',
-		'value' => '&copy; 2010 Hunter Perrin. All Rights Reserved. Powered by <a href="http://pines.sourceforge.net/" onclick="window.open(this.href); return false;">Pines</a>.',
+		'value' => '&copy; 2010 SciActive.com. All Rights Reserved. Powered by <a href="http://pines.sourceforge.net/" onclick="window.open(this.href); return false;">Pines</a>.',
 	),
 	array(
 		'name' => 'default_template',
@@ -99,8 +99,8 @@ return array(
 		'name' => 'program_version',
 		'cname' => 'Program Version',
 		'description' => 'The program\'s internal version number. Changing this may cause problems while updating!',
-		'value' => '0.33 Alpha',
-		'options' => array('0.33 Alpha'),
+		'value' => '0.44 Alpha',
+		'options' => array('0.44 Alpha'),
 	),
 );
 
