@@ -27,8 +27,12 @@ class dynamic_config extends p_base {
 	 * Fill this object with system configuration.
 	 */
 	public function __construct() {
-		$config_array = require('system/configure.php');
+		$config_array = require('system/defaults.php');
 		$this->fill_object($config_array, $this);
+		if (file_exists('system/config.php')) {
+			$config_array = require('system/config.php');
+			$this->fill_object($config_array, $this);
+		}
 	}
 
 	/**
@@ -47,20 +51,28 @@ class dynamic_config extends p_base {
 		global $pines;
 		if (substr($name, 0, 4) == 'com_') {
 			// Load the config for a component.
-			if ( file_exists("components/$name/configure.php") ) {
-				$config_array = include("components/$name/configure.php");
+			if ( file_exists("components/$name/defaults.php") ) {
+				$config_array = include("components/$name/defaults.php");
 				if (is_array($config_array)) {
 					$this->$name = new p_base;
 					$this->fill_object($config_array, $this->$name);
+					if ( file_exists("components/$name/config.php") ) {
+						$config_array = include("components/$name/config.php");
+						$this->fill_object($config_array, $this->$name);
+					}
 				}
 			}
 		} elseif (substr($name, 0, 4) == 'tpl_') {
 			// Load the config for a template.
-			if ( file_exists("templates/$name/configure.php") ) {
-				$config_array = include("templates/$name/configure.php");
+			if ( file_exists("templates/$name/defaults.php") ) {
+				$config_array = include("templates/$name/defaults.php");
 				if (is_array($config_array)) {
 					$this->$name = new p_base;
 					$this->fill_object($config_array, $this->$name);
+					if ( file_exists("templates/$name/config.php") ) {
+						$config_array = include("templates/$name/config.php");
+						$this->fill_object($config_array, $this->$name);
+					}
 				}
 			}
 		}
