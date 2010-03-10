@@ -30,7 +30,10 @@ var pines = {
 	rela_location: "",
 	loadedjs: [],
 	loadedcss: [],
-	post: function(url, params) {
+	get: function(url){
+		window.location = url;
+	},
+	post: function(url, params){
 		var form = document.createElement("form");
 		form.action = url;
 		form.method = "POST";
@@ -46,7 +49,7 @@ var pines = {
 		document.body.appendChild(form);
 		form.submit();
 	},
-	loadjs: function(filename, multiple) {
+	loadjs: function(filename, multiple){
 		if (this.loadedjs.indexOf(filename) > -1 && !(multiple)) return;
 		var n=document.createElement("script");
 		n.setAttribute("type","text/javascript");
@@ -55,7 +58,7 @@ var pines = {
 			document.getElementsByTagName("head")[0].appendChild(n);
 		this.loadedjs[this.loadedjs.length]=filename;
 	},
-	loadcss: function(filename, multiple) {
+	loadcss: function(filename, multiple){
 		if (this.loadedcss.indexOf(filename) > -1 && !(multiple)) return;
 		var n=document.createElement("link");
 		n.setAttribute("type","text/css");
@@ -65,7 +68,7 @@ var pines = {
 			document.getElementsByTagName("head")[0].appendChild(n);
 		this.loadedcss[this.loadedcss.length]=filename;
 	},
-	alert: function(message, title, iconstyles, otheroptions) {
+	alert: function(message, title, iconstyles, otheroptions){
 		var options = $.extend({}, {
 			pnotify_title: title ? title : "Alert",
 			pnotify_text: String(message).replace("\n", "<br />"),
@@ -73,7 +76,7 @@ var pines = {
 		}, otheroptions);
 		return $.pnotify(options);
 	},
-	error: function(message, title, iconstyles, otheroptions) {
+	error: function(message, title, iconstyles, otheroptions){
 		var options = $.extend({}, {
 			pnotify_type: "error",
 			pnotify_title: title ? title : "Error",
