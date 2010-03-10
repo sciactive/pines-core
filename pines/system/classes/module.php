@@ -21,12 +21,12 @@ class module extends p_base {
 	 */
 	public $title = '';
 	/**
-	 * A suffix to append to the module's class name.
+	 * A list of additional classes to be added to the module.
 	 *
 	 * Applies to HTML modules.
-	 * @var string $class_suffix
+	 * @var string $classes
 	 */
-	public $class_suffix = '';
+	public $classes = '';
 	/**
 	 * The module's content.
 	 *
