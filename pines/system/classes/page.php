@@ -11,7 +11,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 /**
- * The controller of the page. It controls what is output to the user.
+ * The controller of the page. It handles what is output to the user.
  * @package Pines
  */
 class page extends p_base {
@@ -57,23 +57,6 @@ class page extends p_base {
 	 * @var bool $override
 	 */
 	public $override = false;
-	/**
-	 * The page's main menu.
-	 *
-	 * Used to navigate the system.
-	 *
-	 * @var menu $main_menu
-	 */
-	public $main_menu = NULL;
-	
-	/**
-	 * Initialize the main menu.
-	 *
-	 * @access protected
-	 */
-	public function __construct() {
-		$this->main_menu = new menu;
-	}
 	
 	/**
 	 * Append text to the title of the page.

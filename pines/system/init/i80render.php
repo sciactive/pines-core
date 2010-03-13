@@ -1,6 +1,6 @@
 <?php
 /**
- * Render and echo the page.
+ * Render and output the page.
  *
  * @package Pines
  * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html

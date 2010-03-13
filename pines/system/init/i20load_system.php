@@ -88,6 +88,13 @@ $pines->hook = new hook;
 $pines->depend = new depend;
 
 /**
+ * The menu system.
+ *
+ * @global menu $pines->menu
+ */
+$pines->menu = new menu;
+
+/**
  * The display manager.
  *
  * @global page $pines->page

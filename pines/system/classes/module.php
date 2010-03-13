@@ -11,7 +11,10 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 /**
+ * Page module.
+ *
  * Modules are blocks of code or data to be placed on the page.
+ *
  * @package Pines
  */
 class module extends p_base {
@@ -148,15 +151,15 @@ class module extends p_base {
 	 * components/com_game/views/xhtml-1.0/stats.php
 	 * components/com_game/views/xhtml/stats.php
 	 * components/com_game/views/all/stats.php
-	 *
+	 * 
 	 * The component 'system' has views in system/views/. The view 'null' in
 	 * 'system' can be used as a blank view.
 	 *
 	 * The module's template is found in the 'models' directory of the current
 	 * template. If $model is set, it will look for a file by that name (with
-	 * .php appended and require it. If not, or the file doesn't exist, render()
-	 * will require module.php. The module's content variable ultimately ends up
-	 * with the output from this file and is returned.
+	 * .php appended) and require it. If not, or the file doesn't exist,
+	 * render() will require module.php. The module's content variable
+	 * ultimately ends up with the output from this file and is returned.
 	 *
 	 * @param string $model The model to use.
 	 * @return string The module's rendered content.
@@ -169,6 +172,9 @@ class module extends p_base {
 		$format = $pines->template->format;
 		while(true) {
 			$filename = (($this->component != 'system') ? 'components/' : '').$this->component.'/views/'.$format.'/'.$this->view.'.php';
+			//$filename = (($this->component != 'system') ?
+			//		(substr($this->component, 0, 4) == 'tpl_' ? 'templates/' : 'components/')
+			//		: '') . "{$this->component}/views/{$format}/{$this->view}.php";
 			if (file_exists($filename) || $format == 'all') {
 				require $filename;
 				break;

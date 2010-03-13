@@ -11,105 +11,132 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 /**
- * A menu.
+ * The Pines menu system.
  * @package Pines
  */
 class menu extends p_base {
 	/**
-	 * The menu's array of entries.
-	 *
+	 * Array of specially formatted menu entries.
 	 * @var array
 	 */
-	public $menu = array();
+	public $menu_arrays = array();
 
 	/**
-	 * Add an item to or overwrite an entry in the menu.
+	 * Read JSON formatted menu data from a file.
 	 *
-	 * @param string $name The name of the entry.
-	 * @param string $data The data of the entry. Usually this is the URL to which the entry will point.
-	 * @param int $father The parent entry.
-	 * @param int $id The ID of the entry. This should only be set if you are overwriting another entry.
-	 * @return int The ID of the new entry.
+	 * All menu entries are added to $this->menu_arrays.
+	 *
+	 * @param string $filename The path of the file to read.
+	 * @return bool True on success, false on failure.
 	 */
-	function add($name, $data = '#', $father = NULL, $id = NULL) {
-		if ( is_null($id) )
-			$id = count($this->menu);
-		$this->menu[$id]['name'] = $name;
-		$this->menu[$id]['data'] = $data;
-		$this->menu[$id]['father'] = $father;
-		return $id;
+	public function add_json_file($filename) {
+		$array = json_decode(file_get_contents($filename), true);
+		if (!is_array($array))
+			return false;
+		$this->menu_arrays = array_merge($this->menu_arrays, $array);
+		return true;
 	}
 
 	/**
-	 * Renders the menu.
+	 * Parse the entries and build the menus.
 	 *
-	 * @param array $top_container The containing element of the menu.
-	 * @param array $top_element The element of each toplevel entry.
-	 * @param array $sub_container The containing element of each sublevel entry in the menu.
-	 * @param array $sub_element The element of each sublevel entry.
-	 * @param string $link The link code for each entry. The text "#NAME#" and "#DATA#" will be replaced by the name and data of the entry respectively.
-	 * @param string $post_code Any code which will be appended to the completed menu.
-	 * @uses menu::render_item()
-	 * @return string The rendered code.
+	 * render() will read and process menu dependencies using
+	 * $pines->depend->check(), and add each menu to a module in its proper
+	 * position. It will then call $pines->template->menu() and give the menu
+	 * array as an object for each menu. It is the current template's job to
+	 * return the code that gets placed into the module's content.
+	 *
+	 * This is an example of the array passed to $pines->template->menu():
+	 *
+	 * <code>
+	 * Array (
+	 *     [0] => Array (
+	 *             [text] => Main Menu
+	 *             [position] => main_menu
+	 *         )
+	 *     [com_configure] => Array (
+	 *             [0] => Array (
+	 *                     [text] => Configuration
+	 *                 )
+	 *             [components] => Array (
+	 *                     [0] => Array (
+	 *                             [text] => Components
+	 *                             [href] => /pines/index.php/configure/list/
+	 *                         )
+	 *                 )
+	 *         )
+	 *     [myaccount] => Array (
+	 *             [0] => Array (
+	 *                     [text] => My Account
+	 *                     [href] => /pines/index.php/user/editself/
+	 *                 )
+	 *         )
+	 *     [logout] => Array (
+	 *             [0] => Array (
+	 *                     [text] => Logout
+	 *                     [href] => /pines/index.php/user/logout/
+	 *                     [onclick] => return confirm("Are you sure?");
+	 *                 )
+	 *         )
+	 * )
+	 * </code>
 	 */
-	function render($top_container = array('<ul class="dropdown dropdown-horizontal">', '</ul>'), $top_element = array('<li>', '</li>'), $sub_container = array('<ul>', '</ul>'), $sub_element = array('<li>', '</li>'), $link = '<a href="#DATA#">#NAME#</a>', $post_code = '<hr style="visibility: hidden; clear: both;" />') {
-		$return = '';
-		if ( empty($this->menu) ) return $return;
-		$return .= $top_container[0];
-		foreach ($this->menu as $cur_id => $cur_item) {
-			if ( is_null($cur_item['father']) ) {
-				$return .= $top_element[0];
-				$cur_link = str_replace('#DATA#', $cur_item['data'], $link);
-				$cur_link = str_replace('#NAME#', $cur_item['name'], $cur_link);
-				$return .= $cur_link;
-				$return .= $this->render_item($cur_id, $sub_container, $sub_element, $link);
-				$return .= $top_element[1];
-			}
+	public function render() {
+		global $pines;
+		$menus = array();
+		foreach ($this->menu_arrays as $cur_entry) {
+			$tmp_path = explode('/', $cur_entry['path']);
+			$cur_menus =& $menus;
+			do {
+				if (!key_exists($tmp_path[0], $cur_menus))
+					$cur_menus[$tmp_path[0]] = array();
+				$cur_menus =& $cur_menus[$tmp_path[0]];
+				$tmp_path = array_slice($tmp_path, 1);
+			} while (count($tmp_path));
+			$cur_menus[0] = $cur_entry;
 		}
-		$return .= $top_container[1];
-		$return .= $post_code;
-		return $return;
+
+		$this->cleanup($menus);
+
+		foreach ($menus as $cur_menu) {
+			$module = new module('system', 'null', $cur_menu[0]['position']);
+			if (isset($cur_menu[0]['text']))
+				$module->title = $cur_menu[0]['text'];
+			$module->content($pines->template->menu($cur_menu));
+		}
 	}
 
 	/**
-	 * Render an entry (and children) of the menu.
+	 * Clean up the menu array.
 	 *
-	 * @param int $id The entry's ID.
-	 * @param array $sub_container The containing element of each entry.
-	 * @param array $sub_element The element of each entry.
-	 * @param string $link The link code for each entry. The text "#NAME#" and "#DATA#" will be replaced by the name and data of the entry respectively.
-	 * @return string The rendered entry.
+	 * cleanup() will remove entries whose dependencies aren't met, and call
+	 * $pines->template->url with the parameters found in ['href'] variables,
+	 * if they are an array. It will also remove ['path'] and ['depend'].
+	 *
+	 * @access private
+	 * @param array $array The menu array.
+	 * @param bool $allow_empty Allow an array without a menu entry item.
+	 * @return bool True if the entry passes all tests, false otherwise.
 	 */
-	function render_item($id, $sub_container, $sub_element, $link) {
-		$return = '';
-		foreach ($this->menu as $cur_id => $cur_item) {
-			if ( $cur_item['father'] === $id ) {
-				$return .= $sub_element[0];
-				$cur_link = str_replace('#DATA#', $cur_item['data'], $link);
-				$cur_link = str_replace('#NAME#', $cur_item['name'], $cur_link);
-				$return .= $cur_link;
-				$return .= $this->render_item($cur_id, $sub_container, $sub_element, $link);
-				$return .= $sub_element[1];
+	private function cleanup(&$array, $allow_empty = true) {
+		global $pines;
+		if (!$allow_empty && !$array[0])
+			return false;
+		if ($array[0]['depend']) {
+			foreach ($array[0]['depend'] as $key => $value) {
+				if (!$pines->depend->check($key, $value))
+					return false;
 			}
 		}
-		if ( !empty($return) )
-		$return = $sub_container[0] . $return . $sub_container[1];
-		return $return;
-	}
-
-	/**
-	 * Find all the orphaned entries in the menu.
-	 *
-	 * @return array An array of entries.
-	 */
-	function orphans() {
-		$return = array();
-		foreach ($this->menu as $cur_id => $cur_item) {
-			if ( !is_null($cur_item['father']) && !isset($this->menu[$cur_item['father']]) ) {
-				$return[$cur_id] = $cur_item;
-			}
+		unset($array[0]['path']);
+		unset($array[0]['depend']);
+		if ($array[0]['href'] && is_array($array[0]['href']))
+			$array[0]['href'] = call_user_func_array(array($pines->template, 'url'), $array[0]['href']);
+		foreach ($array as $key => &$value) {
+			if (!is_int($key) && !$this->cleanup($value, false))
+				unset($array[$key]);
 		}
-		return $return;
+		return true;
 	}
 }
 
