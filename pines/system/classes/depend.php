@@ -153,6 +153,7 @@ class depend extends p_base {
 		if (preg_match_all('/[^!&|()]+/', $value, $matches)) {
 			$search = $replace = array();
 			// For every match, check it and save the result.
+			usort($matches[0], array($this, 'sort_by_length'));
 			foreach ($matches[0] as $cur_match) {
 				$search[] = $cur_match;
 				$replace[] = call_user_func($callback, $cur_match) ? 'true' : 'false';
@@ -169,6 +170,18 @@ class depend extends p_base {
 
 		// Use PHP to evaluate the string.
 		return eval('return '.$parsable.';');
+	}
+
+	/**
+	 * Sort strings from longest to shortest.
+	 *
+	 * @access private
+	 * @param string $a String 1.
+	 * @param string $b String 2.
+	 * @return int Result.
+	 */
+	private function sort_by_length($a, $b) {
+		return (strlen($b) - strlen($a));
 	}
 }
 
