@@ -48,7 +48,7 @@ class menu extends p_base {
 	 *
 	 * This is an example of the array passed to $pines->template->menu():
 	 *
-	 * <code>
+	 * <pre>
 	 * Array (
 	 *     [0] => Array (
 	 *             [text] => Main Menu
@@ -79,7 +79,7 @@ class menu extends p_base {
 	 *                 )
 	 *         )
 	 * )
-	 * </code>
+	 * </pre>
 	 */
 	public function render() {
 		global $pines;

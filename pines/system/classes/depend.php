@@ -16,7 +16,7 @@ defined('P_RUN') or die('Direct access prohibited');
  * To add a dependency checker type, assign a callback to the $checkers array.
  *
  * <code>
- * $pines->depend->checkers['my_type'] = array($pines->com_my_component, 'my_checking_method');
+ * $pines->depend->checkers['my_type'] = array($pines->com_mycomponent, 'my_checking_method');
  * </code>
  *
  * Your checker callback should return true if the dependency is satisfied, or
@@ -35,6 +35,8 @@ class depend extends p_base {
 	 * Set up the default dependency checker types.
 	 *
 	 * - ability (System abilities.)
+	 * - component (Installed enabled components.)
+	 * - service (Available services.)
 	 * - option (Current or requested component.)
 	 * - action (Current or requested action.)
 	 */
@@ -42,6 +44,7 @@ class depend extends p_base {
 		global $pines;
 		$this->checkers['ability'] = array($this, 'check_ability');
 		$this->checkers['component'] = array($this, 'check_component');
+		$this->checkers['service'] = array($this, 'check_service');
 		$this->checkers['option'] = array($this, 'check_option');
 		$this->checkers['action'] = array($this, 'check_action');
 	}
@@ -56,7 +59,7 @@ class depend extends p_base {
 	 * @param mixed $value The value to be checked.
 	 * @return bool The result of the dependency check.
 	 */
-	function check($type, $value) {
+	public function check($type, $value) {
 		if (!isset($this->checkers[$type]))
 			return false;
 		return call_user_func($this->checkers[$type], $value);
@@ -129,6 +132,22 @@ class depend extends p_base {
 	}
 
 	/**
+	 * Check if a service is available.
+	 *
+	 * Uses simple_parse() to provide simple logic.
+	 *
+	 * @uses $pines->services
+	 * @param string $value The value to check.
+	 * @return bool The result of the service check.
+	 */
+	function check_service($value) {
+		global $pines;
+		if (preg_match('/[!&|()]/', $value))
+			return $this->simple_parse($value, array($pines->depend, 'check_component'));
+		return key_exists($value, $pines->services);
+	}
+
+	/**
 	 * Parse simple logic statements using a callback.
 	 *
 	 * Logic statements can be made with the following operators:
@@ -140,14 +159,14 @@ class depend extends p_base {
 	 *
 	 * For example:
 	 * <code>
-	 * simple_parse('!val1&(val2|!val3|(val2&!val4))', array($pines->com_my_component, 'my_checking_method'));
+	 * simple_parse('!val1&(val2|!val3|(val2&!val4))', array($pines->com_mycomponent, 'my_checking_method'));
 	 * </code>
 	 *
 	 * @param string $value The logic statement.
 	 * @param callback $callback The callback to check each part with.
 	 * @return bool The result of the parsing.
 	 */
-	function simple_parse($value, $callback) {
+	public function simple_parse($value, $callback) {
 		// ex: !val1&(val2|!val3|(val2&val4))
 		// Check whether there are parts, and fill an array with them.
 		if (preg_match_all('/[^!&|()]+/', $value, $matches)) {

@@ -15,16 +15,23 @@ defined('P_RUN') or die('Direct access prohibited');
  *
  * Component classes will be automatically loaded into their variables. In other
  * words, when you call $pines->com_xmlparser->parse(), if $pines->com_xmlparser
- * is empty, the com_xmlparser class will attempt to be loaded into it.
+ * is empty, the com_xmlparser class will attempt to be loaded into it. It will
+ * then be hooked by the hook manager.
  *
  * @package Pines
  */
 class dynamic_loader extends p_base {
 	/**
-	 * An array of standard classes.
-	 * @var array $standard_classes
+	 * An array of the possible system services.
+	 * @var array
 	 */
-	var $standard_classes = array();
+	public $service_names = array('template', 'configurator', 'log_manager', 'entity_manager', 'user_manager', 'ability_manager', 'editor');
+	/**
+	 * An array of the system services.
+	 * @var array
+	 */
+	public $services = array();
+
 	/**
 	 * Retrieve a variable.
 	 *
@@ -49,9 +56,9 @@ class dynamic_loader extends p_base {
 				return;
 			}
 		}
-		if (in_array($name, array('template', 'configurator', 'log_manager', 'entity_manager', 'db_manager', 'user_manager', 'ability_manager', 'editor')) && isset($this->standard_classes[$name])) {
+		if (in_array($name, $this->service_names) && isset($this->services[$name])) {
 			global $pines;
-			$this->$name = new $this->standard_classes[$name];
+			$this->$name = new $this->services[$name];
 			$pines->hook->hook_object($this->$name, "\$pines->{$name}->");
 			return $this->$name;
 		}
@@ -72,7 +79,7 @@ class dynamic_loader extends p_base {
 		global $pines;
 		if (substr($name, 0, 4) == 'com_')
 			return (class_exists($name) || (is_array($pines->class_files) && isset($pines->class_files[$name])));
-		return (in_array($name, array('template', 'configurator', 'log_manager', 'entity_manager', 'db_manager', 'user_manager', 'ability_manager', 'editor')) && isset($this->standard_classes[$name]));
+		return (in_array($name, $this->service_names) && isset($this->services[$name]));
 	}
 
 	/**
@@ -90,8 +97,8 @@ class dynamic_loader extends p_base {
 	 * @return mixed The value of the variable.
 	 */
 	public function __set($name, $value) {
-		if (in_array($name, array('template', 'configurator', 'log_manager', 'entity_manager', 'db_manager', 'user_manager', 'ability_manager', 'editor')) && is_string($value)) {
-			return $this->standard_classes[$name] = $value;
+		if (in_array($name, $this->service_names) && is_string($value)) {
+			return $this->services[$name] = $value;
 		} else {
 			return $this->$name = $value;
 		}

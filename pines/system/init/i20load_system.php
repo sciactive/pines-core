@@ -34,33 +34,38 @@ if (P_SCRIPT_TIMING) pines_print_time('Load System Classes');
  * The main object for Pines.
  *
  * This object is used to hold everything from Pines' settings, to component
- * functions. Components' configure.php files will be parsed into $pines->config
+ * functions. Components' configuration files will be parsed into $pines->config
  * under the name of their component. Such as $pines->config->com_xmlparser.
  * Components' classes will be automatically loaded into $pines under their name
- * when the variable is first used. For example, com_xmlparser will be loaded
+ * when the variable is *first used*. For example, com_xmlparser will be loaded
  * the first time $pines->com_xmlparser is accessed.
  *
- * $pines also holds Pines' standard classes/objects, which include:
+ * $pines also holds Pines' standard classes/objects (called "services"), which
+ * include:
  *
- * - config - Configuration. (Part of the base system.)
- * - hook - Hooking system. (Part of the base system.)
- * - depend - Dependency checker. (Part of the base system.)
+ * - config - System and component configuration. (Part of the base system.)
+ * - hook - Hook system. (Part of the base system.)
+ * - depend - Dependency system. (Part of the base system.)
+ * - menu - Menu system. (Part of the base system.)
+ * - page - Display controller. (Part of the base system.)
  * - template - The current template's object.
- * - configurator - Manages Pines' and components' configuration.
+ * - configurator - Manages configuration settings for Pines and components.
  * - log_manager - Manages logging features.
- * - entity_manager - Manages entities.
- * - db_manager - Manages database connections.
- * - user_manager - Manages users.
+ * - entity_manager - Manages data abstraction (entities).
+ * - user_manager - Manages users and groups.
  * - ability_manager - Manages users' abilities.
  * - editor - Provides a content editor.
  *
- * When you want your component to be one of Pines' standard classes, place a
- * string with the name of your component's class into the appropriate variable.
+ * When you want to set your component as one of these services (excluding the
+ * base system services), place a string with the name of your component's class
+ * into the appropriate variable.
  *
- * For example, if you are designing a log manager called com_email_logs, use
- * this in your load.php file:
+ * For example, if you are designing a log manager called com_emaillogs, use
+ * this in an init file (like i10set.php):
  *
- * $pines->log_manager = 'com_email_logs';
+ * <code>
+ * $pines->log_manager = 'com_emaillogs';
+ * </code>
  *
  * @global dynamic_loader $pines
  */
@@ -74,14 +79,14 @@ $pines = new dynamic_loader;
 $pines->config = new dynamic_config;
 
 /**
- * The hooking system.
+ * The hook system.
  *
  * @global hook $pines->hook
  */
 $pines->hook = new hook;
 
 /**
- * The dependency checker.
+ * The dependency system.
  *
  * @global depend $pines->depend
  */
@@ -95,7 +100,7 @@ $pines->depend = new depend;
 $pines->menu = new menu;
 
 /**
- * The display manager.
+ * The display controller.
  *
  * @global page $pines->page
  */
