@@ -1,0 +1,693 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+   "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<!--
+	This design has been tested in the following browsers. Any issues are stated below.
+
+	Firefox 1.0:
+	Fieldset's right border doesn't show on auto aligned forms.
+
+	Firefox 1.5:
+	Fieldset's right border doesn't show on auto aligned forms.
+
+	Firefox 2.0:
+	Fieldset's right border doesn't show on auto aligned forms.
+
+	Firefox 3.0:
+
+	Firefox 3.5:
+
+	Google Chrome 2.0:
+
+	Internet Explorer 5.01:
+	Centering using the <center> workaround will center all the form's content.
+	Won't automatically clear content after forms without a fieldset.
+	Custom Fieldset's border is not dotted.
+	Centered buttons don't work.
+
+	Internet Explorer 5.5:
+	Centering using the <center> workaround will center all the form's content.
+	Won't automatically clear content after forms without a fieldset.
+	Custom Fieldset's border displays through title.
+	Centered buttons don't work.
+
+	Internet Explorer 6:
+	When custom fieldset's title is colored, all fieldsets' titles get colored.
+	Custom Fieldset's border displays through title.
+	Centered buttons don't work.
+
+	Internet Explorer 7:
+	When custom fieldset's title is colored, all fieldsets' titles get colored.
+	Custom Fieldset's border displays through title.
+
+	Internet Explorer 8:
+	When custom fieldset's title is colored, all fieldsets' titles get colored.
+	Custom Fieldset's border displays through title.
+
+	Opera 8:
+
+	Opera 9:
+
+	Opera 10:
+
+	Safari 3:
+
+	Safari 4:
+	-->
+	<title>Pines Form Example Page</title>
+	<meta http-equiv="Content-Type" content="application/xhtml+xml;charset=utf-8" />
+	<!-- BEGIN PINES FORM CSS -->
+	<style type="text/css">
+		/* <![CDATA[ */
+		/* ----------- Pines Forms ----------- */
+		.pform:after {
+			content: ".";
+			display: block;
+			height: 0;
+			clear: both;
+			visibility: hidden;
+		}
+		.pform fieldset {
+			padding: 5.6px 10px 12px;
+			border: 1px solid #CCC;
+			overflow: auto; /* Opera 8 won't enclose floated divs without this. */
+		}
+		.pform fieldset legend, .pform .heading h1 {
+			font-size: 150%;
+			font-weight: normal;
+		}
+		.pform fieldset.group {
+			display: block;
+			clear: left;
+			margin-bottom: 15px;
+		}
+		.pform div.element {
+			float: left;
+			clear: left;
+			padding-bottom: 15px;
+		}
+		.pform div.heading, .pform div.element.full_width {
+			width: 100%;
+		}
+		.pform div.heading {
+			border-bottom: 1px solid #CCC;
+			padding-bottom: 0;
+			margin-bottom: 10px;
+		}
+		.pform div.heading h1 {
+			margin-top: 5px;
+			margin-bottom: 5px;
+		}
+		.pform div.heading p {
+			clear: left;
+			margin-top: 5px;
+			margin-bottom: 5px;
+		}
+		.pform div.element .label, .pform div.element .note {
+			width: 230px; /* Width of labels. */
+			float: left;
+		}
+		.pform div.element .note {
+			margin-top: .5em;
+			clear: left;
+			font-size: 60%;
+			color: #555;
+		}
+		.pform div.element .group {
+			 margin-left: 230px; /* Same as width of labels. */
+		}
+		.pform div.element .field, .pform div.buttons .button {
+			float: none;
+			margin-left: 5px; /* Margin between inputs and labels. */
+		}
+		.pform div.element .field.full_width {
+			display: block;
+			margin-left: 235px; /* Width of labels + margin between inputs and labels. */
+		}
+		.pform div.buttons {
+			clear: both;
+			padding-bottom: 0;
+			padding-left: 215px; /* Width of labels + margin to inputs - button spacing. */
+		}
+		.pform div.buttons.centered {
+			width: 100%;
+			padding-left: 0;
+			text-align: center;
+		}
+		.pform div.buttons .button {
+			margin-left: 20px; /* Button spacing. */
+			margin-bottom: 10px;
+		}
+		/* ----------- Two Columns ----------- */
+		.pform_twocol, .pform_twocol fieldset {
+			overflow: hidden; /* Hides the unnecessary scrollbar caused by wide elements. */
+		}
+		.pform_twocol div.element {
+			clear: none;
+			width: auto;
+			min-width: 50%; /* For two columns max. */
+		}
+		.pform_twocol div.heading, .pform_twocol div.full_width {
+			width: 100%;
+		}
+		.pform_twocol div.heading {
+			clear: both;
+		}
+		.pform_twocol div.buttons {
+			clear: both;
+			width: 100%;
+		}
+		/* ----------- Three Columns ----------- */
+		.pform_threecol, .pform_threecol fieldset {
+			overflow: hidden; /* Hides the unnecessary scrollbar caused by wide elements. */
+		}
+		.pform_threecol div.element {
+			clear: none;
+			width: auto;
+			min-width: 33%; /* For three columns max. */
+		}
+		.pform_threecol div.heading, .pform_threecol div.full_width {
+			width: 100%;
+		}
+		.pform_threecol div.heading {
+			clear: both;
+		}
+		.pform_threecol div.buttons {
+			clear: both;
+			width: 100%;
+		}
+		/* ]]> */
+	</style>
+	<!--[if lt IE 8]>
+	<style type="text/css">
+		/* Required for IE 7 and lower. */
+		.pform {
+			overflow: hidden; /* Hides an extended border. */
+			height: 100%; /* Makes IE6 enclose floats. */
+		}
+		.pform fieldset {
+			overflow: visible; /* IE7 will show scrollbars without this. */
+		}
+		.pform div.element {
+			width: 100%; /* Positions the inputs correctly. */
+		}
+		.pform div.buttons {
+			width: 550px; /* Keeps IE's broken box model from pushing the button box out of the form. Increase or decrease if needed. */
+		}
+	</style>
+	<![endif]-->
+	<!--[if lt IE 7]>
+	<style type="text/css">
+		/* Required for IE 6 and lower. */
+		.pform_twocol div.element {
+			width: 48%;
+		}
+		.pform_twocol div.heading {
+			width: 100%;
+		}
+		.pform_twocol div.buttons {
+			width: 550px;
+		}
+		.pform_threecol div.element {
+			width: 32%;
+		}
+		.pform_threecol div.heading {
+			width: 100%;
+		}
+		.pform_threecol div.buttons {
+			width: 550px;
+		}
+	</style>
+	<![endif]-->
+	<!--[if lt IE 6]>
+	<style type="text/css">
+		/* Required for IE 5.5 and lower. */
+		.pform {
+			height: auto; /* Undoes our IE6 fix from above. */
+			clear: left; /* Fixes forms aligning right of floated elements. */
+		}
+	</style>
+	<![endif]-->
+	<!-- END PINES FORM CSS -->
+
+	<!-- This is how to change the size. -->
+	<style type="text/css">
+		/* <![CDATA[ */
+		.pform_custom {
+			width: 311px;
+		}
+		.pform_custom div.element .label, .pform_custom div.element .note {
+			width: 130px; /* Width of labels. */
+		}
+		.pform_custom div.element .group {
+			 margin-left: 130px; /* Same as width of labels. */
+		}
+		.pform_custom div.buttons {
+			padding-left: 115px; /* Width of labels + margin to inputs - button spacing. */
+		}
+		/* ]]> */
+	</style>
+	<!--[if lt IE 7]>
+	<style type="text/css">
+		.pform_custom div.buttons {
+			width: 176px; /* Custom form width - custom button div left padding - 20px (for IE's default padding.) */
+		}
+	</style>
+	<![endif]-->
+
+	<!-- This is an example customization. -->
+	<style type="text/css">
+		/* <![CDATA[ */
+		.pform_custom {
+			font-family: sans-serif;
+			font-size: 13px;
+			margin: 0 auto;
+			color: #008;
+		}
+		.pform_custom fieldset {
+			border: 1px #008 dotted;
+		}
+		.pform_custom div.heading {
+			border-bottom-color: #008;
+			border-bottom-style: dotted;
+		}
+		.pform_custom div.element .label, .pform_custom div.element .note {
+			text-align: right;
+		}
+		.pform_custom div.element .note {
+			font-size: 75%;
+			color: #55A;
+		}
+		.pform_custom div.element .field, .pform_custom div.buttons .button {
+			color: white;
+			border-width: 1px;
+			border-color: #69F;
+			background-color: #88C;
+		}
+		.pform_custom div.element .field {
+			border-style: inset;
+		}
+		.pform_custom div.buttons .button {
+			border-style: outset;
+		}
+		/* ]]> */
+	</style>
+
+	<!-- Make this page a little more presentable. -->
+	<style type="text/css">
+		/* <![CDATA[ */
+		html, body {
+			font-family: "Trebuchet MS",Helvetica,sans-serif;
+		}
+		body {
+			padding: 0 10px 10px 10px;
+		}
+		.pretty {
+			font-family: 'Palatino Linotype','Book Antiqua',Palatino,serif;
+		}
+		/* ]]> */
+	</style>
+
+	<!-- Uncomment the next line to use Firebug Lite for testing in non-Mozilla browsers.
+	<script type="text/javascript" src="http://getfirebug.com/releases/lite/1.2/firebug-lite-compressed.js"></script> -->
+</head>
+<body>
+	<div class="pretty">
+		<h1>Pines Form Examples</h1>
+		<p>Welcome to the Pines Form example page. This page functions as a reference for Pines' XHTML form design. It also makes a great sample design to use in your own web project. All the code on this page is licensed under the GNU Affero GPL, as it is part of the <a href="http://sourceforge.net/projects/pines/">Pines</a> project.</p>
+		<p>Pines Form was designed with the goal of providing beauty, flexibility, customizeable design, hack/JavaScript free code, and sensible, valid XHTML1.0/XHTML1.1/CSS. You can use the buttons at the bottom of this page to validate it as XHTML 1.0 Strict, XHTML 1.1, and CSS 2.1.</p>
+		<p>Without further adieu, the examples:</p>
+	</div>
+
+	<form class="pform" action="" method="post">
+		<fieldset>
+			<legend>Example Form 1</legend>
+			<div class="element heading">
+				<p>This form is an example, and this is a description of it.</p>
+			</div>
+			<div class="element">
+				<label>
+					<span class="label">This is a test.</span>
+					<span class="note">This is a note about something.</span>
+					<input class="field" type="text" name="test" />
+				</label>
+			</div>
+			<div class="element">
+				<label>
+					<span class="label">This is also a test.</span>
+					<span class="note">99 bottles of beer on the wall.</span>
+					<input class="field" type="text" name="test2" style="width: 400px;" />
+				</label>
+			</div>
+			<div class="element">
+				<label>
+					<span class="label">This is a test.</span>
+					<span class="note">99 bottles of beer.</span>
+					<span class="field">Fill in the <input type="text" name="test" size="5" />.</span>
+				</label>
+			</div>
+			<div class="element">
+				<label>
+					<span class="label">Is this a test?</span>
+					<span class="note">Take one down.</span>
+					<input class="field" type="checkbox" name="checktest" />
+				</label>
+			</div>
+			<div class="element">
+				<span class="label">Is this really a test?</span>
+				<span class="note">Pass it around.</span>
+				<div class="group">
+					<label><input class="field" type="radio" name="radiotest" />Yes</label>
+					<label><input class="field" type="radio" name="radiotest" />No</label>
+				</div>
+			</div>
+			<div class="element heading">
+				<h1>Foods</h1>
+			</div>
+			<div class="element">
+				<span class="label">What's your favorite food?</span>
+				<span class="note">98 bottles of beer on the wall.</span>
+				<div class="group">
+					<label><input class="field" type="radio" name="radiotest" />Hot Dogs</label><br />
+					<label><input class="field" type="radio" name="radiotest" />Hamburgers</label><br />
+					<label><input class="field" type="radio" name="radiotest" />Cheeseburgers</label><br />
+					<label><input class="field" type="radio" name="radiotest" />Sushi</label><br />
+					<label><input class="field" type="radio" name="radiotest" />Pizza</label><br />
+					<label><input class="field" type="radio" name="radiotest" />Steak</label><br />
+					<label><input class="field" type="radio" name="radiotest" />Ham</label><br />
+					<label><input class="field" type="radio" name="radiotest" />Turkey</label><br />
+					<label><input class="field" type="radio" name="radiotest" />Mashed Potatoes</label><br />
+					<label><input class="field" type="radio" name="radiotest" />Eggs</label><br />
+					<label><input class="field" type="radio" name="radiotest" />Bacon</label><br />
+					<label><input class="field" type="radio" name="radiotest" />Cake</label><br />
+					<label><input class="field" type="radio" name="radiotest" />Ice Cream</label><br />
+				</div>
+			</div>
+			<div class="element">
+				<span class="label">What foods do you like?</span>
+				<span class="note">Hold CTRL to select multiples.</span>
+				<select class="field" name="likefoods" multiple="multiple" size="4">
+					<option>Hot Dogs</option>
+					<option>Hamburgers</option>
+					<option>Cheeseburgers</option>
+					<option>Sushi</option>
+					<option>Pizza</option>
+					<option>Steak</option>
+					<option>Ham</option>
+					<option>Turkey</option>
+					<option>Mashed Potatoes</option>
+					<option>Eggs</option>
+					<option>Bacon</option>
+					<option>Cake</option>
+					<option>Ice Cream</option>
+				</select>
+			</div>
+			<div class="element heading">
+				<h1>More Tests</h1>
+			</div>
+			<!-- This line break is required for Firefox 1.5 if you follow an "element" div with a "group" fieldset.
+			(https://bugzilla.mozilla.org/show_bug.cgi?id=309550) -->
+			<br />
+			<fieldset class="group">
+				<legend>Complex Tests</legend>
+				<div class="element heading">
+					<p>These tests require a complex grasp on reality to correctly comprehend.</p>
+				</div>
+				<div class="element">
+					<label>
+						<span class="label">This is a complex test.</span>
+						<span class="note">Not really.</span>
+						<select class="field" name="complex">
+							<option>This is an option.</option>
+							<option>This is another option.</option>
+						</select>
+					</label>
+				</div>
+				<div class="element">
+					<label>
+						<span class="label">This is a long complex test.</span>
+						<select class="field" name="longcomplex" size="6">
+							<option>1. This is a lot of options.</option>
+							<option>2. This is a lot of options.</option>
+							<option>3. This is a lot of options.</option>
+							<option>4. This is a lot of options.</option>
+							<option>5. This is a lot of options.</option>
+							<option>6. This is a lot of options.</option>
+							<option>7. This is a lot of options.</option>
+							<option>8. This is a lot of options.</option>
+							<option>9. This is a lot of options.</option>
+							<option>10. This is a lot of options.</option>
+							<option>11. This is a lot of options.</option>
+							<option>12. This is a lot of options.</option>
+							<option>13. This is a lot of options.</option>
+							<option>14. This is a lot of options.</option>
+							<option>15. This is a lot of options.</option>
+							<option>16. This is a lot of options.</option>
+							<option>17. This is a lot of options.</option>
+							<option>18. This is a lot of options.</option>
+							<option>19. This is a lot of options.</option>
+							<option>20. This is a lot of options.</option>
+						</select>
+					</label>
+				</div>
+			</fieldset>
+			<fieldset class="group">
+				<legend>Simple Tests</legend>
+				<div class="element">
+					<label>
+						<span class="label">This is a test.</span>
+						<span class="note">This is a note about something.</span>
+						<input class="field" type="text" name="test" />
+					</label>
+				</div>
+			</fieldset>
+			<div class="element full_width">
+				<label>
+					<span class="label">What do you think of my tests?</span>
+					<span class="note">I won't actually be reading this, it's just an example.</span>
+					<span class="note">You can't even submit this form. It won't go anywhere.</span>
+					<span class="field full_width"><textarea style="width: 100%;" name="comment" rows="5" cols="30"></textarea></span>
+				</label>
+			</div>
+			<div class="element buttons">
+				<input class="button" type="submit" name="submit" value="Submit" />
+				<input class="button" type="reset" name="reset" value="Reset" />
+			</div>
+		</fieldset>
+	</form>
+
+	<p><br /><br /></p>
+
+	<!-- Use these conditional comments for centering if you support IE 5.5 -->
+	<!--[if lt IE 6]>
+	<center>
+	<![endif]-->
+	<form class="pform pform_custom" action="" method="post">
+		<fieldset>
+			<legend>Example Form 2</legend>
+			<div class="element heading">
+				<p>This form is custom styled.</p>
+			</div>
+			<div class="element">
+				<label><span class="label">Username</span>
+				<input class="field" type="text" name="username" style="width: 130px;" /></label>
+			</div>
+			<div class="element">
+				<label><span class="label">Password</span>
+				<input class="field" type="password" name="password" style="width: 130px;" /></label>
+			</div>
+			<div class="element">
+				<label><span class="label">Remember Me</span>
+				<span class="note">Lasts for 2 weeks.</span>
+				<input class="field" type="checkbox" name="remember" /></label>
+			</div>
+			<div class="element buttons centered">
+				<input class="button" type="submit" name="submit" value="Submit" />
+				<input class="button" type="reset" name="reset" value="Reset" />
+			</div>
+		</fieldset>
+	</form>
+	<!--[if lt IE 6]>
+	</center>
+	<![endif]-->
+
+	<p><br /><br /></p>
+
+	<form class="pform" action="" method="post">
+		<fieldset>
+			<legend>Example Form 3</legend>
+			<div class="element">
+				<span class="label">Mary had a little...</span>
+				<span class="note">This is not optional!</span>
+				<span class="field">Lamb.</span>
+			</div>
+			<div class="element">
+				<span class="label">Whose fleece was white as...</span>
+				<span class="field">Baking soda.</span>
+			</div>
+			<div class="element">
+				<span class="label">Everywhere that Mary went...</span>
+				<span class="field">The lamb was Abe Vigoda.</span>
+			</div>
+			<div class="element buttons">
+				<button class="button" type="submit" name="submit">This is Correct</button>
+				<button class="button" type="button" name="changes">Make Changes</button>
+			</div>
+		</fieldset>
+	</form>
+
+	<p><br /><br /></p>
+
+	<form class="pform" action="" method="post">
+		<div class="element heading">
+			<h1>Example Form 4</h1>
+			<p>This form has fixed width elements and no border. This can be done by changing either the markup, or the CSS.</p>
+		</div>
+		<div class="element">
+			<label>
+				<span class="label">This is a test.</span>
+				<span class="note">This is a note about something.</span>
+				<input class="field" type="text" name="test" style="width: 400px" />
+			</label>
+		</div>
+		<div class="element">
+			<label>
+				<span class="label">What do you think of my tests?</span>
+				<textarea class="field" name="comment" rows="5" cols="30" style="width: 400px"></textarea>
+			</label>
+		</div>
+		<div class="element">
+			<span class="note">Watch out for lions around the submit button.</span>
+		</div>
+		<div class="element buttons">
+			<button class="button" type="submit" name="submit">Submit</button>
+			<span class="field">Lion.</span>
+			<button class="button" type="reset" name="reset">Reset</button>
+		</div>
+	</form>
+
+	<!-- Anything after a form without a fieldset needs to be cleared if you support IE 5.5 -->
+	<p><br /><br /></p>
+
+	<form class="pform pform_twocol" action="" method="post">
+		<fieldset>
+			<legend>Example Form 5</legend>
+			<div class="element heading">
+				<p>This form tests columns of elements to conserve space on wider screens. Try resizing the browser window.</p>
+			</div>
+			<div class="element">
+				<label>
+					<span class="label">1. This is a test.</span>
+					<span class="note">This is a note about something.</span>
+					<input class="field" type="text" name="test" />
+				</label>
+			</div>
+			<div class="element">
+				<label>
+					<span class="label">2. This is a test.</span>
+					<span class="note">This is a note about something.</span>
+					<input class="field" type="text" name="test2" />
+				</label>
+			</div>
+			<div class="element">
+				<label>
+					<span class="label">3. This is a test.</span>
+					<span class="note">This is a note about something.</span>
+					<span class="field">Fill in the <input type="text" name="test" size="5" />.</span>
+				</label>
+			</div>
+			<div class="element">
+				<label>
+					<span class="label">4. This is a test.</span>
+					<span class="note">This is a note about something.</span>
+					<input class="field" type="checkbox" name="checktest" />
+				</label>
+			</div>
+			<div class="element">
+				<span class="label">5. This is a test.</span>
+				<span class="note">This is a note about something.</span>
+				<div class="group">
+					<label><input class="field" type="radio" name="radiotest" />Yes</label>
+					<label><input class="field" type="radio" name="radiotest" />No</label>
+				</div>
+			</div>
+			<div class="element">
+				<span class="label">6. This is a test.</span>
+				<span class="note">This is a note about something.</span>
+				<select class="field" name="likefoods" multiple="multiple" size="4">
+					<option>Hot Dogs</option>
+					<option>Hamburgers</option>
+					<option>Cheeseburgers</option>
+					<option>Sushi</option>
+					<option>Pizza</option>
+					<option>Steak</option>
+					<option>Ham</option>
+					<option>Turkey</option>
+					<option>Mashed Potatoes</option>
+					<option>Eggs</option>
+					<option>Bacon</option>
+					<option>Cake</option>
+					<option>Ice Cream</option>
+				</select>
+			</div>
+			<div class="element">
+				<label>
+					<span class="label">7. This is a test.</span>
+					<span class="note">This is a note about something.</span>
+					<select class="field" name="complex">
+						<option>This is an option.</option>
+						<option>This is another option.</option>
+					</select>
+				</label>
+			</div>
+			<div class="element">
+				<label>
+					<span class="label">8. This is a test.</span>
+					<span class="note">This is a note about something.</span>
+					<select class="field" name="longcomplex" size="6">
+						<option>1. This is a lot of options.</option>
+						<option>2. This is a lot of options.</option>
+						<option>3. This is a lot of options.</option>
+						<option>4. This is a lot of options.</option>
+						<option>5. This is a lot of options.</option>
+						<option>6. This is a lot of options.</option>
+						<option>7. This is a lot of options.</option>
+						<option>8. This is a lot of options.</option>
+						<option>9. This is a lot of options.</option>
+						<option>10. This is a lot of options.</option>
+						<option>11. This is a lot of options.</option>
+						<option>12. This is a lot of options.</option>
+						<option>13. This is a lot of options.</option>
+						<option>14. This is a lot of options.</option>
+						<option>15. This is a lot of options.</option>
+						<option>16. This is a lot of options.</option>
+						<option>17. This is a lot of options.</option>
+						<option>18. This is a lot of options.</option>
+						<option>19. This is a lot of options.</option>
+						<option>20. This is a lot of options.</option>
+					</select>
+				</label>
+			</div>
+			<div class="element">
+				<label>
+					<span class="label">9. This is a test.</span>
+					<span class="note">This is a note about something.</span>
+					<textarea class="field" name="comment" rows="5" cols="30"></textarea>
+				</label>
+			</div>
+			<div class="element buttons centered">
+				<input class="button" type="submit" name="submit" value="Submit" />
+				<input class="button" type="reset" name="reset" value="Reset" />
+			</div>
+		</fieldset>
+	</form>
+
+	<p><br /><br /><br /><br /></p>
+	<p style="text-align: right;">
+		<a href="http://validator.w3.org/check?uri=referer"><img style="border:0;width:88px;height:31px" src="http://www.w3.org/Icons/valid-xhtml11-blue" alt="Valid XHTML 1.1" /></a>
+		<a href="http://validator.w3.org/check?uri=referer&amp;doctype=XHTML+1.0+Strict"><img style="border:0;width:88px;height:31px" src="http://www.w3.org/Icons/valid-xhtml10-blue" alt="Valid XHTML 1.0 Strict" /></a>
+		<a href="http://jigsaw.w3.org/css-validator/check/referer"><img style="border:0;width:88px;height:31px" src="http://jigsaw.w3.org/css-validator/images/vcss-blue" alt="Valid CSS!" /></a>
+	</p>
+</body>
+</html>
