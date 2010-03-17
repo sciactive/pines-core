@@ -2,6 +2,79 @@
 	{
 		"path": "main_menu",
 		"text": "Main Menu",
-		"position": "main_menu"
-	}
+		"position": "main_menu",
+		"depend": {
+			"children": true
+		}
+	},
+		{
+			"path": "main_menu/accessories",
+			"text": "Accessories",
+			"depend": {
+				"children": true
+			}
+		},
+		{
+			"path": "main_menu/business",
+			"text": "Business",
+			"depend": {
+				"children": true
+			}
+		},
+		{
+			"path": "main_menu/education",
+			"text": "Education",
+			"depend": {
+				"children": true
+			}
+		},
+		{
+			"path": "main_menu/games",
+			"text": "Games",
+			"depend": {
+				"children": true
+			}
+		},
+		{
+			"path": "main_menu/graphics",
+			"text": "Graphics",
+			"depend": {
+				"children": true
+			}
+		},
+		{
+			"path": "main_menu/other",
+			"text": "Other",
+			"depend": {
+				"children": true
+			}
+		},
+		{
+			"path": "main_menu/programming",
+			"text": "Programming",
+			"depend": {
+				"children": true
+			}
+		},
+		{
+			"path": "main_menu/science",
+			"text": "Science",
+			"depend": {
+				"children": true
+			}
+		},
+		{
+			"path": "main_menu/soundandvideo",
+			"text": "Sound and Video",
+			"depend": {
+				"children": true
+			}
+		},
+		{
+			"path": "main_menu/system",
+			"text": "System",
+			"depend": {
+				"children": true
+			}
+		}
 ]

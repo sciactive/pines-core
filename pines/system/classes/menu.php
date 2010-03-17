@@ -84,6 +84,8 @@ class menu extends p_base {
 	public function render() {
 		global $pines;
 		$menus = array();
+		// Go through each entry and organize them into a multidimensional
+		// array.
 		foreach ($this->menu_arrays as $cur_entry) {
 			$tmp_path = explode('/', $cur_entry['path']);
 			$cur_menus =& $menus;
@@ -96,6 +98,7 @@ class menu extends p_base {
 			$cur_menus[0] = $cur_entry;
 		}
 
+		// Clean up the full menu.
 		$this->cleanup($menus);
 
 		foreach ($menus as $cur_menu) {
@@ -111,31 +114,42 @@ class menu extends p_base {
 	 *
 	 * cleanup() will remove entries whose dependencies aren't met, and call
 	 * $pines->template->url with the parameters found in ['href'] variables,
-	 * if they are an array. It will also remove ['path'] and ['depend'].
+	 * if they are an array. It checks the "children" dependency for menus that
+	 * require children. Set it to true to remove the entry if it has no
+	 * children. It will also remove ['path'] and ['depend'].
 	 *
 	 * @access private
 	 * @param array $array The menu array.
-	 * @param bool $allow_empty Allow an array without a menu entry item.
+	 * @param bool $is_top_menu Allow an array without a menu entry item.
 	 * @return bool True if the entry passes all tests, false otherwise.
 	 */
-	private function cleanup(&$array, $allow_empty = true) {
+	private function cleanup(&$array, $is_top_menu = true) {
 		global $pines;
-		if (!$allow_empty && !$array[0])
+		// If this isn't a top menu, and has no menu entry, return false.
+		if (!$is_top_menu && !$array[0])
 			return false;
+		// Check all the dependencies. If any are not met, return false.
 		if ($array[0]['depend']) {
 			foreach ($array[0]['depend'] as $key => $value) {
+				if ($key == 'children')
+					continue;
 				if (!$pines->depend->check($key, $value))
 					return false;
 			}
 		}
-		unset($array[0]['path']);
-		unset($array[0]['depend']);
+		// Transform URL arrays into actual URLs.
 		if ($array[0]['href'] && is_array($array[0]['href']))
 			$array[0]['href'] = call_user_func_array(array($pines->template, 'url'), $array[0]['href']);
+		// Clean up all its children.
 		foreach ($array as $key => &$value) {
 			if (!is_int($key) && !$this->cleanup($value, false))
 				unset($array[$key]);
 		}
+		// If the menu requires children and has none, return false.
+		if ($array[0]['depend']['children'] && count($array) == 1)
+			return false;
+		unset($array[0]['path']);
+		unset($array[0]['depend']);
 		return true;
 	}
 }
