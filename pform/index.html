@@ -58,176 +58,15 @@
 	<title>Pines Form Example Page</title>
 	<meta http-equiv="Content-Type" content="application/xhtml+xml;charset=utf-8" />
 	<!-- BEGIN PINES FORM CSS -->
-	<style type="text/css">
-		/* <![CDATA[ */
-		/* ----------- Pines Forms ----------- */
-		.pform:after {
-			content: ".";
-			display: block;
-			height: 0;
-			clear: both;
-			visibility: hidden;
-		}
-		.pform fieldset {
-			padding: 5.6px 10px 12px;
-			border: 1px solid #CCC;
-			overflow: auto; /* Opera 8 won't enclose floated divs without this. */
-		}
-		.pform fieldset legend, .pform .heading h1 {
-			font-size: 150%;
-			font-weight: normal;
-		}
-		.pform fieldset.group {
-			display: block;
-			clear: left;
-			margin-bottom: 15px;
-		}
-		.pform div.element {
-			float: left;
-			clear: left;
-			padding-bottom: 15px;
-		}
-		.pform div.heading, .pform div.element.full_width {
-			width: 100%;
-		}
-		.pform div.heading {
-			border-bottom: 1px solid #CCC;
-			padding-bottom: 0;
-			margin-bottom: 10px;
-		}
-		.pform div.heading h1 {
-			margin-top: 5px;
-			margin-bottom: 5px;
-		}
-		.pform div.heading p {
-			clear: left;
-			margin-top: 5px;
-			margin-bottom: 5px;
-		}
-		.pform div.element .label, .pform div.element .note {
-			width: 230px; /* Width of labels. */
-			float: left;
-		}
-		.pform div.element .note {
-			margin-top: .5em;
-			clear: left;
-			font-size: 60%;
-			color: #555;
-		}
-		.pform div.element .group {
-			 margin-left: 230px; /* Same as width of labels. */
-		}
-		.pform div.element .field, .pform div.buttons .button {
-			float: none;
-			margin-left: 5px; /* Margin between inputs and labels. */
-		}
-		.pform div.element .field.full_width {
-			display: block;
-			margin-left: 235px; /* Width of labels + margin between inputs and labels. */
-		}
-		.pform div.buttons {
-			clear: both;
-			padding-bottom: 0;
-			padding-left: 215px; /* Width of labels + margin to inputs - button spacing. */
-		}
-		.pform div.buttons.centered {
-			width: 100%;
-			padding-left: 0;
-			text-align: center;
-		}
-		.pform div.buttons .button {
-			margin-left: 20px; /* Button spacing. */
-			margin-bottom: 10px;
-		}
-		/* ----------- Two Columns ----------- */
-		.pform_twocol, .pform_twocol fieldset {
-			overflow: hidden; /* Hides the unnecessary scrollbar caused by wide elements. */
-		}
-		.pform_twocol div.element {
-			clear: none;
-			width: auto;
-			min-width: 50%; /* For two columns max. */
-		}
-		.pform_twocol div.heading, .pform_twocol div.full_width {
-			width: 100%;
-		}
-		.pform_twocol div.heading {
-			clear: both;
-		}
-		.pform_twocol div.buttons {
-			clear: both;
-			width: 100%;
-		}
-		/* ----------- Three Columns ----------- */
-		.pform_threecol, .pform_threecol fieldset {
-			overflow: hidden; /* Hides the unnecessary scrollbar caused by wide elements. */
-		}
-		.pform_threecol div.element {
-			clear: none;
-			width: auto;
-			min-width: 33%; /* For three columns max. */
-		}
-		.pform_threecol div.heading, .pform_threecol div.full_width {
-			width: 100%;
-		}
-		.pform_threecol div.heading {
-			clear: both;
-		}
-		.pform_threecol div.buttons {
-			clear: both;
-			width: 100%;
-		}
-		/* ]]> */
-	</style>
+	<link href="../pines/system/css/pform.css" media="all" rel="stylesheet" type="text/css" />
 	<!--[if lt IE 8]>
-	<style type="text/css">
-		/* Required for IE 7 and lower. */
-		.pform {
-			overflow: hidden; /* Hides an extended border. */
-			height: 100%; /* Makes IE6 enclose floats. */
-		}
-		.pform fieldset {
-			overflow: visible; /* IE7 will show scrollbars without this. */
-		}
-		.pform div.element {
-			width: 100%; /* Positions the inputs correctly. */
-		}
-		.pform div.buttons {
-			width: 550px; /* Keeps IE's broken box model from pushing the button box out of the form. Increase or decrease if needed. */
-		}
-	</style>
+	<link href="../pines/system/css/pform-ie-lt-8.css" media="all" rel="stylesheet" type="text/css" />
 	<![endif]-->
 	<!--[if lt IE 7]>
-	<style type="text/css">
-		/* Required for IE 6 and lower. */
-		.pform_twocol div.element {
-			width: 48%;
-		}
-		.pform_twocol div.heading {
-			width: 100%;
-		}
-		.pform_twocol div.buttons {
-			width: 550px;
-		}
-		.pform_threecol div.element {
-			width: 32%;
-		}
-		.pform_threecol div.heading {
-			width: 100%;
-		}
-		.pform_threecol div.buttons {
-			width: 550px;
-		}
-	</style>
+	<link href="../pines/system/css/pform-ie-lt-7.css" media="all" rel="stylesheet" type="text/css" />
 	<![endif]-->
 	<!--[if lt IE 6]>
-	<style type="text/css">
-		/* Required for IE 5.5 and lower. */
-		.pform {
-			height: auto; /* Undoes our IE6 fix from above. */
-			clear: left; /* Fixes forms aligning right of floated elements. */
-		}
-	</style>
+	<link href="../pines/system/css/pform-ie-lt-6.css" media="all" rel="stylesheet" type="text/css" />
 	<![endif]-->
 	<!-- END PINES FORM CSS -->
 
@@ -305,6 +144,25 @@
 		}
 		.pretty {
 			font-family: 'Palatino Linotype','Book Antiqua',Palatino,serif;
+		}
+		/* Custom styling. */
+		.pform fieldset legend, .pform .heading h1 {
+			font-size: 150%;
+		}
+		.pform div.element .label, .pform div.element .note {
+			width: 230px; /* Width of labels. */
+		}
+		.pform div.element .note {
+			font-size: 60%;
+		}
+		.pform div.element .group {
+			 margin-left: 230px; /* Same as width of labels. */
+		}
+		.pform div.element .field.full_width {
+			margin-left: 235px; /* Width of labels + margin between inputs and labels. */
+		}
+		.pform div.buttons {
+			padding-left: 215px; /* Width of labels + margin to inputs - button spacing. */
 		}
 		/* ]]> */
 	</style>
