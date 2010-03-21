@@ -523,6 +523,11 @@
 					pnotify_text: 'I\'m not part of the notice history, so if you redisplay the last message, it won\'t be me.',
 					pnotify_history: false
 				});" type="button" class="ui-state-default ui-corner-all" />
+				<input value="No Mouse Reset Notice" onclick="$.pnotify({
+					pnotify_title: 'No Mouse Reset Notice',
+					pnotify_text: 'I don\'t care if you move your mouse over me, I\'ll disappear when I want.',
+					pnotify_mouse_reset: false
+				});" type="button" class="ui-state-default ui-corner-all" />
 				<input value="Notice with Callbacks" onclick="$.pnotify({
 					pnotify_title: 'I\'m Here',
 					pnotify_text: 'I have a callback for each of my events. I\'ll call all my callbacks while I change states.',
