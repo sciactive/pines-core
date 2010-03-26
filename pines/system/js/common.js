@@ -30,7 +30,20 @@ var pines = {
 	rela_location: "",
 	loadedjs: [],
 	loadedcss: [],
-	get: function(url){
+	get: function(url, params){
+		if (params) {
+			url += (url.indexOf("?") == -1) ? "?" : "&";
+			var parray = [];
+			for (var i in params) {
+				if (params.hasOwnProperty(i)) {
+					if (encodeURIComponent)
+						parray.push(encodeURIComponent(i)+"="+encodeURIComponent(params[i]));
+					else
+						parray.push(escape(i)+"="+escape(params[i]));
+				}
+			}
+			url += parray.join("&");
+		}
 		window.location = url;
 	},
 	post: function(url, params){
