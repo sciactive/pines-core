@@ -39,6 +39,9 @@ class depend extends p_base {
 	 * - service (Available services.)
 	 * - option (Current or requested component.)
 	 * - action (Current or requested action.)
+	 * - class (Class exists.)
+	 * - function (Function exists.)
+	 * - php_version (PHP version.)
 	 */
 	function __construct() {
 		global $pines;
@@ -47,6 +50,9 @@ class depend extends p_base {
 		$this->checkers['service'] = array($this, 'check_service');
 		$this->checkers['option'] = array($this, 'check_option');
 		$this->checkers['action'] = array($this, 'check_action');
+		$this->checkers['class'] = array($this, 'check_class');
+		$this->checkers['function'] = array($this, 'check_function');
+		$this->checkers['php_version'] = array($this, 'check_php_version');
 	}
 
 	/**
@@ -99,6 +105,21 @@ class depend extends p_base {
 	}
 
 	/**
+	 * Check to see if a class exists.
+	 *
+	 * Uses simple_parse() to provide simple logic.
+	 *
+	 * @param string $value The value to check for.
+	 * @return bool The result of the class check.
+	 */
+	function check_class($value) {
+		global $pines;
+		if (preg_match('/[!&|()]/', $value))
+			return $this->simple_parse($value, array($pines->depend, 'check_class'));
+		return class_exists($value);
+	}
+
+	/**
 	 * Check if a component is installed and enabled.
 	 *
 	 * Uses simple_parse() to provide simple logic.
@@ -112,6 +133,21 @@ class depend extends p_base {
 		if (preg_match('/[!&|()]/', $value))
 			return $this->simple_parse($value, array($pines->depend, 'check_component'));
 		return in_array($value, $pines->components);
+	}
+
+	/**
+	 * Check to see if a function exists.
+	 *
+	 * Uses simple_parse() to provide simple logic.
+	 *
+	 * @param string $value The value to check.
+	 * @return bool The result of the function check.
+	 */
+	function check_function($value) {
+		global $pines;
+		if (preg_match('/[!&|()]/', $value))
+			return $this->simple_parse($value, array($pines->depend, 'check_function'));
+		return function_exists($value);
 	}
 
 	/**
@@ -129,6 +165,34 @@ class depend extends p_base {
 		if (preg_match('/[!&|()]/', $value))
 			return $this->simple_parse($value, array($pines->depend, 'check_option'));
 		return $pines->component == $value || $pines->request_component == $value;
+	}
+
+	/**
+	 * Check PHP's version.
+	 *
+	 * Operators should be placed before the version number to test. Such as,
+	 * ">=5.2.10". The available operators are:
+	 *
+	 * - =
+	 * - <
+	 * - >
+	 * - <=
+	 * - >=
+	 * - <>
+	 *
+	 * Uses simple_parse() to provide simple logic.
+	 *
+	 * @param string $value The value to check.
+	 * @return bool The result of the version comparison.
+	 */
+	function check_php_version($value) {
+		global $pines;
+		if (preg_match('/[!&|()]/', $value))
+			return $this->simple_parse($value, array($pines->depend, 'check_php_version'));
+		// <, >, =, <=, >=
+		$compare = preg_replace('/([<>=]{1,2})(.*)/', '$1', $value);
+		$required = preg_replace('/([<>=]{1,2})(.*)/', '$2', $value);
+		return version_compare(phpversion(), $required, $compare);
 	}
 
 	/**
