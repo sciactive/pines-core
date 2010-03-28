@@ -89,19 +89,6 @@ return array(
 		'description' => 'The timezone the system should use as its default. User\'s timezones will default to this.',
 		'value' => date_default_timezone_get(),
 	),
-	array(
-		'name' => 'program_title',
-		'cname' => 'Program Name',
-		'description' => 'The program\'s internal name.',
-		'value' => '',
-	),
-	array(
-		'name' => 'program_version',
-		'cname' => 'Program Version',
-		'description' => 'The program\'s internal version number. Changing this may cause problems while updating!',
-		'value' => '',
-		'options' => array('0.44 Alpha'),
-	),
 );
 
 ?>

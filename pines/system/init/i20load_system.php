@@ -43,6 +43,7 @@ if (P_SCRIPT_TIMING) pines_print_time('Load System Classes');
  * $pines also holds Pines' standard classes/objects (called "services"), which
  * include:
  *
+ * - info - System and component info. (Part of the base system.)
  * - config - System and component configuration. (Part of the base system.)
  * - hook - Hook system. (Part of the base system.)
  * - depend - Dependency system. (Part of the base system.)
@@ -70,6 +71,13 @@ if (P_SCRIPT_TIMING) pines_print_time('Load System Classes');
  * @global dynamic_loader $pines
  */
 $pines = new dynamic_loader;
+
+/**
+ * Pines' and components' info.
+ *
+ * @global dynamic_info $pines->info
+ */
+$pines->info = new dynamic_info;
 
 /**
  * Pines' and components' configuration.

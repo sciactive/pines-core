@@ -52,7 +52,7 @@ defined('P_RUN') or die('Direct access prohibited');
 <div class="wrapper">
 	<fieldset>
 		<legend><?php echo $pines->config->option_title; ?></legend>
-		<p>The currently selected template is either missing or is not compatible with <?php echo $pines->config->program_title; ?>.</p>
+		<p>The currently selected template is either missing or is not compatible with <?php echo $pines->info->name; ?>.</p>
 	</fieldset>
 </div>
 </body>

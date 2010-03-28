@@ -49,6 +49,10 @@ class dynamic_config extends p_base {
 	 */
 	public function &__get($name) {
 		global $pines;
+		if ($name == 'template') {
+			$name = $pines->current_template;
+			$is_template = true;
+		}
 		if (substr($name, 0, 4) == 'com_') {
 			// Load the config for a component.
 			if ( file_exists("components/$name/defaults.php") ) {
@@ -76,6 +80,8 @@ class dynamic_config extends p_base {
 				}
 			}
 		}
+		if ($is_template)
+			$this->template =& $this->$name;
 		return $this->$name;
 	}
 
@@ -94,13 +100,13 @@ class dynamic_config extends p_base {
 	public function __isset($name) {
 		global $pines;
 		if (substr($name, 0, 4) == 'com_') {
-			if ( file_exists("components/$name/configure.php") ) {
-				$config_array = include("components/$name/configure.php");
+			if ( file_exists("components/$name/defaults.php") ) {
+				$config_array = include("components/$name/defaults.php");
 				return is_array($config_array);
 			}
 		} elseif (substr($name, 0, 4) == 'tpl_') {
-			if ( file_exists("templates/$name/configure.php") ) {
-				$config_array = include("templates/$name/configure.php");
+			if ( file_exists("templates/$name/defaults.php") ) {
+				$config_array = include("templates/$name/defaults.php");
 				return is_array($config_array);
 			}
 		}
