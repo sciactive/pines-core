@@ -53,6 +53,8 @@ class depend extends p_base {
 		$this->checkers['class'] = array($this, 'check_class');
 		$this->checkers['function'] = array($this, 'check_function');
 		$this->checkers['php_version'] = array($this, 'check_php_version');
+		$this->checkers['pines_version'] = array($this, 'check_pines_version');
+		$this->checkers['component_version'] = array($this, 'check_component_version');
 	}
 
 	/**
@@ -136,6 +138,35 @@ class depend extends p_base {
 	}
 
 	/**
+	 * Check a component's version.
+	 *
+	 * Operators should be placed betwen the component name and the version
+	 * number to test. Such as, "com_xmlparser>=1.1.0". The available operators
+	 * are:
+	 *
+	 * - =
+	 * - <
+	 * - >
+	 * - <=
+	 * - >=
+	 * - <>
+	 *
+	 * Uses simple_parse() to provide simple logic.
+	 *
+	 * @param string $value The value to check.
+	 * @return bool The result of the version comparison.
+	 */
+	function check_component_version($value) {
+		global $pines;
+		if (preg_match('/[!&|()]/', $value))
+			return $this->simple_parse($value, array($pines->depend, 'check_component_version'));
+		$component = preg_replace('/([a-z0-9_]+)([<>=]{1,2})(.+)/S', '$1', $value);
+		$compare = preg_replace('/([a-z0-9_]+)([<>=]{1,2})(.+)/S', '$2', $value);
+		$required = preg_replace('/([a-z0-9_]+)([<>=]{1,2})(.+)/S', '$3', $value);
+		return version_compare($pines->info->$component->version, $required, $compare);
+	}
+
+	/**
 	 * Check to see if a function exists.
 	 *
 	 * Uses simple_parse() to provide simple logic.
@@ -190,9 +221,37 @@ class depend extends p_base {
 		if (preg_match('/[!&|()]/', $value))
 			return $this->simple_parse($value, array($pines->depend, 'check_php_version'));
 		// <, >, =, <=, >=
-		$compare = preg_replace('/([<>=]{1,2})(.*)/', '$1', $value);
-		$required = preg_replace('/([<>=]{1,2})(.*)/', '$2', $value);
+		$compare = preg_replace('/([<>=]{1,2})(.+)/S', '$1', $value);
+		$required = preg_replace('/([<>=]{1,2})(.+)/S', '$2', $value);
 		return version_compare(phpversion(), $required, $compare);
+	}
+
+	/**
+	 * Check Pines' version.
+	 *
+	 * Operators should be placed before the version number to test. Such as,
+	 * ">=1.0.0". The available operators are:
+	 *
+	 * - =
+	 * - <
+	 * - >
+	 * - <=
+	 * - >=
+	 * - <>
+	 *
+	 * Uses simple_parse() to provide simple logic.
+	 *
+	 * @param string $value The value to check.
+	 * @return bool The result of the version comparison.check_pines_version
+	 */
+	function check_pines_version($value) {
+		global $pines;
+		if (preg_match('/[!&|()]/', $value))
+			return $this->simple_parse($value, array($pines->depend, 'check_pines_version'));
+		// <, >, =, <=, >=
+		$compare = preg_replace('/([<>=]{1,2})(.+)/S', '$1', $value);
+		$required = preg_replace('/([<>=]{1,2})(.+)/S', '$2', $value);
+		return version_compare($pines->info->version, $required, $compare);
 	}
 
 	/**
