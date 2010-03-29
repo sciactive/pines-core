@@ -10,6 +10,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
+if (P_SCRIPT_TIMING) pines_print_time('Render Page');
 // Render the page.
 echo $pines->page->render();
 if (P_SCRIPT_TIMING) pines_print_time('Render Page', true);

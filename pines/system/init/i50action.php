@@ -10,6 +10,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
+if (P_SCRIPT_TIMING) pines_print_time('Get Requested Action');
 // Load any post or get vars for our component/action.
 $pines->request_component = clean_filename($_REQUEST['option']);
 $pines->request_action = clean_filename($_REQUEST['action']);
@@ -47,6 +48,7 @@ if ( empty($pines->request_component) ) $pines->request_component = $pines->conf
 if ( empty($pines->request_action) ) $pines->request_action = 'default';
 if (P_SCRIPT_TIMING) pines_print_time('Get Requested Action');
 
+if (P_SCRIPT_TIMING) pines_print_time('Run Requested Action');
 // Call the action specified.
 if ( action($pines->request_component, $pines->request_action) === 'error_404' ) {
 	header('HTTP/1.0 404 Not Found', true, 404);

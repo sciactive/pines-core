@@ -12,6 +12,7 @@ defined('P_RUN') or die('Direct access prohibited');
 
 // Strip magic quotes.
 if (get_magic_quotes_gpc()) {
+	if (P_SCRIPT_TIMING) pines_print_time('Strip Request Slashes');
 	pines_stripslashes_array_recursive($_GET);
 	pines_stripslashes_array_recursive($_POST);
 	pines_stripslashes_array_recursive($_REQUEST);
@@ -19,17 +20,20 @@ if (get_magic_quotes_gpc()) {
 	if (P_SCRIPT_TIMING) pines_print_time('Strip Request Slashes');
 }
 
+if (P_SCRIPT_TIMING) pines_print_time('Load System Classes');
 // Load system classes.
 $temp_classes = pines_scandir("system/classes/");
 foreach ($temp_classes as $cur_class) {
 	/**
 	 * Include each system class.
 	 */
-	include_once("system/classes/$cur_class");
+	if ($cur_class != 'hook_override_extend.php')
+		include_once("system/classes/$cur_class");
 }
 unset($temp_classes);
 if (P_SCRIPT_TIMING) pines_print_time('Load System Classes');
 
+if (P_SCRIPT_TIMING) pines_print_time('Load Pines');
 /**
  * The main object for Pines.
  *
@@ -118,5 +122,7 @@ $pines->menu = new menu;
  * @global page $pines->page
  */
 $pines->page = new page;
+
+if (P_SCRIPT_TIMING) pines_print_time('Load Pines');
 
 ?>

@@ -203,7 +203,7 @@ class entity extends p_base {
 			$tag_array = func_get_args();
 		}
 		foreach ($tag_array as $tag) {
-			array_push($this->tags, $tag);
+			$this->tags[] = $tag;
 		}
 	}
 

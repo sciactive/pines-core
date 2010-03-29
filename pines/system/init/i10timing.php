@@ -22,10 +22,18 @@ if (P_SCRIPT_TIMING) {
 	 */
 	function pines_print_time($message, $print_now = false) {
 		static $time_output;
+		static $time_array = array();
 		$microtime = microtime(true);
-		$time_output .= sprintf(str_pad($message, 40).'%F\n', ($microtime - $GLOBALS['p_last_time']));
-		$GLOBALS['p_last_time'] = $microtime;
+		if (!isset($time_array[$message]))
+			$time_array[$message] = array();
+		$time_array[$message][] = $microtime;
 		if ($print_now) {
+			$total_time = $microtime - P_EXEC_TIME;
+			foreach($time_array as $message => $times) {
+				$time = end($times) - reset($times);
+				$percent = $time / $total_time * 100;
+				$time_output .= sprintf(str_pad($message, 70).'%.6F (% 5.2F%%)\n', $time, $percent);
+			}
 			echo '<script type="text/javascript">
 (function(message){
 	if (console.log) {
@@ -36,11 +44,11 @@ if (P_SCRIPT_TIMING) {
 })("';
 			echo 'Pines Script Timing\n\nTimes are measured in seconds.\n';
 			echo $time_output;
-			printf('--------------------\n'.str_pad('Script Run', 40).'%F', ($microtime - P_EXEC_TIME));
+			printf('--------------------\n'.str_pad('Script Run', 70).'%F', $total_time);
 			echo '");</script>';
 		}
 	}
-	$GLOBALS['p_last_time'] = P_EXEC_TIME;
+	pines_print_time('Script Timing Start');
 	pines_print_time('Script Timing Start');
 }
 

@@ -39,8 +39,9 @@ foreach ($_p_cominit as $_p_cur_cominit) {
 	/**
 	 * Include each component init script in the correct order.
 	 */
+	if (P_SCRIPT_TIMING) pines_print_time("Init Script: $_p_cur_cominit");
 	include($_p_cur_cominit);
+	if (P_SCRIPT_TIMING) pines_print_time("Init Script: $_p_cur_cominit");
 }
-if (P_SCRIPT_TIMING) pines_print_time('Init Components');
 
 ?>

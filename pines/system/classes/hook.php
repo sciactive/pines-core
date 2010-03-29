@@ -59,6 +59,10 @@ class hook extends p_base {
 	 * Additional identical callbacks can be added in order to have a callback
 	 * called multiple times for one hook.
 	 *
+	 * The hook "all" is a psuedo hook which will run regardless of what hook
+	 * was actually caught. Callbacks attached to the "all" hook will run before
+	 * callbacks attached to the actual hook.
+	 *
 	 * Note: Be careful to avoid recursive callbacks, as they may result in an
 	 * infinite loop. All methods under $pines are automatically defined as
 	 * hooks.
@@ -70,10 +74,12 @@ class hook extends p_base {
 	 * @uses hook::sort_callbacks() To resort the callback array in the correct order.
 	 */
 	function add_callback($hook, $order, $function) {
-		$callback = array($hook, $order, $function);
-		$this->callbacks[] = $callback;
-		uasort($this->callbacks, array($this, 'sort_callbacks'));
-		return array_keys($this->callbacks, $callback);
+		$callback = array($order, $function);
+		if (!isset($this->callbacks[$hook]))
+			$this->callbacks[$hook] == array();
+		$this->callbacks[$hook][] = $callback;
+		uasort($this->callbacks[$hook], array($this, 'sort_callbacks'));
+		return array_keys($this->callbacks[$hook], $callback);
 	}
 
 	/**
@@ -98,12 +104,13 @@ class hook extends p_base {
 	/**
 	 * Delete a callback by its ID.
 	 *
+	 * @param string $hook The name of the callback's hook.
 	 * @param int $id The ID of the callback.
 	 * @return int 1 if the callback was deleted, 2 if it didn't exist.
 	 */
-	function del_callback_by_id($id) {
-		if (!isset($this->callbacks[$id])) return 2;
-		unset($this->callbacks[$id]);
+	function del_callback_by_id($hook, $id) {
+		if (!isset($this->callbacks[$hook][$id])) return 2;
+		unset($this->callbacks[$hook][$id]);
 		return 1;
 	}
 
@@ -143,8 +150,9 @@ class hook extends p_base {
 	/**
 	 * Get the array of callbacks.
 	 *
-	 * Callbacks are stored in arrays inside this array. Each array contains the
-	 * values $hook, $order, $function, in that order.
+	 * Callbacks are stored in arrays inside this array. The keys of this array
+	 * are the name of the hook whose callbacks are contained in its value as an
+	 * array. Each array contains the values $order, $function, in that order.
 	 *
 	 * @return array An array of callbacks.
 	 */
@@ -164,7 +172,7 @@ class hook extends p_base {
 	/**
 	 * Hook an object.
 	 *
-	 * This hooks all methods defined in the given object.
+	 * This hooks all (public) methods defined in the given object.
 	 *
 	 * @param object &$object The object to hook.
 	 * @param string $prefix The prefix used to call the object's methods. Usually something like "$object->".
@@ -175,30 +183,32 @@ class hook extends p_base {
 		if (!is_object($object)) return false;
 		// Make sure we don't take over the hook object, or we'll end up
 		// recursively calling ourself.
-		if (get_class($object) == 'hook') return false;
+		$class_name = get_class($object);
+		if ($class_name == 'hook') return false;
 
-		$ref_class = new ReflectionObject($object);
-		$methods = $ref_class->getMethods();
-		foreach ($methods as $cur_ref_method) {
-			$this->add_hook($prefix.$cur_ref_method->getName());
-		}
-		
 		if ($recursive) {
 			foreach ($object as $cur_name => &$cur_property) {
 				if (is_object($cur_property))
 					$this->hook_object($cur_property, $prefix.$cur_name.'->');
 			}
 		}
-		
-		$class_name = get_class($object);
+
 		if (!class_exists("hook_override_$class_name")) {
+
 			$reflection = new ReflectionObject($object);
 			$methods = $reflection->getMethods();
+
 			$code = '';
-			foreach ($methods as $cur_method) {
-				$fname = $cur_method->getName();
-				if (in_array($fname, array('_p_get', '_p_set', '_p_unset', '__construct', '__destruct', '__get', '__set', '__isset', '__unset', '__toString', '__invoke', '__set_state', '__clone', '__sleep')))
+			foreach ($methods as &$cur_method) {
+				if (!$cur_method->isPublic())
 					continue;
+				$fname = $cur_method->getName();
+				if (in_array($fname, array('__construct', '__destruct', '__get', '__set', '__isset', '__unset', '__toString', '__invoke', '__set_state', '__clone', '__sleep')))
+					continue;
+				// Create a hook for this method.
+				$this->add_hook($prefix.$fname);
+
+				//$fprefix = $cur_method->isFinal() ? 'final ' : '';
 				$fprefix = $cur_method->isStatic() ? 'static ' : '';
 				$params = $cur_method->getParameters();
 				$param_array = array();
@@ -227,6 +237,7 @@ class hook extends p_base {
 				$code .= "\t}\n";
 				$code .= "}\n\n";
 			}
+			// Build a hook_override class.
 			$include = str_replace(array('_NAMEHERE_', '//#CODEHERE#', '<?php', '?>'), array($class_name, $code, '', ''), $this->hook_file);
 			eval ($include);
 		}
@@ -251,10 +262,18 @@ class hook extends p_base {
 	function run_callbacks($name, $arguments = array(), $type = 'all', $object = null) {
 		if (!in_array($name, $this->hooks))
 			return $arguments;
-		foreach ($this->callbacks as $cur_callback) {
-			if ($cur_callback[0] == $name || $cur_callback[0] == 'all') {
-				if (($type == 'all' && $cur_callback[1] != 0) || ($type == 'before' && $cur_callback[1] < 0) || ($type == 'after' && $cur_callback[1] > 0)) {
-					$arguments = call_user_func_array($cur_callback[2], array($arguments, $name, $object));
+		if (isset($this->callbacks['all'])) {
+			foreach ($this->callbacks['all'] as $cur_callback) {
+				if (($type == 'all' && $cur_callback[0] != 0) || ($type == 'before' && $cur_callback[0] < 0) || ($type == 'after' && $cur_callback[0] > 0)) {
+					$arguments = call_user_func_array($cur_callback[1], array($arguments, $name, $object));
+					if ($arguments === false) return false;
+				}
+			}
+		}
+		if (isset($this->callbacks[$name])) {
+			foreach ($this->callbacks[$name] as $cur_callback) {
+				if (($type == 'all' && $cur_callback[0] != 0) || ($type == 'before' && $cur_callback[0] < 0) || ($type == 'after' && $cur_callback[0] > 0)) {
+					$arguments = call_user_func_array($cur_callback[1], array($arguments, $name, $object));
 					if ($arguments === false) return false;
 				}
 			}
@@ -274,10 +293,79 @@ class hook extends p_base {
 	 * @access private
 	 */
 	private function sort_callbacks($a, $b) {
-		if ($a[1] == $b[1])
+		if ($a[0] == $b[0])
 			return 0;
-		return ($a[1] < $b[1]) ? -1 : 1;
+		return ($a[0] < $b[0]) ? -1 : 1;
 	}
 }
 
+/*
+
+	function hook_object(&$object, $prefix = '', $recursive = true) {
+		if (!is_object($object)) return false;
+		// Make sure we don't take over the hook object, or we'll end up
+		// recursively calling ourself.
+		$class_name = get_class($object);
+		if ($class_name == 'hook') return false;
+
+		if ($recursive) {
+			foreach ($object as $cur_name => &$cur_property) {
+				if (is_object($cur_property))
+					$this->hook_object($cur_property, $prefix.$cur_name.'->');
+			}
+		}
+
+		if (!class_exists("hook_override_$class_name")) {
+
+			$reflection = new ReflectionObject($object);
+			$methods = $reflection->getMethods();
+
+			$code = '';
+			foreach ($methods as $cur_method) {
+				if (!$cur_method->isPublic())
+					continue;
+				$fname = $cur_method->getName();
+				if (in_array($fname, array('__construct', '__destruct', '__get', '__set', '__isset', '__unset', '__toString', '__invoke', '__set_state', '__clone', '__sleep')))
+					continue;
+				// Create a hook for this method.
+				$this->add_hook($prefix.$fname);
+
+				//$fprefix = $cur_method->isFinal() ? 'final ' : '';
+				$fprefix = $cur_method->isStatic() ? 'static ' : '';
+				$params = $cur_method->getParameters();
+				$param_array = array();
+				$param_call_array = array();
+				foreach ($params as $cur_param) {
+					$param_name = $cur_param->getName();
+					$param_prefix = $cur_param->isPassedByReference() ? '&' : '';
+					if ($cur_param->isDefaultValueAvailable()) {
+						$param_suffix = ' = '.var_export($cur_param->getDefaultValue(), true);
+					} else {
+						$param_suffix = '';
+					}
+					$param_array[] = $param_prefix.'$'.$param_name.$param_suffix;
+					$param_call_array[] = '$'.$param_name;
+				}
+				$code .= $fprefix."function $fname(".implode(', ', $param_array).") {\n";
+				$code .= "\tglobal \$pines;\n";
+				$code .= "\t\$arguments = debug_backtrace(false);\n";
+				$code .= "\t\$arguments = \$arguments[0]['args'];\n";
+				$code .= "\t\$arguments = \$pines->hook->run_callbacks(\$this->_p_prefix.'$fname', \$arguments, 'before', \$this->_p_object);\n";
+				$code .= "\tif (\$arguments !== false) {\n";
+				$code .= "\t\t\$return = call_user_func_array(array(\$this->_p_object, '$fname'), \$arguments);\n";
+				$code .= "\t\t\$return = \$pines->hook->run_callbacks(\$this->_p_prefix.'$fname', array(\$return), 'after', \$this->_p_object);\n";
+				$code .= "\t\tif (is_array(\$return))\n";
+				$code .= "\t\t\treturn \$return[0];\n";
+				$code .= "\t}\n";
+				$code .= "}\n\n";
+			}
+			// Build a hook_override class.
+			$include = str_replace(array('_NAMEHERE_', '//#CODEHERE#', '<?php', '?>'), array($class_name, $code, '', ''), $this->hook_file);
+			eval ($include);
+		}
+
+		eval ('$object = new hook_override_'.$class_name.' ($object, $prefix);');
+		return true;
+	}
+ */
 ?>

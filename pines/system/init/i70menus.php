@@ -10,6 +10,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
+if (P_SCRIPT_TIMING) pines_print_time('Process Menus');
 // Add the system menu.
 $pines->menu->add_json_file('system/menu.json');
 // Get the component menus.

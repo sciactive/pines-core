@@ -33,7 +33,9 @@ class menu extends p_base {
 		$array = json_decode(file_get_contents($filename), true);
 		if (!is_array($array))
 			return false;
-		$this->menu_arrays = array_merge($this->menu_arrays, $array);
+		foreach ($array as $value) {
+			$this->menu_arrays[] = $value;
+		}
 		return true;
 	}
 
@@ -89,12 +91,19 @@ class menu extends p_base {
 		foreach ($this->menu_arrays as $cur_entry) {
 			$tmp_path = explode('/', $cur_entry['path']);
 			$cur_menus =& $menus;
+			foreach ($tmp_path as $cur_path) {
+				if (!isset($cur_menus[$cur_path]))
+					$cur_menus[$cur_path] = array();
+				$cur_menus =& $cur_menus[$cur_path];
+			}
+			/* which way is faster?
 			do {
-				if (!key_exists($tmp_path[0], $cur_menus))
+				if (!isset($cur_menus[$tmp_path[0]]))
 					$cur_menus[$tmp_path[0]] = array();
 				$cur_menus =& $cur_menus[$tmp_path[0]];
 				$tmp_path = array_slice($tmp_path, 1);
 			} while (count($tmp_path));
+			 */
 			$cur_menus[0] = $cur_entry;
 		}
 

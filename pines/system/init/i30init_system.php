@@ -10,6 +10,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
+if (P_SCRIPT_TIMING) pines_print_time('Load System Config');
 /**
  * The current template.
  *
@@ -21,6 +22,7 @@ $pines->template = $pines->current_template;
 date_default_timezone_set($pines->config->timezone);
 if (P_SCRIPT_TIMING) pines_print_time('Load System Config');
 
+if (P_SCRIPT_TIMING) pines_print_time('Find Component Classes');
 // Check the offline mode, and load the offline page if enabled.
 if ($pines->config->offline_mode)
 	require('system/offline.php');
@@ -82,24 +84,33 @@ function __autoload($class_name) {
 		$trace = debug_backtrace();
 		// But the hook object will check if a hooked class exists before
 		// hooking it, so we don't want to create an extra object each time.
-		if ($trace[1]['function'] == 'class_exists')
+		if ($trace[1]['function'] == 'class_exists') {
+			if (P_SCRIPT_TIMING) pines_print_time("Checking Class [$class_name]");
+			if (P_SCRIPT_TIMING) pines_print_time("Checking Class [$class_name]");
 			return;
-		$new_class = preg_replace('/^hook_override_/', '', $class_name);
+		}
+		if (P_SCRIPT_TIMING) pines_print_time("Preparing Class [$class_name]");
+		$new_class = substr($class_name, 14);
 		$new_object = new $new_class;
 		$pines->hook->hook_object($new_object, get_class($new_object).'->', false);
 		unset($new_object);
+		if (P_SCRIPT_TIMING) pines_print_time("Preparing Class [$class_name]");
 		return;
 	}
 	if (key_exists($class_name, $pines->class_files)) {
+		if (P_SCRIPT_TIMING) pines_print_time("Load [$class_name]");
 		include_once($pines->class_files[$class_name]);
 		if (P_SCRIPT_TIMING) pines_print_time("Load [$class_name]");
 	}
 }
 
+if (P_SCRIPT_TIMING) pines_print_time('Start Session');
 // Now that all classes can be loaded, we can start the session manager. This
 // allows variables to keep their classes over sessions.
 session_start();
+if (P_SCRIPT_TIMING) pines_print_time('Start Session');
 
+if (P_SCRIPT_TIMING) pines_print_time('Hook $pines');
 // Load the hooks for $pines.
 $pines->hook->hook_object($pines, '$pines->');
 if (P_SCRIPT_TIMING) pines_print_time('Hook $pines');

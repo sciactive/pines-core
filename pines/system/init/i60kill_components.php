@@ -10,6 +10,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
+if (P_SCRIPT_TIMING) pines_print_time('Kill Components');
 // Run the component kill scripts.
 $_p_comkill = glob('components/com_*/init/k*.php');
 // Sort by just the filename.
