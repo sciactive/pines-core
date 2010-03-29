@@ -15,7 +15,7 @@ return array(
 	'author' => 'SciActive',
 	'version' => '0.44.0dev',
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
-	'short_description' => 'Pines PHP Framework Core System',
+	'short_description' => 'Pines PHP framework core system',
 	'description' => 'The base system of the Pines PHP application framework.',
 );
 
