@@ -43,12 +43,17 @@ if (P_SCRIPT_TIMING) pines_print_time('Load System Classes');
  * $pines also holds Pines' standard classes/objects (called "services"), which
  * include:
  *
- * - info - System and component info. (Part of the core system.)
- * - config - System and component configuration. (Part of the core system.)
- * - hook - Hook system. (Part of the core system.)
- * - depend - Dependency system. (Part of the core system.)
- * - menu - Menu system. (Part of the core system.)
- * - page - Display controller. (Part of the core system.)
+ * Pines Core:
+ *
+ * - info - System and component info.
+ * - config - System and component configuration.
+ * - hook - Hook system.
+ * - depend - Dependency system.
+ * - menu - Menu system.
+ * - page - Display controller.
+ *
+ * Provided by Components:
+ *
  * - template - The current template's object.
  * - configurator - Manages configuration settings for Pines and components.
  * - log_manager - Manages logging features.
