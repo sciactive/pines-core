@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <title>Layout Test</title>
+		<style type="text/css">
+			/* -- Visual Styles -- */
+			#header, #footer {
+				background-color: yellow;
+			}
+			#col_mid {
+				background-color: gray;
+			}
+			#col_left {
+				background-color: green;
+			}
+			#col_right {
+				background-color: orange;
+			}
+			/* -- Layout Styles -- */
+			* {
+				padding: 0;
+				margin: 0;
+			}
+			html, body {
+				position: relative;
+				min-height: 100%;
+				height: auto !important;
+				height: 100%;
+			}
+			#page {
+				float: left;
+				clear: both;
+				width: 100%;
+				min-height: 100%;
+			}
+			#header, #wrapper, #footer {
+				float: left;
+				clear: both;
+				width: 100%
+			}
+			#col_left {
+				float: left;
+				width: 150px;
+			}
+			#col_mid {
+				float: left;
+				width: 150px;
+			}
+			#col_right {
+				float: left;
+				width: 150px;
+			}
+		</style>
+    </head>
+    <body>
+		<div id="page">
+			<div id="header">HEADER<p>Filler</p><p>Filler</p></div>
+			<div id="wrapper">
+				<div id="col_mid">MIDDLE COLUMN<p>Filler</p><p>Filler</p><p>Filler</p><p>Filler</p><p>Filler</p></div>
+				<div id="col_left">LEFT COLUMN<p>Filler</p><p>Filler</p></div>
+				<div id="col_right">RIGHT COLUMN<p>Filler</p><p>Filler</p></div>
+			</div>
+			<div id="footer">FOOTER<p>Filler</p><p>Filler</p></div>
+		</div>
+    </body>
+</html>
