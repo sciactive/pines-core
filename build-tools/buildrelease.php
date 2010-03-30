@@ -4,8 +4,8 @@ function clean_filename($filename) {
 }
 if (isset($_REQUEST['directory'])) {
 	$directory = clean_filename($_REQUEST['directory']);
+	if (empty($directory)) $directory = 'pines';
 	$directory = '../'.$directory;
-	if (empty($directory)) $directory = 'trunk';
 	$file = clean_filename($_REQUEST['file']);
 	switch ($_REQUEST['submit']) {
 		case "Build .php":
@@ -99,7 +99,7 @@ echo '<?xml version="1.0" encoding="UTF-8" standalone="no" ?>'; ?>
 		<fieldset>
 			<legend>Pines Release Builder</legend>
 			<p>Use this release builder to build a package of the source from the given directory in the repository. After you click one of the build options, you will be given the chance to save the file to your hard drive.</p>
-			<label>Repository directory to build from: <input type="text" name="directory" value="trunk/pines/" /></label><br />
+			<label>Repository directory to build from: <input type="text" name="directory" value="pines/" /></label><br />
 			<label>Filename to save as: <input type="text" name="file" value="pines-VERSION-STATE" /></label><br />
 			<div class="buttons"><input type="submit" value="Build .php" name="submit" /> <input type="submit" value="Build .tar.gz" name="submit" /> <input type="submit" value="Build .tar.bz2" name="submit" /> <input type="submit" value="Build .zip" name="submit" /> <input type="reset" value="Reset" name="reset" /></div>
 		</fieldset>
