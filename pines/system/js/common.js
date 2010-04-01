@@ -63,7 +63,7 @@ var pines = {
 		form.submit();
 	},
 	loadjs: function(filename, multiple){
-		if (this.loadedjs.indexOf(filename) > -1 && !(multiple)) return;
+		if (this.loadedjs.indexOf(filename) > -1 && !multiple) return;
 		var n=document.createElement("script");
 		n.setAttribute("type","text/javascript");
 		n.setAttribute("src", filename);
@@ -72,7 +72,7 @@ var pines = {
 		this.loadedjs[this.loadedjs.length]=filename;
 	},
 	loadcss: function(filename, multiple){
-		if (this.loadedcss.indexOf(filename) > -1 && !(multiple)) return;
+		if (this.loadedcss.indexOf(filename) > -1 && !multiple) return;
 		var n=document.createElement("link");
 		n.setAttribute("type","text/css");
 		n.setAttribute("rel", "stylesheet");

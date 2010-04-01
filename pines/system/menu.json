@@ -76,5 +76,12 @@
 			"depend": {
 				"children": true
 			}
+		},
+		{
+			"path": "main_menu/account",
+			"text": "Account",
+			"depend": {
+				"children": true
+			}
 		}
 ]
