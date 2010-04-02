@@ -96,6 +96,42 @@ class pines extends p_base {
 	 * @var string
 	 */
 	public $request_action;
+	/**
+	 * The currently running component/option.
+	 * @var string
+	 */
+	public $component;
+	/**
+	 * The currently running action.
+	 * @var string
+	 */
+	public $action;
+
+	/**
+	 * Load and run an action.
+	 *
+	 * @param string $component The component in which the action resides.
+	 * @param string $action The action to run.
+	 * @return mixed The value returned by the action, or 'error_404' if it doesn't exist.
+	 */
+	public function action($component, $action) {
+		global $pines;
+		$component = str_replace('..', 'fail-danger-dont-use-hack-attempt', $component);
+		$action = str_replace('..', 'fail-danger-dont-use-hack-attempt', $action);
+		$action_file = ($component == 'system' ? $component : "components/$component")."/actions/$action.php";
+		if ( file_exists($action_file) ) {
+			$this->component = $component;
+			$this->action = $action;
+			unset($component);
+			unset($action);
+			/**
+			 * Run the action's file.
+			 */
+			return require($action_file);
+		} else {
+			return 'error_404';
+		}
+	}
 
 	/**
 	 * Set up the Pines object.

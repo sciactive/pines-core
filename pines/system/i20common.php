@@ -13,34 +13,6 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if (!function_exists('action')) {
-	/**
-	 * Load and run an action.
-	 *
-	 * @param string $component The component in which the action resides.
-	 * @param string $action The action to run.
-	 * @return mixed The value returned by the action, or 'error_404' if it doesn't exist.
-	 */
-	function action($component, $action) {
-		global $pines;
-		$component = clean_filename($component);
-		$action = clean_filename($action);
-		$action_file = ($component == 'system' ? $component : "components/$component")."/actions/$action.php";
-		if ( file_exists($action_file) ) {
-			$pines->component = $component;
-			$pines->action = $action;
-			unset($component);
-			unset($action);
-			/**
-			 * Run the action's file.
-			 */
-			return require($action_file);
-		} else {
-			return 'error_404';
-		}
-	}
-}
-
 if ( isset($pines->ability_manager) ) {
 	/**
 	 * The system/all ability let's the user perform any action on the system,
@@ -49,7 +21,7 @@ if ( isset($pines->ability_manager) ) {
 	$pines->ability_manager->add('system', 'all', 'All Abilities', 'Let user do anything, regardless of whether they have the ability.');
 }
 
-/**
+/*
  * These are very rudamentary security functions. If you are worried about
  * security, you should consider replacing them.
  */
@@ -94,36 +66,40 @@ if (!function_exists('is_clean_filename')) {
 	}
 }
 
-if (!function_exists('display_error')) {
-	/**
-	 * Causes the system to report an error to the user.
-	 * 
-	 * This function should be used instead of calling $pines->page->error
-	 * directly, because some admins may wish to log Pines errors, instead of
-	 * displaying them.
-	 *
-	 * @param string $error_text Information to display to the user.
-	 */
-	function display_error($error_text) {
-		global $pines;
-		$pines->page->error($error_text);
-	}
+/*
+ * Some shortcuts, to make life easier.
+ */
+
+/**
+ * Shortcut to $pines->action().
+ *
+ * @param string $component The component in which the action resides.
+ * @param string $action The action to run.
+ * @return mixed The value returned by the action, or 'error_404' if it doesn't exist.
+ */
+function action($component, $action) {
+	global $pines;
+	return $pines->action($component, $action);
 }
 
-if (!function_exists('display_notice')) {
-	/**
-	 * Causes the system to report a notice to the user.
-	 * 
-	 * This function should be used instead of calling $pines->page->notice
-	 * directly, because some admins may wish to log Pines notices, instead of
-	 * displaying them.
-	 *
-	 * @param string $notice_text Information to display to the user.
-	 */
-	function display_notice($notice_text) {
-		global $pines;
-		$pines->page->notice($notice_text);
-	}
+/**
+ * Shortcut to $pines->page->error().
+ *
+ * @param string $text Information to display to the user.
+ */
+function pines_error($text) {
+	global $pines;
+	$pines->page->error($text);
+}
+
+/**
+ * Shortcut to $pines->page->notice().
+ *
+ * @param string $text Information to display to the user.
+ */
+function pines_notice($text) {
+	global $pines;
+	$pines->page->notice($text);
 }
 
 /**
@@ -172,26 +148,6 @@ function punt_user($message = NULL, $url = NULL) {
 }
 
 /**
- * Formats a date using the DateTime class.
- *
- * @param int $timestamp The timestamp to format.
- * @param DateTimeZone|string|null $timezone The timezone to use for formatting. Defaults to date_default_timezone_get().
- * @param string $format The format to use.
- * @return string The formatted date.
- */
-function pines_date_format($timestamp, $timezone = null, $format = 'Y-m-d H:i T') {
-	$date = new DateTime(gmdate('c', (int) $timestamp));
-	if (!is_null($timezone)) {
-		if (is_string($timezone))
-			$timezone = new DateTimeZone($timezone);
-		$date->setTimezone($timezone);
-	} else {
-		$date->setTimezone(new DateTimeZone(date_default_timezone_get()));
-	}
-	return $date->format($format);
-}
-
-/**
  * Shortcut to $pines->depend->check().
  *
  * @uses $pines->depend->check() Forwards parameters and returns the result.
@@ -220,19 +176,6 @@ function pines_log() {
 }
 
 /**
- * Formats a phone number.
- *
- * @param string $phone The phone number to format.
- * @return string The formatted phone number.
- */
-function pines_phone_format($phone) {
-	if (is_null($phone))
-		return '';
-	$return = preg_replace('/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/', '($1$2$3) $4$5$6-$7$8$9$10 x$11', (string) $phone);
-	return preg_replace('/\D*$/', '', $return);
-}
-
-/**
  * Shortcut to $pines->template->url().
  *
  * @uses $pines->template->url() Forwards parameters and returns the result.
@@ -244,6 +187,43 @@ function pines_url() {
 		return null;
 	$args = func_get_args();
 	return call_user_func_array(array($pines->template, 'url'), $args);
+}
+
+/*
+ * Some simple formatting functions.
+ */
+
+/**
+ * Formats a date using the DateTime class.
+ *
+ * @param int $timestamp The timestamp to format.
+ * @param DateTimeZone|string|null $timezone The timezone to use for formatting. Defaults to date_default_timezone_get().
+ * @param string $format The format to use.
+ * @return string The formatted date.
+ */
+function pines_date_format($timestamp, $timezone = null, $format = 'Y-m-d H:i T') {
+	$date = new DateTime(gmdate('c', (int) $timestamp));
+	if (!is_null($timezone)) {
+		if (is_string($timezone))
+			$timezone = new DateTimeZone($timezone);
+		$date->setTimezone($timezone);
+	} else {
+		$date->setTimezone(new DateTimeZone(date_default_timezone_get()));
+	}
+	return $date->format($format);
+}
+
+/**
+ * Formats a phone number.
+ *
+ * @param string $phone The phone number to format.
+ * @return string The formatted phone number.
+ */
+function pines_phone_format($phone) {
+	if (is_null($phone))
+		return '';
+	$return = preg_replace('/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/', '($1$2$3) $4$5$6-$7$8$9$10 x$11', (string) $phone);
+	return preg_replace('/\D*$/', '', $return);
 }
 
 ?>

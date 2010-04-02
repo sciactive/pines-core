@@ -67,7 +67,7 @@ class validate extends p_base {
 	 */
 	function check_required($value, $args) {
 		if (empty($value)) {
-			display_notice($args);
+			pines_notice($args);
 			return false;
 		}
 		return true;
