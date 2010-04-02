@@ -43,15 +43,16 @@ function __autoload($class_name) {
 	}
 }
 
-if (P_SCRIPT_TIMING) pines_print_time('Start Session');
-// Now that all classes can be loaded, we can start the session manager. This
-// allows variables to keep their classes over sessions.
-session_start();
-if (P_SCRIPT_TIMING) pines_print_time('Start Session');
-
 if (P_SCRIPT_TIMING) pines_print_time('Hook $pines');
 // Load the hooks for $pines.
 $pines->hook->hook_object($pines, '$pines->');
 if (P_SCRIPT_TIMING) pines_print_time('Hook $pines');
+
+if (P_SCRIPT_TIMING) pines_print_time('Start Session');
+// Now that all classes can be loaded, and system methods can be hooked, we can
+// start the session manager. This allows variables to keep their classes over
+// sessions.
+session_start();
+if (P_SCRIPT_TIMING) pines_print_time('Start Session');
 
 ?>

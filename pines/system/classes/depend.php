@@ -35,26 +35,28 @@ class depend extends p_base {
 	 * Set up the default dependency checker types.
 	 *
 	 * - ability (System abilities.)
-	 * - component (Installed enabled components.)
-	 * - service (Available services.)
-	 * - option (Current or requested component.)
 	 * - action (Current or requested action.)
 	 * - class (Class exists.)
+	 * - component (Installed enabled components.)
+	 * - component_version (Component version.)
 	 * - function (Function exists.)
+	 * - option (Current or requested component.)
 	 * - php_version (PHP version.)
+	 * - pines_version (Pines version.)
+	 * - service (Available services.)
 	 */
 	function __construct() {
 		global $pines;
 		$this->checkers['ability'] = array($this, 'check_ability');
-		$this->checkers['component'] = array($this, 'check_component');
-		$this->checkers['service'] = array($this, 'check_service');
-		$this->checkers['option'] = array($this, 'check_option');
 		$this->checkers['action'] = array($this, 'check_action');
 		$this->checkers['class'] = array($this, 'check_class');
+		$this->checkers['component'] = array($this, 'check_component');
+		$this->checkers['component_version'] = array($this, 'check_component_version');
 		$this->checkers['function'] = array($this, 'check_function');
+		$this->checkers['option'] = array($this, 'check_option');
 		$this->checkers['php_version'] = array($this, 'check_php_version');
 		$this->checkers['pines_version'] = array($this, 'check_pines_version');
-		$this->checkers['component_version'] = array($this, 'check_component_version');
+		$this->checkers['service'] = array($this, 'check_service');
 	}
 
 	/**
@@ -274,9 +276,9 @@ class depend extends p_base {
 	 * Parse simple logic statements using a callback.
 	 *
 	 * Logic statements can be made with the following operators:
-	 * - ! (Not)
-	 * - & (And)
-	 * - | (Or)
+	 * - ! (Bang - Not)
+	 * - & (Ampersand - And)
+	 * - | (Pipe - Or)
 	 *
 	 * They can be grouped using parentheses.
 	 *

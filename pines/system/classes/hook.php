@@ -228,10 +228,11 @@ class hook extends p_base {
 				$code .= "\tglobal \$pines;\n";
 				$code .= "\t\$arguments = debug_backtrace(false);\n";
 				$code .= "\t\$arguments = \$arguments[0]['args'];\n";
-				$code .= "\t\$arguments = \$pines->hook->run_callbacks(\$this->_p_prefix.'$fname', \$arguments, 'before', \$this->_p_object);\n";
+				$code .= "\t\$function = array(\$this->_p_object, '$fname');\n";
+				$code .= "\t\$arguments = \$pines->hook->run_callbacks(\$this->_p_prefix.'$fname', \$arguments, 'before', \$this->_p_object, \$function);\n";
 				$code .= "\tif (\$arguments !== false) {\n";
-				$code .= "\t\t\$return = call_user_func_array(array(\$this->_p_object, '$fname'), \$arguments);\n";
-				$code .= "\t\t\$return = \$pines->hook->run_callbacks(\$this->_p_prefix.'$fname', array(\$return), 'after', \$this->_p_object);\n";
+				$code .= "\t\t\$return = call_user_func_array(\$function, \$arguments);\n";
+				$code .= "\t\t\$return = \$pines->hook->run_callbacks(\$this->_p_prefix.'$fname', array(\$return), 'after', \$this->_p_object, \$function);\n";
 				$code .= "\t\tif (is_array(\$return))\n";
 				$code .= "\t\t\treturn \$return[0];\n";
 				$code .= "\t}\n";
@@ -257,15 +258,16 @@ class hook extends p_base {
 	 * @param array $arguments An array of arguments to be passed to the callbacks.
 	 * @param string $type The type of callbacks to run. 'before', 'after', or 'all'.
 	 * @param mixed $object The object on which the hook was called.
+	 * @param callback $function The function which is called at "0". You can change this in the "before" callbacks to effectively takeover a function.
 	 * @return array|bool The array of arguments returned by the last callback or FALSE if a callback returned it.
 	 */
-	function run_callbacks($name, $arguments = array(), $type = 'all', $object = null) {
+	function run_callbacks($name, $arguments = array(), $type = 'all', &$object = null, &$function = null) {
 		if (!in_array($name, $this->hooks))
 			return $arguments;
 		if (isset($this->callbacks['all'])) {
 			foreach ($this->callbacks['all'] as $cur_callback) {
 				if (($type == 'all' && $cur_callback[0] != 0) || ($type == 'before' && $cur_callback[0] < 0) || ($type == 'after' && $cur_callback[0] > 0)) {
-					$arguments = call_user_func_array($cur_callback[1], array($arguments, $name, $object));
+					$arguments = call_user_func_array($cur_callback[1], array($arguments, $name, &$object, &$function));
 					if ($arguments === false) return false;
 				}
 			}
@@ -273,7 +275,7 @@ class hook extends p_base {
 		if (isset($this->callbacks[$name])) {
 			foreach ($this->callbacks[$name] as $cur_callback) {
 				if (($type == 'all' && $cur_callback[0] != 0) || ($type == 'before' && $cur_callback[0] < 0) || ($type == 'after' && $cur_callback[0] > 0)) {
-					$arguments = call_user_func_array($cur_callback[1], array($arguments, $name, $object));
+					$arguments = call_user_func_array($cur_callback[1], array($arguments, $name, &$object, &$function));
 					if ($arguments === false) return false;
 				}
 			}
