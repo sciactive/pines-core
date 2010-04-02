@@ -1,6 +1,6 @@
 <?php
 /**
- * dynamic_info class.
+ * info class.
  *
  * @package Pines
  * @license http://www.gnu.org/licenses/agpl-3.0.html
@@ -11,7 +11,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 /**
- * A dynamic info object.
+ * A dynamic info class.
  *
  * Components' info will be loaded into their variables. In other words, when
  * you access $pines->info->com_xmlparser->version, if
@@ -22,7 +22,7 @@ defined('P_RUN') or die('Direct access prohibited');
  *
  * @package Pines
  */
-class dynamic_info extends p_base {
+class info extends p_base {
 	/**
 	 * Fill this object with system info.
 	 */

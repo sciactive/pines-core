@@ -10,67 +10,6 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if (P_SCRIPT_TIMING) pines_print_time('Load System Config');
-/**
- * The current template.
- *
- * @global string $pines->current_template
- */
-$pines->current_template = ( !empty($_REQUEST['template']) && $pines->config->allow_template_override ) ?
-	$_REQUEST['template'] : $pines->config->default_template;
-$pines->template = $pines->current_template;
-date_default_timezone_set($pines->config->timezone);
-if (P_SCRIPT_TIMING) pines_print_time('Load System Config');
-
-if (P_SCRIPT_TIMING) pines_print_time('Find Component Classes');
-// Check the offline mode, and load the offline page if enabled.
-if ($pines->config->offline_mode)
-	require('system/offline.php');
-
-/**
- * An array of the enabled components.
- * @global array $pines->components
- */
-$pines->components = array();
-/**
- * An array of all components.
- * @global array $pines->all_components
- */
-$pines->all_components = array();
-if ( file_exists('components/') && file_exists('templates/') ) {
-	$pines->components = array_merge(pines_scandir('components/'), pines_scandir('templates/'));
-	$pines->all_components = array_merge(pines_scandir('components/', 0, null, false), pines_scandir('templates/', 0, null, false));
-	foreach ($pines->all_components as &$cur_value) {
-		if (substr($cur_value, 0, 1) == '.')
-			$cur_value = substr($cur_value, 1);
-	}
-	unset($cur_value);
-	sort($pines->components);
-	sort($pines->all_components);
-}
-
-// Load component classes.
-/**
- * List of class files for autoloading classes.
- *
- * Note that templates have a classes dir, but the only file loaded from it is
- * the file of the same name as the template. Also, only the current template's
- * class is loaded.
- *
- * @var array $pines->class_files
- */
-$pines->class_files = array();
-$temp_classes = glob('components/com_*/classes/*.php');
-foreach ($temp_classes as $cur_class) {
-	$pines->class_files[preg_replace('/^\/|\.php$/', '', strrchr($cur_class, '/'))] = $cur_class;
-}
-unset($cur_class);
-unset($temp_classes);
-// If the current template is missing its class, display the template error page.
-if ( !file_exists("templates/{$pines->current_template}/classes/{$pines->current_template}.php") )
-	require('system/template_error.php');
-$pines->class_files[$pines->current_template] = "templates/{$pines->current_template}/classes/{$pines->current_template}.php";
-if (P_SCRIPT_TIMING) pines_print_time('Find Component Classes');
 /**
  * Load a class file.
  *

@@ -1,6 +1,6 @@
 <?php
 /**
- * dynamic_config class.
+ * config class.
  *
  * @package Pines
  * @license http://www.gnu.org/licenses/agpl-3.0.html
@@ -11,7 +11,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 /**
- * A dynamic config object.
+ * A dynamic config class.
  *
  * Components' configuration will be loaded into their variables. In other
  * words, when you access $pines->config->com_xmlparser->strict, if
@@ -22,7 +22,7 @@ defined('P_RUN') or die('Direct access prohibited');
  *
  * @package Pines
  */
-class dynamic_config extends p_base {
+class config extends p_base {
 	/**
 	 * Fill this object with system configuration.
 	 */

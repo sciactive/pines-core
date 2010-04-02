@@ -55,4 +55,24 @@ function pines_stripslashes_array_recursive(&$array) {
 	return true;
 }
 
+/**
+ * Sort by only the file's name.
+ *
+ * If the file's names are equal, then the entire string is compared using
+ * strcmp(), otherwise, only the filename is compared.
+ *
+ * @param string $a The first file.
+ * @param string $b The second file.
+ * @return int Compare result.
+ */
+function pines_sort_by_filename($a, $b) {
+	$str1 = strrchr($a, '/');
+	$str2 = strrchr($b, '/');
+	if ($str1 == $str2) {
+		return strcmp($a, $b);
+	} else {
+		return strcmp($str1, $str2);
+	}
+}
+
 ?>

@@ -30,6 +30,7 @@ foreach ($temp_classes as $cur_class) {
 	if ($cur_class != 'hook_override_extend.php')
 		include_once("system/classes/$cur_class");
 }
+unset($cur_class);
 unset($temp_classes);
 if (P_SCRIPT_TIMING) pines_print_time('Load System Classes');
 
@@ -77,52 +78,9 @@ if (P_SCRIPT_TIMING) pines_print_time('Load Pines');
  * $pines->log_manager = 'com_emaillogs';
  * </code>
  *
- * @global dynamic_loader $pines
+ * @global pines $pines
  */
-$pines = new dynamic_loader;
-
-/**
- * Pines' and components' info.
- *
- * @global dynamic_info $pines->info
- */
-$pines->info = new dynamic_info;
-
-/**
- * Pines' and components' configuration.
- *
- * @global dynamic_config $pines->config
- */
-$pines->config = new dynamic_config;
-
-/**
- * The hook system.
- *
- * @global hook $pines->hook
- */
-$pines->hook = new hook;
-
-/**
- * The dependency system.
- *
- * @global depend $pines->depend
- */
-$pines->depend = new depend;
-
-/**
- * The menu system.
- *
- * @global menu $pines->menu
- */
-$pines->menu = new menu;
-
-/**
- * The display controller.
- *
- * @global page $pines->page
- */
-$pines->page = new page;
-
+$pines = new pines;
 if (P_SCRIPT_TIMING) pines_print_time('Load Pines');
 
 ?>
