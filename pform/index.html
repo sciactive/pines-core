@@ -73,17 +73,20 @@
 	<!-- This is how to change the size. -->
 	<style type="text/css">
 		/* <![CDATA[ */
-		.pform_custom {
+		.pform.pform_custom {
 			width: 311px;
 		}
-		.pform_custom div.element .label, .pform_custom div.element .note {
+		.pform.pform_custom div.element .label, .pform_custom div.element .note {
 			width: 130px; /* Width of labels. */
 		}
-		.pform_custom div.element .group {
+		.pform.pform_custom div.element .group {
 			 margin-left: 130px; /* Same as width of labels. */
 		}
-		.pform_custom div.buttons {
+		.pform.pform_custom div.buttons {
 			padding-left: 115px; /* Width of labels + margin to inputs - button spacing. */
+		}
+		.pform.pform_custom div.buttons.centered {
+			padding-left: 0;
 		}
 		/* ]]> */
 	</style>
@@ -98,36 +101,36 @@
 	<!-- This is an example customization. -->
 	<style type="text/css">
 		/* <![CDATA[ */
-		.pform_custom {
+		.pform.pform_custom {
 			font-family: sans-serif;
 			font-size: 13px;
 			margin: 0 auto;
 			color: #008;
 		}
-		.pform_custom fieldset {
+		.pform.pform_custom fieldset {
 			border: 1px #008 dotted;
 		}
-		.pform_custom div.heading {
+		.pform.pform_custom div.heading {
 			border-bottom-color: #008;
 			border-bottom-style: dotted;
 		}
-		.pform_custom div.element .label, .pform_custom div.element .note {
+		.pform.pform_custom div.element .label, .pform_custom div.element .note {
 			text-align: right;
 		}
-		.pform_custom div.element .note {
+		.pform.pform_custom div.element .note {
 			font-size: 75%;
 			color: #55A;
 		}
-		.pform_custom div.element .field, .pform_custom div.buttons .button {
+		.pform.pform_custom div.element .field, .pform_custom div.buttons .button {
 			color: white;
 			border-width: 1px;
 			border-color: #69F;
 			background-color: #88C;
 		}
-		.pform_custom div.element .field {
+		.pform.pform_custom div.element .field {
 			border-style: inset;
 		}
-		.pform_custom div.buttons .button {
+		.pform.pform_custom div.buttons .button {
 			border-style: outset;
 		}
 		/* ]]> */
