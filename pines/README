@@ -1,12 +1,11 @@
 This version of Pines is incomplete and many changes are coming, possibly even
-major structural changes.
+major structural changes. This file is a feature plan.
 
 Read the INSTALL file for installation instructions.
 
-A list of things to complete before the initial release of Pines:
+Planned features for versions <=1.0:
 --------------------------------------------------------------------------------
 +Installer/Package Manager.
-+More dependency checker types. (Version, PHP abilities...)
 +Use interfaces to define Pines Services.
 +Use entity references in com_user.
 +Fix and improve com_newsletter.
@@ -15,7 +14,7 @@ A list of things to complete before the initial release of Pines:
 +More log entries.
 --------------------------------------------------------------------------------
 
-Possible future features:
+Planned features for versions >1.0:
 --------------------------------------------------------------------------------
 +Entity locking.
 +Pines Grid caption and summary support.

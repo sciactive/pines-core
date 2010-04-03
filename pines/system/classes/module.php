@@ -101,7 +101,6 @@ class module extends p_base {
 	/**
 	 * Detach the module from the page.
 	 *
-	 * @global page Used to detach a module.
 	 * @uses page::detach_module()
 	 * @return mixed The value of $pines->page->detach_module.
 	 */

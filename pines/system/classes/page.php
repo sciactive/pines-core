@@ -126,7 +126,7 @@ class page extends p_base {
 	 * The $order parameter is not guaranteed, and will be ignored if that place
 	 * is already taken.
 	 *
-	 * @param module $module The module to attach.
+	 * @param module &$module The module to attach.
 	 * @param string $position The position on the page. Templates can define their own positions.
 	 * @param int $order The order in which to try to place the module.
 	 * @return int The order in which the module was placed. This will be the last key + 1 if the desired order is already taken.
@@ -158,7 +158,7 @@ class page extends p_base {
 	 * $position, then iterate through $position searching for the module. It
 	 * will delete the first match it finds, then stop and return true.
 	 *
-	 * @param module $module The module to search for.
+	 * @param module &$module The module to search for.
 	 * @param string $position The position in which to search.
 	 * @param int $order The order to try first.
 	 * @return bool Whether a matching module was found and successfully deleted.

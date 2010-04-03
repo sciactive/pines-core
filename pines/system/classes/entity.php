@@ -264,7 +264,7 @@ class entity extends p_base {
 	 * Use this instead of the == operator, because the cached entity data
 	 * causes == to return false when it should return true.
 	 *
-	 * @param mixed $object The object to compare.
+	 * @param mixed &$object The object to compare.
 	 * @return bool True or false.
 	 */
 	public function equals(&$object) {
@@ -349,7 +349,7 @@ class entity extends p_base {
 	 * been changed, but you only care if it is the same entity.
 	 *
 	 * @todo Check tags too.
-	 * @param mixed $object The object to compare.
+	 * @param mixed &$object The object to compare.
 	 * @return bool True or false.
 	 */
 	public function is(&$object) {

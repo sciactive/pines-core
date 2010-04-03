@@ -257,8 +257,8 @@ class hook extends p_base {
 	 * @param string $name The name of the hook.
 	 * @param array $arguments An array of arguments to be passed to the callbacks.
 	 * @param string $type The type of callbacks to run. 'before', 'after', or 'all'.
-	 * @param mixed $object The object on which the hook was called.
-	 * @param callback $function The function which is called at "0". You can change this in the "before" callbacks to effectively takeover a function.
+	 * @param mixed &$object The object on which the hook was called.
+	 * @param callback &$function The function which is called at "0". You can change this in the "before" callbacks to effectively takeover a function.
 	 * @return array|bool The array of arguments returned by the last callback or FALSE if a callback returned it.
 	 */
 	function run_callbacks($name, $arguments = array(), $type = 'all', &$object = null, &$function = null) {
