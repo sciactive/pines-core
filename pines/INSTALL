@@ -16,13 +16,13 @@ URL:
 
 ?option=com_user&action=createadmin&secret=874jdiv8
 
-The secret is stored in /components/com_user/defaults.php
-You should set create_admin to false afterwards using the built in configuration
-editor. (Configuration->Components->com_user->Configure->Create Admin)
-
 The new administrator's credentials are
 
 Username: admin
 Password: password
+
+The secret is stored in /components/com_user/defaults.php
+You should set create_admin to false afterwards using the built in configuration
+editor. (Configuration->Components->User Manager->Configure->Create Admin)
 
 Good luck. ;)
