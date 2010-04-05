@@ -2,7 +2,7 @@
 /**
  * Common functions used in Pines.
  * 
- * These can be overriden by components, which is why this file starts with 20.
+ * These can be overriden by components, which is why this file starts with i01.
  * It's loaded along with the components' init files.
  *
  * @package Pines
@@ -120,7 +120,7 @@ function pines_notice($text) {
  */
 function gatekeeper($ability = NULL, $user = NULL) {
 	global $pines;
-	if (is_null($pines->user_manager))
+	if (!isset($pines->user_manager))
 		return true;
 	return $pines->user_manager->gatekeeper($ability, $user);
 }
@@ -140,7 +140,7 @@ function gatekeeper($ability = NULL, $user = NULL) {
  */
 function punt_user($message = NULL, $url = NULL) {
 	global $pines;
-	if (is_null($pines->user_manager)) {
+	if (!isset($pines->user_manager)) {
 		header("Location: ".pines_url());
 		exit($message);
 	}
@@ -155,7 +155,7 @@ function punt_user($message = NULL, $url = NULL) {
  */
 function pines_depend() {
 	global $pines;
-	if (is_null($pines->depend))
+	if (!isset($pines->depend))
 		return true;
 	$args = func_get_args();
 	return call_user_func_array(array($pines->depend, 'check'), $args);
@@ -169,7 +169,7 @@ function pines_depend() {
  */
 function pines_log() {
 	global $pines;
-	if (is_null($pines->log_manager))
+	if (!isset($pines->log_manager))
 		return true;
 	$args = func_get_args();
 	return call_user_func_array(array($pines->log_manager, 'log'), $args);
@@ -183,7 +183,7 @@ function pines_log() {
  */
 function pines_url() {
 	global $pines;
-	if (is_null($pines->template))
+	if (!isset($pines->template))
 		return null;
 	$args = func_get_args();
 	return call_user_func_array(array($pines->template, 'url'), $args);
@@ -203,7 +203,7 @@ function pines_url() {
  */
 function pines_date_format($timestamp, $timezone = null, $format = 'Y-m-d H:i T') {
 	$date = new DateTime(gmdate('c', (int) $timestamp));
-	if (!is_null($timezone)) {
+	if (isset($timezone)) {
 		if (is_string($timezone))
 			$timezone = new DateTimeZone($timezone);
 		$date->setTimezone($timezone);
@@ -220,7 +220,7 @@ function pines_date_format($timestamp, $timezone = null, $format = 'Y-m-d H:i T'
  * @return string The formatted phone number.
  */
 function pines_phone_format($phone) {
-	if (is_null($phone))
+	if (!isset($phone))
 		return '';
 	$return = preg_replace('/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/', '($1$2$3) $4$5$6-$7$8$9$10 x$11', (string) $phone);
 	return preg_replace('/\D*$/', '', $return);
