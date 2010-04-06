@@ -81,10 +81,6 @@ function pines_sort_by_filename($a, $b) {
  */
 interface data_object_interface {
 	/**
-	 * Create a new instance.
-	 */
-	public static function factory();
-	/**
 	 * Delete the object from storage.
 	 *
 	 * @return bool True on success, false on failure.
@@ -177,18 +173,6 @@ interface user_interface extends able_object_interface {
 	 */
 	public static function factory($id = 0);
 	/**
-	 * Delete the user.
-	 *
-	 * @return bool True on success, false on failure.
-	 */
-	public function delete();
-	/**
-	 * Save the user.
-	 *
-	 * @return bool True on success, false on failure.
-	 */
-	public function save();
-	/**
 	 * Print a form to edit the user.
 	 *
 	 * @return module The form's module.
@@ -248,6 +232,10 @@ interface user_interface extends able_object_interface {
 
 /**
  * Pines system groups.
+ *
+ * Note: When delete() is called all descendants of this group will also be
+ * deleted.
+ *
  * @package Pines
  */
 interface group_interface extends able_object_interface {
@@ -270,20 +258,6 @@ interface group_interface extends able_object_interface {
 	 * @return bool True or false.
 	 */
 	public function is_descendent($group = null);
-	/**
-	 * Delete the group.
-	 *
-	 * This will also delete all descendants of this group.
-	 *
-	 * @return bool True on success, false on failure.
-	 */
-	public function delete();
-	/**
-	 * Save the group.
-	 *
-	 * @return bool True on success, false on failure.
-	 */
-	public function save();
 	/**
 	 * Find the location of the group's current logo image.
 	 *
@@ -322,11 +296,10 @@ interface template_interface {
 	 * @param string $component The component the URL should point to.
 	 * @param string $action The action the URL should point to.
 	 * @param array $params An array of parameters which should be part of the URL's query string.
-	 * @param bool $encode_entities Whether to encode HTML entities, such as the ampersand. Use this if the URL is going to be displayed on an HTML page.
 	 * @param bool $full_location Whether to return an absolute URL or a relative URL.
 	 * @return string The URL in a format to work with the current configuration of Pines.
 	 */
-	public function url($component = null, $action = null, $params = array(), $encode_entities = true, $full_location = false);
+	public function url($component = null, $action = null, $params = array(), $full_location = false);
 }
 
 ?>

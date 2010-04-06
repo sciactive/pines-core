@@ -141,7 +141,7 @@ function gatekeeper($ability = NULL, $user = NULL) {
 function punt_user($message = NULL, $url = NULL) {
 	global $pines;
 	if (!isset($pines->user_manager)) {
-		header("Location: ".pines_url());
+		header('Location: '.pines_url());
 		exit($message);
 	}
 	$pines->user_manager->punt_user($message, $url);
