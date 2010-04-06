@@ -17,7 +17,31 @@ defined('P_RUN') or die('Direct access prohibited');
  * 
  * @package Pines
  */
-class template extends p_base {
+class template extends p_base implements template_interface {
+	/**
+	 * The template format.
+	 * @var string $format
+	 */
+	public $format = '';
+	/**
+	 * The editor CSS location, relative to Pines' directory.
+	 * @var string $editor_css
+	 */
+	public $editor_css = '';
+
+	/**
+	 * Format a menu.
+	 *
+	 * This function is just to satisfy the template interface. It must be
+	 * redifined by the template.
+	 *
+	 * @param array $menu The menu.
+	 * @return string An empty string.
+	 */
+	public function menu($menu) {
+		return '';
+	}
+
 	/**
 	 * Return a URL in the necessary format to be usable on the current
 	 * installation.
@@ -33,7 +57,7 @@ class template extends p_base {
 	 * @param bool $full_location Whether to return an absolute URL or a relative URL.
 	 * @return string The URL in a format to work with the current configuration of Pines.
 	 */
-	function url($component = null, $action = null, $params = array(), $encode_entities = true, $full_location = false) {
+	public function url($component = null, $action = null, $params = array(), $encode_entities = true, $full_location = false) {
 		global $pines;
 		if ( is_null($params) ) $params = array();
 		if ( $pines->config->allow_template_override && isset($_REQUEST['template']) )

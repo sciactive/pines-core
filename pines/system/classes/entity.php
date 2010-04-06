@@ -42,7 +42,7 @@ defined('P_RUN') or die('Direct access prohibited');
  *
  * @package Pines
  */
-class entity extends p_base {
+class entity extends p_base implements data_object_interface {
 	/**
 	 * The GUID of the entity.
 	 *

@@ -76,10 +76,67 @@ function pines_sort_by_filename($a, $b) {
 }
 
 /**
+ * Objects which hold data from some type of storage.
+ * @package Pines
+ */
+interface data_object_interface {
+	/**
+	 * Create a new instance.
+	 */
+	public static function factory();
+	/**
+	 * Delete the object from storage.
+	 *
+	 * @return bool True on success, false on failure.
+	 */
+	public function delete();
+	/**
+	 * Perform a more strict comparison of this object to another.
+	 *
+	 * @param mixed &$object The object to compare.
+	 * @return bool True or false.
+	 */
+	public function equals(&$object);
+	/**
+	 * Check whether this object is in an array.
+	 *
+	 * If $strict is false, is() is used to compare. If $strict is true,
+	 * equals() is used.
+	 *
+	 * @param array $array The array to search.
+	 * @param bool $strict Whether to use stronger comparison.
+	 * @return bool True if the object is in the array, false if it isn't or if $array is not an array.
+	 */
+	public function in_array($array, $strict = false);
+	/**
+	 * Perform a less strict comparison of this object to another.
+	 *
+	 * @param mixed &$object The object to compare.
+	 * @return bool True or false.
+	 */
+	public function is(&$object);
+	/**
+	 * Refresh the object from storage.
+	 *
+	 * If the object has been deleted from storage, the database cannot be
+	 * reached, or a database error occurs, refresh() will return 0.
+	 *
+	 * @return bool|int False if the data has not been saved, 0 if it can't be refreshed, true on success.
+	 */
+	public function refresh();
+	/**
+	 * Save the object to storage.
+	 *
+	 * @return bool True on success, false on failure.
+	 */
+	public function save();
+}
+
+/**
  * Objects which support abilities, such as users and groups.
  * @package Pines
  */
-interface able_object_interface {
+interface able_object_interface extends data_object_interface {
 	/**
 	 * Grant an ability.
 	 *
@@ -95,7 +152,7 @@ interface able_object_interface {
 	 */
 	public function grant($ability);
 	/**
-	 * Revoke an ability from a user.
+	 * Revoke an ability.
 	 *
 	 * @param string $ability The ability.
 	 */
@@ -109,26 +166,31 @@ interface able_object_interface {
 interface user_interface extends able_object_interface {
 	/**
 	 * Load a user.
+	 *
 	 * @param int|string $id The ID or username of the user to load, 0 for a new user.
 	 */
 	public function __construct($id = 0);
 	/**
 	 * Create a new instance.
+	 *
 	 * @param int|string $id The ID or username of the user to load, 0 for a new user.
 	 */
 	public static function factory($id = 0);
 	/**
 	 * Delete the user.
+	 *
 	 * @return bool True on success, false on failure.
 	 */
 	public function delete();
 	/**
 	 * Save the user.
+	 *
 	 * @return bool True on success, false on failure.
 	 */
 	public function save();
 	/**
 	 * Print a form to edit the user.
+	 *
 	 * @return module The form's module.
 	 */
 	public function print_form();
@@ -171,19 +233,12 @@ interface user_interface extends able_object_interface {
 	/**
 	 * Change the user's password.
 	 *
-	 * This function first checks to see if the user already has a salt. If not,
-	 * one will be generated.
-	 *
 	 * @param string $password The new password.
 	 * @return string The resulting MD5 sum which is stored in the entity.
 	 */
 	public function password($password);
 	/**
 	 * Return the user's timezone.
-	 *
-	 * First checks if the user has a timezone set, then the primary group, then
-	 * the secondary groups, then the system default. The first timezone found
-	 * is returned.
 	 *
 	 * @param bool $return_date_time_zone_object Whether to return an object of the DateTimeZone class, instead of an identifier string.
 	 * @return string|DateTimeZone The timezone identifier or the DateTimeZone object.
@@ -198,11 +253,13 @@ interface user_interface extends able_object_interface {
 interface group_interface extends able_object_interface {
 	/**
 	 * Load a group.
+	 *
 	 * @param int $id The ID of the group to load, 0 for a new group.
 	 */
 	public function __construct($id = 0);
 	/**
 	 * Create a new instance.
+	 *
 	 * @param int $id The ID of the group to load, 0 for a new group.
 	 */
 	public static function factory($id = 0);
@@ -215,12 +272,15 @@ interface group_interface extends able_object_interface {
 	public function is_descendent($group = null);
 	/**
 	 * Delete the group.
+	 *
+	 * This will also delete all descendants of this group.
+	 *
 	 * @return bool True on success, false on failure.
-	 * @todo Fix this to delete only its children, who will delete their children.
 	 */
 	public function delete();
 	/**
 	 * Save the group.
+	 *
 	 * @return bool True on success, false on failure.
 	 */
 	public function save();
@@ -233,9 +293,40 @@ interface group_interface extends able_object_interface {
 	public function get_logo($rela_location = false);
 	/**
 	 * Print a form to edit the group.
+	 * 
 	 * @return module The form's module.
 	 */
 	public function print_form();
+}
+
+/**
+ * A Pines template.
+ * @package Pines
+ */
+interface template_interface {
+	/**
+	 * Format a menu.
+	 * 
+	 * @param array $menu The menu.
+	 * @return string The menu's resulting code.
+	 */
+	public function menu($menu);
+	/**
+	 * Return a URL in the necessary format to be usable on the current
+	 * installation.
+	 *
+	 * url() is designed to work with the URL rewriting features of Pines,
+	 * so it should be called whenever outputting a URL is required. If url() is
+	 * called with no parameters, it will return the URL of the index page.
+	 *
+	 * @param string $component The component the URL should point to.
+	 * @param string $action The action the URL should point to.
+	 * @param array $params An array of parameters which should be part of the URL's query string.
+	 * @param bool $encode_entities Whether to encode HTML entities, such as the ampersand. Use this if the URL is going to be displayed on an HTML page.
+	 * @param bool $full_location Whether to return an absolute URL or a relative URL.
+	 * @return string The URL in a format to work with the current configuration of Pines.
+	 */
+	public function url($component = null, $action = null, $params = array(), $encode_entities = true, $full_location = false);
 }
 
 ?>
