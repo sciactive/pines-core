@@ -342,6 +342,337 @@ interface log_manager_interface {
 	public function log($message, $level = 'info');
 }
 
+/**
+ * Database abstraction layer.
+ * @package Pines
+ */
+interface entity_manager_interface {
+	/**
+	 * Delete an entity from the database.
+	 *
+	 * @param entity &$entity The entity to delete.
+	 * @return bool True on success, false on failure.
+	 */
+	public function delete_entity(&$entity);
+	/**
+	 * Delete an entity by its GUID.
+	 *
+	 * @param int $guid The GUID of the entity.
+	 * @return bool True on success, false on failure.
+	 */
+	public function delete_entity_by_id($guid);
+	/**
+	 * Delete a unique ID.
+	 *
+	 * @param string $name The UID's name.
+	 * @return bool True on success, false on failure.
+	 */
+	public function delete_uid($name);
+	/**
+	 * Export entities to a local file.
+	 *
+	 * This is the file format:
+	 *
+	 * <pre>
+	 * # Comments begin with #
+	 *    # And can have white space before them.
+	 * # This defines a UID.
+	 * &lt;name/of/uid&gt;[5]
+	 * &lt;another uid&gt;[8000]
+	 * # For UIDs, the name is in angle brackets (&lt;&gt;) and the value follows in
+	 * #  square brackets ([]).
+	 * # This starts a new entity.
+	 * {1}[tag,list,with,commas]
+	 * # For entities, the GUID is in curly brackets ({}) and the comma
+	 * #  separated tag list follows in square brackets ([]).
+	 * # Variables are stored like this:
+	 * # varname=json_encode(serialize(value))
+	 *     abilities="a:1:{i:0;s:10:\"system\/all\";}"
+	 *     groups="a:0:{}"
+	 *     inherit_abilities="b:0;"
+	 *     name="s:5:\"admin\";"
+	 * # White space before/after "=" and at beginning/end of line is ignored.
+	 *         username  =     "s:5:\"admin\";"
+	 * {2}[tag,list]
+	 *     another="s:23:\"This is another entity.\";"
+	 *     newline="s:1:\"\n\";"
+	 * </pre>
+	 *
+	 * @param string $filename The file to export to.
+	 * @return bool True on success, false on failure.
+	 */
+	public function export($filename);
+	/**
+	 * Export entities to the client as a downloadable file.
+	 *
+	 * @return bool True on success, false on failure.
+	 */
+	public function export_print();
+	/**
+	 * Get an array of entities.
+	 *
+	 * GUIDs are integers and start at one (1).
+	 *
+	 * $options can contain the following key - values:
+	 *
+	 * - guid - A GUID or array of GUIDs.
+	 * - tags - An array of tags. The entity must have each one.
+	 * - tags_i - An array of inclusive tags. The entity must have at least one.
+	 * - data - An array of key/values corresponding to var/values.
+	 * - data_i - An array of inclusive key/values corresponding to var/values.
+	 * - match - An array of key/regex corresponding to var/values.
+	 * - match_i - An array of inclusive key/regex corresponding to var/values.
+	 * - gt - An array of key/numbers corresponding to var/values.
+	 * - gt_i - An array of inclusive key/numbers corresponding to var/values.
+	 * - gte - An array of key/numbers corresponding to var/values.
+	 * - gte_i - An array of inclusive key/numbers corresponding to var/values.
+	 * - lt - An array of key/numbers corresponding to var/values.
+	 * - lt_i - An array of inclusive key/numbers corresponding to var/values.
+	 * - lte - An array of key/numbers corresponding to var/values.
+	 * - lte_i - An array of inclusive key/numbers corresponding to var/values.
+	 * - ref - An array of key/values corresponding to var/values.
+	 * - ref_i - An array of inclusive key/values corresponding to var/values.
+	 * - class - The class to create each entity with.
+	 * - limit - The limit of entities to be returned.
+	 * - offset - The offset from the first (0) to start retrieving entities.
+	 *
+	 * For regex matching, preg_match() is used.
+	 *
+	 * The gt/gte/lt/lte options check whether a variable is greater than/
+	 * greater or equal to/less than/less than or equal to a number,
+	 * respectively.
+	 *
+	 * For reference searching, the values can be an entity, GUID, or an array
+	 * of either. Inclusive ref can't be a single value, as that wouldn't make
+	 * sense.
+	 *
+	 * If a class is specified, it must have a factory() static method which
+	 * returns a new instance.
+	 *
+	 * @param array $options The options to search for.
+	 * @return array|null An array of entities, or null on failure.
+	 */
+	public function get_entities($options = array());
+	/**
+	 * Get the first entity to match all options.
+	 *
+	 * $options is the same as in get_entities().
+	 *
+	 * This function is equivalent to setting $options['limit'] to 1 for
+	 * get_entities(), except that it will return an entity or null, instead of
+	 * an array.
+	 *
+	 * @param mixed $options The options to search for, or just a GUID.
+	 * @return mixed An entity, or null on failure and nothing found.
+	 */
+	public function get_entity($options);
+	/**
+	 * Get the current value of a unique ID.
+	 *
+	 * @param string $name The UID's name.
+	 * @return int|null The UID's value, or null on failure and if it doesn't exist.
+	 */
+	public function get_uid($name);
+	/**
+	 * Import entities from a file.
+	 *
+	 * @param string $filename The file to import from.
+	 * @return bool True on success, false on failure.
+	 */
+	public function import($filename);
+	/**
+	 * Increment or create a unique ID and return the new value.
+	 *
+	 * Unique IDs, or UIDs, are ID numbers, similar to GUIDs, but without any
+	 * constraints on how they are used. UIDs can be named anything, however a
+	 * good naming convention, in order to avoid conflicts, is to use your
+	 * component's name, a slash, then a descriptive name of the objects being
+	 * identified. E.g. "com_example/widget" or "com_hrm/employee".
+	 *
+	 * A UID can be used to identify an object when the GUID doesn't suffice. On
+	 * a system where a new entity is created many times per second, referring
+	 * to something by its GUID may be unintuitive. However, the component
+	 * designer is responsible for assigning UIDs to the component's entities.
+	 * Beware that if a UID is incremented for an entity, and the entity cannot
+	 * be saved, there is no safe, and therefore, no recommended way to
+	 * decrement the UID back to its previous value.
+	 *
+	 * If new_uid() is passed the name of a UID which does not exist yet, one
+	 * will be created with that name, and assigned the value 1. If the UID
+	 * already exists, its value will be incremented. The new value will be
+	 * returned.
+	 *
+	 * @param string $name The UID's name.
+	 * @return int|null The UID's new value, or null on failure.
+	 */
+	public function new_uid($name);
+	/**
+	 * Rename a unique ID.
+	 *
+	 * @param string $old_name The old name.
+	 * @param string $new_name The new name.
+	 * @return bool True on success, false on failure.
+	 */
+	public function rename_uid($old_name, $new_name);
+	/**
+	 * Save an entity to the database.
+	 *
+	 * If the entity has never been saved (has no GUID), a variable "p_cdate"
+	 * is set on it with the current Unix timestamp using microtime(true).
+	 *
+	 * The variable "p_mdate" is set to the current Unix timestamp using
+	 * microtime(true).
+	 *
+	 * @param mixed &$entity The entity.
+	 * @return bool True on success, false on failure.
+	 */
+	public function save_entity(&$entity);
+	/**
+	 * Set the value of a UID.
+	 *
+	 * @param string $name The UID's name.
+	 * @param int $value The value.
+	 * @return bool True on success, false on failure.
+	 */
+	public function set_uid($name, $value);
+}
+
+/**
+ * Database abstraction object.
+ *
+ * Used to provide a standard, abstract way to access, manipulate, and store
+ * data in Pines.
+ * 
+ * The GUID is not set until the entity is saved. GUIDs must be unique forever,
+ * even after deletion. It's the job of the entity manager to make sure no two
+ * entities ever have the same GUID.
+ * 
+ * Tags are used to classify entities. Though not sctrictly necessary, it is
+ * *HIGHLY RECOMMENDED* to give every entity your component creates a tag
+ * indentical to your component's name, such as 'com_xmlparser'. You don't want
+ * to accidentally get another component's entities.
+ *
+ * Simply calling delete() will not unset the entity. It will still take up
+ * memory. Likewise, simply calling unset will not delete the entity from
+ * storage.
+ *
+ * Some notes about equals() and is():
+ *
+ * equals() performs a more strict comparison of the entity to another. Use
+ * equals() instead of the == operator, because the cached entity data causes ==
+ * to return false when it should return true. In order to return true, the
+ * entity and $object must meet the following criteria:
+ *
+ * - They must be entities.
+ * - They must have equal GUIDs. (Or both can have no GUID.)
+ * - They must be instances of the same class.
+ * - Their data must be equal.
+ *
+ * is() performs a less strict comparison of the entity to another. Use is()
+ * instead of the == operator when the entity's data may have been changed, but
+ * you only care if it is the same entity. In order to return true, the entity
+ * and $object must meet the following criteria:
+ *
+ * - They must be entities.
+ * - They must have equal GUIDs. (Or both can have no GUID.)
+ * - If they have no GUIDs, their data must be equal.
+ *
+ * Some notes about saving entities in other entity's variables:
+ *
+ * The entity class often uses references to store an entity in another entity's
+ * variable or array. The reference is stored as an array with the values:
+ *
+ * - 0 => The string 'pines_entity_reference'
+ * - 1 => The reference entity's GUID.
+ * - 2 => The reference entity's class name.
+ *
+ * Since the reference entity's class name is stored in the reference on the
+ * entity's first save and used to retrieve the reference entity using the same
+ * class, if you change the class name in an update, you need to reassign the
+ * reference entity and save to storage.
+ *
+ * When an entity is loaded, it does not request its referenced entities from
+ * the entity manager. This is done the first time the variable/array is
+ * accessed. The referenced entity is then stored in a cache, so if it is
+ * altered elsewhere, then accessed again through the variable, the changes will
+ * *not* be there. Therefore, you should take great care when accessing entities
+ * from multiple variables. If you might be using a referenced entity again
+ * later in the code execution (after some other processing occurs), it's
+ * recommended to call clear_cache().
+ *
+ * Must have the following public variables:
+ *
+ * - $guid - The GUID of the entity.
+ * - $tags - Array of the entity's tags.
+ *
+ * @package Pines
+ */
+interface entity_interface extends data_object_interface {
+	/**
+	 * Add one or more tags. (Same as add_tag)
+	 *
+	 * @param mixed $tag,... List or array of tags.
+	 */
+	public function __construct();
+	/**
+	 * Create a new instance.
+	 */
+	public static function factory();
+	/**
+	 * Add one or more tags.
+	 *
+	 * @param mixed $tag,... List or array of tags.
+	 */
+	public function add_tag();
+	/**
+	 * Clear the cache of referenced entities.
+	 *
+	 * Calling this function ensures that the next time a referenced entity is
+	 * accessed, it will be retrieved from the entity manager.
+	 */
+	public function clear_cache();
+	/**
+	 * Used to retrieve the data array.
+	 *
+	 * This should only be used by the entity manager to save the data array
+	 * into storage.
+	 *
+	 * @return array The entity's data array.
+	 * @access protected
+	 */
+	public function get_data();
+	/**
+	 * Check that the entity has all of the given tags.
+	 *
+	 * @param mixed $tag,... List or array of tags.
+	 * @return bool
+	 */
+	public function has_tag();
+	/**
+	 * Used to set the data array.
+	 *
+	 * This should only be used by the entity manager to push the data array
+	 * from storage.
+	 *
+	 * @param array $data The data array.
+	 * @return array The data array.
+	 * @access protected
+	 */
+	public function put_data($data);
+	/**
+	 * Remove one or more tags.
+	 *
+	 * @param mixed $tag,... List or array of tags.
+	 */
+	public function remove_tag();
+	/**
+	 * Return a Pines Entity Reference for this entity.
+	 *
+	 * @return array A Pines Entity Reference array.
+	 */
+	public function to_reference();
+}
+
 if (P_SCRIPT_TIMING) pines_print_time('Define Service Interfaces');
 
 ?>
