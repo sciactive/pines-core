@@ -302,4 +302,92 @@ interface template_interface {
 	public function url($component = null, $action = null, $params = array(), $full_location = false);
 }
 
+/**
+ * Manages Pines configuration.
+ * @package Pines
+ */
+interface configurator_interface {
+	/**
+	 * Disables a component.
+	 *
+	 * This function renames the component's directory by adding a dot (.) in
+	 * front of the name. This causes Pines to ignore the component.
+	 *
+	 * @param string $component The name of the component.
+	 * @return bool True on success, false on failure.
+	 */
+	public function disable_component($component);
+	/**
+	 * Enables a component.
+	 *
+	 * This function renames the component's directory by removing the dot (.)
+	 * in front of the name. This causes Pines to recognize the component.
+	 *
+	 * @param string $component The name of the component.
+	 * @return bool True on success, false on failure.
+	 */
+	public function enable_component($component);
+	/**
+	 * Creates and attaches a module which lists configurable components.
+	 * @return module The module.
+	 */
+	public function list_components();
+}
+
+/**
+ * A configurable component.
+ * 
+ * Must have the following public variables:
+ * 
+ * - $defaults - The configuration defaults.
+ * - $config - The current configuration.
+ * - $config_keys - The current configuration in an array with key => values.
+ * - $info - The info object of the component.
+ * - $name - The component.
+ * 
+ * @package Pines
+ */
+interface configurator_component_interface {
+	/**
+	 * Load a component's configuration and info.
+	 * @param string $component The component to load.
+	 */
+	public function __construct($component);
+	/**
+	 * Create a new instance.
+	 * @param string $component The component to load.
+	 */
+	public static function factory($component);
+	/**
+	 * Get a full config array. (With defaults replaced.)
+	 * @return array The array.
+	 */
+	public function get_full_config_array();
+	/**
+	 * Check if a component is configurable.
+	 * @return bool True or false.
+	 */
+	public function is_configurable();
+	/**
+	 * Check if a component is disabled.
+	 * @return bool True or false.
+	 */
+	public function is_disabled();
+	/**
+	 * Print a form to edit the configuration.
+	 * @return module The form's module.
+	 */
+	public function print_form();
+	/**
+	 * Print a view of the configuration.
+	 * @return module The view's module.
+	 */
+	public function print_view();
+	/**
+	 * Write the configuration to the config file.
+	 * @return bool True on success, false on failure.
+	 */
+	public function save_config();
+}
+
 ?>
