@@ -673,6 +673,207 @@ interface entity_interface extends data_object_interface {
 	public function to_reference();
 }
 
+/**
+ * Ability manager.
+ *
+ * An ability manager works with a user manager to provide an access control
+ * system for Pines. The gatekeeper() function is used to check if a user has
+ * been granted an ability.
+ *
+ * Must have the following public variables:
+ *
+ * - $abilities - Array of defined abilities.
+ *
+ * @package Pines
+ */
+interface ability_manager_interface {
+	/**
+	 * Add a system managed ability.
+	 *
+	 * This function is used to let the system know that you will be using an
+	 * ability in your component. If you don't let the system know, you will
+	 * have to give your users abilities yourself.
+	 *
+	 * A good way to do this is have the following in an init file (like
+	 * i30abilities.php)
+	 *
+	 * <code>
+	 * if ( isset($pines->ability_manager) ) {
+	 *	$pines->ability_manager->add('com_whatever', 'firstability', 'title', 'description');
+	 *	$pines->ability_manager->add('com_whatever', 'secondability', 'title', 'description');
+	 * }
+	 * </code>
+	 *
+	 * @param string $component The component under which to place the ability.
+	 * @param string $ability The name of the ability to manage.
+	 * @param string $title A descriptive title to display to the user.
+	 * @param string $description A description of the ability to display to the user.
+	 */
+	public function add($component, $ability, $title, $description);
+	/**
+	 * Get an array of the abilities that a specified component has reported
+	 * that it uses.
+	 *
+	 * @param string $component The component.
+	 * @return array The array of abilities.
+	 */
+	public function get_abilities($component);
+}
+
+/**
+ * User and group manager.
+ *
+ * User managers need to hook entity transactions and filter certain
+ * functionality based on an access control variable.
+ *
+ * @package Pines
+ * @todo Finish describing user manager's entity obligations.
+ */
+interface user_manager_interface {
+	/**
+	 * Check an entity's permissions for the currently logged in user.
+	 *
+	 * This will check the variable "ac" (Access Control) of the entity. It
+	 * should be an object that contains the following properties:
+	 *
+	 * - user
+	 * - group
+	 * - other
+	 *
+	 * The property "user" refers to the entity's owner, "group" refers to all
+	 * users in the entity's group and all ancestor groups, and "other" refers
+	 * to any user who doesn't fit these descriptions.
+	 *
+	 * Each variable should be either 0, 1, 2, or 3. If it is 0, the user has no
+	 * access to the entity. If it is 1, the user has read access to the entity.
+	 * If it is 2, the user has read and write access to the entity. If it is 3,
+	 * the user has read, write, and delete access to the entity.
+	 *
+	 * "ac" defaults to:
+	 *
+	 * - user = 3
+	 * - group = 3
+	 * - other = 0
+	 *
+	 * The following conditions will result in different checks, which determine
+	 * whether the check passes:
+	 *
+	 * - No user is logged in. (Always returned, should be managed with abilities.)
+	 * - The entity has no uid and no gid. (Always returned.)
+	 * - The user has the "system/all" ability. (Always returned.)
+	 * - The entity is the user. (Always returned.)
+	 * - It is the user's primary group. (Always returned.)
+	 * - The entity is a user or group. (Always returned.)
+	 * - Its UID is the user. (It is owned by the user.) (Check user AC.)
+	 * - Its GID is the user's primary group. (Check group AC.)
+	 * - Its GID is one of the user's secondary groups. (Check group AC.)
+	 * - Its GID is a child of one of the user's groups. (Check group AC.)
+	 * - None of the above. (Check other AC.)
+	 *
+	 * @param object &$entity The entity to check.
+	 * @param int $type The lowest level of permission to consider a pass. 1 is read, 2 is write, 3 is delete.
+	 * @return bool Whether the current user has at least $type permission for the entity.
+	 */
+	public function check_permissions(&$entity, $type = 1);
+	/**
+	 * Fill the $_SESSION['user'] variable with the logged in user's data.
+	 *
+	 * Also sets the default timezone to the user's timezone.
+	 *
+	 * This must be called by at least i40 in the init script processing.
+	 */
+	public function fill_session();
+	/**
+	 * Check to see if a user has an ability.
+	 *
+	 * If $ability and $user are null, it will check to see if a user is
+	 * currently logged in.
+	 *
+	 * If the user has the "system/all" ability, this function will return true.
+	 *
+	 * @param string $ability The ability.
+	 * @param user $user The user to check. If none is given, the current user is used.
+	 * @return bool
+	 */
+	public function gatekeeper($ability = NULL, $user = NULL);
+	/**
+	 * Gets an array of the components which can be a default component.
+	 *
+	 * The way a component can be a user's default components is to have a
+	 * "default" action, which loads what the user will see when they first log
+	 * on.
+	 *
+	 * @return array The array of component names.
+	 */
+	public function get_default_component_array();
+	/**
+	 * Gets an array of a group's descendendents.
+	 *
+	 * If no parent is given, get_group_descendents() will start with all top
+	 * level groups. (It will return all top level groups' descendents.)
+	 *
+	 * get_group_descendents() returns an array of a group's descendents.
+	 *
+	 * @param group $parent The group to descend from.
+	 * @return array The array of groups.
+	 */
+	public function get_group_descendents($parent = NULL);
+	/**
+	 * Gets a group's groupname by its GID.
+	 *
+	 * @param int $id The group's GID.
+	 * @return string|null The groupname if the group exists, null if it doesn't.
+	 */
+	public function get_groupname($id);
+	/**
+	 * Gets all groups.
+	 *
+	 * @return array An array of group entities.
+	 */
+	public function get_groups();
+	/**
+	 * Gets a user's username by its UID.
+	 *
+	 * @param int $id The user's UID.
+	 * @return string|null The username if the user exists, null if it doesn't.
+	 */
+	public function get_username($id);
+	/**
+	 * Gets all users.
+	 *
+	 * @return array An array of user entities.
+	 */
+	public function get_users();
+	/**
+	 * Logs the given user into the system.
+	 *
+	 * @param user $user The user.
+	 * @return bool True on success, false on failure.
+	 */
+	public function login($user);
+	/**
+	 * Logs the current user out of the system.
+	 */
+	public function logout();
+	/**
+	 * Creates and attaches a module which let's the user log in.
+	 *
+	 * @param string $position The position in which to place the module.
+	 * @return module The new module.
+	 */
+	public function print_login($position = 'content');
+	/**
+	 * Kick the user out of the current page.
+	 *
+	 * Note that this method completely terminates execution of the script when
+	 * it is called. Code after this function is called will not run.
+	 *
+	 * @param string $message An optional message to display to the user.
+	 * @param string $url An optional URL to be included in the query data of the redirection url.
+	 */
+	public function punt_user($message = null, $url = null);
+}
+
 if (P_SCRIPT_TIMING) pines_print_time('Define Service Interfaces');
 
 ?>
