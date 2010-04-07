@@ -81,21 +81,10 @@ var pines = {
 			document.getElementsByTagName("head")[0].appendChild(n);
 		this.loadedcss[this.loadedcss.length]=filename;
 	},
-	alert: function(message, title, iconstyles, otheroptions){
-		var options = $.extend({}, {
-			pnotify_title: title ? title : "Alert",
-			pnotify_text: String(message).replace("\n", "<br />"),
-			pnotify_notice_icon: iconstyles ? iconstyles : $.pnotify.defaults.pnotify_notice_icon
-		}, otheroptions);
-		return $.pnotify(options);
+	alert: function(message, title){
+		alert((title ? title : "Alert") + "\n\n" + message);
 	},
-	error: function(message, title, iconstyles, otheroptions){
-		var options = $.extend({}, {
-			pnotify_type: "error",
-			pnotify_title: title ? title : "Error",
-			pnotify_text: String(message).replace("\n", "<br />"),
-			pnotify_error_icon: iconstyles ? iconstyles : $.pnotify.defaults.pnotify_error_icon
-		}, otheroptions);
-		return $.pnotify(options);
+	error: function(message, title){
+		alert((title ? title : "Error") + "\n\n" + message);
 	}
 };
