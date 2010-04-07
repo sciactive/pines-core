@@ -874,6 +874,23 @@ interface user_manager_interface {
 	public function punt_user($message = null, $url = null);
 }
 
+/**
+ * Content editor.
+ * @package Pines
+ */
+interface editor_interface {
+	/**
+	 * Load the editor.
+	 *
+	 * This will transform any textareas with the "peditor" class into editors
+	 * and any textareas with the "peditor_simple" class into simple editors.
+	 *
+	 * Simple editors may be the same as editors, depending on the
+	 * implementation.
+	 */
+	public function load();
+}
+
 if (P_SCRIPT_TIMING) pines_print_time('Define Service Interfaces');
 
 ?>
