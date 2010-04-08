@@ -25,4 +25,12 @@ foreach ($_p_cominit as $_p_cur_cominit) {
 	if (P_SCRIPT_TIMING) pines_print_time("Init Script: $_p_cur_cominit");
 }
 
+if ( isset($pines->ability_manager) ) {
+	/**
+	 * The system/all ability let's the user perform any action on the system,
+	 * regardless of their other abilities.
+	 */
+	$pines->ability_manager->add('system', 'all', 'All Abilities', 'Let user do anything, regardless of whether they have the ability.');
+}
+
 ?>

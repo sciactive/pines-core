@@ -13,14 +13,6 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
-if ( isset($pines->ability_manager) ) {
-	/**
-	 * The system/all ability let's the user perform any action on the system,
-	 * regardless of their other abilities.
-	 */
-	$pines->ability_manager->add('system', 'all', 'All Abilities', 'Let user do anything, regardless of whether they have the ability.');
-}
-
 /*
  * These are very rudamentary security functions. If you are worried about
  * security, you should consider replacing them.
