@@ -6,6 +6,10 @@
 	clear: both;
 	visibility: hidden;
 }
+.pform .clearing { /* For clearing BRs... */
+	clear: both;
+	height: 1px;
+}
 .pform fieldset {
 	padding: 5.6px 10px 12px;
 	border: 1px solid #CCC;
