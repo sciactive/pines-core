@@ -89,6 +89,12 @@ return array(
 		'description' => 'The timezone the system should use as its default. User\'s timezones will default to this.',
 		'value' => date_default_timezone_get(),
 	),
+	array(
+		'name' => 'debug_mode',
+		'cname' => 'Debug Mode',
+		'description' => 'Only use debug mode during testing. When debug mode is enabled, components will use non-minified versions of their JavaScripts (if available), in order to make debugging easier.',
+		'value' => false,
+	),
 );
 
 ?>
