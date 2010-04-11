@@ -121,7 +121,7 @@ interface user_interface extends able_object_interface {
 	 * @param group $group The group.
 	 * @return mixed True if the user is already in the group. The resulting array of groups if the user was not.
 	 */
-	public function addgroup($group);
+	public function add_group($group);
 	/**
 	 * Check if the password given is the correct password for the user's
 	 * account.
@@ -136,14 +136,14 @@ interface user_interface extends able_object_interface {
 	 * @param group $group The group.
 	 * @return mixed True if the user wasn't in the group. The resulting array of groups if the user was.
 	 */
-	public function delgroup($group);
+	public function del_group($group);
 	/**
 	 * Check whether the user is in a (primary or secondary) group.
 	 *
 	 * @param mixed $group The group, or the group's GUID.
 	 * @return bool True or false.
 	 */
-	public function ingroup($group = null);
+	public function in_group($group = null);
 	/**
 	 * Check whether the user is a descendent of a group.
 	 *
