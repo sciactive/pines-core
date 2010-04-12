@@ -73,26 +73,26 @@
 	<!-- This is how to change the size. -->
 	<style type="text/css">
 		/* <![CDATA[ */
-		.pform.pform_custom {
+		.pf-form.pform_custom {
 			width: 311px;
 		}
-		.pform.pform_custom div.element .label, .pform_custom div.element .note {
+		.pf-form.pform_custom div.pf-element .pf-label, .pform_custom div.pf-element .pf-note {
 			width: 130px; /* Width of labels. */
 		}
-		.pform.pform_custom div.element .group {
+		.pf-form.pform_custom div.pf-element .pf-group {
 			 margin-left: 130px; /* Same as width of labels. */
 		}
-		.pform.pform_custom div.buttons {
+		.pf-form.pform_custom div.pf-buttons {
 			padding-left: 115px; /* Width of labels + margin to inputs - button spacing. */
 		}
-		.pform.pform_custom div.buttons.centered {
+		.pf-form.pform_custom div.pf-buttons.pf-centered {
 			padding-left: 0;
 		}
 		/* ]]> */
 	</style>
 	<!--[if lt IE 7]>
 	<style type="text/css">
-		.pform_custom div.buttons {
+		.pform_custom div.pf-buttons {
 			width: 176px; /* Custom form width - custom button div left padding - 20px (for IE's default padding.) */
 		}
 	</style>
@@ -101,36 +101,36 @@
 	<!-- This is an example customization. -->
 	<style type="text/css">
 		/* <![CDATA[ */
-		.pform.pform_custom {
+		.pf-form.pform_custom {
 			font-family: sans-serif;
 			font-size: 13px;
 			margin: 0 auto;
 			color: #008;
 		}
-		.pform.pform_custom fieldset {
+		.pf-form.pform_custom fieldset {
 			border: 1px #008 dotted;
 		}
-		.pform.pform_custom div.heading {
+		.pf-form.pform_custom div.pf-heading {
 			border-bottom-color: #008;
 			border-bottom-style: dotted;
 		}
-		.pform.pform_custom div.element .label, .pform_custom div.element .note {
+		.pf-form.pform_custom div.pf-element .pf-label, .pform_custom div.pf-element .pf-note {
 			text-align: right;
 		}
-		.pform.pform_custom div.element .note {
+		.pf-form.pform_custom div.pf-element .pf-note {
 			font-size: 75%;
 			color: #55A;
 		}
-		.pform.pform_custom div.element .field, .pform_custom div.buttons .button {
+		.pf-form.pform_custom div.pf-element .pf-field, .pform_custom div.pf-buttons .pf-button {
 			color: white;
 			border-width: 1px;
 			border-color: #69F;
 			background-color: #88C;
 		}
-		.pform.pform_custom div.element .field {
+		.pf-form.pform_custom div.pf-element .pf-field {
 			border-style: inset;
 		}
-		.pform.pform_custom div.buttons .button {
+		.pf-form.pform_custom div.pf-buttons .pf-button {
 			border-style: outset;
 		}
 		/* ]]> */
@@ -149,22 +149,22 @@
 			font-family: 'Palatino Linotype','Book Antiqua',Palatino,serif;
 		}
 		/* Custom styling. */
-		.pform fieldset legend, .pform .heading h1 {
+		.pf-form fieldset legend, .pf-form .pf-heading h1 {
 			font-size: 150%;
 		}
-		.pform div.element .label, .pform div.element .note {
+		.pf-form div.pf-element .pf-label, .pf-form div.pf-element .pf-note {
 			width: 230px; /* Width of labels. */
 		}
-		.pform div.element .note {
+		.pf-form div.pf-element .pf-note {
 			font-size: 60%;
 		}
-		.pform div.element .group {
+		.pf-form div.pf-element .pf-group {
 			 margin-left: 230px; /* Same as width of labels. */
 		}
-		.pform div.element .field.full_width {
+		.pf-form div.pf-element .pf-field.pf-full-width {
 			margin-left: 235px; /* Width of labels + margin between inputs and labels. */
 		}
-		.pform div.buttons {
+		.pf-form div.pf-buttons {
 			padding-left: 215px; /* Width of labels + margin to inputs - button spacing. */
 		}
 		/* ]]> */
@@ -181,74 +181,74 @@
 		<p>Without further adieu, the examples:</p>
 	</div>
 
-	<form class="pform" action="" method="post">
+	<form class="pf-form" action="" method="post">
 		<fieldset>
 			<legend>Example Form 1</legend>
-			<div class="element heading">
+			<div class="pf-element pf-heading">
 				<p>This form is an example, and this is a description of it.</p>
 			</div>
-			<div class="element">
+			<div class="pf-element">
 				<label>
-					<span class="label">This is a test.</span>
-					<span class="note">This is a note about something.</span>
-					<input class="field" type="text" name="test" />
+					<span class="pf-label">This is a test.</span>
+					<span class="pf-note">This is a note about something.</span>
+					<input class="pf-field" type="text" name="test" />
 				</label>
 			</div>
-			<div class="element">
+			<div class="pf-element">
 				<label>
-					<span class="label">This is also a test.</span>
-					<span class="note">99 bottles of beer on the wall.</span>
-					<input class="field" type="text" name="test2" style="width: 400px;" />
+					<span class="pf-label">This is also a test.</span>
+					<span class="pf-note">99 bottles of beer on the wall.</span>
+					<input class="pf-field" type="text" name="test2" style="width: 400px;" />
 				</label>
 			</div>
-			<div class="element">
+			<div class="pf-element">
 				<label>
-					<span class="label">This is a test.</span>
-					<span class="note">99 bottles of beer.</span>
-					<span class="field">Fill in the <input type="text" name="test" size="5" />.</span>
+					<span class="pf-label">This is a test.</span>
+					<span class="pf-note">99 bottles of beer.</span>
+					<span class="pf-field">Fill in the <input type="text" name="test" size="5" />.</span>
 				</label>
 			</div>
-			<div class="element">
+			<div class="pf-element">
 				<label>
-					<span class="label">Is this a test?</span>
-					<span class="note">Take one down.</span>
-					<input class="field" type="checkbox" name="checktest" />
+					<span class="pf-label">Is this a test?</span>
+					<span class="pf-note">Take one down.</span>
+					<input class="pf-field" type="checkbox" name="checktest" />
 				</label>
 			</div>
-			<div class="element">
-				<span class="label">Is this really a test?</span>
-				<span class="note">Pass it around.</span>
-				<div class="group">
-					<label><input class="field" type="radio" name="radiotest" />Yes</label>
-					<label><input class="field" type="radio" name="radiotest" />No</label>
+			<div class="pf-element">
+				<span class="pf-label">Is this really a test?</span>
+				<span class="pf-note">Pass it around.</span>
+				<div class="pf-group">
+					<label><input class="pf-field" type="radio" name="radiotest" />Yes</label>
+					<label><input class="pf-field" type="radio" name="radiotest" />No</label>
 				</div>
 			</div>
-			<div class="element heading">
+			<div class="pf-element pf-heading">
 				<h1>Foods</h1>
 			</div>
-			<div class="element">
-				<span class="label">What's your favorite food?</span>
-				<span class="note">98 bottles of beer on the wall.</span>
-				<div class="group">
-					<label><input class="field" type="radio" name="radiotest" />Hot Dogs</label><br />
-					<label><input class="field" type="radio" name="radiotest" />Hamburgers</label><br />
-					<label><input class="field" type="radio" name="radiotest" />Cheeseburgers</label><br />
-					<label><input class="field" type="radio" name="radiotest" />Sushi</label><br />
-					<label><input class="field" type="radio" name="radiotest" />Pizza</label><br />
-					<label><input class="field" type="radio" name="radiotest" />Steak</label><br />
-					<label><input class="field" type="radio" name="radiotest" />Ham</label><br />
-					<label><input class="field" type="radio" name="radiotest" />Turkey</label><br />
-					<label><input class="field" type="radio" name="radiotest" />Mashed Potatoes</label><br />
-					<label><input class="field" type="radio" name="radiotest" />Eggs</label><br />
-					<label><input class="field" type="radio" name="radiotest" />Bacon</label><br />
-					<label><input class="field" type="radio" name="radiotest" />Cake</label><br />
-					<label><input class="field" type="radio" name="radiotest" />Ice Cream</label><br />
+			<div class="pf-element">
+				<span class="pf-label">What's your favorite food?</span>
+				<span class="pf-note">98 bottles of beer on the wall.</span>
+				<div class="pf-group">
+					<label><input class="pf-field" type="radio" name="radiotest" />Hot Dogs</label><br />
+					<label><input class="pf-field" type="radio" name="radiotest" />Hamburgers</label><br />
+					<label><input class="pf-field" type="radio" name="radiotest" />Cheeseburgers</label><br />
+					<label><input class="pf-field" type="radio" name="radiotest" />Sushi</label><br />
+					<label><input class="pf-field" type="radio" name="radiotest" />Pizza</label><br />
+					<label><input class="pf-field" type="radio" name="radiotest" />Steak</label><br />
+					<label><input class="pf-field" type="radio" name="radiotest" />Ham</label><br />
+					<label><input class="pf-field" type="radio" name="radiotest" />Turkey</label><br />
+					<label><input class="pf-field" type="radio" name="radiotest" />Mashed Potatoes</label><br />
+					<label><input class="pf-field" type="radio" name="radiotest" />Eggs</label><br />
+					<label><input class="pf-field" type="radio" name="radiotest" />Bacon</label><br />
+					<label><input class="pf-field" type="radio" name="radiotest" />Cake</label><br />
+					<label><input class="pf-field" type="radio" name="radiotest" />Ice Cream</label><br />
 				</div>
 			</div>
-			<div class="element">
-				<span class="label">What foods do you like?</span>
-				<span class="note">Hold CTRL to select multiples.</span>
-				<select class="field" name="likefoods" multiple="multiple" size="4">
+			<div class="pf-element">
+				<span class="pf-label">What foods do you like?</span>
+				<span class="pf-note">Hold CTRL to select multiples.</span>
+				<select class="pf-field" name="likefoods" multiple="multiple" size="4">
 					<option>Hot Dogs</option>
 					<option>Hamburgers</option>
 					<option>Cheeseburgers</option>
@@ -264,31 +264,31 @@
 					<option>Ice Cream</option>
 				</select>
 			</div>
-			<div class="element heading">
+			<div class="pf-element pf-heading">
 				<h1>More Tests</h1>
 			</div>
-			<!-- This line break is required for Firefox 1.5 if you follow an "element" div with a "group" fieldset.
+			<!-- This line break is required for Firefox 1.5 if you follow an "pf-element" div with a "pf-group" fieldset.
 			(https://bugzilla.mozilla.org/show_bug.cgi?id=309550) -->
 			<br />
-			<fieldset class="group">
+			<fieldset class="pf-group">
 				<legend>Complex Tests</legend>
-				<div class="element heading">
+				<div class="pf-element pf-heading">
 					<p>These tests require a complex grasp on reality to correctly comprehend.</p>
 				</div>
-				<div class="element">
+				<div class="pf-element">
 					<label>
-						<span class="label">This is a complex test.</span>
-						<span class="note">Not really.</span>
-						<select class="field" name="complex">
+						<span class="pf-label">This is a complex test.</span>
+						<span class="pf-note">Not really.</span>
+						<select class="pf-field" name="complex">
 							<option>This is an option.</option>
 							<option>This is another option.</option>
 						</select>
 					</label>
 				</div>
-				<div class="element">
+				<div class="pf-element">
 					<label>
-						<span class="label">This is a long complex test.</span>
-						<select class="field" name="longcomplex" size="6">
+						<span class="pf-label">This is a long complex test.</span>
+						<select class="pf-field" name="longcomplex" size="6">
 							<option>1. This is a lot of options.</option>
 							<option>2. This is a lot of options.</option>
 							<option>3. This is a lot of options.</option>
@@ -313,27 +313,27 @@
 					</label>
 				</div>
 			</fieldset>
-			<fieldset class="group">
+			<fieldset class="pf-group">
 				<legend>Simple Tests</legend>
-				<div class="element">
+				<div class="pf-element">
 					<label>
-						<span class="label">This is a test.</span>
-						<span class="note">This is a note about something.</span>
-						<input class="field" type="text" name="test" />
+						<span class="pf-label">This is a test.</span>
+						<span class="pf-note">This is a note about something.</span>
+						<input class="pf-field" type="text" name="test" />
 					</label>
 				</div>
 			</fieldset>
-			<div class="element full_width">
+			<div class="pf-element pf-full-width">
 				<label>
-					<span class="label">What do you think of my tests?</span>
-					<span class="note">I won't actually be reading this, it's just an example.</span>
-					<span class="note">You can't even submit this form. It won't go anywhere.</span>
-					<span class="field full_width"><textarea style="width: 100%;" name="comment" rows="5" cols="30"></textarea></span>
+					<span class="pf-label">What do you think of my tests?</span>
+					<span class="pf-note">I won't actually be reading this, it's just an example.</span>
+					<span class="pf-note">You can't even submit this form. It won't go anywhere.</span>
+					<span class="pf-field pf-full-width"><textarea style="width: 100%;" name="comment" rows="5" cols="30"></textarea></span>
 				</label>
 			</div>
-			<div class="element buttons">
-				<input class="button" type="submit" name="submit" value="Submit" />
-				<input class="button" type="reset" name="reset" value="Reset" />
+			<div class="pf-element pf-buttons">
+				<input class="pf-button" type="submit" name="submit" value="Submit" />
+				<input class="pf-button" type="reset" name="reset" value="Reset" />
 			</div>
 		</fieldset>
 	</form>
@@ -344,28 +344,28 @@
 	<!--[if lt IE 6]>
 	<center>
 	<![endif]-->
-	<form class="pform pform_custom" action="" method="post">
+	<form class="pf-form pform_custom" action="" method="post">
 		<fieldset>
 			<legend>Example Form 2</legend>
-			<div class="element heading">
+			<div class="pf-element pf-heading">
 				<p>This form is custom styled.</p>
 			</div>
-			<div class="element">
-				<label><span class="label">Username</span>
-				<input class="field" type="text" name="username" style="width: 130px;" /></label>
+			<div class="pf-element">
+				<label><span class="pf-label">Username</span>
+				<input class="pf-field" type="text" name="username" style="width: 130px;" /></label>
 			</div>
-			<div class="element">
-				<label><span class="label">Password</span>
-				<input class="field" type="password" name="password" style="width: 130px;" /></label>
+			<div class="pf-element">
+				<label><span class="pf-label">Password</span>
+				<input class="pf-field" type="password" name="password" style="width: 130px;" /></label>
 			</div>
-			<div class="element">
-				<label><span class="label">Remember Me</span>
-				<span class="note">Lasts for 2 weeks.</span>
-				<input class="field" type="checkbox" name="remember" /></label>
+			<div class="pf-element">
+				<label><span class="pf-label">Remember Me</span>
+				<span class="pf-note">Lasts for 2 weeks.</span>
+				<input class="pf-field" type="checkbox" name="remember" /></label>
 			</div>
-			<div class="element buttons centered">
-				<input class="button" type="submit" name="submit" value="Submit" />
-				<input class="button" type="reset" name="reset" value="Reset" />
+			<div class="pf-element pf-buttons pf-centered">
+				<input class="pf-button" type="submit" name="submit" value="Submit" />
+				<input class="pf-button" type="reset" name="reset" value="Reset" />
 			</div>
 		</fieldset>
 	</form>
@@ -375,108 +375,108 @@
 
 	<p><br /><br /></p>
 
-	<form class="pform" action="" method="post">
+	<form class="pf-form" action="" method="post">
 		<fieldset>
 			<legend>Example Form 3</legend>
-			<div class="element">
-				<span class="label">Mary had a little...</span>
-				<span class="note">This is not optional!</span>
-				<span class="field">Lamb.</span>
+			<div class="pf-element">
+				<span class="pf-label">Mary had a little...</span>
+				<span class="pf-note">This is not optional!</span>
+				<span class="pf-field">Lamb.</span>
 			</div>
-			<div class="element">
-				<span class="label">Whose fleece was white as...</span>
-				<span class="field">Baking soda.</span>
+			<div class="pf-element">
+				<span class="pf-label">Whose fleece was white as...</span>
+				<span class="pf-field">Baking soda.</span>
 			</div>
-			<div class="element">
-				<span class="label">Everywhere that Mary went...</span>
-				<span class="field">The lamb was Abe Vigoda.</span>
+			<div class="pf-element">
+				<span class="pf-label">Everywhere that Mary went...</span>
+				<span class="pf-field">The lamb was Abe Vigoda.</span>
 			</div>
-			<div class="element buttons">
-				<button class="button" type="submit" name="submit">This is Correct</button>
-				<button class="button" type="button" name="changes">Make Changes</button>
+			<div class="pf-element pf-buttons">
+				<button class="pf-button" type="submit" name="submit">This is Correct</button>
+				<button class="pf-button" type="button" name="changes">Make Changes</button>
 			</div>
 		</fieldset>
 	</form>
 
 	<p><br /><br /></p>
 
-	<form class="pform" action="" method="post">
-		<div class="element heading">
+	<form class="pf-form" action="" method="post">
+		<div class="pf-element pf-heading">
 			<h1>Example Form 4</h1>
 			<p>This form has fixed width elements and no border. This can be done by changing either the markup, or the CSS.</p>
 		</div>
-		<div class="element">
+		<div class="pf-element">
 			<label>
-				<span class="label">This is a test.</span>
-				<span class="note">This is a note about something.</span>
-				<input class="field" type="text" name="test" style="width: 400px" />
+				<span class="pf-label">This is a test.</span>
+				<span class="pf-note">This is a note about something.</span>
+				<input class="pf-field" type="text" name="test" style="width: 400px" />
 			</label>
 		</div>
-		<div class="element">
+		<div class="pf-element">
 			<label>
-				<span class="label">What do you think of my tests?</span>
-				<textarea class="field" name="comment" rows="5" cols="30" style="width: 400px"></textarea>
+				<span class="pf-label">What do you think of my tests?</span>
+				<textarea class="pf-field" name="comment" rows="5" cols="30" style="width: 400px"></textarea>
 			</label>
 		</div>
-		<div class="element">
-			<span class="note">Watch out for lions around the submit button.</span>
+		<div class="pf-element">
+			<span class="pf-note">Watch out for lions around the submit button.</span>
 		</div>
-		<div class="element buttons">
-			<button class="button" type="submit" name="submit">Submit</button>
-			<span class="field">Lion.</span>
-			<button class="button" type="reset" name="reset">Reset</button>
+		<div class="pf-element pf-buttons">
+			<button class="pf-button" type="submit" name="submit">Submit</button>
+			<span class="pf-field">Lion.</span>
+			<button class="pf-button" type="reset" name="reset">Reset</button>
 		</div>
 	</form>
 
 	<!-- Anything after a form without a fieldset needs to be cleared if you support IE 5.5 -->
 	<p><br /><br /></p>
 
-	<form class="pform pform_twocol" action="" method="post">
+	<form class="pf-form pf-form-twocol" action="" method="post">
 		<fieldset>
 			<legend>Example Form 5</legend>
-			<div class="element heading">
+			<div class="pf-element pf-heading">
 				<p>This form tests columns of elements to conserve space on wider screens. Try resizing the browser window.</p>
 			</div>
-			<div class="element">
+			<div class="pf-element">
 				<label>
-					<span class="label">1. This is a test.</span>
-					<span class="note">This is a note about something.</span>
-					<input class="field" type="text" name="test" />
+					<span class="pf-label">1. This is a test.</span>
+					<span class="pf-note">This is a note about something.</span>
+					<input class="pf-field" type="text" name="test" />
 				</label>
 			</div>
-			<div class="element">
+			<div class="pf-element">
 				<label>
-					<span class="label">2. This is a test.</span>
-					<span class="note">This is a note about something.</span>
-					<input class="field" type="text" name="test2" />
+					<span class="pf-label">2. This is a test.</span>
+					<span class="pf-note">This is a note about something.</span>
+					<input class="pf-field" type="text" name="test2" />
 				</label>
 			</div>
-			<div class="element">
+			<div class="pf-element">
 				<label>
-					<span class="label">3. This is a test.</span>
-					<span class="note">This is a note about something.</span>
-					<span class="field">Fill in the <input type="text" name="test" size="5" />.</span>
+					<span class="pf-label">3. This is a test.</span>
+					<span class="pf-note">This is a note about something.</span>
+					<span class="pf-field">Fill in the <input type="text" name="test" size="5" />.</span>
 				</label>
 			</div>
-			<div class="element">
+			<div class="pf-element">
 				<label>
-					<span class="label">4. This is a test.</span>
-					<span class="note">This is a note about something.</span>
-					<input class="field" type="checkbox" name="checktest" />
+					<span class="pf-label">4. This is a test.</span>
+					<span class="pf-note">This is a note about something.</span>
+					<input class="pf-field" type="checkbox" name="checktest" />
 				</label>
 			</div>
-			<div class="element">
-				<span class="label">5. This is a test.</span>
-				<span class="note">This is a note about something.</span>
-				<div class="group">
-					<label><input class="field" type="radio" name="radiotest" />Yes</label>
-					<label><input class="field" type="radio" name="radiotest" />No</label>
+			<div class="pf-element">
+				<span class="pf-label">5. This is a test.</span>
+				<span class="pf-note">This is a note about something.</span>
+				<div class="pf-group">
+					<label><input class="pf-field" type="radio" name="radiotest" />Yes</label>
+					<label><input class="pf-field" type="radio" name="radiotest" />No</label>
 				</div>
 			</div>
-			<div class="element">
-				<span class="label">6. This is a test.</span>
-				<span class="note">This is a note about something.</span>
-				<select class="field" name="likefoods" multiple="multiple" size="4">
+			<div class="pf-element">
+				<span class="pf-label">6. This is a test.</span>
+				<span class="pf-note">This is a note about something.</span>
+				<select class="pf-field" name="likefoods" multiple="multiple" size="4">
 					<option>Hot Dogs</option>
 					<option>Hamburgers</option>
 					<option>Cheeseburgers</option>
@@ -492,21 +492,21 @@
 					<option>Ice Cream</option>
 				</select>
 			</div>
-			<div class="element">
+			<div class="pf-element">
 				<label>
-					<span class="label">7. This is a test.</span>
-					<span class="note">This is a note about something.</span>
-					<select class="field" name="complex">
+					<span class="pf-label">7. This is a test.</span>
+					<span class="pf-note">This is a note about something.</span>
+					<select class="pf-field" name="complex">
 						<option>This is an option.</option>
 						<option>This is another option.</option>
 					</select>
 				</label>
 			</div>
-			<div class="element">
+			<div class="pf-element">
 				<label>
-					<span class="label">8. This is a test.</span>
-					<span class="note">This is a note about something.</span>
-					<select class="field" name="longcomplex" size="6">
+					<span class="pf-label">8. This is a test.</span>
+					<span class="pf-note">This is a note about something.</span>
+					<select class="pf-field" name="longcomplex" size="6">
 						<option>1. This is a lot of options.</option>
 						<option>2. This is a lot of options.</option>
 						<option>3. This is a lot of options.</option>
@@ -530,16 +530,16 @@
 					</select>
 				</label>
 			</div>
-			<div class="element">
+			<div class="pf-element">
 				<label>
-					<span class="label">9. This is a test.</span>
-					<span class="note">This is a note about something.</span>
-					<textarea class="field" name="comment" rows="5" cols="30"></textarea>
+					<span class="pf-label">9. This is a test.</span>
+					<span class="pf-note">This is a note about something.</span>
+					<textarea class="pf-field" name="comment" rows="5" cols="30"></textarea>
 				</label>
 			</div>
-			<div class="element buttons centered">
-				<input class="button" type="submit" name="submit" value="Submit" />
-				<input class="button" type="reset" name="reset" value="Reset" />
+			<div class="pf-element pf-buttons pf-centered">
+				<input class="pf-button" type="submit" name="submit" value="Submit" />
+				<input class="pf-button" type="reset" name="reset" value="Reset" />
 			</div>
 		</fieldset>
 	</form>

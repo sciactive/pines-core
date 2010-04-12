@@ -47,7 +47,7 @@
 				visibility: hidden;
 			}
 
-			.group {
+			.pf-group {
 				background: transparent none no-repeat 0 0 !important;
 				padding: 4px;
 				margin: 5px auto;
@@ -445,21 +445,21 @@
 		<![endif]-->
 		<style type="text/css">
 			/* <![CDATA[ */
-			.pform_custom div.element .label, .pform_custom div.element .note {
+			.pform_custom div.pf-element .pf-label, .pform_custom div.pf-element .pf-note {
 				width: 130px; /* Width of labels. */
 				text-align: right;
 			}
-			.pform_custom div.element .group {
+			.pform_custom div.pf-element .pf-group {
 				 margin-left: 130px; /* Same as width of labels. */
 			}
-			.pform_custom div.buttons {
+			.pform_custom div.pf-buttons {
 				padding-left: 115px; /* Width of labels + margin to inputs - button spacing. */
 			}
 			/* ]]> */
 		</style>
 		<!--[if lt IE 7]>
 		<style type="text/css">
-			.pform_custom div.buttons {
+			.pform_custom div.pf-buttons {
 				width: 225px; /* Custom form width - custom button div left padding - 20px (for IE's default padding.) */
 			}
 		</style>
@@ -501,7 +501,7 @@
 			</div>
 			<p style="clear: both;">Try out different themes using the selector in the top right corner of this page.</p>
 			<h2>Demos</h2>
-			<div class="group ui-widget-content ui-corner-all">
+			<div class="pf-group ui-widget-content ui-corner-all">
 				<input value="Regular Notice" onclick="$.pnotify({
 					pnotify_title: 'Regular Notice',
 					pnotify_text: 'Check me out! I\'m a notice.'
@@ -616,7 +616,7 @@
 					pnotify_closer: false,
 					pnotify_insert_brs: false
 				});
-				notice.find('form.pform').submit(function(){
+				notice.find('form.pf-form').submit(function(){
 					var username = $(this).find('input[name=username]').val();
 					if (!username) {
 						alert('Please provide a username.');
@@ -633,33 +633,33 @@
 					return false;
 				});" type="button" class="ui-state-default ui-corner-all" />
 				<div id="form_notice" style="display: none;">
-					<form class="pform pform_custom" action="" method="post">
-						<div class="element heading">
+					<form class="pf-form pform_custom" action="" method="post">
+						<div class="pf-element pf-heading">
 							<h1>Login to Continue</h1>
 							<p>Just an example.</p>
 						</div>
-						<div class="element">
+						<div class="pf-element">
 							<label>
-								<span class="label">Username</span>
-								<input class="field ui-widget-content" type="text" name="username" />
+								<span class="pf-label">Username</span>
+								<input class="pf-field ui-widget-content" type="text" name="username" />
 							</label>
 						</div>
-						<div class="element">
+						<div class="pf-element">
 							<label>
-								<span class="label">Password</span>
-								<input class="field ui-widget-content" type="password" name="password" />
+								<span class="pf-label">Password</span>
+								<input class="pf-field ui-widget-content" type="password" name="password" />
 							</label>
 						</div>
-						<div class="element">
+						<div class="pf-element">
 							<label>
-								<span class="label">Remember Me</span>
-								<span class="note">Lasts for 2 weeks.</span>
-								<input class="field ui-widget-content" type="checkbox" name="remember" />
+								<span class="pf-label">Remember Me</span>
+								<span class="pf-note">Lasts for 2 weeks.</span>
+								<input class="pf-field ui-widget-content" type="checkbox" name="remember" />
 							</label>
 						</div>
-						<div class="element buttons centered">
-							<input class="button ui-state-default ui-corner-all ui-priority-primary" type="submit" name="submit" value="Submit" />
-							<input class="button ui-state-default ui-corner-all ui-priority-secondary" type="reset" name="reset" value="Reset" />
+						<div class="pf-element pf-buttons pf-centered">
+							<input class="pf-button ui-state-default ui-corner-all ui-priority-primary" type="submit" name="submit" value="Submit" />
+							<input class="pf-button ui-state-default ui-corner-all ui-priority-secondary" type="reset" name="reset" value="Reset" />
 						</div>
 					</form>
 				</div>
@@ -676,7 +676,7 @@
 				});" type="button" class="ui-state-default ui-corner-all" />
 			</div>
 
-			<div class="group ui-widget-content ui-corner-all">
+			<div class="pf-group ui-widget-content ui-corner-all">
 				<input value="Regular Error" onclick="$.pnotify({
 					pnotify_title: 'Oh No!',
 					pnotify_text: 'Something terrible happened. It seems everything\'s ok now.',
@@ -746,7 +746,7 @@
 				});" type="button" class="ui-state-default ui-corner-all" />
 			</div>
 
-			<div class="group ui-widget-content ui-corner-all">
+			<div class="pf-group ui-widget-content ui-corner-all">
 				Custom Stacks:
 				<br />
 				<input value="Notice" onclick="void show_stack_topleft();" type="button" class="ui-state-default ui-corner-all" />
@@ -773,7 +773,7 @@
 				Tooltip
 			</div>
 
-			<div class="group ui-widget-content ui-corner-all">
+			<div class="pf-group ui-widget-content ui-corner-all">
 				<input value="Lower Timer" onclick="$.pnotify.defaults.pnotify_delay ? (function(){$.pnotify.defaults.pnotify_delay -= 500; alert('Timer lowered to '+($.pnotify.defaults.pnotify_delay/1000)+' seconds.');}()) : (alert('Timer is already at zero.'))" type="button" class="ui-state-default ui-corner-all" />
 				<input value="Raise Timer" onclick="(function(){$.pnotify.defaults.pnotify_delay += 500; alert('Timer raised to '+($.pnotify.defaults.pnotify_delay/1000)+' seconds.');}())" type="button" class="ui-state-default ui-corner-all" />
 				<br style="margin-bottom: 5px;" />
@@ -800,7 +800,7 @@
 				<input value="Remove All Notices" onclick="void $.pnotify_remove_all();" type="button" class="ui-state-default ui-corner-all" />
 			</div>
 
-			<div class="group ui-widget-content ui-corner-all">
+			<div class="pf-group ui-widget-content ui-corner-all">
 				Effects built in to jQuery:
 				<br />
 				<input value="Show" onclick="$.pnotify({
@@ -886,7 +886,7 @@
 				});" type="button" class="ui-state-default ui-corner-all" />
 			</div>
 
-			<div class="group ui-widget-content ui-corner-all">
+			<div class="pf-group ui-widget-content ui-corner-all">
 				This isn't really a feature of Pines Notify, but it's cool:
 				<br />
 				<input value="Consume alert()" onclick="void consume_alert();" type="button" class="ui-state-default ui-corner-all" />
