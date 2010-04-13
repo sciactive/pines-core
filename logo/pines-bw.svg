@@ -14,8 +14,8 @@
    inkscape:export-ydpi="299.99408"
    inkscape:export-xdpi="299.99408"
    inkscape:export-filename="/home/hunter/htdocs/pines/logo/new-logo/simple-logo-text.png"
-   sodipodi:docname="simple-logo-text.svg"
-   inkscape:version="0.47pre4 r22446"
+   sodipodi:docname="pines.svg"
+   inkscape:version="0.47 r22583"
    version="1.1"
    id="svg2"
    height="725.71429"
@@ -413,42 +413,6 @@
          offset="1"
          id="stop3761" />
     </linearGradient>
-    <linearGradient
-       y2="233.44836"
-       x2="116.26626"
-       y1="763.78107"
-       x1="465.77905"
-       gradientUnits="userSpaceOnUse"
-       id="linearGradient3767"
-       xlink:href="#linearGradient3714-4"
-       inkscape:collect="always" />
-    <linearGradient
-       y2="233.44836"
-       x2="116.26626"
-       y1="763.78107"
-       x1="465.77905"
-       gradientUnits="userSpaceOnUse"
-       id="linearGradient3769"
-       xlink:href="#linearGradient3714-4"
-       inkscape:collect="always" />
-    <linearGradient
-       y2="233.44836"
-       x2="116.26626"
-       y1="763.78107"
-       x1="465.77905"
-       gradientUnits="userSpaceOnUse"
-       id="linearGradient3771"
-       xlink:href="#linearGradient3714-4"
-       inkscape:collect="always" />
-    <linearGradient
-       y2="233.44836"
-       x2="116.26626"
-       y1="763.78107"
-       x1="465.77905"
-       gradientUnits="userSpaceOnUse"
-       id="linearGradient3773"
-       xlink:href="#linearGradient3714-4"
-       inkscape:collect="always" />
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient3714"
@@ -885,7 +849,7 @@
          specularExponent="55"
          specularConstant="2.5"
          surfaceScale="2"
-         lighting-color="rgb(255,255,255)"
+         lighting-color="#ffffff"
          result="result1"
          in="result0">
         <feDistantLight
@@ -906,12 +870,13 @@
          k2="1"
          operator="arithmetic"
          result="result4"
-         in="fbSourceGraphic" />
+         in="fbSourceGraphic"
+         k1="0"
+         k4="0" />
       <feComposite
          in2="result4"
          id="feComposite3221"
          operator="in"
-         in="result9"
          result="result9" />
       <feBlend
          in2="result9"
@@ -933,7 +898,7 @@
       <feSpecularLighting
          id="feSpecularLighting3250"
          result="result0"
-         specularExponent="18.1"
+         specularExponent="18.10000038"
          specularConstant="2"
          surfaceScale="5">
         <feDistantLight
@@ -1004,7 +969,7 @@
          specularExponent="25"
          specularConstant="1"
          surfaceScale="10"
-         lighting-color="rgb(255,255,255)"
+         lighting-color="#ffffff"
          result="result1"
          in="result0">
         <feDistantLight
@@ -1014,12 +979,14 @@
       </feSpecularLighting>
       <feComposite
          id="feComposite3782"
-         in2="result91"
+         in2="result1"
          k3="1"
          k2="1"
          operator="arithmetic"
          result="result4"
-         in="SourceGraphic" />
+         in="SourceGraphic"
+         k1="0"
+         k4="0" />
       <feComposite
          id="feComposite3784"
          in2="SourceAlpha"
@@ -1036,13 +1003,13 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.49497476"
-     inkscape:cx="1208.7054"
-     inkscape:cy="200.788"
+     inkscape:cx="784.39171"
+     inkscape:cy="362.4124"
      inkscape:document-units="px"
-     inkscape:current-layer="layer8"
+     inkscape:current-layer="layer5"
      showgrid="false"
      inkscape:window-width="1280"
-     inkscape:window-height="951"
+     inkscape:window-height="726"
      inkscape:window-x="0"
      inkscape:window-y="25"
      inkscape:window-maximized="1" />
@@ -1062,10 +1029,11 @@
      inkscape:label="Circles"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-9.1900944,-163.32394)">
+     transform="translate(-9.1900944,-163.32394)"
+     style="display:inline">
     <path
        sodipodi:type="arc"
-       style="fill:url(#linearGradient3675);fill-opacity:1;stroke:none"
+       style="fill:#000000;fill-opacity:1;stroke:none"
        id="path2816"
        sodipodi:cx="388.57144"
        sodipodi:cy="635.2193"
@@ -1075,17 +1043,7 @@
        transform="translate(-16.5242,-109.03821)" />
     <path
        sodipodi:type="arc"
-       style="fill:url(#linearGradient3694);fill-opacity:1;stroke:none"
-       id="path2816-5"
-       sodipodi:cx="388.57144"
-       sodipodi:cy="635.2193"
-       sodipodi:rx="362.85715"
-       sodipodi:ry="362.85715"
-       d="m 751.42859,635.2193 a 362.85715,362.85715 0 1 1 -725.714296,0 362.85715,362.85715 0 1 1 725.714296,0 z"
-       transform="matrix(0.94488189,0,0,0.94488189,4.893123,-74.026121)" />
-    <path
-       sodipodi:type="arc"
-       style="fill:#08501c;fill-opacity:1;stroke:none"
+       style="fill:#ffffff;fill-opacity:1;stroke:none"
        id="path2816-9"
        sodipodi:cx="388.57144"
        sodipodi:cy="635.2193"
@@ -1096,19 +1054,6 @@
   </g>
   <g
      inkscape:groupmode="layer"
-     id="layer4"
-     inkscape:label="Wave"
-     transform="translate(-9.1900944,-163.32394)"
-     style="display:inline">
-    <path
-       style="fill:url(#linearGradient3758);fill-opacity:1;stroke:none"
-       d="m 22.857141,515.2193 c 211.379309,-107.0936 507.192149,117.19211 702.857179,0 179.74898,-107.65932 0,628.5714 0,628.5714 l -702.857179,0 c 0,0 -186.904601,-533.87773 0,-628.5714 z"
-       id="rect3717"
-       sodipodi:nodetypes="csccs"
-       clip-path="url(#clipPath3802)" />
-  </g>
-  <g
-     inkscape:groupmode="layer"
      id="layer5"
      inkscape:label="Tree"
      transform="translate(-9.1900944,-163.32394)"
@@ -1116,31 +1061,32 @@
     <g
        transform="translate(-2.8180638,27.566373)"
        id="g3709-0"
-       style="fill:url(#linearGradient3773);fill-opacity:1;display:inline;filter:url(#filter4678)">
+       style="fill:#000000;fill-opacity:1;display:inline">
       <path
          sodipodi:nodetypes="ccac"
          id="path3642-5"
          d="m 116.26626,543.56607 c 214.79029,209.56963 304.0431,211.70514 517.19809,0 C 558.38407,685.06742 489.59214,763.34467 376.88563,763.77932 263.15368,764.21792 178.5424,682.12555 116.26626,543.56607 z"
-         style="color:#000000;fill:url(#linearGradient3767);fill-opacity:1;stroke:none;stroke-width:1px;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+         style="color:#000000;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
       <path
          sodipodi:nodetypes="ccac"
          id="path3642-0-07"
          d="m 170.81451,443.5601 c 167.80491,194.18849 237.53366,196.16727 404.061,0 C 516.21904,574.67611 462.47534,647.20829 374.42338,647.61104 285.5703,648.01745 219.46775,571.95016 170.81451,443.5601 z"
-         style="color:#000000;fill:url(#linearGradient3769);fill-opacity:1;stroke:none;stroke-width:1px;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+         style="color:#000000;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
       <path
          sodipodi:nodetypes="cczc"
          id="path3642-0-0-2"
          d="m 285.9719,340.52453 c 84.48727,204.61942 92.12245,191.18025 149.50256,-107.07617 7.75374,202.66973 -39.53847,308.33494 -64.1131,305.06559 -24.57464,-3.26935 -53.27832,-21.2946 -85.38946,-197.98942 z"
-         style="color:#000000;fill:url(#linearGradient3771);fill-opacity:1;stroke:none;stroke-width:1px;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+         style="color:#000000;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
     </g>
   </g>
   <g
      inkscape:groupmode="layer"
      id="layer8"
-     inkscape:label="Text">
+     inkscape:label="Text"
+     style="display:inline">
     <text
        xml:space="preserve"
-       style="font-size:511.13677979000004825px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:Bitstream Vera Sans;filter:url(#filter3774)"
+       style="font-size:511.13677979px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:Bitstream Vera Sans"
        x="956.75195"
        y="525.20801"
        id="text3631"
@@ -1149,62 +1095,6 @@
          id="tspan3633"
          x="956.75195"
          y="525.20801"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;font-family:Copperplate Gothic Bold;-inkscape-font-specification:'Copperplate Gothic Bold, Bold';">Pines</tspan></text>
-  </g>
-  <g
-     inkscape:groupmode="layer"
-     id="layer7"
-     inkscape:label="Tree Worse"
-     style="display:none"
-     transform="translate(-4.3359375e-7,-2.0996094e-6)">
-    <g
-       style="display:inline"
-       id="g3845"
-       transform="translate(-737.76151,-557.60967)">
-      <path
-         sodipodi:nodetypes="ccac"
-         id="path3642"
-         d="m 156.67236,543.56607 c 181.22931,209.56963 256.53637,211.70514 436.38589,0 -63.34899,141.50135 -121.39218,219.7786 -216.4883,220.21325 -95.96133,0.4386 -167.3521,-81.65377 -219.89759,-220.21325 z"
-         style="color:#000000;fill:url(#linearGradient3850-2);fill-opacity:1;stroke:none;stroke-width:1px;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
-      <path
-         sodipodi:nodetypes="ccac"
-         id="path3642-0"
-         d="m 195.05817,443.5601 c 147.66832,194.18849 209.02962,196.16727 355.57368,0 C 499.01416,574.67611 451.7197,647.20829 374.23398,647.61104 296.04327,648.01745 237.87302,571.95016 195.05817,443.5601 z"
-         style="color:#000000;fill:url(#linearGradient3852-4);fill-opacity:1;stroke:none;stroke-width:1px;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
-      <path
-         sodipodi:nodetypes="cczc"
-         id="path3642-0-0"
-         d="m 285.9719,340.52453 c 84.48727,204.61942 92.12245,191.18025 149.50256,-107.07617 7.75374,202.66973 -39.53847,308.33494 -64.1131,305.06559 -24.57464,-3.26935 -53.27832,-21.2946 -85.38946,-197.98942 z"
-         style="color:#000000;fill:url(#linearGradient3891);fill-opacity:1;stroke:none;stroke-width:1px;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
-    </g>
-  </g>
-  <g
-     inkscape:groupmode="layer"
-     id="layer6"
-     inkscape:label="Gloss"
-     style="display:none"
-     transform="translate(-4.3359375e-7,-2.0996094e-6)">
-    <path
-       style="fill:url(#linearGradient3665);fill-opacity:1;stroke:none;display:inline"
-       d="m 170,592.85715 c 44.11577,44.70679 180,55.71429 180,55.71429 C 153.66096,567.54017 102.11923,406.25089 85.71428,307.14286 77.142853,475.7143 100.25608,522.17885 170,592.85715 z"
-       id="path3638"
-       sodipodi:nodetypes="ccca" />
-  </g>
-  <g
-     inkscape:groupmode="layer"
-     id="layer3"
-     inkscape:label="Reflection"
-     style="display:inline"
-     transform="translate(-9.1900944,-163.32394)">
-    <path
-       sodipodi:type="arc"
-       style="fill:url(#linearGradient3667);fill-opacity:1;stroke:none"
-       id="path2816-9-2"
-       sodipodi:cx="388.57144"
-       sodipodi:cy="635.2193"
-       sodipodi:rx="362.85715"
-       sodipodi:ry="362.85715"
-       d="m 751.42859,635.2193 a 362.85715,362.85715 0 1 1 -725.714296,0 362.85715,362.85715 0 1 1 725.714296,0 z"
-       transform="matrix(0.57070225,0,0,0.56574208,150.28864,43.237214)" />
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;font-family:Copperplate Gothic Bold;-inkscape-font-specification:'Copperplate Gothic Bold, Bold'">Pines</tspan></text>
   </g>
 </svg>
