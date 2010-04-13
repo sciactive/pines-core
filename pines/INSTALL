@@ -1,28 +1,39 @@
--Installation Instructions-
+                 -- Installation Instructions --
 
-These instructions are preliminary and will not apply to future releases of
-Pines.
+           ** These instructions are preliminary and **
+         ** will not apply to future releases of Pines.**
 
-There is a pines.sql file with the current state of the database.
+This release of Pines is in the Alpha stage of development, which means that
+many features are incomplete and subject to radical change or even complete
+removal. You should not install this version of Pines in a production
+environment. It is only being released for testing and evaluation purposes.
 
-Basically, to install Pines, you currently need PHP and MySQL. Set up a database
-for Pines, run the pines.sql file on it, and put the settings in
+There is no Pines installer at this stage in development, so installation
+must be done manually. You will need PHP version 5.2.10 or greater and MySQL 5.0
+or greater. These requirements are subject to change, and MySQL will not be
+required in later releases of Pines.
 
-/components/com_mysql/defaults.php
+Set up a database for Pines in your MySQL server. Use the SQL in the pines.sql
+file to build the tables required for com_myentity. Put your database settings
+in the following file:
 
-Once you install Pines, if you use com_user, you need to create an admin user.
-To do this, point your browser to your Pines installation, then add this to the
-URL:
+components/com_mysql/defaults.php
+
+Once Pines is configured for your database, you need to create an admin user. To
+do this, point your browser to your Pines URL, then add this to the end:
 
 ?option=com_user&action=createadmin&secret=874jdiv8
 
-The new administrator's credentials are
-
+This will create an administrator user with the credentials:
 Username: admin
 Password: password
 
-The secret is stored in /components/com_user/defaults.php
-You should set create_admin to false afterwards using the built in configuration
-editor. (Configuration->Components->User Manager->Configure->Create Admin)
+Now you should log in and disable this "Create Admin" feature. You can use the
+built in configurator. From the main menu go to
+
+System->Configuration->Components->User Manager->Configure
+
+check the box next to "Create Admin" (to set it to a non-default value), then
+uncheck the checkbox that appears to the right of it.
 
 Good luck. ;)

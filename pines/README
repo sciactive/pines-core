@@ -18,6 +18,6 @@ Planned features for versions >1.0:
 +Entity locking.
 +Pines Grid caption and summary support.
 +New templates / Improve Pines template. (Maybe use XSL instead of PHP.)
-+An entity exporter/importer. Also a backup creator. Use the metadata of a PJA
-	to hold the entity export. It would provide a full backup.
++A backup creator, using the metadata of a Slim archive to hold an entity
+	export, allowing for a complete backup of a Pines installation.
 --------------------------------------------------------------------------------
