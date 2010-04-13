@@ -14,12 +14,12 @@
    inkscape:export-ydpi="299.99408"
    inkscape:export-xdpi="299.99408"
    inkscape:export-filename="/home/hunter/htdocs/pines/logo/new-logo/simple-logo-text.png"
-   sodipodi:docname="pines.svg"
+   sodipodi:docname="pines-bw.svg"
    inkscape:version="0.47 r22583"
    version="1.1"
    id="svg2"
-   height="725.71429"
-   width="2457.7136">
+   height="750"
+   width="2600">
   <defs
      id="defs4">
     <linearGradient
@@ -1002,9 +1002,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.49497476"
-     inkscape:cx="784.39171"
-     inkscape:cy="362.4124"
+     inkscape:zoom="0.24748738"
+     inkscape:cx="1297.7082"
+     inkscape:cy="280.34821"
      inkscape:document-units="px"
      inkscape:current-layer="layer5"
      showgrid="false"
@@ -1021,7 +1021,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -1029,7 +1029,7 @@
      inkscape:label="Circles"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-9.1900944,-163.32394)"
+     transform="translate(-9.1900944,-139.03823)"
      style="display:inline">
     <path
        sodipodi:type="arc"
@@ -1040,7 +1040,7 @@
        sodipodi:rx="362.85715"
        sodipodi:ry="362.85715"
        d="m 751.42859,635.2193 a 362.85715,362.85715 0 1 1 -725.714296,0 362.85715,362.85715 0 1 1 725.714296,0 z"
-       transform="translate(-16.5242,-109.03821)" />
+       transform="translate(-4.3813473,-121.18107)" />
     <path
        sodipodi:type="arc"
        style="fill:#ffffff;fill-opacity:1;stroke:none"
@@ -1050,16 +1050,16 @@
        sodipodi:rx="362.85715"
        sodipodi:ry="362.85715"
        d="m 751.42859,635.2193 a 362.85715,362.85715 0 1 1 -725.714296,0 362.85715,362.85715 0 1 1 725.714296,0 z"
-       transform="matrix(0.90944882,0,0,0.90944882,18.661402,-51.518351)" />
+       transform="matrix(0.90944882,0,0,0.90944882,30.804255,-63.66121)" />
   </g>
   <g
      inkscape:groupmode="layer"
      id="layer5"
      inkscape:label="Tree"
-     transform="translate(-9.1900944,-163.32394)"
+     transform="translate(-9.1900944,-139.03823)"
      style="display:inline">
     <g
-       transform="translate(-2.8180638,27.566373)"
+       transform="translate(9.3247889,15.423514)"
        id="g3709-0"
        style="fill:#000000;fill-opacity:1;display:inline">
       <path
@@ -1083,7 +1083,8 @@
      inkscape:groupmode="layer"
      id="layer8"
      inkscape:label="Text"
-     style="display:inline">
+     style="display:inline"
+     transform="translate(0,24.285706)">
     <text
        xml:space="preserve"
        style="font-size:511.13677979px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:Bitstream Vera Sans"
