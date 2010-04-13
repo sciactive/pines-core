@@ -69,7 +69,7 @@ return array(
 		'name' => 'url_rewriting',
 		'cname' => 'URL Rewriting',
 		'description' => 'Use url rewriting engine.',
-		'value' => true,
+		'value' => false,
 	),
 	array(
 		'name' => 'use_htaccess',

@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS `pin_com_myentity_data` (
   `guid` bigint(20) unsigned NOT NULL,
   `name` text NOT NULL,
   `value` longtext NOT NULL,
-  PRIMARY KEY (`guid`,`name`(980))
+  PRIMARY KEY (`guid`,`name`(330))
 ) ;
 
 CREATE TABLE IF NOT EXISTS `pin_com_myentity_entities` (
