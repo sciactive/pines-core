@@ -10,12 +10,15 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="725.71429"
+   width="2457.7136"
    height="725.71429"
    id="svg2"
    version="1.1"
    inkscape:version="0.47pre4 r22446"
    sodipodi:docname="simple-logo.svg"
+   inkscape:export-filename="/home/hunter/htdocs/pines/logo/new-logo/simple-logo.png"
+   inkscape:export-xdpi="300"
+   inkscape:export-ydpi="300"
    style="display:inline">
   <defs
      id="defs4">
@@ -832,6 +835,90 @@
          type="matrix"
          values="2 -1 0 0 0 0 2 -1 0 0 -1 0 2 0 0 0 0 0 1 0 " />
     </filter>
+    <inkscape:perspective
+       id="perspective2971"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective2987"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <filter
+       id="filter3201"
+       inkscape:label="Molten metal"
+       inkscape:menu="Bevels"
+       inkscape:menu-tooltip="Melting parts of object together, with a glossy bevel and a glow"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur3203"
+         stdDeviation="5"
+         result="result1" />
+      <feColorMatrix
+         id="feColorMatrix3205"
+         result="result10"
+         values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 5 -4 " />
+      <feComposite
+         in2="result10"
+         id="feComposite3207"
+         operator="atop"
+         in="result10"
+         result="result8" />
+      <feComposite
+         in2="result8"
+         id="feComposite3209"
+         operator="in"
+         result="fbSourceGraphic"
+         in="result1" />
+      <feGaussianBlur
+         id="feGaussianBlur3211"
+         result="result0"
+         in="fbSourceGraphic"
+         stdDeviation="5" />
+      <feSpecularLighting
+         id="feSpecularLighting3213"
+         specularExponent="55"
+         specularConstant="2.5"
+         surfaceScale="2"
+         lighting-color="rgb(255,255,255)"
+         result="result1"
+         in="result0">
+        <feDistantLight
+           id="feDistantLight3215"
+           azimuth="225"
+           elevation="60" />
+      </feSpecularLighting>
+      <feComposite
+         in2="fbSourceGraphic"
+         id="feComposite3217"
+         operator="in"
+         result="result2"
+         in="result1" />
+      <feComposite
+         in2="result2"
+         id="feComposite3219"
+         k3="1"
+         k2="1"
+         operator="arithmetic"
+         result="result4"
+         in="fbSourceGraphic" />
+      <feComposite
+         in2="result4"
+         id="feComposite3221"
+         operator="in"
+         in="result9"
+         result="result9" />
+      <feBlend
+         in2="result9"
+         id="feBlend3223"
+         mode="multiply"
+         in="result9" />
+    </filter>
   </defs>
   <sodipodi:namedview
      id="base"
@@ -840,11 +927,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.24748738"
-     inkscape:cx="8.9307652"
-     inkscape:cy="171.39206"
+     inkscape:zoom="0.35000001"
+     inkscape:cx="1253.3045"
+     inkscape:cy="142.54259"
      inkscape:document-units="px"
-     inkscape:current-layer="layer5"
+     inkscape:current-layer="layer8"
      showgrid="false"
      inkscape:window-width="1280"
      inkscape:window-height="951"
@@ -859,7 +946,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -867,7 +954,7 @@
      inkscape:label="Circles"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-9.190094,-163.32394)">
+     transform="translate(-9.1900944,-163.32394)">
     <path
        sodipodi:type="arc"
        style="fill:url(#linearGradient3675);fill-opacity:1;stroke:none"
@@ -903,7 +990,7 @@
      inkscape:groupmode="layer"
      id="layer4"
      inkscape:label="Wave"
-     transform="translate(-9.190094,-163.32394)"
+     transform="translate(-9.1900944,-163.32394)"
      style="display:inline">
     <path
        style="fill:url(#linearGradient3758);fill-opacity:1;stroke:none"
@@ -916,7 +1003,7 @@
      inkscape:groupmode="layer"
      id="layer5"
      inkscape:label="Tree"
-     transform="translate(-9.190094,-163.32394)"
+     transform="translate(-9.1900944,-163.32394)"
      style="display:inline">
     <g
        transform="translate(-2.8180638,27.566373)"
@@ -941,9 +1028,27 @@
   </g>
   <g
      inkscape:groupmode="layer"
+     id="layer8"
+     inkscape:label="Text">
+    <text
+       xml:space="preserve"
+       style="font-size:511.13677978999999141px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:Bitstream Vera Sans;filter:url(#filter3201)"
+       x="956.75195"
+       y="525.20801"
+       id="text3631"
+       transform="matrix(1,0,-0.18952287,1,0,0)"><tspan
+         sodipodi:role="line"
+         id="tspan3633"
+         x="956.75195"
+         y="525.20801"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;font-family:Copperplate Gothic Bold;-inkscape-font-specification:'Copperplate Gothic Bold, Bold'">Pines</tspan></text>
+  </g>
+  <g
+     inkscape:groupmode="layer"
      id="layer7"
      inkscape:label="Tree Worse"
-     style="display:none">
+     style="display:none"
+     transform="translate(-4.3359375e-7,-2.0996094e-6)">
     <g
        style="display:inline"
        id="g3845"
@@ -969,7 +1074,8 @@
      inkscape:groupmode="layer"
      id="layer6"
      inkscape:label="Gloss"
-     style="display:none">
+     style="display:none"
+     transform="translate(-4.3359375e-7,-2.0996094e-6)">
     <path
        style="fill:url(#linearGradient3665);fill-opacity:1;stroke:none;display:inline"
        d="m 170,592.85715 c 44.11577,44.70679 180,55.71429 180,55.71429 C 153.66096,567.54017 102.11923,406.25089 85.71428,307.14286 77.142853,475.7143 100.25608,522.17885 170,592.85715 z"
@@ -981,7 +1087,7 @@
      id="layer3"
      inkscape:label="Reflection"
      style="display:inline"
-     transform="translate(-9.190094,-163.32394)">
+     transform="translate(-9.1900944,-163.32394)">
     <path
        sodipodi:type="arc"
        style="fill:url(#linearGradient3667);fill-opacity:1;stroke:none"
