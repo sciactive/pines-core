@@ -21,26 +21,21 @@
 				font-family: 'Palatino Linotype','Book Antiqua',Palatino,serif;
 				font-size: .92em;
 			}
-
 			.wrapper {
-				padding: 10px 10px 10px 10px;
+				padding: 10px;
 			}
-
 			#header {
 				height: 70px;
 				background: transparent url(../pines/templates/tpl_pines/images/header.png) no-repeat top left;
 			}
-
 			#header h1 {
 				margin: 0;
 				padding: 0;
 				visibility: hidden;
 			}
-
 			.ui-widget {
-				font-size: 75% !important;
+				font-size: .9em !important;
 			}
-
 			.ui-pgrid tbody td.col_4, .ui-pgrid tbody td.col_5 {
 				padding-left: 2px !important;
 			}
@@ -191,12 +186,7 @@
 			<div id="header"><h1>Pines</h1></div>
 			<h2>Pines Grid jQuery Plugin</h2>
 			<div>
-				<p style="margin: 0;">
-			The Pines Grid plugin was developed by Hunter Perrin as part of
-					<a href="http://sourceforge.net/projects/pines/">Pines</a>.
-			There are other grid plugins for jQuery, but none that satisfy
-			all the requirements of Pines. Pines Grid's features include:
-				</p>
+				<p style="margin: 0;">The Pines Grid plugin was developed by Hunter Perrin as part of <a href="http://sourceforge.net/projects/pines/">Pines</a>. There are other grid plugins for jQuery, but none that satisfy all the requirements of Pines. Pines Grid's features include:</p>
 				<div style="float: left; margin-right: 10px;">
 					<ul style="padding-left: 20px;">
 						<li>Pagination.</li>
@@ -228,17 +218,15 @@
 						<li>Integration with jQuery UI.</li>
 					</ul>
 				</div>
-				<p style="clear: both;">
-			Try out different themes using the selector in the top right
-			corner of this page.
-				</p>
+				<p style="clear: both;">Try out different themes using the selector in the top right corner of this page.</p>
 			</div>
+			<h2>Demos</h2>
 			<p>This table was gridified on $(document).ready() with a toolbar:</p>
 			<p>
 				<label><input type="checkbox" id="auto-save" />Auto Save</label>
 				<button class="ui-state-default ui-corner-all" onclick="save_state(); $('#saved-notice').show().fadeOut('slow');">Save State</button>
 				<button class="ui-state-default ui-corner-all" onclick="load_state();">Load State</button>
-				<span id="saved-notice" style="border: 1px solid #CCC; background-color: #FFC; color: #33F; display: none;">State saved.</span>
+				<span id="saved-notice" class="ui-state-highlight ui-corner-all" style="display: none;">State saved.</span>
 			</p>
 			<table id="test1">
 				<thead>
