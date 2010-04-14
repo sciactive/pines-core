@@ -95,6 +95,7 @@ interface able_object_interface extends data_object_interface {
 /**
  * Pines system users.
  * @package Pines
+ * @property int $guid The UID of the user.
  */
 interface user_interface extends able_object_interface {
 	/**
@@ -107,6 +108,7 @@ interface user_interface extends able_object_interface {
 	 * Create a new instance.
 	 *
 	 * @param int|string $id The ID or username of the user to load, 0 for a new user.
+	 * @return user A user instance.
 	 */
 	public static function factory($id = 0);
 	/**
@@ -174,6 +176,7 @@ interface user_interface extends able_object_interface {
  * deleted.
  *
  * @package Pines
+ * @property int $guid The GID of the group.
  */
 interface group_interface extends able_object_interface {
 	/**
@@ -186,6 +189,7 @@ interface group_interface extends able_object_interface {
 	 * Create a new instance.
 	 *
 	 * @param int $id The ID of the group to load, 0 for a new group.
+	 * @return group A group instance.
 	 */
 	public static function factory($id = 0);
 	/**
@@ -273,16 +277,12 @@ interface configurator_interface {
 
 /**
  * A configurable component.
- *
- * Must have the following public variables:
- *
- * - $defaults - The configuration defaults.
- * - $config - The current configuration.
- * - $config_keys - The current configuration in an array with key => values.
- * - $info - The info object of the component.
- * - $name - The component.
- *
  * @package Pines
+ * @property array $defaults The configuration defaults.
+ * @property array $config The current configuration.
+ * @property array $config_keys The current configuration in an array with key => values.
+ * @property array $info The info object of the component.
+ * @property string $name The component.
  */
 interface configurator_component_interface {
 	/**
@@ -293,6 +293,7 @@ interface configurator_component_interface {
 	/**
 	 * Create a new instance.
 	 * @param string $component The component to load.
+	 * @return configurator_component A component configuration object instance.
 	 */
 	public static function factory($component);
 	/**
@@ -600,12 +601,9 @@ interface entity_manager_interface {
  * later in the code execution (after some other processing occurs), it's
  * recommended to call clear_cache().
  *
- * Must have the following public variables:
- *
- * - $guid - The GUID of the entity.
- * - $tags - Array of the entity's tags.
- *
  * @package Pines
+ * @property int $guid The GUID of the entity.
+ * @property array $tags Array of the entity's tags.
  */
 interface entity_interface extends data_object_interface {
 	/**
@@ -616,6 +614,7 @@ interface entity_interface extends data_object_interface {
 	public function __construct();
 	/**
 	 * Create a new instance.
+	 * @return entity An entity instance.
 	 */
 	public static function factory();
 	/**
@@ -680,11 +679,8 @@ interface entity_interface extends data_object_interface {
  * system for Pines. The gatekeeper() function is used to check if a user has
  * been granted an ability.
  *
- * Must have the following public variables:
- *
- * - $abilities - Array of defined abilities.
- *
  * @package Pines
+ * @property array $abilities Array of defined abilities.
  */
 interface ability_manager_interface {
 	/**
