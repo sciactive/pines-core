@@ -31,6 +31,36 @@
 				padding: 0;
 				visibility: hidden;
 			}
+			h2 {
+				margin: .83em 0 .1em 0;
+			}
+			p {
+				margin: 1em 0 .5em 0;
+			}
+			.featurelist {
+				margin: .5em 10px .5em 0;
+				padding: .5em;
+				float: left;
+				background-image: none !important;
+			}
+			.featurelist ul {
+				margin: 0;
+				padding: 0;
+				list-style-type: none;
+			}
+			.featurelist ul a {
+				text-decoration: underline !important;
+			}
+			.featurelist ul .ui-icon {
+				display: inline-block;
+				position: relative;
+				top: 4px;
+				margin-right: .3em;
+			}
+			.featurelist ul img {
+				vertical-align: middle;
+				border: none 0;
+			}
 			.pf-group {
 				background: transparent none no-repeat 0 0 !important;
 				padding: 4px;
@@ -67,16 +97,23 @@
 		<div class="wrapper ui-widget-content ui-corner-all ui-helper-clearfix">
 			<div id="header"><h1>Pines</h1></div>
 			<h2>Pines Tags jQuery Plugin</h2>
-			<p style="margin: 0;">The Pines Tags plugin was developed by Hunter Perrin as part of <a href="http://sourceforge.net/projects/pines/">Pines</a>. Pines Tags' features include:</p>
-			<div style="float: left; margin-right: 10px;">
-				<ul style="padding-left: 20px;">
-					<li>Preserves original input element. The value is updated when tags change, so you don't have to alter your server side script.</li>
-					<li>Tags can be edited by clicking them.</li>
-					<li><a href="http://validator.w3.org/check?uri=referer">XHTML 1.0 Strict compliance.</a></li>
-					<li>Integration with jQuery UI.</li>
-				</ul>
+			<p>
+				The Pines Tags plugin was developed by Hunter Perrin as part
+				of <a href="http://sourceforge.net/projects/pines/">Pines</a>.
+				Try out different themes using the selector in the top right
+				corner of this page.
+			</p>
+			<h2>Features</h2>
+			<div class="ui-helper-clearfix">
+				<div class="featurelist ui-state-active ui-corner-all">
+					<ul>
+						<li><span class="ui-icon ui-icon-bullet"></span>Preserves original input element. The value is updated when tags change, so you don't have to alter your server side script.</li>
+						<li><span class="ui-icon ui-icon-bullet"></span>Tags can be edited by clicking them.</li>
+						<li><span class="ui-icon ui-icon-bullet"></span><a href="http://validator.w3.org/check?uri=referer">XHTML 1.0 Strict compliance.</a></li>
+						<li><span class="ui-icon ui-icon-bullet"></span><a href="http://jqueryui.com/themeroller/"><img src="themeroller-ready.png" alt="ThemeRoller Ready" /></a></li>
+					</ul>
+				</div>
 			</div>
-			<p style="clear: both;">Try out different themes using the selector in the top right corner of this page.</p>
 			<h2>Demos</h2>
 			<form id="demo_form" action="post">
 				<div class="pf-group ui-widget-content ui-corner-all">
@@ -108,12 +145,12 @@
 			</form>
 
 			<h2>Installation</h2>
-			<div>
-				<p style="margin: 0;">Installation is simple. Include jQuery, jQuery UI (only the CSS is required), and the CSS for a jQuery UI theme, then the following files:</p>
-				<div style="float: left; margin-right: 10px;">
-					<ul style="padding-left: 20px;">
-						<li><a href="../pines/components/com_ptags/includes/jquery.ptags.js">jquery.ptags.js</a></li>
-						<li><a href="../pines/components/com_ptags/includes/jquery.ptags.default.css">jquery.ptags.default.css</a></li>
+			<p>Installation is simple. Include jQuery, jQuery UI (only the CSS is required), and the CSS for a jQuery UI theme, then the following files:</p>
+			<div class="ui-helper-clearfix">
+				<div class="featurelist">
+					<ul>
+						<li><span class="ui-icon ui-icon-bullet"></span><a href="../pines/components/com_ptags/includes/jquery.ptags.js">jquery.ptags.js</a></li>
+						<li><span class="ui-icon ui-icon-bullet"></span><a href="../pines/components/com_ptags/includes/jquery.ptags.default.css">jquery.ptags.default.css</a></li>
 					</ul>
 				</div>
 			</div>

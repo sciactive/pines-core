@@ -33,6 +33,36 @@
 				padding: 0;
 				visibility: hidden;
 			}
+			h2 {
+				margin: .83em 0 .1em 0;
+			}
+			p {
+				margin: 1em 0 .5em 0;
+			}
+			.featurelist {
+				margin: .5em 10px .5em 0;
+				padding: .5em;
+				float: left;
+				background-image: none !important;
+			}
+			.featurelist ul {
+				margin: 0;
+				padding: 0;
+				list-style-type: none;
+			}
+			.featurelist ul a {
+				text-decoration: underline !important;
+			}
+			.featurelist ul .ui-icon {
+				display: inline-block;
+				position: relative;
+				top: 4px;
+				margin-right: .3em;
+			}
+			.featurelist ul img {
+				vertical-align: middle;
+				border: none 0;
+			}
 			.ui-widget {
 				font-size: .9em !important;
 			}
@@ -185,40 +215,43 @@
 		<div class="wrapper ui-widget-content ui-corner-all">
 			<div id="header"><h1>Pines</h1></div>
 			<h2>Pines Grid jQuery Plugin</h2>
-			<div>
-				<p style="margin: 0;">The Pines Grid plugin was developed by Hunter Perrin as part of <a href="http://sourceforge.net/projects/pines/">Pines</a>. There are other grid plugins for jQuery, but none that satisfy all the requirements of Pines. Pines Grid's features include:</p>
-				<div style="float: left; margin-right: 10px;">
-					<ul style="padding-left: 20px;">
-						<li>Pagination.</li>
-						<li>Filtering.</li>
-						<li>Sorting.</li>
-						<li>Customizeable toolbar.</li>
+			<p>
+				The Pines Grid plugin was developed by Hunter Perrin as part
+				of <a href="http://sourceforge.net/projects/pines/">Pines</a>.
+				Pines Grid is designed to provide maximum flexibility, while
+				still being easy to use and easy to implement. Try out
+				different themes using the selector in the top right corner
+				of this page.
+			</p>
+			<h2>Features</h2>
+			<div class="ui-helper-clearfix">
+				<div class="featurelist ui-state-active ui-corner-all">
+					<ul>
+						<li><span class="ui-icon ui-icon-bullet"></span>Pagination.</li>
+						<li><span class="ui-icon ui-icon-bullet"></span>Filtering.</li>
+						<li><span class="ui-icon ui-icon-bullet"></span>Sorting.</li>
+						<li><span class="ui-icon ui-icon-bullet"></span>Customizeable toolbar.</li>
+						<li><span class="ui-icon ui-icon-bullet"></span>Column resizing.</li>
+						<li><span class="ui-icon ui-icon-bullet"></span>Column hiding.</li>
 					</ul>
 				</div>
-				<div style="float: left; margin-right: 10px;">
-					<ul style="padding-left: 20px;">
-						<li>Column resizing.</li>
-						<li>Column hiding.</li>
-						<li>Hierarchical data.</li>
-						<li>Selecting.</li>
+				<div class="featurelist ui-state-active ui-corner-all">
+					<ul>
+						<li><span class="ui-icon ui-icon-bullet"></span>Hierarchical data.</li>
+						<li><span class="ui-icon ui-icon-bullet"></span>Selecting.</li>
+						<li><span class="ui-icon ui-icon-bullet"></span>Saving and loading state. (Current page, filter, etc.)</li>
+						<li><span class="ui-icon ui-icon-bullet"></span>Adding and removing items dynamically.</li>
+						<li><span class="ui-icon ui-icon-bullet"></span>Selecting and deselecting items dynamically.</li>
+						<li><span class="ui-icon ui-icon-bullet"></span><a href="http://validator.w3.org/check?uri=referer">XHTML 1.0 Strict compliance.</a></li>
 					</ul>
 				</div>
-				<div style="float: left; margin-right: 10px;">
-					<ul style="padding-left: 20px;">
-						<li>Saving and loading state. (Current page, filter, etc.)</li>
-						<li>Adding and removing items dynamically.</li>
-						<li>Selecting and deselecting items dynamically.</li>
-						<li><a href="http://validator.w3.org/check?uri=referer">XHTML 1.0 Strict compliance.</a></li>
+				<div class="featurelist ui-state-active ui-corner-all">
+					<ul>
+						<li><span class="ui-icon ui-icon-bullet"></span>Clean, sensible, easy markup.</li>
+						<li><span class="ui-icon ui-icon-bullet"></span>Population either statically or dynamically.</li>
+						<li><span class="ui-icon ui-icon-bullet"></span><a href="http://jqueryui.com/themeroller/"><img src="themeroller-ready.png" alt="ThemeRoller Ready" /></a></li>
 					</ul>
 				</div>
-				<div style="float: left; margin-right: 10px;">
-					<ul style="padding-left: 20px;">
-						<li>Clean, sensible, easy markup.</li>
-						<li>Population either statically or dynamically.</li>
-						<li>Integration with jQuery UI.</li>
-					</ul>
-				</div>
-				<p style="clear: both;">Try out different themes using the selector in the top right corner of this page.</p>
 			</div>
 			<h2>Demos</h2>
 			<p>This table was gridified on $(document).ready() with a toolbar:</p>
