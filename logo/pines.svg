@@ -10,14 +10,14 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="3600"
+   width="3200"
    height="1000"
    id="svg2"
    version="1.1"
    inkscape:version="0.47pre4 r22446"
    sodipodi:docname="pines.svg"
    style="display:inline"
-   inkscape:export-filename="/home/hunter/htdocs/pines/logo/logo.png"
+   inkscape:export-filename="/home/hunter/htdocs/pines/logo/pines.png"
    inkscape:export-xdpi="300"
    inkscape:export-ydpi="300">
   <defs
@@ -976,8 +976,9 @@
        inkscape:label="Drop shadow"
        width="1.5"
        height="1.5"
-       x="-.25"
-       y="-.25">
+       x="-0.25"
+       y="-0.25"
+       color-interpolation-filters="sRGB">
       <feGaussianBlur
          id="feGaussianBlur4255"
          in="SourceAlpha"
@@ -1020,8 +1021,9 @@
        inkscape:label="Drop shadow"
        width="1.5"
        height="1.5"
-       x="-.25"
-       y="-.25">
+       x="-0.25"
+       y="-0.25"
+       color-interpolation-filters="sRGB">
       <feGaussianBlur
          id="feGaussianBlur4412"
          in="SourceAlpha"
@@ -1053,8 +1055,9 @@
        inkscape:label="Drop shadow"
        width="1.5"
        height="1.5"
-       x="-.25"
-       y="-.25">
+       x="-0.25"
+       y="-0.25"
+       color-interpolation-filters="sRGB">
       <feGaussianBlur
          id="feGaussianBlur4496"
          in="SourceAlpha"
@@ -1093,7 +1096,7 @@
      inkscape:cx="1598.9983"
      inkscape:cy="558.75431"
      inkscape:document-units="px"
-     inkscape:current-layer="layer5"
+     inkscape:current-layer="layer4"
      showgrid="false"
      inkscape:window-width="1280"
      inkscape:window-height="951"
@@ -1108,7 +1111,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -1126,7 +1129,7 @@
        sodipodi:cy="635.2193"
        sodipodi:rx="362.85715"
        sodipodi:ry="362.85715"
-       d="m 751.42859,635.2193 c 0,200.40047 -162.45668,362.85715 -362.85715,362.85715 -200.40047,0 -362.857146,-162.45668 -362.857146,-362.85715 0,-200.40047 162.456676,-362.85715 362.857146,-362.85715 200.40047,0 362.85715,162.45668 362.85715,362.85715 z"
+       d="m 751.42859,635.2193 a 362.85715,362.85715 0 1 1 -725.714296,0 362.85715,362.85715 0 1 1 725.714296,0 z"
        transform="translate(120.6188,-246.18122)" />
     <path
        sodipodi:type="arc"
@@ -1136,7 +1139,7 @@
        sodipodi:cy="635.2193"
        sodipodi:rx="362.85715"
        sodipodi:ry="362.85715"
-       d="m 751.42859,635.2193 c 0,200.40047 -162.45668,362.85715 -362.85715,362.85715 -200.40047,0 -362.857146,-162.45668 -362.857146,-362.85715 0,-200.40047 162.456676,-362.85715 362.857146,-362.85715 200.40047,0 362.85715,162.45668 362.85715,362.85715 z"
+       d="m 751.42859,635.2193 a 362.85715,362.85715 0 1 1 -725.714296,0 362.85715,362.85715 0 1 1 725.714296,0 z"
        transform="matrix(0.94488189,0,0,0.94488189,142.03613,-211.16913)" />
     <path
        sodipodi:type="arc"
@@ -1146,7 +1149,7 @@
        sodipodi:cy="635.2193"
        sodipodi:rx="362.85715"
        sodipodi:ry="362.85715"
-       d="m 751.42859,635.2193 c 0,200.40047 -162.45668,362.85715 -362.85715,362.85715 -200.40047,0 -362.857146,-162.45668 -362.857146,-362.85715 0,-200.40047 162.456676,-362.85715 362.857146,-362.85715 200.40047,0 362.85715,162.45668 362.85715,362.85715 z"
+       d="m 751.42859,635.2193 a 362.85715,362.85715 0 1 1 -725.714296,0 362.85715,362.85715 0 1 1 725.714296,0 z"
        transform="matrix(0.90944882,0,0,0.90944882,155.80441,-188.66136)" />
   </g>
   <g
@@ -1178,17 +1181,17 @@
          sodipodi:nodetypes="ccac"
          id="path3642-5"
          d="m 250.5912,433.98944 c 214.79029,209.56963 304.0431,211.70514 517.19809,0 C 692.70901,575.49079 623.91708,653.76804 511.21057,654.20269 397.47862,654.64129 312.86734,572.54892 250.5912,433.98944 z"
-         style="color:#000000;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;" />
+         style="color:#000000;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
       <path
          sodipodi:nodetypes="ccac"
          id="path3642-0-07"
          d="m 305.13945,333.98347 c 167.80491,194.18849 237.53366,196.16727 404.061,0 C 650.54398,465.09948 596.80028,537.63166 508.74832,538.03441 419.89524,538.44082 353.79269,462.37353 305.13945,333.98347 z"
-         style="color:#000000;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;" />
+         style="color:#000000;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
       <path
          sodipodi:nodetypes="cczc"
          id="path3642-0-0-2"
          d="m 420.29684,230.9479 c 84.48727,204.61942 92.12245,191.18025 149.50256,-107.07617 7.75374,202.66973 -39.53847,308.33494 -64.1131,305.06559 -24.57464,-3.26935 -53.27832,-21.2946 -85.38946,-197.98942 z"
-         style="color:#000000;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate;" />
+         style="color:#000000;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
     </g>
   </g>
   <g
@@ -1208,7 +1211,7 @@
          id="tspan3633"
          x="1018.0848"
          y="545.49573"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;fill:#000000;fill-opacity:1;font-family:KacstDigital;-inkscape-font-specification:KacstDigital Medium">Pines</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000000;fill-opacity:1;font-family:Adobe Garamond Pro;-inkscape-font-specification:Adobe Garamond Pro">Pines</tspan></text>
   </g>
   <g
      inkscape:groupmode="layer"
@@ -1218,7 +1221,7 @@
      transform="translate(-9.190094,110.96177)">
     <path
        sodipodi:type="arc"
-       style="opacity:0.89177490999999998;fill:url(#radialGradient4267);fill-opacity:1;stroke:none"
+       style="opacity:0.89177491;fill:url(#radialGradient4267);fill-opacity:1;stroke:none"
        id="path2816-9-2"
        sodipodi:cx="388.57144"
        sodipodi:cy="635.2193"
