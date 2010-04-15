@@ -63,4 +63,6 @@ foreach ($_p_sysinit as $_p_cur_sysinit) {
 	require($_p_cur_sysinit);
 }
 
+//echo microtime(true) - P_EXEC_TIME;
+
 ?>

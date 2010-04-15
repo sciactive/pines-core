@@ -673,50 +673,6 @@ interface entity_interface extends data_object_interface {
 }
 
 /**
- * Ability manager.
- *
- * An ability manager works with a user manager to provide an access control
- * system for Pines. The gatekeeper() function is used to check if a user has
- * been granted an ability.
- *
- * @package Pines
- * @property array $abilities Array of defined abilities.
- */
-interface ability_manager_interface {
-	/**
-	 * Add a system managed ability.
-	 *
-	 * This function is used to let the system know that you will be using an
-	 * ability in your component. If you don't let the system know, you will
-	 * have to give your users abilities yourself.
-	 *
-	 * A good way to do this is have the following in an init file (like
-	 * i30abilities.php)
-	 *
-	 * <code>
-	 * if ( isset($pines->ability_manager) ) {
-	 *	$pines->ability_manager->add('com_whatever', 'firstability', 'title', 'description');
-	 *	$pines->ability_manager->add('com_whatever', 'secondability', 'title', 'description');
-	 * }
-	 * </code>
-	 *
-	 * @param string $component The component under which to place the ability.
-	 * @param string $ability The name of the ability to manage.
-	 * @param string $title A descriptive title to display to the user.
-	 * @param string $description A description of the ability to display to the user.
-	 */
-	public function add($component, $ability, $title, $description);
-	/**
-	 * Get an array of the abilities that a specified component has reported
-	 * that it uses.
-	 *
-	 * @param string $component The component.
-	 * @return array The array of abilities.
-	 */
-	public function get_abilities($component);
-}
-
-/**
  * User and group manager.
  *
  * User managers need to hook entity transactions and filter certain

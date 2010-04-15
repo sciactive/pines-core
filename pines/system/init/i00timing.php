@@ -24,6 +24,7 @@ if (P_SCRIPT_TIMING) {
 		static $time_output;
 		static $message_level = 0;
 		static $time_array = array();
+		static $subtract_time = 0;
 		$microtime = microtime(true);
 		if (!isset($time_array[$message])) {
 			$time_array[$message] = array('level' => $message_level);
@@ -32,27 +33,33 @@ if (P_SCRIPT_TIMING) {
 			$message_level--;
 		}
 		$time_array[$message][] = $microtime;
-		if ($print_now) {
-			$total_time = $microtime - P_EXEC_TIME;
-			foreach($time_array as $message => $times) {
-				$prefix = str_repeat('>', $times['level']);
-				$time = $times[count($times)-2] - $times[0];
-				$percent = $time / $total_time * 100;
-				$time_output .= sprintf(str_pad($prefix.$message, 70).'%.6F (% 5.2F%%)\n', $time, $percent);
-			}
-			echo '<script type="text/javascript">
-(function(message){
-	if (console.log) {
-		console.log(message);
-	} else {
-		alert(message);
-	}
-})("';
-			echo 'Pines Script Timing\n\nTimes are measured in seconds.\n';
-			echo $time_output;
-			printf('--------------------\n'.str_pad('Script Run', 70).'%F', $total_time);
-			echo '");</script>';
+		$subtract_time += microtime(true) - $microtime;
+		if (!$print_now)
+			return;
+		
+		$total_time = $microtime - P_EXEC_TIME;
+		$run_time = $total_time - $subtract_time;
+		foreach($time_array as $message => $times) {
+			$prefix = str_repeat('>', $times['level']);
+			$time = $times[count($times)-2] - $times[0];
+			$percent = $time / $total_time * 100;
+			$time_output .= sprintf(str_pad($prefix.$message, 70).'%.6F (% 5.2F%%)\n', $time, $percent);
 		}
+		echo '<script type="text/javascript">
+(function(message){
+if (console.log) {
+	console.log(message);
+} else {
+	alert(message);
+}
+})("';
+		echo 'Pines Script Timing\n\nTimes are measured in seconds.\n';
+		echo $time_output;
+		echo '--------------------\n';
+		printf(str_pad('Time Spent Timing', 70).'%F\n', $subtract_time);
+		printf(str_pad('Script Run', 70).'%F\n', $run_time);
+		printf(str_pad('Total Time', 70).'%F\n', $total_time);
+		echo '");</script>';
 	}
 	pines_print_time('Script Timing Start');
 	pines_print_time('Script Timing Start');

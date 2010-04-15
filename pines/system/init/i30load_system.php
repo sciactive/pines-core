@@ -64,8 +64,7 @@ if (P_SCRIPT_TIMING) pines_print_time('Load Pines');
  * - configurator - Manages configuration settings for Pines and components.
  * - log_manager - Manages logging features.
  * - entity_manager - Manages data abstraction (entities).
- * - user_manager - Manages users and groups.
- * - ability_manager - Manages users' abilities.
+ * - user_manager - Manages users, groups, and their permissions.
  * - editor - Provides a content editor.
  *
  * When you want to set your component as one of these services (excluding the
