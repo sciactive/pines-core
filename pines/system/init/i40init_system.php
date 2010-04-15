@@ -38,7 +38,7 @@ function __autoload($class_name) {
 	}
 	if (key_exists($class_name, $pines->class_files)) {
 		if (P_SCRIPT_TIMING) pines_print_time("Load [$class_name]");
-		include_once($pines->class_files[$class_name]);
+		include($pines->class_files[$class_name]);
 		if (P_SCRIPT_TIMING) pines_print_time("Load [$class_name]");
 	}
 }

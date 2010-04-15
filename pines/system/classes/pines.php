@@ -160,11 +160,14 @@ class pines extends p_base {
 		if (P_SCRIPT_TIMING) pines_print_time('Find Component Classes');
 		// Fill the lists of components.
 		if ( file_exists('components/') && file_exists('templates/') ) {
-			$this->components = array_merge(pines_scandir('components/'), pines_scandir('templates/'));
+			$this->components = array();
 			$this->all_components = array_merge(pines_scandir('components/', 0, null, false), pines_scandir('templates/', 0, null, false));
 			foreach ($this->all_components as &$cur_value) {
-				if (substr($cur_value, 0, 1) == '.')
+				if (substr($cur_value, 0, 1) == '.') {
 					$cur_value = substr($cur_value, 1);
+				} else {
+					$this->components[] = $cur_value;
+				}
 			}
 			sort($this->components);
 			sort($this->all_components);
@@ -173,7 +176,9 @@ class pines extends p_base {
 		// Fill the list of component classes.
 		$temp_classes = glob('components/com_*/classes/*.php');
 		foreach ($temp_classes as $cur_class) {
-			$this->class_files[preg_replace('/^\/|\.php$/S', '', strrchr($cur_class, '/'))] = $cur_class;
+			$cur_name = strrchr($cur_class, '/');
+			$cur_name = substr($cur_name, 1, strlen($cur_name) -5);
+			$this->class_files[$cur_name] = $cur_class;
 		}
 		// If the current template is missing its class, display the template error page.
 		$template_class_file = "templates/{$this->current_template}/classes/{$this->current_template}.php";

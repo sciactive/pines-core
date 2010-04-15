@@ -21,17 +21,18 @@ if (get_magic_quotes_gpc()) {
 }
 
 if (P_SCRIPT_TIMING) pines_print_time('Load System Classes');
-// Load system classes.
-$temp_classes = pines_scandir("system/classes/");
-foreach ($temp_classes as $cur_class) {
-	/**
-	 * Include each system class.
-	 */
-	if ($cur_class != 'hook_override_extend.php')
-		include_once("system/classes/$cur_class");
-}
-unset($cur_class);
-unset($temp_classes);
+include('system/classes/01_p_base.php');
+include('system/classes/component.php');
+include('system/classes/config.php');
+include('system/classes/depend.php');
+include('system/classes/hook.php');
+include('system/classes/hook_override.php');
+include('system/classes/info.php');
+include('system/classes/menu.php');
+include('system/classes/module.php');
+include('system/classes/page.php');
+include('system/classes/pines.php');
+include('system/classes/template.php');
 if (P_SCRIPT_TIMING) pines_print_time('Load System Classes');
 
 if (P_SCRIPT_TIMING) pines_print_time('Load Pines');

@@ -10,6 +10,7 @@
  */
 defined('P_RUN') or die('Direct access prohibited');
 
+if (P_SCRIPT_TIMING) pines_print_time('Init Components');
 // Run the component init scripts.
 $_p_cominit = glob('components/com_*/init/i*.php');
 // Include the common system functions.
@@ -32,5 +33,6 @@ if ( isset($pines->ability_manager) ) {
 	 */
 	$pines->ability_manager->add('system', 'all', 'All Abilities', 'Let user do anything, regardless of whether they have the ability.');
 }
+if (P_SCRIPT_TIMING) pines_print_time('Init Components');
 
 ?>

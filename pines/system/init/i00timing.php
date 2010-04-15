@@ -22,17 +22,23 @@ if (P_SCRIPT_TIMING) {
 	 */
 	function pines_print_time($message, $print_now = false) {
 		static $time_output;
+		static $message_level = 0;
 		static $time_array = array();
 		$microtime = microtime(true);
-		if (!isset($time_array[$message]))
-			$time_array[$message] = array();
+		if (!isset($time_array[$message])) {
+			$time_array[$message] = array('level' => $message_level);
+			$message_level++;
+		} else {
+			$message_level--;
+		}
 		$time_array[$message][] = $microtime;
 		if ($print_now) {
 			$total_time = $microtime - P_EXEC_TIME;
 			foreach($time_array as $message => $times) {
-				$time = end($times) - reset($times);
+				$prefix = str_repeat('>', $times['level']);
+				$time = $times[count($times)-2] - $times[0];
 				$percent = $time / $total_time * 100;
-				$time_output .= sprintf(str_pad($message, 70).'%.6F (% 5.2F%%)\n', $time, $percent);
+				$time_output .= sprintf(str_pad($prefix.$message, 70).'%.6F (% 5.2F%%)\n', $time, $percent);
 			}
 			echo '<script type="text/javascript">
 (function(message){

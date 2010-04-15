@@ -17,6 +17,7 @@ defined('P_RUN') or die('Direct access prohibited');
  * hooking.
  * 
  * @package Pines
+ * @todo Include the generated code for system classes so hook doesn't have to scan them every time the system is started.
  */
 class hook_override__NAMEHERE_ extends hook_override {
 	/**
