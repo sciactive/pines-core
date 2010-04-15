@@ -15,9 +15,9 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.47pre4 r22446"
-   sodipodi:docname="pines-bw.svg"
+   sodipodi:docname="pines-low.svg"
    style="display:inline"
-   inkscape:export-filename="/home/hunter/htdocs/pines/logo/pines-bw.png"
+   inkscape:export-filename="/home/hunter/htdocs/pines/logo/pines-low.png"
    inkscape:export-xdpi="300"
    inkscape:export-ydpi="300">
   <defs
@@ -987,6 +987,17 @@
            in="SourceGraphic" />
       </feMerge>
     </filter>
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3661"
+       id="radialGradient4267"
+       cx="388.57144"
+       cy="272.36215"
+       fx="388.57144"
+       fy="272.36215"
+       r="362.85715"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0,0.99999995,-1.9786032,0,927.46807,-116.20926)" />
     <filter
        id="filter4410"
        inkscape:label="Drop shadow"
@@ -1100,7 +1111,7 @@
        sodipodi:cy="635.2193"
        sodipodi:rx="362.85715"
        sodipodi:ry="362.85715"
-       d="m 751.42859,635.2193 a 362.85715,362.85715 0 1 1 -725.714296,0 362.85715,362.85715 0 1 1 725.714296,0 z"
+       d="m 751.42859,635.2193 c 0,200.40047 -162.45668,362.85715 -362.85715,362.85715 -200.40047,0 -362.857146,-162.45668 -362.857146,-362.85715 0,-200.40047 162.456676,-362.85715 362.857146,-362.85715 200.40047,0 362.85715,162.45668 362.85715,362.85715 z"
        transform="translate(120.6188,-246.18122)" />
     <path
        sodipodi:type="arc"
@@ -1110,17 +1121,17 @@
        sodipodi:cy="635.2193"
        sodipodi:rx="362.85715"
        sodipodi:ry="362.85715"
-       d="m 751.42859,635.2193 a 362.85715,362.85715 0 1 1 -725.714296,0 362.85715,362.85715 0 1 1 725.714296,0 z"
+       d="m 751.42859,635.2193 c 0,200.40047 -162.45668,362.85715 -362.85715,362.85715 -200.40047,0 -362.857146,-162.45668 -362.857146,-362.85715 0,-200.40047 162.456676,-362.85715 362.857146,-362.85715 200.40047,0 362.85715,162.45668 362.85715,362.85715 z"
        transform="matrix(0.94488189,0,0,0.94488189,142.03613,-211.16913)" />
     <path
        sodipodi:type="arc"
-       style="fill:#000000;fill-opacity:1;stroke:none"
+       style="fill:#0a9800;fill-opacity:1;stroke:none"
        id="path2816-9"
        sodipodi:cx="388.57144"
        sodipodi:cy="635.2193"
        sodipodi:rx="362.85715"
        sodipodi:ry="362.85715"
-       d="m 751.42859,635.2193 a 362.85715,362.85715 0 1 1 -725.714296,0 362.85715,362.85715 0 1 1 725.714296,0 z"
+       d="m 751.42859,635.2193 c 0,200.40047 -162.45668,362.85715 -362.85715,362.85715 -200.40047,0 -362.857146,-162.45668 -362.857146,-362.85715 0,-200.40047 162.456676,-362.85715 362.857146,-362.85715 200.40047,0 362.85715,162.45668 362.85715,362.85715 z"
        transform="matrix(0.90944882,0,0,0.90944882,155.80441,-188.66136)" />
   </g>
   <g
