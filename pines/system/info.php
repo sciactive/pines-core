@@ -17,6 +17,9 @@ return array(
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
 	'short_description' => 'Pines PHP framework core system',
 	'description' => 'The core system of the Pines PHP application framework.',
+	'abilities' => array(
+		array('all', 'All Abilities', 'Let user do anything, regardless of whether they have the ability.')
+	),
 );
 
 ?>
