@@ -108,32 +108,6 @@ class pines extends p_base {
 	public $action;
 
 	/**
-	 * Load and run an action.
-	 *
-	 * @param string $component The component in which the action resides.
-	 * @param string $action The action to run.
-	 * @return mixed The value returned by the action, or 'error_404' if it doesn't exist.
-	 */
-	public function action($component, $action) {
-		global $pines;
-		$component = str_replace('..', 'fail-danger-dont-use-hack-attempt', $component);
-		$action = str_replace('..', 'fail-danger-dont-use-hack-attempt', $action);
-		$action_file = ($component == 'system' ? $component : "components/$component")."/actions/$action.php";
-		if ( file_exists($action_file) ) {
-			$this->component = $component;
-			$this->action = $action;
-			unset($component);
-			unset($action);
-			/**
-			 * Run the action's file.
-			 */
-			return require($action_file);
-		} else {
-			return 'error_404';
-		}
-	}
-
-	/**
 	 * Set up the Pines object.
 	 */
 	public function __construct() {
@@ -221,6 +195,24 @@ class pines extends p_base {
 		if ( empty($this->request_component) ) $this->request_component = $this->config->default_component;
 		if ( empty($this->request_action) ) $this->request_action = 'default';
 		if (P_SCRIPT_TIMING) pines_print_time('Get Requested Action');
+
+		if (P_SCRIPT_TIMING) pines_print_time('Display Pending Notices');
+		// Check the cookies for notices and errors awaiting after a redirect.
+		if ($_COOKIE['p_notices']) {
+			$notices = (array) json_decode($_COOKIE['p_notices']);
+			foreach ($notices as $cur_notice) {
+				$this->page->notice($cur_notice);
+			}
+			setcookie('p_notices', '');
+		}
+		if ($_COOKIE['p_errors']) {
+			$errors = (array) json_decode($_COOKIE['p_errors']);
+			foreach ($errors as $cur_error) {
+				$this->page->error($cur_error);
+			}
+			setcookie('p_errors', '');
+		}
+		if (P_SCRIPT_TIMING) pines_print_time('Display Pending Notices');
 	}
 
 	/**
@@ -293,6 +285,59 @@ class pines extends p_base {
 		} else {
 			return $this->$name = $value;
 		}
+	}
+
+	/**
+	 * Load and run an action.
+	 *
+	 * @param string $component The component in which the action resides.
+	 * @param string $action The action to run.
+	 * @return mixed The value returned by the action, or 'error_404' if it doesn't exist.
+	 */
+	public function action($component, $action) {
+		global $pines;
+		$component = str_replace('..', 'fail-danger-dont-use-hack-attempt', $component);
+		$action = str_replace('..', 'fail-danger-dont-use-hack-attempt', $action);
+		$action_file = ($component == 'system' ? $component : "components/$component")."/actions/$action.php";
+		if ( file_exists($action_file) ) {
+			$this->component = $component;
+			$this->action = $action;
+			unset($component);
+			unset($action);
+			/**
+			 * Run the action's file.
+			 */
+			return require($action_file);
+		} else {
+			return 'error_404';
+		}
+	}
+
+	/**
+	 * Safely redirect to a new URL.
+	 *
+	 * Redirect the user to a new URL, while still displaying any pending
+	 * notices and errors. Keep in mind that notices and errors will only be
+	 * displayed if you redirect the user to a Pines installation. (A query
+	 * string is appended to the URL with notice and error text, which Pines
+	 * will display.)
+	 *
+	 * This function will inform the user that they are being redirected if
+	 * their browser doesn't support HTTP redirection.
+	 *
+	 * @param string $url The URL to send the user to.
+	 * @param int $code The HTTP code to send to the browser.
+	 */
+	public function redirect($url, $code = 303) {
+		$notices = $this->page->get_notice();
+		$errors = $this->page->get_error();
+		if ($notices)
+			setcookie('p_notices', json_encode($notices));
+		if ($errors)
+			setcookie('p_errors', json_encode($errors));
+		header('X', true, (int) $code);
+		header('Location: '.$url);
+		$this->page->override = true;
 	}
 }
 

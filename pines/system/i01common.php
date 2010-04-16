@@ -75,8 +75,21 @@ function action($component, $action) {
 }
 
 /**
+ * Shortcut to $pines->redirect().
+ *
+ * @uses pines::redirect() Forwards parameters and returns the result.
+ * @param string $url The URL to send the user to.
+ * @param int $code The HTTP code to send to the browser.
+ */
+function redirect($url, $code = 303) {
+	global $pines;
+	$pines->redirect($url, $code);
+}
+
+/**
  * Shortcut to $pines->page->error().
  *
+ * @uses page::error() Forwards parameters and returns the result.
  * @param string $text Information to display to the user.
  */
 function pines_error($text) {
@@ -87,6 +100,7 @@ function pines_error($text) {
 /**
  * Shortcut to $pines->page->notice().
  *
+ * @uses page::notice() Forwards parameters and returns the result.
  * @param string $text Information to display to the user.
  */
 function pines_notice($text) {
@@ -105,12 +119,12 @@ function pines_notice($text) {
  * check whether a different user has an ability. This helps user managers use a
  * "login" ability, which can be used to disable an account.
  *
- * @uses $pines->user_manager->gatekeeper() Forwards parameters and returns the result.
+ * @uses user_manager_inerface::gatekeeper() Forwards parameters and returns the result.
  * @param string $ability The ability to provide.
  * @param user $user The user to provide.
  * @return bool The result is returned if there is a user management component, otherwise it returns true.
  */
-function gatekeeper($ability = NULL, $user = NULL) {
+function gatekeeper($ability = null, $user = null) {
 	global $pines;
 	if (!isset($pines->user_manager))
 		return true;
@@ -125,12 +139,12 @@ function gatekeeper($ability = NULL, $user = NULL) {
  * script. If there is no user management component, the user is directed to the
  * home page and the script terminates.
  *
- * @uses $pines->user_manager->punt_user() Forwards parameters and returns the result.
+ * @uses user_manager_inerface::punt_user() Forwards parameters and returns the result.
  * @param string $message An optional message to display to the user.
  * @param string $url An optional URL to be included in the query data of the redirection url.
  * @return bool The result is returned if there is a user management component, otherwise it returns true.
  */
-function punt_user($message = NULL, $url = NULL) {
+function punt_user($message = null, $url = null) {
 	global $pines;
 	if (!isset($pines->user_manager)) {
 		header('Location: '.pines_url());
@@ -142,7 +156,7 @@ function punt_user($message = NULL, $url = NULL) {
 /**
  * Shortcut to $pines->depend->check().
  *
- * @uses $pines->depend->check() Forwards parameters and returns the result.
+ * @uses depend::check() Forwards parameters and returns the result.
  * @return bool The result is returned from the dependency checker.
  */
 function pines_depend() {
@@ -156,7 +170,7 @@ function pines_depend() {
 /**
  * Shortcut to $pines->log_manager->log().
  *
- * @uses $pines->log_manager->log() Forwards parameters and returns the result.
+ * @uses log_manager_interface::log() Forwards parameters and returns the result.
  * @return bool The result is returned if there is a log management component, otherwise it returns true.
  */
 function pines_log() {
@@ -170,7 +184,7 @@ function pines_log() {
 /**
  * Shortcut to $pines->template->url().
  *
- * @uses $pines->template->url() Forwards parameters and returns the result.
+ * @uses template::url() Forwards parameters and returns the result.
  * @return bool The result is returned if there is a template, otherwise it returns null.
  */
 function pines_url() {
