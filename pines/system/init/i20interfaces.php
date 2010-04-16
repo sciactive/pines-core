@@ -747,7 +747,7 @@ interface user_manager_interface {
 	 * @param user $user The user to check. If none is given, the current user is used.
 	 * @return bool
 	 */
-	public function gatekeeper($ability = NULL, $user = NULL);
+	public function gatekeeper($ability = null, $user = null);
 	/**
 	 * Gets an array of the components which can be a default component.
 	 *
@@ -769,7 +769,7 @@ interface user_manager_interface {
 	 * @param group $parent The group to descend from.
 	 * @return array The array of groups.
 	 */
-	public function get_group_descendents($parent = NULL);
+	public function get_group_descendents($parent = null);
 	/**
 	 * Gets a group's groupname by its GID.
 	 *

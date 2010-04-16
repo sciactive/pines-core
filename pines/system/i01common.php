@@ -65,6 +65,7 @@ if (!function_exists('is_clean_filename')) {
 /**
  * Shortcut to $pines->action().
  *
+ * @uses pines::action() Forwards parameters and returns the result.
  * @param string $component The component in which the action resides.
  * @param string $action The action to run.
  * @return mixed The value returned by the action, or 'error_404' if it doesn't exist.
@@ -119,7 +120,7 @@ function pines_notice($text) {
  * check whether a different user has an ability. This helps user managers use a
  * "login" ability, which can be used to disable an account.
  *
- * @uses user_manager_inerface::gatekeeper() Forwards parameters and returns the result.
+ * @uses user_manager_interface::gatekeeper() Forwards parameters and returns the result.
  * @param string $ability The ability to provide.
  * @param user $user The user to provide.
  * @return bool The result is returned if there is a user management component, otherwise it returns true.
@@ -139,7 +140,7 @@ function gatekeeper($ability = null, $user = null) {
  * script. If there is no user management component, the user is directed to the
  * home page and the script terminates.
  *
- * @uses user_manager_inerface::punt_user() Forwards parameters and returns the result.
+ * @uses user_manager_interface::punt_user() Forwards parameters and returns the result.
  * @param string $message An optional message to display to the user.
  * @param string $url An optional URL to be included in the query data of the redirection url.
  * @return bool The result is returned if there is a user management component, otherwise it returns true.
@@ -184,7 +185,7 @@ function pines_log() {
 /**
  * Shortcut to $pines->template->url().
  *
- * @uses template::url() Forwards parameters and returns the result.
+ * @uses template_interface::url() Forwards parameters and returns the result.
  * @return bool The result is returned if there is a template, otherwise it returns null.
  */
 function pines_url() {

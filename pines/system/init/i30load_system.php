@@ -21,17 +21,53 @@ if (get_magic_quotes_gpc()) {
 }
 
 if (P_SCRIPT_TIMING) pines_print_time('Load System Classes');
+/**
+ * Base Class
+ */
 include('system/classes/01_p_base.php');
+/**
+ * Component Class
+ */
 include('system/classes/component.php');
+/**
+ * Config Class
+ */
 include('system/classes/config.php');
+/**
+ * Depend Class
+ */
 include('system/classes/depend.php');
+/**
+ * Hook Class
+ */
 include('system/classes/hook.php');
+/**
+ * Hook Override Class
+ */
 include('system/classes/hook_override.php');
+/**
+ * Info Class
+ */
 include('system/classes/info.php');
+/**
+ * Menu Class
+ */
 include('system/classes/menu.php');
+/**
+ * Module Class
+ */
 include('system/classes/module.php');
+/**
+ * Page Class
+ */
 include('system/classes/page.php');
+/**
+ * Pines Class
+ */
 include('system/classes/pines.php');
+/**
+ * Template Class
+ */
 include('system/classes/template.php');
 if (P_SCRIPT_TIMING) pines_print_time('Load System Classes');
 

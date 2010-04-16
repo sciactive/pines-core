@@ -327,6 +327,7 @@ class pines extends p_base {
 	 *
 	 * @param string $url The URL to send the user to.
 	 * @param int $code The HTTP code to send to the browser.
+	 * @todo Include a page to notify the user about the redirection.
 	 */
 	public function redirect($url, $code = 303) {
 		$notices = $this->page->get_notice();
