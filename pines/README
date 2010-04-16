@@ -7,6 +7,7 @@ Planned features for versions <=1.0:
 --------------------------------------------------------------------------------
 +Installer/Package Manager.
 +Use entity references in com_user.
++Load JS files dynamically to better support AJAX.
 +Fix and improve com_newsletter.
 +Full SAWASC A implementation for better security.
 	(http://sawasc.sciactive.com/)
