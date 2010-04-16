@@ -13,10 +13,22 @@ defined('P_RUN') or die('Direct access prohibited');
 if (P_SCRIPT_TIMING) pines_print_time('Define Service Interfaces');
 
 /**
+ * A base for all interfaces in Pines.
+ * @package Pines
+ */
+interface p_base_interface { }
+
+/**
+ * A base interface for all components.
+ * @package Pines
+ */
+interface component_interface extends p_base_interface { }
+
+/**
  * Objects which hold data from some type of storage.
  * @package Pines
  */
-interface data_object_interface {
+interface data_object_interface extends p_base_interface {
 	/**
 	 * Delete the object from storage.
 	 *
@@ -218,7 +230,7 @@ interface group_interface extends able_object_interface {
  * A Pines template.
  * @package Pines
  */
-interface template_interface {
+interface template_interface extends p_base_interface {
 	/**
 	 * Format a menu.
 	 *
@@ -247,7 +259,7 @@ interface template_interface {
  * Manages Pines configuration.
  * @package Pines
  */
-interface configurator_interface {
+interface configurator_interface extends component_interface {
 	/**
 	 * Disables a component.
 	 *
@@ -284,7 +296,7 @@ interface configurator_interface {
  * @property array $info The info object of the component.
  * @property string $name The component.
  */
-interface configurator_component_interface {
+interface configurator_component_interface extends p_base_interface {
 	/**
 	 * Load a component's configuration and info.
 	 * @param string $component The component to load.
@@ -332,7 +344,7 @@ interface configurator_component_interface {
  * Logs activity within the framework.
  * @package Pines
  */
-interface log_manager_interface {
+interface log_manager_interface extends component_interface {
 	/**
 	 * Log an entry to the Pines log.
 	 *
@@ -347,7 +359,7 @@ interface log_manager_interface {
  * Database abstraction layer.
  * @package Pines
  */
-interface entity_manager_interface {
+interface entity_manager_interface extends component_interface {
 	/**
 	 * Delete an entity from the database.
 	 *
@@ -681,7 +693,7 @@ interface entity_interface extends data_object_interface {
  * @package Pines
  * @todo Finish describing user manager's entity obligations.
  */
-interface user_manager_interface {
+interface user_manager_interface extends component_interface {
 	/**
 	 * Check an entity's permissions for the currently logged in user.
 	 *
@@ -830,7 +842,7 @@ interface user_manager_interface {
  * Content editor.
  * @package Pines
  */
-interface editor_interface {
+interface editor_interface extends component_interface {
 	/**
 	 * Load the editor.
 	 *

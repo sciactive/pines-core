@@ -14,6 +14,6 @@ defined('P_RUN') or die('Direct access prohibited');
  * A base for all classes in Pines.
  * @package Pines
  */
-class p_base { }
+class p_base implements p_base_interface { }
 
 ?>
