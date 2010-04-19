@@ -48,6 +48,10 @@ class menu extends p_base {
 	 * array as an object for each menu. It is the current template's job to
 	 * return the code that gets placed into the module's content.
 	 *
+	 * It will remove entries whose dependencies aren't met and ['path'], and
+	 * call $pines->template->url with the parameters found in ['href']
+	 * variables, if they are an array.
+	 *
 	 * This is an example of the array passed to $pines->template->menu():
 	 *
 	 * <pre>
@@ -88,8 +92,27 @@ class menu extends p_base {
 		$menus = array();
 		// Go through each entry and organize them into a multidimensional
 		// array.
-		foreach ($this->menu_arrays as $cur_entry) {
+		foreach ($this->menu_arrays as &$cur_entry) {
+			if ($cur_entry['depend']) {
+				if ($notmet)
+					$notmet = false;
+				foreach ($cur_entry['depend'] as $key => &$value) {
+					if ($key == 'children')
+						continue;
+					if (!$pines->depend->check($key, $value)) {
+						$notmet = true;
+						break;
+					}
+				}
+				unset($value);
+				if ($notmet)
+					continue;
+			}
+			// Transform URL arrays into actual URLs.
+			if ($cur_entry['href'] && is_array($cur_entry['href']))
+				$cur_entry['href'] = call_user_func_array(array($pines->template, 'url'), $cur_entry['href']);
 			$tmp_path = explode('/', $cur_entry['path']);
+			unset($cur_entry['path']);
 			$cur_menus =& $menus;
 			foreach ($tmp_path as $cur_path) {
 				if (!isset($cur_menus[$cur_path]))
@@ -106,11 +129,12 @@ class menu extends p_base {
 			 */
 			$cur_menus[0] = $cur_entry;
 		}
+		unset($cur_entry);
 
 		// Clean up the full menu.
 		$this->cleanup($menus);
 
-		foreach ($menus as $cur_menu) {
+		foreach ($menus as &$cur_menu) {
 			$module = new module('system', 'null', $cur_menu[0]['position']);
 			if (isset($cur_menu[0]['text']))
 				$module->title = $cur_menu[0]['text'];
@@ -121,11 +145,9 @@ class menu extends p_base {
 	/**
 	 * Clean up the menu array.
 	 *
-	 * cleanup() will remove entries whose dependencies aren't met, and call
-	 * $pines->template->url with the parameters found in ['href'] variables,
-	 * if they are an array. It checks the "children" dependency for menus that
+	 * cleanup() checks the "children" dependency for menus that
 	 * require children. Set it to true to remove the entry if it has no
-	 * children. It will also remove ['path'] and ['depend'].
+	 * children. It will also remove ['depend'].
 	 *
 	 * @access private
 	 * @param array $array The menu array.
@@ -133,31 +155,28 @@ class menu extends p_base {
 	 * @return bool True if the entry passes all tests, false otherwise.
 	 */
 	private function cleanup(&$array, $is_top_menu = true) {
-		global $pines;
 		// If this isn't a top menu, and has no menu entry, return false.
 		if (!$is_top_menu && !$array[0])
 			return false;
-		// Check all the dependencies. If any are not met, return false.
-		if ($array[0]['depend']) {
-			foreach ($array[0]['depend'] as $key => $value) {
-				if ($key == 'children')
+		$count = count($array);
+		if ($count > 1) {
+			// Clean up all its children.
+			foreach ($array as $key => &$value) {
+				if ($key === 0)
 					continue;
-				if (!$pines->depend->check($key, $value))
-					return false;
+				if (!$this->cleanup($value, false)) {
+					unset($array[$key]);
+					$count--;
+				}
 			}
+			// If the menu requires children and has none, return false.
+			if ($array[0]['depend']['children'] && $count === 1)
+				return false;
+		} else {
+			// It has no children.
+			if ($array[0]['depend']['children'])
+				return false;
 		}
-		// Transform URL arrays into actual URLs.
-		if ($array[0]['href'] && is_array($array[0]['href']))
-			$array[0]['href'] = call_user_func_array(array($pines->template, 'url'), $array[0]['href']);
-		// Clean up all its children.
-		foreach ($array as $key => &$value) {
-			if (!is_int($key) && !$this->cleanup($value, false))
-				unset($array[$key]);
-		}
-		// If the menu requires children and has none, return false.
-		if ($array[0]['depend']['children'] && count($array) == 1)
-			return false;
-		unset($array[0]['path']);
 		unset($array[0]['depend']);
 		return true;
 	}
