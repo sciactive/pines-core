@@ -58,42 +58,42 @@ class template extends p_base implements template_interface {
 	 */
 	public function url($component = null, $action = null, $params = array(), $full_location = false) {
 		global $pines;
-		if ( is_null($params) ) $params = array();
+		if ( !$params ) $params = array();
 		if ( $pines->config->allow_template_override && isset($_REQUEST['template']) )
 			$params['template'] = $_REQUEST['template'];
 		$return = ($full_location) ? $pines->config->full_location : $pines->config->rela_location;
-		if ( is_null($component) && empty($params) )
+		if ( !isset($component) && !$params )
 			return $return;
 		if ( $pines->config->url_rewriting ) {
 			if ( !$pines->config->use_htaccess )
 				$return .= P_INDEX.'/';
-			if ( !is_null($component) ) {
+			if ( isset($component) ) {
 				// Get rid of 'com_', if it's not the system component.
-				$return .= ($component == 'system' ? $component : substr($component, 4)).'/';
-				if (!is_null($action))
+				$return .= ($component == 'system' ? "$component/" : substr($component, 4)).'/';
+				if (isset($action))
 					$return .= "$action/";
 			}
-			if ( !empty($params) ) {
+			if ( $params ) {
 				$return .= '?';
 				foreach ($params as $key => $value) {
-					if ( !empty($param_return) )
+					if ( $param_return )
 						$param_return .= '&';
-					$param_return .= "$key=$value";
+					$param_return .= $key.'='.urlencode($value);
 				}
 				$return .= $param_return;
 			}
 		} else {
 			$return .= ($pines->config->use_htaccess) ? '?' : P_INDEX.'?';
-			if ( !is_null($component) ) {
+			if ( isset($component) ) {
 				$param_return = "option=$component";
-				if (!is_null($action))
+				if (isset($action))
 					$param_return .= "&action=$action";
 			}
-			if ( !empty($params) ) {
+			if ( $params ) {
 				foreach ($params as $key => $value) {
-					if ( !empty($param_return) )
+					if ( $param_return )
 						$param_return .= '&';
-					$param_return .= "$key=$value";
+					$param_return .= $key.'='.urlencode($value);
 				}
 			}
 			$return .= $param_return;
