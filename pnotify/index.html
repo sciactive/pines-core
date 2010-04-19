@@ -34,13 +34,22 @@
 				text-shadow: 2px 2px 1px black;
 			}
 			#header {
-				height: 70px;
-				background: transparent url(../pines/templates/tpl_pines/images/header.png) no-repeat top left;
+				height: 68px;
+				position: relative;
 			}
-			#header h1 {
-				margin: 0;
-				padding: 0;
-				visibility: hidden;
+			#switcher-container {
+				position: absolute;
+				top: 5px;
+				right: 5px;
+			}
+			#header img.header {
+				position: absolute;
+			}
+			#header h1.header {
+				text-align: center;
+			}
+			.main-description {
+				font-size: 1.2em;
 			}
 			h2 {
 				margin: .83em 0 .1em 0;
@@ -83,16 +92,6 @@
 			input.ui-button {
 				padding: 2px !important;
 				font-size: .92em !important;
-			}
-
-			/* Change the default position of the notices, to allow room for the
-			   theme switcher widget. */
-			.ui-pnotify {
-				top: 35px;
-				right: 15px;
-			}
-			.ui-pnotify-history-container {
-				right: 175px;
 			}
 
 			/* Custom styled notice CSS */
@@ -480,16 +479,23 @@
 		<![endif]-->
 	</head>
 	<body>
-		<div style="float: right;"><div id="switcher"></div></div>
 		<div class="ui-widget-content ui-corner-all ui-helper-clearfix">
 			<div class="wrapper">
-				<div id="header"><h1>Pines</h1></div>
-				<h2>Pines Notify jQuery Plugin</h2>
-				<p>
-					The Pines Notify plugin was developed by Hunter Perrin as part
+				<div id="header" class="ui-widget-header ui-corner-all">
+					<div id="switcher-container"><div id="switcher"></div></div>
+					<img class="header" src="../pines/templates/tpl_pines/images/header.png" alt="Pines Logo" />
+					<h1 class="header">Pines Notify jQuery Plugin</h1>
+				</div>
+				<p class="main-description">
+					Pines Notify is a JavaScript notification plugin for the
+					jQuery JavaScript library, developed by Hunter Perrin as part
 					of <a href="http://sourceforge.net/projects/pines/">Pines</a>.
-					Try out different themes using the selector in the top right
-					corner of this page.
+					It is licensed under the
+					<a href="http://www.gnu.org/licenses/agpl-3.0.html">GNU Affero GPL</a>.
+					It is designed to provide maximum flexibility, while
+					still being easy to use and easy to implement. Try out
+					different themes using the selector in the top right corner
+					of this page.
 				</p>
 				<h2>Features</h2>
 				<div class="ui-helper-clearfix">
@@ -770,6 +776,11 @@
 
 				<div class="pf-group ui-widget-content ui-corner-all">
 					Custom Stacks:
+					<br />
+					<input value="What are stacks?" onclick="$.pnotify({
+						pnotify_title: 'Pines Notify Stacks',
+						pnotify_text: ''
+					});" type="button" />
 					<br />
 					<input value="Notice" onclick="void show_stack_topleft();" type="button" />
 					<input value="Error" onclick="void show_stack_topleft(true);" type="button" />

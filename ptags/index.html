@@ -24,13 +24,22 @@
 				padding: 10px;
 			}
 			#header {
-				height: 70px;
-				background: transparent url(../pines/templates/tpl_pines/images/header.png) no-repeat top left;
+				height: 68px;
+				position: relative;
 			}
-			#header h1 {
-				margin: 0;
-				padding: 0;
-				visibility: hidden;
+			#switcher-container {
+				position: absolute;
+				top: 5px;
+				right: 5px;
+			}
+			#header img.header {
+				position: absolute;
+			}
+			#header h1.header {
+				text-align: center;
+			}
+			.main-description {
+				font-size: 1.2em;
 			}
 			h2 {
 				margin: .83em 0 .1em 0;
@@ -94,16 +103,23 @@
 		</script>
 	</head>
 	<body>
-		<div style="float: right;"><div id="switcher"></div></div>
 		<div class="ui-widget-content ui-corner-all ui-helper-clearfix">
 			<div class="wrapper">
-				<div id="header"><h1>Pines</h1></div>
-				<h2>Pines Tags jQuery Plugin</h2>
-				<p>
-					The Pines Tags plugin was developed by Hunter Perrin as part
+				<div id="header" class="ui-widget-header ui-corner-all">
+					<div id="switcher-container"><div id="switcher"></div></div>
+					<img class="header" src="../pines/templates/tpl_pines/images/header.png" alt="Pines Logo" />
+					<h1 class="header">Pines Tags jQuery Plugin</h1>
+				</div>
+				<p class="main-description">
+					Pines Tags is a JavaScript content tag editor plugin for the
+					jQuery JavaScript library, developed by Hunter Perrin as part
 					of <a href="http://sourceforge.net/projects/pines/">Pines</a>.
-					Try out different themes using the selector in the top right
-					corner of this page.
+					It is licensed under the
+					<a href="http://www.gnu.org/licenses/agpl-3.0.html">GNU Affero GPL</a>.
+					It is designed to provide maximum flexibility, while
+					still being easy to use and easy to implement. Try out
+					different themes using the selector in the top right corner
+					of this page.
 				</p>
 				<h2>Features</h2>
 				<div class="ui-helper-clearfix">
