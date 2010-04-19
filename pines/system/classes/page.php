@@ -132,7 +132,7 @@ class page extends p_base {
 	 * @return int The order in which the module was placed. This will be the last key + 1 if the desired order is already taken.
 	 */
 	public function attach_module(&$module, $position, $order = null) {
-		if ( is_null($order) ) {
+		if ( !isset($order) ) {
 			if ( isset($this->modules[$position]) ) {
 				end($this->modules[$position]);
 				$order = key($this->modules[$position]) + 1;
@@ -164,7 +164,7 @@ class page extends p_base {
 	 * @return bool Whether a matching module was found and successfully deleted.
 	 */
 	public function detach_module(&$module, $position, $order = null) {
-		if ( is_null($order) ) {
+		if ( !isset($order) ) {
 			if ( isset($this->modules[$position]) ) {
 				end($this->modules[$position]);
 				$order = key($this->modules[$position]);
