@@ -105,14 +105,14 @@
 					pgrid_toolbar: true,
 					pgrid_toolbar_contents: [
 						{type: 'button', text: 'New', extra_class: 'icon picon_16x16_actions_document-new', selection_optional: true, url: 'new.html'},
-						{type: 'button', text: 'View', extra_class: 'icon picon_16x16_mimetypes_text-x-generic', url: 'view.html?username=#title#'},
+						{type: 'button', text: 'View', extra_class: 'icon picon_16x16_mimetypes_text-x-generic', url: 'view.html?username=__title__'},
 						{type: 'button', text: 'Edit', extra_class: 'icon picon_16x16_actions_document-open', double_click: true, click: function(e, rows){
 							alert('Editing '+rows.attr('title')+'.');
 						}},
 						{type: 'separator'},
-						{type: 'button', text: 'Google', extra_class: 'icon picon_16x16_actions_system-search', multi_select: true, url: 'http://google.com/search?q=#col_1#', delimiter: '+', new_window: true},
-						{type: 'button', text: 'Email', extra_class: 'icon picon_16x16_actions_mail-message-new', multi_select: true, url: 'mailto:#col_2#', delimiter: ','},
-						{type: 'button', text: 'All', extra_class: 'icon picon_16x16_actions_mail-message-new', multi_select: true, return_all_rows: true, url: 'mailto:#col_2#', delimiter: ','},
+						{type: 'button', text: 'Google', extra_class: 'icon picon_16x16_actions_system-search', multi_select: true, url: 'http://google.com/search?q=__col_1__', delimiter: '+', new_window: true},
+						{type: 'button', text: 'Email', extra_class: 'icon picon_16x16_actions_mail-message-new', multi_select: true, url: 'mailto:__col_2__', delimiter: ','},
+						{type: 'button', text: 'All', extra_class: 'icon picon_16x16_actions_mail-message-new', multi_select: true, return_all_rows: true, url: 'mailto:__col_2__', delimiter: ','},
 						{type: 'separator'},
 						{type: 'text', label: 'SMS: ', extra_class: 'icon picon_16x16_stock_generic_stock_cell-phone', attributes: {size: 15}, load: function(textbox){
 							textbox.focus(function(){
