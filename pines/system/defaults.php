@@ -75,7 +75,6 @@ return array(
 		'cname' => 'URL Rewriting',
 		'description' => 'Use url rewriting engine.',
 		'value' => false,
-		'peruser' => true,
 	),
 	array(
 		'name' => 'use_htaccess',
