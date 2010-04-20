@@ -87,14 +87,12 @@ return array(
 		'cname' => 'Default Component',
 		'description' => 'This component should have a "default" action. That action will be called when the user first accesses Pines. If an action is specified, but no component, this one will be used.',
 		'value' => 'com_user',
-		'peruser' => true,
 	),
 	array(
 		'name' => 'timezone',
 		'cname' => 'System Timezone',
 		'description' => 'The timezone the system should use as its default. User\'s timezones will default to this.',
 		'value' => date_default_timezone_get(),
-		'peruser' => true,
 	),
 	array(
 		'name' => 'debug_mode',
