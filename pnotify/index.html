@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-		<title>Notify</title>
+		<title>Pines Notify</title>
 		<!-- jQuery -->
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.js"></script>
 		<!-- jQuery UI -->
@@ -174,22 +174,20 @@
 
 				$.pnotify({
 					pnotify_title: "Pines Notify",
-					pnotify_text: "Welcome to Pines Notify.",
+					pnotify_text: "Welcome. Try hovering over me. You can click anything behind me.",
 					pnotify_nonblock: true,
+					pnotify_mouse_reset: false,
 					pnotify_before_close: function(pnotify){
 						// You can access the notice's options with this. It is read only.
 						//pnotify.opts.pnotify_text;
 
-						// You could change the notices text before allowing it
-						// to close with something like this:
-						//pnotify.pnotify({
-						//	pnotify_text: "Enjoy your stay.",
-						//	pnotify_before_close: null
-						//});
-						//pnotify.pnotify_queue_remove();
-						//return false;
-
-						pnotify.pnotify({pnotify_text: "Enjoy your stay."});
+						// You can change the notice's options after the timer like this:
+						pnotify.pnotify({
+							pnotify_title: pnotify.opts.pnotify_title+" - Enjoy your Stay",
+							pnotify_before_close: null
+						});
+						pnotify.pnotify_queue_remove();
+						return false;
 					}
 				});
 
@@ -623,6 +621,11 @@
 						pnotify_text: 'I have no icon.',
 						pnotify_notice_icon: ''
 					});" type="button" />
+					<input value="Shadow Notice" onclick="$.pnotify({
+						pnotify_title: 'Shadow Notice',
+						pnotify_text: 'I have a shadow. It makes me pop out!',
+						pnotify_shadow: true
+					});" type="button" />
 					<input value="Pretend Loader" onclick="fake_load();" type="button" />
 					<input value="Dynamic Notice" onclick="dyn_notice();" type="button" />
 					<br style="margin-bottom: 5px;" />
@@ -632,11 +635,18 @@
 						permanotice = $.pnotify({
 							pnotify_title: 'Now Look Here',
 							pnotify_text: 'There\'s something you need to know, and I won\'t go away until you come to grips with it.',
+							pnotify_nonblock: true,
 							pnotify_hide: false,
 							pnotify_closer: false
 						});
 					}" type="button" />
 					<input value="Remove Permanotice" onclick="if (permanotice.pnotify_remove) permanotice.pnotify_remove();" type="button" />
+					<input value="Non-Blocking Notice" onclick="$.pnotify({
+						pnotify_title: 'Non-Blocking Notice',
+						pnotify_text: 'I\'m a special kind of notice called &quot;non-blocking&quot;. When you hover over me I\'ll fade to show the elements underneath. Feel free to click any of them just like I wasn\'t even here.\n\nUnfortunately, HTML links don\'t trigger in Firefox, due to security settings.',
+						pnotify_nonblock: true,
+						pnotify_nonblock_opacity: .2
+					});" type="button" />
 					<input value="Form Notice" onclick="var notice = $.pnotify({
 						pnotify_text: $('#form_notice').html(),
 						pnotify_notice_icon: '',
@@ -697,11 +707,6 @@
 						pnotify_text: 'I have an additional class that\'s used to give me special styling. I always wanted to be pretty.',
 						pnotify_addclass: 'custom',
 						pnotify_notice_icon: 'icon picon_32x32_emotes_face-monkey'
-					});" type="button" />
-					<input value="Shadow Notice" onclick="$.pnotify({
-						pnotify_title: 'Shadow Notice',
-						pnotify_text: 'I have a shadow. It makes me pop out!',
-						pnotify_shadow: true
 					});" type="button" />
 				</div>
 
