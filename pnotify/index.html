@@ -89,9 +89,10 @@
 			.ui-widget {
 				font-size: 75% !important;
 			}
-			input.ui-button {
+			.pf-group input.ui-button {
 				padding: 2px !important;
 				font-size: .92em !important;
+				margin-bottom: 3px;
 			}
 
 			/* Custom styled notice CSS */
@@ -158,6 +159,17 @@
 			}
 			/* ]]> */
 		</style>
+		<!--[if lt IE 8]>
+		<style type="text/css">
+			.featurelist ul {
+				padding-left: 1em;
+				list-style-type: disc;
+			}
+			.featurelist ul .ui-icon {
+				display: none;
+			}
+		</style>
+		<![endif]-->
 		<script type="text/javascript">
 			// <![CDATA[
 
@@ -623,7 +635,7 @@
 					});" type="button" />
 					<input value="Shadow Notice" onclick="$.pnotify({
 						pnotify_title: 'Shadow Notice',
-						pnotify_text: 'I have a shadow. It makes me pop out!',
+						pnotify_text: 'I have a shadow. It makes me pop out!\n\nNote: Shadows do not work in IE.',
 						pnotify_shadow: true
 					});" type="button" />
 					<input value="Pretend Loader" onclick="fake_load();" type="button" />
@@ -643,7 +655,7 @@
 					<input value="Remove Permanotice" onclick="if (permanotice.pnotify_remove) permanotice.pnotify_remove();" type="button" />
 					<input value="Non-Blocking Notice" onclick="$.pnotify({
 						pnotify_title: 'Non-Blocking Notice',
-						pnotify_text: 'I\'m a special kind of notice called &quot;non-blocking&quot;. When you hover over me I\'ll fade to show the elements underneath. Feel free to click any of them just like I wasn\'t even here.\n\nUnfortunately, HTML links don\'t trigger in Firefox, due to security settings.',
+						pnotify_text: 'I\'m a special kind of notice called &quot;non-blocking&quot;. When you hover over me I\'ll fade to show the elements underneath. Feel free to click any of them just like I wasn\'t even here.\n\nNote: HTML links don\'t trigger in Firefox or IE, due to security settings.',
 						pnotify_nonblock: true,
 						pnotify_nonblock_opacity: .2
 					});" type="button" />
