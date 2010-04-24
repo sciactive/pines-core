@@ -136,36 +136,14 @@ class depend extends p_base {
 		global $pines;
 		if (preg_match('/[!&|()]/', $value))
 			return $this->simple_parse($value, array($pines->depend, 'check_component'));
-		return in_array($value, $pines->components);
-	}
-
-	/**
-	 * Check a component's version.
-	 *
-	 * Operators should be placed betwen the component name and the version
-	 * number to test. Such as, "com_xmlparser>=1.1.0". The available operators
-	 * are:
-	 *
-	 * - =
-	 * - <
-	 * - >
-	 * - <=
-	 * - >=
-	 * - <>
-	 *
-	 * Uses simple_parse() to provide simple logic.
-	 *
-	 * @param string $value The value to check.
-	 * @return bool The result of the version comparison.
-	 */
-	function check_component_version($value) {
-		global $pines;
-		if (preg_match('/[!&|()]/', $value))
-			return $this->simple_parse($value, array($pines->depend, 'check_component_version'));
 		$component = preg_replace('/([a-z0-9_]+)([<>=]{1,2})(.+)/S', '$1', $value);
 		$compare = preg_replace('/([a-z0-9_]+)([<>=]{1,2})(.+)/S', '$2', $value);
-		$required = preg_replace('/([a-z0-9_]+)([<>=]{1,2})(.+)/S', '$3', $value);
-		return version_compare($pines->info->$component->version, $required, $compare);
+		$required = preg_replace(' /([a-z0-9_]+)([<>=]{1,2})(.+)/S', '$3', $value);
+		if ($required == '') {
+			return in_array($value, $pines->components);
+		} else {
+			return version_compare($pines->info->$component->version, $required, $compare);
+		}
 	}
 
 	/**
