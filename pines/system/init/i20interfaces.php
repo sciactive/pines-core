@@ -783,25 +783,11 @@ interface user_manager_interface extends component_interface {
 	 */
 	public function get_group_descendents($parent = null);
 	/**
-	 * Gets a group's groupname by its GID.
-	 *
-	 * @param int $id The group's GID.
-	 * @return string|null The groupname if the group exists, null if it doesn't.
-	 */
-	public function get_groupname($id);
-	/**
 	 * Gets all groups.
 	 *
 	 * @return array An array of group entities.
 	 */
 	public function get_groups();
-	/**
-	 * Gets a user's username by its UID.
-	 *
-	 * @param int $id The user's UID.
-	 * @return string|null The username if the user exists, null if it doesn't.
-	 */
-	public function get_username($id);
 	/**
 	 * Gets all users.
 	 *
