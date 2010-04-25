@@ -315,13 +315,76 @@ class pines extends p_base {
 
 	/**
 	 * Formats a date using the DateTime class.
+	 * 
+	 * $type can be any of the following:
+	 * 
+	 * - full_sort - Date and time, big endian and 24 hour format so it is sortable.
+	 * - full_long - Date and time, long format.
+	 * - full_med - Date and time, medium format.
+	 * - full_short - Date and time, short format.
+	 * - date_sort - Only the date, big endian so it is sortable.
+	 * - date_long - Only the date, long format.
+	 * - date_med - Only the date, medium format.
+	 * - date_short - Only the date, short format.
+	 * - time_sort - Only the time, 24 hour format so it is sortable.
+	 * - time_long - Only the time, long format.
+	 * - time_med - Only the time, medium format.
+	 * - time_short - Only the time, short format.
+	 * - custom - Use whatever is passed in $format.
+	 *
+	 * A component can hook this function and redirect the call to its own
+	 * function in order to provide localization.
 	 *
 	 * @param int $timestamp The timestamp to format.
+	 * @param string $type The type of formatting to use.
+	 * @param string $format The format to use if type is 'custom'.
 	 * @param DateTimeZone|string|null $timezone The timezone to use for formatting. Defaults to date_default_timezone_get().
-	 * @param string $format The format to use.
 	 * @return string The formatted date.
 	 */
-	public function format_date($timestamp, $timezone = null, $format = 'Y-m-d H:i T') {
+	public function format_date($timestamp, $type = 'full_sort', $format = '', $timezone = null) {
+		// Determine the format to use.
+		switch ($type) {
+			case 'date_sort':
+				$format = 'Y-m-d';
+				break;
+			case 'date_long':
+				$format = 'l, F j, Y';
+				break;
+			case 'date_med':
+				$format = 'j M Y';
+				break;
+			case 'date_short':
+				$format = 'n/d/Y';
+				break;
+			case 'time_sort':
+				$format = 'H:i T';
+				break;
+			case 'time_long':
+				$format = 'g:i:s A T';
+				break;
+			case 'time_med':
+				$format = 'g:i:s A';
+				break;
+			case 'time_short':
+				$format = 'g:i A';
+				break;
+			case 'full_sort':
+				$format = 'Y-m-d H:i T';
+				break;
+			case 'full_long':
+				$format = 'l, F j, Y g:i A T';
+				break;
+			case 'full_med':
+				$format = 'j M Y g:i A T';
+				break;
+			case 'full_short':
+				$format = 'n/d/Y g:i A T';
+				break;
+			case 'custom':
+			default:
+				break;
+		}
+		// Create a date object from the timestamp.
 		$date = new DateTime(gmdate('c', (int) $timestamp));
 		if (isset($timezone)) {
 			if (is_string($timezone))
@@ -336,13 +399,18 @@ class pines extends p_base {
 	/**
 	 * Formats a phone number.
 	 *
-	 * @param string $phone The phone number to format.
+	 * Uses US phone number format. E.g. "(800) 555-1234 x56".
+	 *
+	 * A component can hook this function and redirect the call to its own
+	 * function in order to provide localization.
+	 *
+	 * @param string $number The phone number to format.
 	 * @return string The formatted phone number.
 	 */
-	public function format_phone($phone) {
-		if (!isset($phone))
+	public function format_phone($number) {
+		if (!isset($number))
 			return '';
-		$return = preg_replace('/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/', '($1$2$3) $4$5$6-$7$8$9$10 x$11', (string) $phone);
+		$return = preg_replace('/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/', '($1$2$3) $4$5$6-$7$8$9$10 x$11', (string) $number);
 		return preg_replace('/\D*$/', '', $return);
 	}
 

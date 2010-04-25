@@ -88,6 +88,33 @@ function redirect($url, $code = 303) {
 }
 
 /**
+ * Shortcut to $pines->format_date().
+ *
+ * @uses pines::format_date() Forwards parameters and returns the result.
+ * @param int $timestamp The timestamp to format.
+ * @param string $type The type of formatting to use.
+ * @param string $format The format to use if type is 'custom'.
+ * @param DateTimeZone|string|null $timezone The timezone to use for formatting. Defaults to date_default_timezone_get().
+ * @return string The formatted date.
+ */
+function format_date($timestamp, $type = 'full_sort', $format = '', $timezone = null) {
+	global $pines;
+	return $pines->format_date($timestamp, $type, $format, $timezone);
+}
+
+/**
+ * Shortcut to $pines->format_phone().
+ *
+ * @uses pines::format_phone() Forwards parameters and returns the result.
+ * @param string $number The phone number to format.
+ * @return string The formatted phone number.
+ */
+function format_phone($number) {
+	global $pines;
+	return $pines->format_phone($number);
+}
+
+/**
  * Shortcut to $pines->page->error().
  *
  * @uses page::error() Forwards parameters and returns the result.
