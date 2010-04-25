@@ -24,7 +24,7 @@ if (P_SCRIPT_TIMING) pines_print_time('Load System Classes');
 /**
  * Base Class
  */
-include('system/classes/01_p_base.php');
+include('system/classes/p_base.php');
 /**
  * Component Class
  */
