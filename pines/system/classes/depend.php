@@ -37,12 +37,11 @@ class depend extends p_base {
 	 * - ability (System abilities.)
 	 * - action (Current or requested action.)
 	 * - class (Class exists.)
-	 * - component (Installed enabled components.)
-	 * - component_version (Component version.)
+	 * - component (Installed enabled components and version.)
 	 * - function (Function exists.)
 	 * - option (Current or requested component.)
-	 * - php_version (PHP version.)
-	 * - pines_version (Pines version.)
+	 * - php (PHP version.)
+	 * - pines (Pines version.)
 	 * - service (Available services.)
 	 */
 	function __construct() {
@@ -51,11 +50,10 @@ class depend extends p_base {
 		$this->checkers['action'] = array($this, 'check_action');
 		$this->checkers['class'] = array($this, 'check_class');
 		$this->checkers['component'] = array($this, 'check_component');
-		$this->checkers['component_version'] = array($this, 'check_component_version');
 		$this->checkers['function'] = array($this, 'check_function');
 		$this->checkers['option'] = array($this, 'check_option');
-		$this->checkers['php_version'] = array($this, 'check_php_version');
-		$this->checkers['pines_version'] = array($this, 'check_pines_version');
+		$this->checkers['php'] = array($this, 'check_php');
+		$this->checkers['pines'] = array($this, 'check_pines');
 		$this->checkers['service'] = array($this, 'check_service');
 	}
 
@@ -124,7 +122,21 @@ class depend extends p_base {
 	}
 
 	/**
-	 * Check if a component is installed and enabled.
+	 * Check if a component is installed and check its version.
+	 *
+	 * You can either check only that the component is installed, by using its
+	 * name, or that the component's version matches a certain version/range.
+	 *
+	 * Operators should be placed betwen the component name and the version
+	 * number to test. Such as, "com_xmlparser>=1.1.0". The available operators
+	 * are:
+	 *
+	 * - =
+	 * - <
+	 * - >
+	 * - <=
+	 * - >=
+	 * - <>
 	 *
 	 * Uses simple_parse() to provide simple logic.
 	 *
@@ -137,11 +149,13 @@ class depend extends p_base {
 		if (preg_match('/[!&|()]/', $value))
 			return $this->simple_parse($value, array($pines->depend, 'check_component'));
 		$component = preg_replace('/([a-z0-9_]+)([<>=]{1,2})(.+)/S', '$1', $value);
-		$compare = preg_replace('/([a-z0-9_]+)([<>=]{1,2})(.+)/S', '$2', $value);
-		$required = preg_replace(' /([a-z0-9_]+)([<>=]{1,2})(.+)/S', '$3', $value);
-		if ($required == '') {
+		if ($component == $value) {
 			return in_array($value, $pines->components);
 		} else {
+			if (!isset($pines->info->$component))
+				return false;
+			$compare = preg_replace('/([a-z0-9_]+)([<>=]{1,2})(.+)/S', '$2', $value);
+			$required = preg_replace(' /([a-z0-9_]+)([<>=]{1,2})(.+)/S', '$3', $value);
 			return version_compare($pines->info->$component->version, $required, $compare);
 		}
 	}
@@ -196,10 +210,10 @@ class depend extends p_base {
 	 * @param string $value The value to check.
 	 * @return bool The result of the version comparison.
 	 */
-	function check_php_version($value) {
+	function check_php($value) {
 		global $pines;
 		if (preg_match('/[!&|()]/', $value))
-			return $this->simple_parse($value, array($pines->depend, 'check_php_version'));
+			return $this->simple_parse($value, array($pines->depend, 'check_php'));
 		// <, >, =, <=, >=
 		$compare = preg_replace('/([<>=]{1,2})(.+)/S', '$1', $value);
 		$required = preg_replace('/([<>=]{1,2})(.+)/S', '$2', $value);
@@ -224,10 +238,10 @@ class depend extends p_base {
 	 * @param string $value The value to check.
 	 * @return bool The result of the version comparison.check_pines_version
 	 */
-	function check_pines_version($value) {
+	function check_pines($value) {
 		global $pines;
 		if (preg_match('/[!&|()]/', $value))
-			return $this->simple_parse($value, array($pines->depend, 'check_pines_version'));
+			return $this->simple_parse($value, array($pines->depend, 'check_pines'));
 		// <, >, =, <=, >=
 		$compare = preg_replace('/([<>=]{1,2})(.+)/S', '$1', $value);
 		$required = preg_replace('/([<>=]{1,2})(.+)/S', '$2', $value);
@@ -246,7 +260,7 @@ class depend extends p_base {
 	function check_service($value) {
 		global $pines;
 		if (preg_match('/[!&|()]/', $value))
-			return $this->simple_parse($value, array($pines->depend, 'check_component'));
+			return $this->simple_parse($value, array($pines->depend, 'check_service'));
 		return key_exists($value, $pines->services);
 	}
 
@@ -266,7 +280,7 @@ class depend extends p_base {
 	 * </code>
 	 *
 	 * @param string $value The logic statement.
-	 * @param callback $callback The callback to check each part with.
+	 * @param callback $callback The callback with which to check each part.
 	 * @return bool The result of the parsing.
 	 */
 	public function simple_parse($value, $callback) {
