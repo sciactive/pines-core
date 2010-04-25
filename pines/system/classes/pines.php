@@ -314,6 +314,39 @@ class pines extends p_base {
 	}
 
 	/**
+	 * Formats a date using the DateTime class.
+	 *
+	 * @param int $timestamp The timestamp to format.
+	 * @param DateTimeZone|string|null $timezone The timezone to use for formatting. Defaults to date_default_timezone_get().
+	 * @param string $format The format to use.
+	 * @return string The formatted date.
+	 */
+	public function format_date($timestamp, $timezone = null, $format = 'Y-m-d H:i T') {
+		$date = new DateTime(gmdate('c', (int) $timestamp));
+		if (isset($timezone)) {
+			if (is_string($timezone))
+				$timezone = new DateTimeZone($timezone);
+			$date->setTimezone($timezone);
+		} else {
+			$date->setTimezone(new DateTimeZone(date_default_timezone_get()));
+		}
+		return $date->format($format);
+	}
+
+	/**
+	 * Formats a phone number.
+	 *
+	 * @param string $phone The phone number to format.
+	 * @return string The formatted phone number.
+	 */
+	public function format_phone($phone) {
+		if (!isset($phone))
+			return '';
+		$return = preg_replace('/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/', '($1$2$3) $4$5$6-$7$8$9$10 x$11', (string) $phone);
+		return preg_replace('/\D*$/', '', $return);
+	}
+
+	/**
 	 * Safely redirect to a new URL.
 	 *
 	 * Redirect the user to a new URL, while still displaying any pending
