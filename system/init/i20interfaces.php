@@ -723,15 +723,15 @@ interface user_manager_interface extends component_interface {
 	 * whether the check passes:
 	 *
 	 * - No user is logged in. (Always returned, should be managed with abilities.)
-	 * - The entity has no uid and no gid. (Always returned.)
+	 * - The entity has no "user" and no "group". (Always returned.)
 	 * - The user has the "system/all" ability. (Always returned.)
 	 * - The entity is the user. (Always returned.)
 	 * - It is the user's primary group. (Always returned.)
 	 * - The entity is a user or group. (Always returned.)
-	 * - Its UID is the user. (It is owned by the user.) (Check user AC.)
-	 * - Its GID is the user's primary group. (Check group AC.)
-	 * - Its GID is one of the user's secondary groups. (Check group AC.)
-	 * - Its GID is a child of one of the user's groups. (Check group AC.)
+	 * - Its "user" is the user. (It is owned by the user.) (Check user AC.)
+	 * - Its "group" is the user's primary group. (Check group AC.)
+	 * - Its "group" is one of the user's secondary groups. (Check group AC.)
+	 * - Its "group" is a child of one of the user's groups. (Check group AC.)
 	 * - None of the above. (Check other AC.)
 	 *
 	 * @param object &$entity The entity to check.
