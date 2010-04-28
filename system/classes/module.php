@@ -150,31 +150,27 @@ class module extends p_base {
 	 * components/com_game/views/xhtml-1.0/stats.php
 	 * components/com_game/views/xhtml/stats.php
 	 * components/com_game/views/all/stats.php
-	 * 
+	 *
 	 * The component 'system' has views in system/views/. The view 'null' in
 	 * 'system' can be used as a blank view.
 	 *
-	 * The module's template is found in the 'models' directory of the current
-	 * template. If $model is set, it will look for a file by that name (with
-	 * .php appended) and require it. If not, or the file doesn't exist,
-	 * render() will require module.php. The module's content variable
-	 * ultimately ends up with the output from this file and is returned.
-	 *
-	 * @param string $model The model to use.
 	 * @return string The module's rendered content.
 	 */
-	function render($model = 'module') {
+	function render() {
 		global $pines;
 
 		// Get content from the view.
 		ob_start();
 		$format = $pines->template->format;
+		$base_dir = ($this->component != 'system') ? 'components/' : '';
 		while(true) {
-			$filename = (($this->component != 'system') ? 'components/' : '').$this->component.'/views/'.$format.'/'.$this->view.'.php';
-			//$filename = (($this->component != 'system') ?
-			//		(substr($this->component, 0, 4) == 'tpl_' ? 'templates/' : 'components/')
-			//		: '') . "{$this->component}/views/{$format}/{$this->view}.php";
+			$filename = "{$base_dir}{$this->component}/views/{$format}/{$this->view}.php";
 			if (file_exists($filename) || $format == 'all') {
+				unset($format);
+				unset($base_dir);
+				/**
+				 * This file should print the content of the module.
+				 */
 				require $filename;
 				break;
 			} else {
@@ -186,8 +182,25 @@ class module extends p_base {
 			}
 		}
 		$this->content(ob_get_clean());
-		if (empty($this->content))
-			return;
+
+		// Return the content.
+		return $this->content;
+	}
+
+	/**
+	 * Renders the module's code into a model.
+	 *
+	 * The module's template is found in the 'models' directory of the current
+	 * template. If $model is set, it will look for a file by that name (with
+	 * .php appended) and require it. If not, or the file doesn't exist,
+	 * render() will require module.php. The module's content variable
+	 * ultimately ends up with the output from this file and is returned.
+	 *
+	 * @param string $model The model to use.
+	 * @return string The module's rendered content.
+	 */
+	function render_model($model = 'module') {
+		global $pines;
 
 		// Return the content.
 		ob_start();

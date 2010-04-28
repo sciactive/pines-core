@@ -218,12 +218,21 @@ class page extends p_base {
 	 * @return string The page's rendered content.
 	 */
 	public function render() {
-		// Make all globals accessible, so the template file can use them.
-		foreach ($GLOBALS as $key => $val) { global $$key; }
 		ob_start();
 		if ( $this->override ) {
 			echo $this->get_override_doc();
 		} else {
+			// Make $pines accessible, so the modules and template can use it.
+			global $pines;
+			foreach ($this->modules as &$cur_pos) {
+				if (!$cur_pos || !is_array($cur_pos))
+					continue;
+				foreach ($cur_pos as &$cur_module) {
+					$cur_module->render();
+				}
+				unset($cur_module);
+			}
+			unset($cur_pos);
 			require("templates/{$pines->current_template}/template.php");
 		}
 		$this->content = ob_get_clean();
@@ -241,9 +250,10 @@ class page extends p_base {
 	public function render_modules($position, $model = null) {
 		$return = '';
 		if (is_array($this->modules[$position])) {
-			foreach ($this->modules[$position] as $cur_module) {
-				$return .= $cur_module->render($model);
+			foreach ($this->modules[$position] as &$cur_module) {
+				$return .= $cur_module->render_model($model);
 			}
+			unset($cur_module);
 		}
 		return $return;
 	}
