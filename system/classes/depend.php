@@ -44,17 +44,20 @@ class depend extends p_base {
 	 * - pines (Pines version.)
 	 * - service (Available services.)
 	 */
-	function __construct() {
+	public function __construct() {
 		global $pines;
-		$this->checkers['ability'] = array($this, 'check_ability');
-		$this->checkers['action'] = array($this, 'check_action');
-		$this->checkers['class'] = array($this, 'check_class');
-		$this->checkers['component'] = array($this, 'check_component');
-		$this->checkers['function'] = array($this, 'check_function');
-		$this->checkers['option'] = array($this, 'check_option');
-		$this->checkers['php'] = array($this, 'check_php');
-		$this->checkers['pines'] = array($this, 'check_pines');
-		$this->checkers['service'] = array($this, 'check_service');
+		$this->checkers = array(
+			'ability' => array($this, 'check_ability'),
+			'action' => array($this, 'check_action'),
+			'class' => array($this, 'check_class'),
+			'clientip' => array($this, 'check_clientip'),
+			'component' => array($this, 'check_component'),
+			'function' => array($this, 'check_function'),
+			'option' => array($this, 'check_option'),
+			'php' => array($this, 'check_php'),
+			'pines' => array($this, 'check_pines'),
+			'service' => array($this, 'check_service')
+		);
 	}
 
 	/**
@@ -78,14 +81,21 @@ class depend extends p_base {
 	 *
 	 * Uses simple_parse() to provide simple logic.
 	 *
+	 * @access private
 	 * @uses gatekeeper()
 	 * @param string $value The value to check.
 	 * @return bool The result of the ability check.
 	 */
-	function check_ability($value) {
+	private function check_ability($value) {
 		global $pines;
-		if (preg_match('/[!&|()]/', $value))
-			return $this->simple_parse($value, array($pines->depend, 'check_ability'));
+		if (
+				strpos($value, '&') !== false ||
+				strpos($value, '|') !== false ||
+				strpos($value, '!') !== false ||
+				strpos($value, '(') !== false ||
+				strpos($value, ')') !== false
+			)
+			return $this->simple_parse($value, array($this, 'check_ability'));
 		return gatekeeper($value);
 	}
 
@@ -94,15 +104,22 @@ class depend extends p_base {
 	 *
 	 * Uses simple_parse() to provide simple logic.
 	 *
-	 * @uses $pines->action
-	 * @uses $pines->request_action
+	 * @access private
+	 * @uses pines::action
+	 * @uses pines::request_action
 	 * @param string $value The value to check.
 	 * @return bool The result of the action check.
 	 */
-	function check_action($value) {
+	private function check_action($value) {
 		global $pines;
-		if (preg_match('/[!&|()]/', $value))
-			return $this->simple_parse($value, array($pines->depend, 'check_action'));
+		if (
+				strpos($value, '&') !== false ||
+				strpos($value, '|') !== false ||
+				strpos($value, '!') !== false ||
+				strpos($value, '(') !== false ||
+				strpos($value, ')') !== false
+			)
+			return $this->simple_parse($value, array($this, 'check_action'));
 		return $pines->action == $value || $pines->request_action == $value;
 	}
 
@@ -111,14 +128,93 @@ class depend extends p_base {
 	 *
 	 * Uses simple_parse() to provide simple logic.
 	 *
+	 * @access private
 	 * @param string $value The value to check for.
 	 * @return bool The result of the class check.
 	 */
-	function check_class($value) {
+	private function check_class($value) {
 		global $pines;
-		if (preg_match('/[!&|()]/', $value))
-			return $this->simple_parse($value, array($pines->depend, 'check_class'));
+		if (
+				strpos($value, '&') !== false ||
+				strpos($value, '|') !== false ||
+				strpos($value, '!') !== false ||
+				strpos($value, '(') !== false ||
+				strpos($value, ')') !== false
+			)
+			return $this->simple_parse($value, array($this, 'check_class'));
 		return class_exists($value);
+	}
+
+	/**
+	 * Check the client's IP address.
+	 *
+	 * The syntax is split into three parts:
+	 *
+	 * IP - Only matches one IP address.
+	 *
+	 * <pre>0.0.0.0</pre>
+	 *
+	 * CIDR - Matches a network using CIDR notation.
+	 *
+	 * <pre>0.0.0.0/24</pre>
+	 *
+	 * Subnet Mask - Matches a network using a subnet mask.
+	 *
+	 * <pre>0.0.0.0/255.255.255.0</pre>
+	 *
+	 * IP Range - Matches a range of IP addresses.
+	 *
+	 * <pre>0.0.0.0-0.0.0.255</pre>
+	 *
+	 * The string "{server_addr}" (without quotes) will be replaced by the
+	 * server's IP address. (From $_SERVER['SERVER_ADDR'])
+	 *
+	 * Examples
+	 *
+	 * - 192.168/24 = 192.168.0.0/255.255.255.0 = The request is on the 192.168.0.X network.
+	 * - 128.64/16 = 128.64.0.0/255.255.0.0 = The request is on the 128.64.X.X network.
+	 * - {server_addr} = The request is coming from localhost.
+	 * - {server_addr}/24 = {server_addr}/255.255.255.0 = The client is on the same 255.255.255.0 subnet as the server.
+	 *
+	 * Uses simple_parse() to provide simple logic.
+	 *
+	 * @access private
+	 * @uses pines::check_ip_cidr()
+	 * @uses pines::check_ip_subnet()
+	 * @uses pines::check_ip_range()
+	 * @param string $value The value to check.
+	 * @return bool The result of the action check.
+	 */
+	private function check_clientip($value) {
+		global $pines;
+		$value = str_replace('{server_addr}', $_SERVER['SERVER_ADDR'], $value);
+		if (
+				strpos($value, '&') !== false ||
+				strpos($value, '|') !== false ||
+				strpos($value, '!') !== false ||
+				strpos($value, '(') !== false ||
+				strpos($value, ')') !== false
+			)
+			return $this->simple_parse($value, array($this, 'check_clientip'));
+		$client_ip = $_SERVER['REMOTE_ADDR'];
+		if (preg_match('/^\d{1,3}(\.\d{1,3}){3}$/', $value)) {
+			// IP
+			return ($client_ip == $value);
+		} elseif (preg_match('/^\d{1,3}(\.\d{1,3}){0,3}\/\d{1,2}$/', $value)) {
+			// CIDR
+			return $pines->check_ip_cidr($client_ip, $value);
+		} elseif (preg_match('/^\d{1,3}(\.\d{1,3}){3}\/\d{1,3}(\.\d{1,3}){3}$/', $value)) {
+			// Subnet Mask
+			$params = explode('/', $value);
+			return $pines->check_ip_subnet($client_ip, $params[0], $params[1]);
+		} elseif (preg_match('/^\d{1,3}(\.\d{1,3}){3}-\d{1,3}(\.\d{1,3}){3}$/', $value)) {
+			// IP Range
+			$params = explode('-', $value);
+			return $pines->check_ip_range($client_ip, $params[0], $params[1]);
+		} else {
+			// Not formatted correctly.
+			return false;
+		}
 	}
 
 	/**
@@ -140,14 +236,21 @@ class depend extends p_base {
 	 *
 	 * Uses simple_parse() to provide simple logic.
 	 *
-	 * @uses $pines->components
+	 * @access private
+	 * @uses pines::components
 	 * @param string $value The value to check.
 	 * @return bool The result of the component check.
 	 */
-	function check_component($value) {
+	private function check_component($value) {
 		global $pines;
-		if (preg_match('/[!&|()]/', $value))
-			return $this->simple_parse($value, array($pines->depend, 'check_component'));
+		if (
+				strpos($value, '&') !== false ||
+				strpos($value, '|') !== false ||
+				strpos($value, '!') !== false ||
+				strpos($value, '(') !== false ||
+				strpos($value, ')') !== false
+			)
+			return $this->simple_parse($value, array($this, 'check_component'));
 		$component = preg_replace('/([a-z0-9_]+)([<>=]{1,2})(.+)/S', '$1', $value);
 		if ($component == $value) {
 			return in_array($value, $pines->components);
@@ -165,13 +268,20 @@ class depend extends p_base {
 	 *
 	 * Uses simple_parse() to provide simple logic.
 	 *
+	 * @access private
 	 * @param string $value The value to check.
 	 * @return bool The result of the function check.
 	 */
-	function check_function($value) {
+	private function check_function($value) {
 		global $pines;
-		if (preg_match('/[!&|()]/', $value))
-			return $this->simple_parse($value, array($pines->depend, 'check_function'));
+		if (
+				strpos($value, '&') !== false ||
+				strpos($value, '|') !== false ||
+				strpos($value, '!') !== false ||
+				strpos($value, '(') !== false ||
+				strpos($value, ')') !== false
+			)
+			return $this->simple_parse($value, array($this, 'check_function'));
 		return function_exists($value);
 	}
 
@@ -180,15 +290,22 @@ class depend extends p_base {
 	 *
 	 * Uses simple_parse() to provide simple logic.
 	 *
-	 * @uses $pines->component
-	 * @uses $pines->request_component
+	 * @access private
+	 * @uses pines::component
+	 * @uses pines::request_component
 	 * @param string $value The value to check.
 	 * @return bool The result of the component check.
 	 */
-	function check_option($value) {
+	private function check_option($value) {
 		global $pines;
-		if (preg_match('/[!&|()]/', $value))
-			return $this->simple_parse($value, array($pines->depend, 'check_option'));
+		if (
+				strpos($value, '&') !== false ||
+				strpos($value, '|') !== false ||
+				strpos($value, '!') !== false ||
+				strpos($value, '(') !== false ||
+				strpos($value, ')') !== false
+			)
+			return $this->simple_parse($value, array($this, 'check_option'));
 		return $pines->component == $value || $pines->request_component == $value;
 	}
 
@@ -207,13 +324,20 @@ class depend extends p_base {
 	 *
 	 * Uses simple_parse() to provide simple logic.
 	 *
+	 * @access private
 	 * @param string $value The value to check.
 	 * @return bool The result of the version comparison.
 	 */
-	function check_php($value) {
+	private function check_php($value) {
 		global $pines;
-		if (preg_match('/[!&|()]/', $value))
-			return $this->simple_parse($value, array($pines->depend, 'check_php'));
+		if (
+				strpos($value, '&') !== false ||
+				strpos($value, '|') !== false ||
+				strpos($value, '!') !== false ||
+				strpos($value, '(') !== false ||
+				strpos($value, ')') !== false
+			)
+			return $this->simple_parse($value, array($this, 'check_php'));
 		// <, >, =, <=, >=
 		$compare = preg_replace('/([<>=]{1,2})(.+)/S', '$1', $value);
 		$required = preg_replace('/([<>=]{1,2})(.+)/S', '$2', $value);
@@ -235,32 +359,68 @@ class depend extends p_base {
 	 *
 	 * Uses simple_parse() to provide simple logic.
 	 *
+	 * @access private
 	 * @param string $value The value to check.
-	 * @return bool The result of the version comparison.check_pines_version
+	 * @return bool The result of the version comparison.
 	 */
-	function check_pines($value) {
+	private function check_pines($value) {
 		global $pines;
-		if (preg_match('/[!&|()]/', $value))
-			return $this->simple_parse($value, array($pines->depend, 'check_pines'));
+		if (
+				strpos($value, '&') !== false ||
+				strpos($value, '|') !== false ||
+				strpos($value, '!') !== false ||
+				strpos($value, '(') !== false ||
+				strpos($value, ')') !== false
+			)
+			return $this->simple_parse($value, array($this, 'check_pines'));
 		// <, >, =, <=, >=
 		$compare = preg_replace('/([<>=]{1,2})(.+)/S', '$1', $value);
 		$required = preg_replace('/([<>=]{1,2})(.+)/S', '$2', $value);
 		return version_compare($pines->info->version, $required, $compare);
 	}
 
+	// Is this safe? Consider that users can use dependencies to discover things...
+	//private function check_server($value) {
+		// {server_addr} $_SERVER['SERVER_ADDR'] Server IP address.
+		// {server_name} $_SERVER['SERVER_NAME'] Server hostname.
+		// {server_software} $_SERVER['SERVER_SOFTWARE'] Server identification string.
+		// {server_protocol} $_SERVER['SERVER_PROTOCOL'] Name and revision of the information protocol via which the page was requested; i.e. 'HTTP/1.0'.
+		// {request_method} $_SERVER['REQUEST_METHOD'] Which request method was used to access the page; i.e. 'GET', 'HEAD', 'POST', 'PUT'.
+		// {request_time} $_SERVER['REQUEST_TIME'] The timestamp of the start of the request.
+		// {http_accept} $_SERVER['HTTP_ACCEPT'] Contents of the Accept: header from the current request, if there is one.
+		// {http_accept_charset} $_SERVER['HTTP_ACCEPT_CHARSET'] Contents of the Accept-Charset: header from the current request, if there is one. Example: 'iso-8859-1,*,utf-8'.
+		// {http_accept_encoding} $_SERVER['HTTP_ACCEPT_ENCODING'] Contents of the Accept-Encoding: header from the current request, if there is one. Example: 'gzip'.
+		// {http_accept_language} $_SERVER['HTTP_ACCEPT_LANGUAGE'] Contents of the Accept-Language: header from the current request, if there is one. Example: 'en'.
+		// {http_connection} $_SERVER['HTTP_CONNECTION'] Contents of the Connection: header from the current request, if there is one. Example: 'Keep-Alive'.
+		// {http_host} $_SERVER['HTTP_HOST'] Contents of the Host: header from the current request, if there is one.
+		// {http_referer} $_SERVER['HTTP_REFERER'] The address of the page (if any) which referred the user agent to the current page. This is set by the user agent.
+		// {http_user_agent} $_SERVER['HTTP_USER_AGENT'] Contents of the User-Agent: header from the current request, if there is one. This is a string denoting the user agent being which is accessing the page.
+		// {https} $_SERVER['HTTPS'] Set to a non-empty value if the script was queried through the HTTPS protocol.
+		// {remote_addr} $_SERVER['REMOTE_ADDR'] The IP address from which the user is viewing the current page.
+		// {remote_host} $_SERVER['REMOTE_HOST'] The Host name from which the user is viewing the current page. The reverse dns lookup is based off the REMOTE_ADDR of the user.
+		// {remote_port} $_SERVER['REMOTE_PORT'] The port being used on the user's machine to communicate with the web server.
+	//}
+
 	/**
 	 * Check if a service is available.
 	 *
 	 * Uses simple_parse() to provide simple logic.
 	 *
-	 * @uses $pines->services
+	 * @access private
+	 * @uses pines::services
 	 * @param string $value The value to check.
 	 * @return bool The result of the service check.
 	 */
-	function check_service($value) {
+	private function check_service($value) {
 		global $pines;
-		if (preg_match('/[!&|()]/', $value))
-			return $this->simple_parse($value, array($pines->depend, 'check_service'));
+		if (
+				strpos($value, '&') !== false ||
+				strpos($value, '|') !== false ||
+				strpos($value, '!') !== false ||
+				strpos($value, '(') !== false ||
+				strpos($value, ')') !== false
+			)
+			return $this->simple_parse($value, array($this, 'check_service'));
 		return key_exists($value, $pines->services);
 	}
 

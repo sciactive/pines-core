@@ -314,6 +314,72 @@ class pines extends p_base {
 	}
 
 	/**
+	 * Check if an IP address is on a network using CIDR notation.
+	 *
+	 * You can shorten the notation by dropping trailing ".0"s.
+	 *
+	 * @param string $ip The IP address to check.
+	 * @param string $cidr The network in CIDR notation. (E.g. 192.168.0.0/24)
+	 * @return bool True or false.
+	 */
+	public function check_ip_cidr($ip, $cidr) {
+		// Separate the CIDR notation.
+		$ip_arr = explode('/', $cidr);
+		// Fill in any missing ".0" parts, and turn the address into a long.
+		$cidr_long = ip2long($ip_arr[0].str_repeat('.0', 3 - substr_count($ip_arr[0], '.')));
+		$cidr_bits = (int) $ip_arr[1];
+		// Turn the IP into a long.
+		$ip_long = ip2long($ip);
+
+		// Get the network part of the CIDR and the IP.
+		$cidr_network = $cidr_long >> (32 - $cidr_bits);
+		$ip_network = $ip_long >> (32 - $cidr_bits);
+
+		// If the network parts are equal, return true.
+		return ($cidr_network === $ip_network);
+	}
+
+	/**
+	 * Check if an IP address is on a network using a subnet mask.
+	 *
+	 * @param string $ip The IP address to check.
+	 * @param string $network The IP address of the network. (Or any address on the network.)
+	 * @param string $netmask The subnet mask.
+	 * @return bool True or false.
+	 */
+	public function check_ip_subnet($ip, $network, $netmask) {
+		// Turn the addresses into long format.
+		$network_long = ip2long($network);
+		$mask_long = ip2long($netmask);
+		$ip_long = ip2long($ip);
+
+		// Remove the host part of the addresses.
+		$network_net_long = $network_long & $mask_long;
+		$ip_net_long = $ip_long & $mask_long;
+
+		// If the network parts are equal, return true.
+		return ($network_net_long === $ip_net_long);
+	}
+
+	/**
+	 * Check if an IP address falls within a range of IP addresses.
+	 *
+	 * @param string $ip The IP address to check.
+	 * @param string $from_ip The first IP address of the range.
+	 * @param string $to_ip The last IP address of the range.
+	 * @return bool True or false.
+	 */
+	public function check_ip_range($ip, $from_ip, $to_ip) {
+		// Turn the addresses into long format.
+		$from_ip_long = ip2long($from_ip);
+		$to_ip_long = ip2long($to_ip);
+		$ip_long = ip2long($ip);
+
+		// If the IP is between the two addresses, return true.
+		return ($ip_long >= $from_ip_long && $ip_long <= $to_ip_long);
+	}
+
+	/**
 	 * Formats a date using the DateTime class.
 	 * 
 	 * $type can be any of the following:
