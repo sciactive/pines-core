@@ -6,7 +6,7 @@ Read the INSTALL file for installation instructions.
 Planned features for versions <=1.0:
 --------------------------------------------------------------------------------
 +Installer/Package Manager.
-+Load JS files dynamically to better support AJAX.
++A way to give new users abilities and groups.
 +Fix and improve com_newsletter.
 +Full SAWASC A implementation for better security.
 	(http://sawasc.sciactive.com/)
