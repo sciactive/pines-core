@@ -33,7 +33,7 @@ return array(
 	array(
 		'name' => 'offline_mode',
 		'cname' => 'Offline Mode',
-		'description' => 'In offline mode, the system will not be accessible, and simply display the offline message. To disable offline mode, you will need to edit "system/configure.php" in the Pines directory. Under the array named "offline_mode", change the value to false.',
+		'description' => 'In offline mode, the system will not be accessible, and simply display the offline message. To disable offline mode, you will need to edit "system/config.php" in the Pines directory. Under the array named "offline_mode", change the value to false.',
 		'value' => false,
 	),
 	array(
@@ -61,12 +61,13 @@ return array(
 		'cname' => 'Default Template',
 		'description' => 'The default template.',
 		'value' => 'tpl_pines',
+		'options' => pines_scandir('templates/'),
 		'peruser' => true,
 	),
 	array(
 		'name' => 'allow_template_override',
 		'cname' => 'Template Override',
-		'description' => 'Allow the template to be overriden by adding ?template=whatever',
+		'description' => 'Allow the template to be overriden by adding ?template=tpl_whatever',
 		'value' => true,
 		'peruser' => true,
 	),
@@ -87,6 +88,7 @@ return array(
 		'cname' => 'Default Component',
 		'description' => 'This component should have a "default" action. That action will be called when the user first accesses Pines. If an action is specified, but no component, this one will be used.',
 		'value' => 'com_user',
+		'options' => pines_scandir('components/'),
 	),
 	array(
 		'name' => 'timezone',
