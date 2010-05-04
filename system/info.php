@@ -18,6 +18,9 @@ return array(
 	'website' => 'http://www.sciactive.com',
 	'short_description' => 'Pines PHP framework core system',
 	'description' => 'The core system of the Pines PHP application framework.',
+	'depend' => array(
+		'php' => '>=5.2.10'
+	),
 	'abilities' => array(
 		array('all', 'All Abilities', 'Let user do anything, regardless of whether they have the ability.')
 	),
