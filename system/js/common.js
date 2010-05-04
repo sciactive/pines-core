@@ -106,8 +106,8 @@ pines.loadcss=function(url, multiple){
 	_loadedcss[_loadedcss.length]=url;
 };
 // Notify the user.
-pines.alert=function(message, title){
-	alert((title ? title : "Alert") + "\n\n" + message);
+pines.notice=function(message, title){
+	alert((title ? title : "Notice") + "\n\n" + message);
 };
 // Show the user an error.
 pines.error=function(message, title){
