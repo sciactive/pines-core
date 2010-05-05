@@ -68,6 +68,20 @@ pines.post=function(url, params){
 	document.body.appendChild(form);
 	form.submit();
 };
+// Wait to load pending JavaScript.
+pines.pause=function(){
+	_paused = true;
+};
+// Continue loading any pending JavaScript.
+pines.play=function(){
+	_paused = false;
+	if (_loadnext_ready) {
+		_loadnext_ready = false;
+		_loadnext();
+	}
+	if (_domloaded)
+		_ready();
+};
 // Executes a function after all JS files are loaded and the DOM is ready.
 pines.ready=function(fn){
 	_rdpending.push(fn);
@@ -85,7 +99,7 @@ pines.load=function(fn){
 pines.loadjs=function(url, multiple){
 	if (_loadedjs.indexOf(url) > -1 && !multiple) return;
 	// Mark that the JS is loading.
-	_jscloaded = false;
+	_jsloaded = false;
 	var n=document.createElement("script");
 	n.setAttribute("type","text/javascript");
 	n.setAttribute("src",url);
@@ -114,8 +128,12 @@ pines.error=function(message, title){
 	alert((title ? title : "Error") + "\n\n" + message);
 };
 
+// JS loading is paused when true.
+var _paused=false,
+// If _loadnext is called while paused, be sure to call it again.
+_loadnext_ready=false,
 // List of loaded JS files.
-var _loadedjs=[],
+_loadedjs=[],
 // Loaded CSS files.
 _loadedcss=[],
 // Pending JS files.
@@ -125,9 +143,10 @@ _rdpending=[],
 // Whether the DOM is ready.
 _domloaded=false,
 // Whether all JS/CSS files are ready.
-_jscloaded=false,
+_jsloaded=false,
 _ready=function(){
-	if ((_pendingjs && !_jscloaded) || !_domloaded) return;
+	// Don't run if there's pending JS, the DOM isn't ready, or JS is paused.
+	if ((_pendingjs && !_jsloaded) || !_domloaded || _paused) return;
 	if (_rdpending) {
 		var fn = _rdpending[0];
 		while (fn) {
@@ -140,9 +159,13 @@ _ready=function(){
 },
 // Load the next JS/CSS file.
 _loadnext=function(){
+	if (_paused) {
+		_loadnext_ready = true;
+		return;
+	}
 	var n = _pendingjs[0];
 	if (typeof n == "undefined") {
-		_jscloaded = true;
+		_jsloaded = true;
 		_ready();
 		return;
 	}
