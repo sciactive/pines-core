@@ -14,7 +14,9 @@
 
 header('Content-Type: text/javascript');
 
-if (array_key_exists('HTTP_IF_MODIFIED_SINCE', $_SERVER) && filemtime('common.js') <= strtotime(preg_replace('/;.*$/', '', $_SERVER['HTTP_IF_MODIFIED_SINCE']))) {
+$mod_date = filemtime('common.js');
+
+if (array_key_exists('HTTP_IF_MODIFIED_SINCE', $_SERVER) && $mod_date <= strtotime(preg_replace('/;.*$/', '', $_SERVER['HTTP_IF_MODIFIED_SINCE']))) {
 	header('x', TRUE, 304);
 	exit;
 }
