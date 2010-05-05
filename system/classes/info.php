@@ -74,7 +74,7 @@ class info extends p_base {
 				}
 			}
 		}
-		if ($is_template)
+		if (isset($is_template) && $is_template)
 			$this->template =& $this->$name;
 		return $this->$name;
 	}

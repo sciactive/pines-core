@@ -15,7 +15,7 @@ return array(
 		'name' => 'full_location',
 		'cname' => 'Full Location',
 		'description' => 'The URL of this Pines installation. End this path with a slash!',
-		'value' => 'http'.(($_SERVER["HTTPS"] == "on") ? 's://' : '://').$_SERVER['HTTP_HOST'].substr($_SERVER['PHP_SELF'], 0, strripos($_SERVER['PHP_SELF'], P_INDEX)),
+		'value' => 'http'.(($_SERVER['HTTPS'] == "on") ? 's://' : '://').$_SERVER['HTTP_HOST'].substr($_SERVER['PHP_SELF'], 0, strripos($_SERVER['PHP_SELF'], P_INDEX)),
 	),
 	array(
 		'name' => 'rela_location',

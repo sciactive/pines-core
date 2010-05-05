@@ -62,6 +62,11 @@ class module extends p_base {
 	 * @var bool $show_title
 	 */
 	public $show_title = true;
+	/**
+	 * Whether the module's content has been rendered.
+	 * @var bool $is_rendered
+	 */
+	private $is_rendered = false;
 
 	/**
 	 * @param string $component
@@ -159,6 +164,10 @@ class module extends p_base {
 	function render() {
 		global $pines;
 
+		// Is it already rendered?
+		if ($this->is_rendered)
+			return $this->content;
+
 		// Get content from the view.
 		ob_start();
 		$format = $pines->template->format;
@@ -183,6 +192,8 @@ class module extends p_base {
 		}
 		$this->content(ob_get_clean());
 
+		$this->is_rendered = true;
+
 		// Return the content.
 		return $this->content;
 	}
@@ -193,14 +204,17 @@ class module extends p_base {
 	 * The module's template is found in the 'models' directory of the current
 	 * template. If $model is set, it will look for a file by that name (with
 	 * .php appended) and require it. If not, or the file doesn't exist,
-	 * render() will require module.php. The module's content variable
-	 * ultimately ends up with the output from this file and is returned.
+	 * render() will require module.php.
 	 *
 	 * @param string $model The model to use.
 	 * @return string The module's rendered content.
 	 */
 	function render_model($model = 'module') {
 		global $pines;
+
+		// Render the module, if it's not already.
+		if (!$this->is_rendered)
+			$this->render();
 
 		// Return the content.
 		ob_start();
@@ -209,8 +223,8 @@ class module extends p_base {
 		} else {
 			require "templates/{$pines->current_template}/models/module.php";
 		}
-		$this->content = ob_get_clean();
-		return $this->content;
+		$content = ob_get_clean();
+		return $content;
 	}
 }
 

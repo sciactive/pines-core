@@ -249,7 +249,7 @@ class page extends p_base {
 	 */
 	public function render_modules($position, $model = null) {
 		$return = '';
-		if (is_array($this->modules[$position])) {
+		if (isset($this->modules[$position])) {
 			foreach ($this->modules[$position] as &$cur_module) {
 				$return .= $cur_module->render_model($model);
 			}
