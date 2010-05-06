@@ -233,7 +233,10 @@ class page extends p_base {
 				unset($cur_module);
 			}
 			unset($cur_pos);
-			require("templates/{$pines->current_template}/template.php");
+			/**
+			 * This file should print the whole page's content.
+			 */
+			require "templates/{$pines->current_template}/template.php";
 		}
 		$this->content = ob_get_clean();
 		return $this->content;

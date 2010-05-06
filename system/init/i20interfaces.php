@@ -841,6 +841,19 @@ interface editor_interface extends component_interface {
 	public function load();
 }
 
+/**
+ * Pines Icon theme.
+ * @package Pines
+ */
+interface icons_interface extends component_interface {
+	/**
+	 * Load the icon theme.
+	 *
+	 * This will provide CSS styling for the Pines Icon styles.
+	 */
+	public function load();
+}
+
 if (P_SCRIPT_TIMING) pines_print_time('Define Service Interfaces');
 
 ?>

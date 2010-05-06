@@ -219,8 +219,16 @@ class module extends p_base {
 		// Return the content.
 		ob_start();
 		if (isset($model) && file_exists("templates/{$pines->current_template}/models/$model.php")) {
+			/**
+			 * This file should print the module's content.
+			 */
 			require "templates/{$pines->current_template}/models/$model.php";
 		} else {
+			/**
+			 * This file should print the module's content.
+			 *
+			 * It should always exist, in every template.
+			 */
 			require "templates/{$pines->current_template}/models/module.php";
 		}
 		$content = ob_get_clean();
