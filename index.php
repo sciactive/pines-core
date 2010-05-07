@@ -62,6 +62,8 @@ $_p_sysinit = glob('system/init/i*.php');
 foreach ($_p_sysinit as $_p_cur_sysinit) {
 	require($_p_cur_sysinit);
 }
+// Use this for serious testing.
+//file_put_contents('trace '.getmypid(), print_r($GLOBALS, true));
 
 //echo microtime(true) - P_EXEC_TIME;
 
