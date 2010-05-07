@@ -20,6 +20,12 @@ class menu extends p_base {
 	 * @var array
 	 */
 	public $menu_arrays = array();
+	/**
+	 * The hierarchical menu array.
+	 * @access private
+	 * @var array
+	 */
+	private $menus = array();
 
 	/**
 	 * Read JSON formatted menu data from a file.
@@ -89,7 +95,6 @@ class menu extends p_base {
 	 */
 	public function render() {
 		global $pines;
-		$menus = array();
 		// Go through each entry and organize them into a multidimensional
 		// array.
 		foreach ($this->menu_arrays as &$cur_entry) {
@@ -113,7 +118,7 @@ class menu extends p_base {
 				$cur_entry['href'] = call_user_func_array(array($pines->template, 'url'), $cur_entry['href']);
 			$tmp_path = explode('/', $cur_entry['path']);
 			unset($cur_entry['path']);
-			$cur_menus =& $menus;
+			$cur_menus =& $this->menus;
 			foreach ($tmp_path as $cur_path) {
 				if (!isset($cur_menus[$cur_path]))
 					$cur_menus[$cur_path] = array();
@@ -130,11 +135,12 @@ class menu extends p_base {
 			$cur_menus[0] = $cur_entry;
 		}
 		unset($cur_entry);
+		$this->menu_arrays = array();
 
 		// Clean up the full menu.
-		$this->cleanup($menus);
+		$this->cleanup($this->menus);
 
-		foreach ($menus as &$cur_menu) {
+		foreach ($this->menus as &$cur_menu) {
 			$module = new module('system', 'null', $cur_menu[0]['position']);
 			if (isset($cur_menu[0]['text']))
 				$module->title = $cur_menu[0]['text'];

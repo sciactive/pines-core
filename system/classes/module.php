@@ -20,53 +20,60 @@ defined('P_RUN') or die('Direct access prohibited');
 class module extends p_base {
 	/**
 	 * The modules title.
-	 * @var string $title
+	 * @var string
 	 */
 	public $title = '';
 	/**
 	 * A list of additional classes to be added to the module.
 	 *
 	 * Applies to HTML modules.
-	 * @var string $classes
+	 * @var string
 	 */
 	public $classes = '';
 	/**
 	 * The module's content.
 	 *
 	 * Though not necessary, this should be filled automatically using a view.
-	 * @var string $content
+	 * @var string
 	 */
 	public $content = '';
 	/**
 	 * The component that the module will retrieve its content from.
-	 * @var string $component
+	 * @var string
 	 */
 	public $component = '';
 	/**
 	 * The view that the module will retrieve its content from.
-	 * @var string $view
+	 * @var string
 	 */
 	public $view = '';
 	/**
 	 * The position on the page to place the module.
-	 * @var string $position
+	 * @var string
 	 */
 	public $position = null;
 	/**
 	 * The order the module will be placed in.
-	 * @var int $order
+	 * @var int
 	 */
 	public $order = null;
 	/**
 	 * Whether the title of the module should be displayed.
-	 * @var bool $show_title
+	 * @var bool
 	 */
 	public $show_title = true;
 	/**
 	 * Whether the module's content has been rendered.
-	 * @var bool $is_rendered
+	 * @access private
+	 * @var bool
 	 */
 	private $is_rendered = false;
+	/**
+	 * Any data that is set on the module.
+	 * @access private
+	 * @var array
+	 */
+	private $data_container = array();
 
 	/**
 	 * @param string $component
@@ -78,11 +85,67 @@ class module extends p_base {
 	 * @uses module::attach()
 	 * @return mixed If $position is given, returns the value of attach($position, $order).
 	 */
-	function __construct($component, $view, $position = null, $order = null) {
+	public function __construct($component, $view, $position = null, $order = null) {
 		$this->component = $component;
 		$this->view = $view;
 		if ( isset($position) )
 			return $this->attach($position, $order);
+	}
+
+	/**
+	 * Retrieve a variable.
+	 *
+	 * You do not need to explicitly call this method. It is called by PHP when
+	 * you access the variable normally.
+	 *
+	 * @param string $name The name of the variable.
+	 * @return mixed The value of the variable or nothing if it doesn't exist.
+	 */
+	public function &__get($name) {
+		return $this->data_container[$name];
+	}
+
+	/**
+	 * Checks whether a variable is set.
+	 *
+	 * You do not need to explicitly call this method. It is called by PHP when
+	 * you access the variable normally.
+	 *
+	 * @param string $name The name of the variable.
+	 * @return bool
+	 * @todo Check that a referenced entity has not been deleted.
+	 */
+	public function __isset($name) {
+		return isset($this->data_container[$name]);
+	}
+
+	/**
+	 * Sets a variable.
+	 *
+	 * You do not need to explicitly call this method. It is called by PHP when
+	 * you access the variable normally.
+	 *
+	 * @param string $name The name of the variable.
+	 * @param string $value The value of the variable.
+	 * @return mixed The value of the variable.
+	 */
+	public function __set($name, $value) {
+		// Store the actual value passed.
+		$save_value = $value;
+
+		return ($this->data_container[$name] = $save_value);
+	}
+
+	/**
+	 * Unsets a variable.
+	 *
+	 * You do not need to explicitly call this method. It is called by PHP when
+	 * you access the variable normally.
+	 *
+	 * @param string $name The name of the variable.
+	 */
+	public function __unset($name) {
+		unset($this->data_container[$name]);
 	}
 
 	/**
@@ -96,7 +159,7 @@ class module extends p_base {
 	 * @uses page::attach_module()
 	 * @return int The order in which the module was placed.
 	 */
-	function attach($position, $order = null) {
+	public function attach($position, $order = null) {
 		global $pines;
 		$this->position = $position;
 		$this->order = $pines->page->attach_module($this, $position, $order);
@@ -109,7 +172,7 @@ class module extends p_base {
 	 * @uses page::detach_module()
 	 * @return mixed The value of $pines->page->detach_module.
 	 */
-	function detach() {
+	public function detach() {
 		global $pines;
 		return $pines->page->detach_module($this, $this->position, $this->order);
 	}
@@ -122,7 +185,7 @@ class module extends p_base {
 	 *
 	 * @param string $add_content Content to append.
 	 */
-	function content($add_content) {
+	public function content($add_content) {
 		$this->content .= $add_content;
 	}
 
@@ -134,7 +197,7 @@ class module extends p_base {
 	 *
 	 * @return string The content.
 	 */
-	function get_content() {
+	public function get_content() {
 		return $this->content;
 	}
 
@@ -161,7 +224,7 @@ class module extends p_base {
 	 *
 	 * @return string The module's rendered content.
 	 */
-	function render() {
+	public function render() {
 		global $pines;
 
 		// Is it already rendered?
@@ -193,6 +256,7 @@ class module extends p_base {
 		$this->content(ob_get_clean());
 
 		$this->is_rendered = true;
+		$this->data_container = array();
 
 		// Return the content.
 		return $this->content;
@@ -209,7 +273,7 @@ class module extends p_base {
 	 * @param string $model The model to use.
 	 * @return string The module's rendered content.
 	 */
-	function render_model($model = 'module') {
+	public function render_model($model = 'module') {
 		global $pines;
 
 		// Render the module, if it's not already.

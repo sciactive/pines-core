@@ -25,6 +25,7 @@ foreach ($_p_cominit as $_p_cur_cominit) {
 	include($_p_cur_cominit);
 	if (P_SCRIPT_TIMING) pines_print_time("Init Script: $_p_cur_cominit");
 }
+unset ($_p_cominit, $_p_cur_cominit);
 if (P_SCRIPT_TIMING) pines_print_time('Init Components');
 
 ?>
