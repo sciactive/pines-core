@@ -69,7 +69,7 @@ class template extends p_base implements template_interface {
 				$return .= P_INDEX.'/';
 			if ( isset($component) ) {
 				// Get rid of 'com_', if it's not the system component.
-				$return .= ($component == 'system' ? "$component/" : substr($component, 4)).'/';
+				$return .= ($component == 'system' ? $component : substr($component, 4)).'/';
 				if (isset($action))
 					$return .= "$action/";
 			}
