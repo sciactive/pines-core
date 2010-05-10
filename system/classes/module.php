@@ -19,10 +19,15 @@ defined('P_RUN') or die('Direct access prohibited');
  */
 class module extends p_base {
 	/**
-	 * The modules title.
+	 * The module's title.
 	 * @var string
 	 */
 	public $title = '';
+	/**
+	 * The module's note.
+	 * @var string
+	 */
+	public $note = '';
 	/**
 	 * A list of additional classes to be added to the module.
 	 *
