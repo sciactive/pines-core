@@ -71,7 +71,7 @@ class page extends p_base {
 	 * Get the title of the page.
 	 *
 	 * If the title has not been explicitly set, get_title() uses
-	 * $pines->config->option_title.
+	 * $pines->config->page_title.
 	 *
 	 * @return string The title.
 	 */
@@ -80,7 +80,7 @@ class page extends p_base {
 		if ( !empty($this->title) ) {
 			return $this->title;
 		} else {
-			return $pines->config->option_title;
+			return $pines->config->page_title;
 		}
 	}
 	

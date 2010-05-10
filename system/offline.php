@@ -15,7 +15,7 @@ defined('P_RUN') or die('Direct access prohibited');
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
 <head>
-	<title><?php echo $this->config->option_title; ?></title>
+	<title><?php echo $this->config->page_title; ?></title>
 	<style type="text/css" media="all">
 		/* <![CDATA[ */
 		.wrapper {
@@ -51,7 +51,7 @@ defined('P_RUN') or die('Direct access prohibited');
 <body>
 <div class="wrapper">
 	<fieldset>
-		<legend><?php echo $this->config->option_title; ?></legend>
+		<legend><?php echo $this->config->page_title; ?></legend>
 		<p><?php echo $this->config->offline_message; ?></p>
 	</fieldset>
 </div>

@@ -12,6 +12,13 @@ defined('P_RUN') or die('Direct access prohibited');
 
 return array(
 	array(
+		'name' => 'system_name',
+		'cname' => 'System Name',
+		'description' => 'The name of the system.',
+		'value' => 'Pines',
+		'peruser' => true,
+	),
+	array(
 		'name' => 'full_location',
 		'cname' => 'Full Location',
 		'description' => 'The URL of this Pines installation. End this path with a slash!',
@@ -24,9 +31,9 @@ return array(
 		'value' => substr($_SERVER['PHP_SELF'], 0, strripos($_SERVER['PHP_SELF'], P_INDEX)),
 	),
 	array(
-		'name' => 'setting_upload',
-		'cname' => 'Upload Directory',
-		'description' => 'The directory to store uploaded files. This should be the real, relative path and the relative URL. End this path with a slash!',
+		'name' => 'upload_location',
+		'cname' => 'Upload Location',
+		'description' => 'The location to store uploaded files. This should be the real, relative path and the relative (to "Full Location") URL. End this path with a slash!',
 		'value' => 'media/',
 		'peruser' => true,
 	),
@@ -43,31 +50,23 @@ return array(
 		'value' => 'We are currently offline for maintenance. Please try back shortly.',
 	),
 	array(
-		'name' => 'option_title',
+		'name' => 'page_title',
 		'cname' => 'Page Title',
 		'description' => 'The default title at the top of each page.',
 		'value' => 'Pines',
 		'peruser' => true,
 	),
 	array(
-		'name' => 'option_copyright_notice',
+		'name' => 'copyright_notice',
 		'cname' => 'Copyright Notice',
 		'description' => 'The copyright notice at the bottom of each page.',
 		'value' => '&copy; 2010 SciActive.com. All Rights Reserved. Powered by <a href="http://pines.sourceforge.net/" onclick="window.open(this.href); return false;">Pines</a>.',
 		'peruser' => true,
 	),
 	array(
-		'name' => 'default_template',
-		'cname' => 'Default Template',
-		'description' => 'The default template.',
-		'value' => 'tpl_pines',
-		'options' => pines_scandir('templates/'),
-		'peruser' => true,
-	),
-	array(
-		'name' => 'allow_template_override',
+		'name' => 'template_override',
 		'cname' => 'Template Override',
-		'description' => 'Allow the template to be overriden by adding ?template=tpl_whatever',
+		'description' => 'Allow the template to be overridden by adding ?template=tpl_whatever',
 		'value' => true,
 		'peruser' => true,
 	),
@@ -80,8 +79,16 @@ return array(
 	array(
 		'name' => 'use_htaccess',
 		'cname' => 'Apache .htaccess',
-		'description' => 'Use Apache .htaccess with mod_rewrite. (Rename htaccess.txt to .htaccess before using.)',
+		'description' => 'Use Apache .htaccess with mod_rewrite to hide "index.php" in the URL. (Rename htaccess.txt to .htaccess before using.)',
 		'value' => false,
+	),
+	array(
+		'name' => 'default_template',
+		'cname' => 'Default Template',
+		'description' => 'The default template.',
+		'value' => 'tpl_pines',
+		'options' => pines_scandir('templates/'),
+		'peruser' => true,
 	),
 	array(
 		'name' => 'default_component',

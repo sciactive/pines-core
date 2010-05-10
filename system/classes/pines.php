@@ -121,7 +121,7 @@ class pines extends p_base {
 		if (P_SCRIPT_TIMING) pines_print_time('Load the Pines base system services.');
 
 		if (P_SCRIPT_TIMING) pines_print_time('Load System Config');
-		$this->current_template = ( !empty($_REQUEST['template']) && $this->config->allow_template_override ) ?
+		$this->current_template = ( !empty($_REQUEST['template']) && $this->config->template_override ) ?
 			$_REQUEST['template'] : $this->config->default_template;
 		$this->template = $this->current_template;
 		date_default_timezone_set($this->config->timezone);
