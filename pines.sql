@@ -26,6 +26,8 @@ CREATE TABLE IF NOT EXISTS `pin_com_myentity_entities` (
   `guid` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `tags` text,
   `varlist` text,
+  `cdate` decimal(18,6) NOT NULL,
+  `mdate` decimal(18,6) NOT NULL,
   PRIMARY KEY (`guid`),
   KEY `id_tags` (`tags`(1000)),
   KEY `id_varlist` (`varlist`(1000))
