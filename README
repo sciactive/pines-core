@@ -15,6 +15,7 @@ Planned features for versions <=1.0:
 
 Planned features for versions >1.0:
 --------------------------------------------------------------------------------
++Install alternative services for icons and editor.
 +Entity locking.
 +Pines Grid caption and summary support.
 +New templates / Improve Pines template. (Maybe use XSL instead of PHP.)
