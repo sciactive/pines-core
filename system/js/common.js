@@ -68,6 +68,10 @@ pines.post=function(url, params){
 	document.body.appendChild(form);
 	form.submit();
 };
+// Determine whether JavaScript loading is paused.
+pines.paused=function(){
+	return _paused;
+};
 // Wait to load pending JavaScript.
 pines.pause=function(){
 	_paused = true;
