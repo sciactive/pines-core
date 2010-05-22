@@ -212,12 +212,25 @@ interface group_interface extends able_object_interface {
 	 */
 	public function is_descendent($group = null);
 	/**
+	 * Gets an array of the group's descendent groups.
+	 *
+	 * @return array An array of groups.
+	 */
+	public function get_descendents();
+	/**
 	 * Find the location of the group's current logo image.
 	 *
 	 * @param bool $rela_location Return a relative URL, instead of a full one.
 	 * @return string The URL of the logo image.
 	 */
 	public function get_logo($rela_location = false);
+	/**
+	 * Gets an array of users in the group.
+	 *
+	 * @param bool $descendents Include users in all descendent groups too.
+	 * @return array An array of users.
+	 */
+	public function get_users($descendents = false);
 	/**
 	 * Print a form to edit the group.
 	 *
@@ -722,12 +735,12 @@ interface user_manager_interface extends component_interface {
 	 * The following conditions will result in different checks, which determine
 	 * whether the check passes:
 	 *
-	 * - No user is logged in. (Always returned, should be managed with abilities.)
-	 * - The entity has no "user" and no "group". (Always returned.)
-	 * - The user has the "system/all" ability. (Always returned.)
-	 * - The entity is the user. (Always returned.)
-	 * - It is the user's primary group. (Always returned.)
-	 * - The entity is a user or group. (Always returned.)
+	 * - No user is logged in. (Always true, should be managed with abilities.)
+	 * - The entity has no "user" and no "group". (Always true.)
+	 * - The user has the "system/all" ability. (Always true.)
+	 * - The entity is the user. (Always true.)
+	 * - It is the user's primary group. (Always true.)
+	 * - The entity is a user or group. (Always true.)
 	 * - Its "user" is the user. (It is owned by the user.) (Check user AC.)
 	 * - Its "group" is the user's primary group. (Check group AC.)
 	 * - Its "group" is one of the user's secondary groups. (Check group AC.)
@@ -757,41 +770,19 @@ interface user_manager_interface extends component_interface {
 	 *
 	 * @param string $ability The ability.
 	 * @param user $user The user to check. If none is given, the current user is used.
-	 * @return bool
+	 * @return bool True or false.
 	 */
 	public function gatekeeper($ability = null, $user = null);
 	/**
-	 * Gets an array of the components which can be a default component.
-	 *
-	 * The way a component can be a user's default components is to have a
-	 * "default" action, which loads what the user will see when they first log
-	 * on.
-	 *
-	 * @return array The array of component names.
-	 */
-	public function get_default_component_array();
-	/**
-	 * Gets an array of a group's descendendents.
-	 *
-	 * If no parent is given, get_group_descendents() will start with all top
-	 * level groups. (It will return all top level groups' descendents.)
-	 *
-	 * get_group_descendents() returns an array of a group's descendents.
-	 *
-	 * @param group $parent The group to descend from.
-	 * @return array The array of groups.
-	 */
-	public function get_group_descendents($parent = null);
-	/**
 	 * Gets all groups.
 	 *
-	 * @return array An array of group entities.
+	 * @return array An array of groups.
 	 */
 	public function get_groups();
 	/**
 	 * Gets all users.
 	 *
-	 * @return array An array of user entities.
+	 * @return array An array of users.
 	 */
 	public function get_users();
 	/**
@@ -816,10 +807,10 @@ interface user_manager_interface extends component_interface {
 	 * Kick the user out of the current page.
 	 *
 	 * Note that this method completely terminates execution of the script when
-	 * it is called. Code after this function is called will not run.
+	 * it is called. Code after this method is called will not run.
 	 *
 	 * @param string $message An optional message to display to the user.
-	 * @param string $url An optional URL to be included in the query data of the redirection url.
+	 * @param string $url An optional URL to return to. (E.g. if the user logs in.)
 	 */
 	public function punt_user($message = null, $url = null);
 }

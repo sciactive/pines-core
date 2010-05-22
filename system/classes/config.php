@@ -114,6 +114,24 @@ class config extends p_base {
 	}
 
 	/**
+	 * Gets an array of the components which can be a default component.
+	 *
+	 * The way a component can be a default component is to have a "default"
+	 * action, which loads what the user will see when they first log on.
+	 *
+	 * @return array An array of component names.
+	 */
+	public function get_default_components() {
+		global $pines;
+		$return = array();
+		foreach ($pines->components as $cur_component) {
+			if ( file_exists("components/{$cur_component}/actions/default.php") )
+				$return[] = $cur_component;
+		}
+		return $return;
+	}
+
+	/**
 	 * Fill an object with the data from a configuration array.
 	 *
 	 * The configuration array must be formatted correctly. It must contain one
