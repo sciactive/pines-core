@@ -30,6 +30,17 @@ interface component_interface extends p_base_interface { }
  */
 interface data_object_interface extends p_base_interface {
 	/**
+	 * Search the array for this object and return the corresponding key.
+	 *
+	 * If $strict is false, is() is used to compare. If $strict is true,
+	 * equals() is used.
+	 *
+	 * @param array $array The array to search.
+	 * @param bool $strict Whether to use stronger comparison.
+	 * @return mixed The key if the object is in the array, false if it isn't or if $array is not an array.
+	 */
+	public function array_search($array, $strict = false);
+	/**
 	 * Delete the object from storage.
 	 *
 	 * @return bool True on success, false on failure.
