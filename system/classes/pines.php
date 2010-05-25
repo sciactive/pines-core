@@ -65,7 +65,7 @@ class pines extends p_base {
 	 * An array of the possible system services.
 	 * @var array
 	 */
-	public $service_names = array('template', 'configurator', 'log_manager', 'entity_manager', 'user_manager', 'editor', 'icons');
+	public $service_names = array('template', 'configurator', 'log_manager', 'entity_manager', 'user_manager', 'editor', 'uploader', 'icons');
 	/**
 	 * An array of the system services.
 	 * @var array

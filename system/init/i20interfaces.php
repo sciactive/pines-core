@@ -844,6 +844,50 @@ interface editor_interface extends component_interface {
 }
 
 /**
+ * File uploader.
+ * @package Pines
+ */
+interface uploader_interface extends component_interface {
+	/**
+	 * Load the uploader.
+	 *
+	 * This will transform any text inputs with the "puploader" class into file
+	 * uploaders. The uploader will contain the URL of the selected file.
+	 */
+	public function load();
+	/**
+	 * Check whether a user provided URL is valid.
+	 * 
+	 * Whenever you use the uploader, you should use this method to check the
+	 * user input. If it returns false, DO NOT use that value. It is VERY likely
+	 * that the user is attempting to hack the system.
+	 * 
+	 * @param string $url The user provided file URL.
+	 * @return bool True if the URL is valid, false if it is not.
+	 */
+	public function check($url);
+	/**
+	 * Get the real path to a file.
+	 * 
+	 * This path can be used in server side code to access the file.
+	 * 
+	 * @param string $url The user provided file URL.
+	 * @return string The real path to the file.
+	 */
+	public function real($url);
+	/**
+	 * Get the URL to a file.
+	 * 
+	 * This path can be used in client side code to access the file.
+	 * 
+	 * @param string $real The real path to the file.
+	 * @param bool $full Whether to return a full URL, instead of relative to the server root.
+	 * @return string The file's URL.
+	 */
+	public function url($real, $full = false);
+}
+
+/**
  * Pines Icon theme.
  * @package Pines
  */

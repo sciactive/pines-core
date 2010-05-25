@@ -102,10 +102,12 @@ if (P_SCRIPT_TIMING) pines_print_time('Load Pines');
  * - entity_manager - Manages data abstraction (entities).
  * - user_manager - Manages users, groups, and their permissions.
  * - editor - Provides a content editor.
+ * - uploader - Provides a file uploader.
+ * - icons - Provides an icon theme.
  *
  * When you want to set your component as one of these services (excluding the
- * base system services), place a string with the name of your component's class
- * into the appropriate variable.
+ * core services), place a string with the name of your component's class into
+ * the appropriate variable.
  *
  * For example, if you are designing a log manager called com_emaillogs, use
  * this in an init file (like i10set.php):
