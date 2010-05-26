@@ -457,6 +457,8 @@ interface entity_manager_interface extends component_interface {
 	 * - tags_i - An array of inclusive tags. The entity must have at least one.
 	 * - data - An array of key/values corresponding to var/values.
 	 * - data_i - An array of inclusive key/values corresponding to var/values.
+	 * - array - An array of key/values corresponding to var/values.
+	 * - array_i - An array of inclusive key/values corresponding to var/values.
 	 * - match - An array of key/regex corresponding to var/values.
 	 * - match_i - An array of inclusive key/regex corresponding to var/values.
 	 * - gt - An array of key/numbers corresponding to var/values.
@@ -472,6 +474,8 @@ interface entity_manager_interface extends component_interface {
 	 * - class - The class to create each entity with.
 	 * - limit - The limit of entities to be returned.
 	 * - offset - The offset from the first (0) to start retrieving entities.
+	 *
+	 * For array matching, in_array() is used.
 	 *
 	 * For regex matching, preg_match() is used.
 	 *
