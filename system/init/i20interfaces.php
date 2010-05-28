@@ -448,61 +448,115 @@ interface entity_manager_interface extends component_interface {
 	/**
 	 * Get an array of entities.
 	 *
-	 * GUIDs are integers and start at one (1).
+	 * $options is an associative array, which contains any of the following
+	 * settings (in the form $options['name'] = value):
 	 *
-	 * $options can contain the following key - values:
+	 * - class - (string) The class to create each entity with.
+	 * - limit - (int) The limit of entities to be returned.
+	 * - offset - (int) The offset from the first (0) to start retrieving
+	 *   entities.
+	 * - reverse - (bool) If true, newest (last) entities will be retrieved
+	 *   first instead of oldest. Also offset will be from the last entity (0).
 	 *
-	 * - guid - A GUID or array of GUIDs.
-	 * - tags - An array of tags. The entity must have each one.
-	 * - tags_i - An array of inclusive tags. The entity must have at least one.
-	 * - data - An array of key/values corresponding to var/values.
-	 * - data_i - An array of inclusive key/values corresponding to var/values.
-	 * - array - An array of key/values corresponding to var/values.
-	 * - array_i - An array of inclusive key/values corresponding to var/values.
-	 * - match - An array of key/regex corresponding to var/values.
-	 * - match_i - An array of inclusive key/regex corresponding to var/values.
-	 * - gt - An array of key/numbers corresponding to var/values.
-	 * - gt_i - An array of inclusive key/numbers corresponding to var/values.
-	 * - gte - An array of key/numbers corresponding to var/values.
-	 * - gte_i - An array of inclusive key/numbers corresponding to var/values.
-	 * - lt - An array of key/numbers corresponding to var/values.
-	 * - lt_i - An array of inclusive key/numbers corresponding to var/values.
-	 * - lte - An array of key/numbers corresponding to var/values.
-	 * - lte_i - An array of inclusive key/numbers corresponding to var/values.
-	 * - ref - An array of key/values corresponding to var/values.
-	 * - ref_i - An array of inclusive key/values corresponding to var/values.
-	 * - class - The class to create each entity with.
-	 * - limit - The limit of entities to be returned.
-	 * - offset - The offset from the first (0) to start retrieving entities.
-	 *
-	 * For array matching, in_array() is used.
-	 *
-	 * For regex matching, preg_match() is used.
-	 *
-	 * The gt/gte/lt/lte options check whether a variable is greater than/
-	 * greater or equal to/less than/less than or equal to a number,
-	 * respectively.
-	 *
-	 * For reference searching, the values can be an entity, GUID, or an array
-	 * of either. Inclusive ref can't be a single value, as that wouldn't make
-	 * sense.
-	 *
-	 * If a class is specified, it must have a factory() static method which
+	 * If a class is specified, it must have a factory() static method that
 	 * returns a new instance.
+	 *
+	 * Selectors are also associative arrays. Any amount of selectors can be
+	 * provided. The first member of a selector must be a "type" string. The
+	 * type string can be:
+	 *
+	 * - & - (and) All values in the selector must be true.
+	 * - | - (or) At least one value in the selector must be true.
+	 * - !& - (not and) All values in the selector must be false.
+	 * - !| - (not or) At least one value in the selector must be false.
+	 *
+	 * The rest of the entries in the selector are associative entries, which
+	 * can be any of the following (in the form $selector['name'] = value, or
+	 * $selector['name'] = array(value1, value2,...)):
+	 *
+	 * - guid - A GUID. True if the entity's GUID is equal.
+	 * - tag - A tag. True if the entity has the tag.
+	 * - data - An array with a name, then value. True if the named variable is
+	 *   equal.
+	 * - strict - An array with a name, then value. True if the named variable
+	 *   is identical.
+	 * - array - An array with a name, then value. True if the named variable is
+	 *   an array containing the value. Uses in_array().
+	 * - match - An array with a name, then regular expression. True if the
+	 *   named variable matches. Uses preg_match().
+	 * - gt - An array with a name, then value. True if the named variable is
+	 *   greater than the value.
+	 * - gte - An array with a name, then value. True if the named variable is
+	 *   greater than or equal to the value.
+	 * - lt - An array with a name, then value. True if the named variable is
+	 *   less than the value.
+	 * - lte - An array with a name, then value. True if the named variable is
+	 *   less than or equal to the value.
+	 * - ref - An array with a name, then either a entity, or a GUID. True if
+	 *   the named variable is the entity or an array containing the entity.
+	 * 
+	 * This example will retrieve the last two entities where:
+	 * 
+	 * - It has 'person' tag.
+	 * - gender = male and lname = Smith.
+	 * - It has either 'employee' or 'manager' tag.
+	 * - name is either Clark, James, Chris, Christopher, Jake, or Jacob.
+	 * - warnings is not an integer 0.
+	 * - If age is 22 or more, then pay is not greater than 8.
+	 * 
+	 * <code>
+	 *	$entities = $pines->entity_manager->get_entities(
+	 *		array('reverse' => true, 'limit' => 2),
+	 *		array(
+	 *			'&', // all must be true
+	 *			'tag' => 'person',
+	 *			'data' => array(
+	 *				array('gender', 'male'),
+	 *				array('lname', 'Smith')
+	 *			)
+	 *		),
+	 *		array(
+	 *			'|', // at least one must be true
+	 *			'tag' => array('employee', 'manager')
+	 *		),
+	 *		array(
+	 *			'|',
+	 *			'data' => array(
+	 *				array('name', 'Clark'),
+	 *				array('name', 'James')
+	 *			),
+	 *			'match' => array(
+	 *				array('name', '/Chris(topher)?/'),
+	 *				array('name', '/Ja(ke|cob)/')
+	 *			)
+	 *		),
+	 *		array(
+	 *			'!&', // all must be false
+	 *			'strict' => array('warnings', 0)
+	 *		),
+	 *		array(
+	 *			'!|', // at least one must be false
+	 *			'gte' => array('age', 22),
+	 *			'gt' => array('pay', 8)
+	 *		)
+	 *	);
+	 * </code>
 	 *
 	 * @param array $options The options.
 	 * @param array $selectors... The selectors to search for.
 	 * @return array|null An array of entities, or null on failure.
+	 * @todo An option to place a total count in a var.
+	 * @todo Use an asterisk to specify any variable.
 	 */
 	public function get_entities();
 	/**
-	 * Get the first entity to match all options.
+	 * Get the first entity to match all options/selectors.
 	 *
-	 * $options is the same as in get_entities().
+	 * $options and $selectors are the same as in get_entities().
 	 *
 	 * This function is equivalent to setting $options['limit'] to 1 for
-	 * get_entities(), except that it will return an entity or null, instead of
-	 * an array.
+	 * get_entities(), except that it will return null if no entity is found.
+	 * get_entities() would return an empty array.
 	 *
 	 * @param mixed $options The options to search for, or just a GUID.
 	 * @param mixed $selectors... The selectors to search for, or nothing if $options is a GUID.
