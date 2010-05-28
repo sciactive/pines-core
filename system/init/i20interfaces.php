@@ -490,10 +490,11 @@ interface entity_manager_interface extends component_interface {
 	 * If a class is specified, it must have a factory() static method which
 	 * returns a new instance.
 	 *
-	 * @param array $options The options to search for.
+	 * @param array $options The options.
+	 * @param array $selectors... The selectors to search for.
 	 * @return array|null An array of entities, or null on failure.
 	 */
-	public function get_entities($options = array());
+	public function get_entities();
 	/**
 	 * Get the first entity to match all options.
 	 *
@@ -504,9 +505,10 @@ interface entity_manager_interface extends component_interface {
 	 * an array.
 	 *
 	 * @param mixed $options The options to search for, or just a GUID.
+	 * @param mixed $selectors... The selectors to search for, or nothing if $options is a GUID.
 	 * @return mixed An entity, or null on failure and nothing found.
 	 */
-	public function get_entity($options);
+	public function get_entity();
 	/**
 	 * Get the current value of a unique ID.
 	 *
