@@ -453,10 +453,10 @@ interface entity_manager_interface extends component_interface {
 	 *
 	 * - class - (string) The class to create each entity with.
 	 * - limit - (int) The limit of entities to be returned.
-	 * - offset - (int) The offset from the first (0) to start retrieving
-	 *   entities.
-	 * - reverse - (bool) If true, newest (last) entities will be retrieved
-	 *   first instead of oldest. Also offset will be from the last entity (0).
+	 * - offset - (int) The offset from the oldest matching entity to start
+	 *   retrieving.
+	 * - reverse - (bool) If true, entities will be retrieved from newest to
+	 *   oldest. Therefore, offset will be from the newest entity.
 	 *
 	 * If a class is specified, it must have a factory() static method that
 	 * returns a new instance.
@@ -498,48 +498,48 @@ interface entity_manager_interface extends component_interface {
 	 * This example will retrieve the last two entities where:
 	 * 
 	 * - It has 'person' tag.
-	 * - gender = male and lname = Smith.
+	 * - gender is male and lname is Smith.
 	 * - It has either 'employee' or 'manager' tag.
 	 * - name is either Clark, James, Chris, Christopher, Jake, or Jacob.
 	 * - warnings is not an integer 0.
 	 * - If age is 22 or more, then pay is not greater than 8.
 	 * 
 	 * <code>
-	 *	$entities = $pines->entity_manager->get_entities(
-	 *		array('reverse' => true, 'limit' => 2),
-	 *		array(
-	 *			'&', // all must be true
-	 *			'tag' => 'person',
-	 *			'data' => array(
-	 *				array('gender', 'male'),
-	 *				array('lname', 'Smith')
-	 *			)
-	 *		),
-	 *		array(
-	 *			'|', // at least one must be true
-	 *			'tag' => array('employee', 'manager')
-	 *		),
-	 *		array(
-	 *			'|',
-	 *			'data' => array(
-	 *				array('name', 'Clark'),
-	 *				array('name', 'James')
-	 *			),
-	 *			'match' => array(
-	 *				array('name', '/Chris(topher)?/'),
-	 *				array('name', '/Ja(ke|cob)/')
-	 *			)
-	 *		),
-	 *		array(
-	 *			'!&', // all must be false
-	 *			'strict' => array('warnings', 0)
-	 *		),
-	 *		array(
-	 *			'!|', // at least one must be false
-	 *			'gte' => array('age', 22),
-	 *			'gt' => array('pay', 8)
+	 * $entities = $pines->entity_manager->get_entities(
+	 *	array('reverse' => true, 'limit' => 2),
+	 *	array(
+	 *		'&', // all must be true
+	 *		'tag' => 'person',
+	 *		'data' => array(
+	 *			array('gender', 'male'),
+	 *			array('lname', 'Smith')
 	 *		)
-	 *	);
+	 *	),
+	 *	array(
+	 *		'|', // at least one must be true
+	 *		'tag' => array('employee', 'manager')
+	 *	),
+	 *	array(
+	 *		'|',
+	 *		'data' => array(
+	 *			array('name', 'Clark'),
+	 *			array('name', 'James')
+	 *		),
+	 *		'match' => array(
+	 *			array('name', '/Chris(topher)?/'),
+	 *			array('name', '/Ja(ke|cob)/')
+	 *		)
+	 *	),
+	 *	array(
+	 *		'!&', // all must be false
+	 *		'strict' => array('warnings', 0)
+	 *	),
+	 *	array(
+	 *		'!|', // at least one must be false
+	 *		'gte' => array('age', 22),
+	 *		'gt' => array('pay', 8)
+	 *	)
+	 * );
 	 * </code>
 	 *
 	 * @param array $options The options.
