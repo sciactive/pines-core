@@ -243,8 +243,7 @@ class module extends p_base {
 		while(true) {
 			$filename = "{$base_dir}{$this->component}/views/{$format}/{$this->view}.php";
 			if (file_exists($filename) || $format == 'all') {
-				unset($format);
-				unset($base_dir);
+				unset($format, $base_dir);
 				/**
 				 * This file should print the content of the module.
 				 */

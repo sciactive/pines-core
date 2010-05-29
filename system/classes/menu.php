@@ -37,7 +37,7 @@ class menu extends p_base {
 	 */
 	public function add_json_file($filename) {
 		$array = json_decode(file_get_contents($filename), true);
-		if (!is_array($array))
+		if ((array) $array !== $array)
 			return false;
 		foreach ($array as $value) {
 			$this->menu_arrays[] = $value;
@@ -114,7 +114,7 @@ class menu extends p_base {
 					continue;
 			}
 			// Transform URL arrays into actual URLs.
-			if ($cur_entry['href'] && is_array($cur_entry['href']))
+			if ((array) $cur_entry['href'] === $cur_entry['href'])
 				$cur_entry['href'] = call_user_func_array(array($pines->template, 'url'), $cur_entry['href']);
 			$tmp_path = explode('/', $cur_entry['path']);
 			unset($cur_entry['path']);
@@ -164,6 +164,7 @@ class menu extends p_base {
 		// If this isn't a top menu, and has no menu entry, return false.
 		if (!$is_top_menu && !$array[0])
 			return false;
+		/* What's faster?
 		$count = count($array);
 		if ($count > 1) {
 			// Clean up all its children.
@@ -173,10 +174,22 @@ class menu extends p_base {
 				if (!$this->cleanup($value, false)) {
 					unset($array[$key]);
 					$count--;
-				}
+			}
 			}
 			// If the menu requires children and has none, return false.
 			if ($array[0]['depend']['children'] && $count === 1)
+				return false;
+		*/
+		if (($array !== array($array[0]))) {
+			// Clean up all its children.
+			foreach ($array as $key => &$value) {
+				if ($key === 0)
+					continue;
+				if (!$this->cleanup($value, false))
+					unset($array[$key]);
+			}
+			// If the menu requires children and has none, return false.
+			if ($array[0]['depend']['children'] && ($array === array($array[0])))
 				return false;
 		} else {
 			// It has no children.

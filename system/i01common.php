@@ -154,9 +154,13 @@ function pines_notice($text) {
  */
 function gatekeeper($ability = null, $user = null) {
 	global $pines;
-	if (!isset($pines->user_manager))
-		return true;
-	return $pines->user_manager->gatekeeper($ability, $user);
+	static $user_manager;
+	if (!isset($user_manager)) {
+		if (!isset($pines->user_manager))
+			return true;
+		$user_manager =& $pines->user_manager;
+	}
+	return $user_manager->gatekeeper($ability, $user);
 }
 
 /**
@@ -185,14 +189,15 @@ function punt_user($message = null, $url = null) {
  * Shortcut to $pines->depend->check().
  *
  * @uses depend::check() Forwards parameters and returns the result.
- * @return bool The result is returned from the dependency checker.
+ * @param string $type The type of dependency to be checked.
+ * @param mixed $value The value to be checked.
+ * @return bool The result of the dependency check.
  */
-function pines_depend() {
+function pines_depend($type, $value) {
 	global $pines;
-	if (!isset($pines->depend))
-		return true;
-	$args = func_get_args();
-	return call_user_func_array(array($pines->depend, 'check'), $args);
+		if (!isset($pines->depend))
+			return true;
+	return $pines->depend->check($type, $value);
 }
 
 /**
@@ -203,10 +208,14 @@ function pines_depend() {
  */
 function pines_log() {
 	global $pines;
-	if (!isset($pines->log_manager))
-		return true;
+	static $log_manager;
+	if (!isset($log_manager)) {
+		if (!isset($pines->log_manager))
+			return true;
+		$log_manager =& $pines->log_manager;
+	}
 	$args = func_get_args();
-	return call_user_func_array(array($pines->log_manager, 'log'), $args);
+	return call_user_func_array(array($log_manager, 'log'), $args);
 }
 
 /**
@@ -217,10 +226,14 @@ function pines_log() {
  */
 function pines_url() {
 	global $pines;
-	if (!isset($pines->template))
-		return null;
+	static $template;
+	if (!isset($template)) {
+		if (!isset($pines->template))
+			return null;
+		$template =& $pines->template;
+	}
 	$args = func_get_args();
-	return call_user_func_array(array($pines->template, 'url'), $args);
+	return call_user_func_array(array($template, 'url'), $args);
 }
 
 ?>

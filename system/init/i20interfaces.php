@@ -543,7 +543,7 @@ interface entity_manager_interface extends component_interface {
 	 * </code>
 	 *
 	 * @param array $options The options.
-	 * @param array $selectors... The selectors to search for.
+	 * @param array $selectors,... The optional selectors to search for. If none are given, all entities are retrieved.
 	 * @return array|null An array of entities, or null on failure.
 	 * @todo An option to place a total count in a var.
 	 * @todo Use an asterisk to specify any variable.
@@ -559,7 +559,7 @@ interface entity_manager_interface extends component_interface {
 	 * get_entities() would return an empty array.
 	 *
 	 * @param mixed $options The options to search for, or just a GUID.
-	 * @param mixed $selectors... The selectors to search for, or nothing if $options is a GUID.
+	 * @param mixed $selectors,... The optional selectors to search for, or nothing if $options is a GUID.
 	 * @return mixed An entity, or null on failure and nothing found.
 	 */
 	public function get_entity();

@@ -55,7 +55,7 @@ class info extends p_base {
 			// Load the info for a component.
 			if ( file_exists("components/$name/info.php") ) {
 				$info_array = include("components/$name/info.php");
-				if (is_array($info_array)) {
+				if ((array) $info_array === $info_array) {
 					$this->$name = new p_base;
 					foreach ($info_array as $key => $value) {
 						$this->$name->$key = $value;
@@ -66,7 +66,7 @@ class info extends p_base {
 			// Load the info for a template.
 			if ( file_exists("templates/$name/info.php") ) {
 				$info_array = include("templates/$name/info.php");
-				if (is_array($info_array)) {
+				if ((array) $info_array === $info_array) {
 					$this->$name = new p_base;
 					foreach ($info_array as $key => $value) {
 						$this->$name->$key = $value;
@@ -95,12 +95,12 @@ class info extends p_base {
 		if (substr($name, 0, 4) == 'com_') {
 			if ( file_exists("components/$name/info.php") ) {
 				$info_array = include("components/$name/info.php");
-				return is_array($info_array);
+				return ((array) $info_array === $info_array);
 			}
 		} elseif (substr($name, 0, 4) == 'tpl_') {
 			if ( file_exists("templates/$name/info.php") ) {
 				$info_array = include("templates/$name/info.php");
-				return is_array($info_array);
+				return ((array) $info_array === $info_array);
 			}
 		}
 		return false;

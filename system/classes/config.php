@@ -57,7 +57,7 @@ class config extends p_base {
 			// Load the config for a component.
 			if ( file_exists("components/$name/defaults.php") ) {
 				$config_array = include("components/$name/defaults.php");
-				if (is_array($config_array)) {
+				if ((array) $config_array === $config_array) {
 					$this->$name = new p_base;
 					$this->fill_object($config_array, $this->$name);
 					if ( file_exists("components/$name/config.php") ) {
@@ -70,7 +70,7 @@ class config extends p_base {
 			// Load the config for a template.
 			if ( file_exists("templates/$name/defaults.php") ) {
 				$config_array = include("templates/$name/defaults.php");
-				if (is_array($config_array)) {
+				if ((array) $config_array === $config_array) {
 					$this->$name = new p_base;
 					$this->fill_object($config_array, $this->$name);
 					if ( file_exists("templates/$name/config.php") ) {
@@ -102,12 +102,12 @@ class config extends p_base {
 		if (substr($name, 0, 4) == 'com_') {
 			if ( file_exists("components/$name/defaults.php") ) {
 				$config_array = include("components/$name/defaults.php");
-				return is_array($config_array);
+				return ((array) $config_array === $config_array);
 			}
 		} elseif (substr($name, 0, 4) == 'tpl_') {
 			if ( file_exists("templates/$name/defaults.php") ) {
 				$config_array = include("templates/$name/defaults.php");
-				return is_array($config_array);
+				return ((array) $config_array === $config_array);
 			}
 		}
 		return false;
@@ -146,7 +146,7 @@ class config extends p_base {
 	 * @return bool True on success, false on failure.
 	 */
 	public function fill_object($config_array, &$object) {
-		if (!is_array($config_array)) return false;
+		if ((array) $config_array !== $config_array) return false;
 		foreach ($config_array as $cur_var) {
 			$name = $cur_var['name'];
 			$value = $cur_var['value'];

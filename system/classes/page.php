@@ -225,7 +225,7 @@ class page extends p_base {
 			// Make $pines accessible, so the modules and template can use it.
 			global $pines;
 			foreach ($this->modules as &$cur_pos) {
-				if (!$cur_pos || !is_array($cur_pos))
+				if (!$cur_pos || (array) $cur_pos !== $cur_pos)
 					continue;
 				foreach ($cur_pos as &$cur_module) {
 					$cur_module->render();

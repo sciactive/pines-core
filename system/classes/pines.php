@@ -261,7 +261,7 @@ class pines extends p_base {
 	public function __isset($name) {
 		global $pines;
 		if (substr($name, 0, 4) == 'com_')
-			return (class_exists($name) || (is_array($pines->class_files) && isset($pines->class_files[$name])));
+			return (class_exists($name) || ((array) $pines->class_files === $pines->class_files && isset($pines->class_files[$name])));
 		return (in_array($name, $this->service_names) && isset($this->services[$name]));
 	}
 
@@ -453,7 +453,7 @@ class pines extends p_base {
 		// Create a date object from the timestamp.
 		$date = new DateTime(gmdate('c', (int) $timestamp));
 		if (isset($timezone)) {
-			if (is_string($timezone))
+			if ((object) $timezone !== $timezone)
 				$timezone = new DateTimeZone($timezone);
 			$date->setTimezone($timezone);
 		} else {

@@ -180,7 +180,7 @@ class hook extends p_base {
 	 * @return bool True on success, false on failure.
 	 */
 	function hook_object(&$object, $prefix = '', $recursive = true) {
-		if (!is_object($object)) return false;
+		if ((object) $object !== $object) return false;
 		// Make sure we don't take over the hook object, or we'll end up
 		// recursively calling ourself.
 		$class_name = get_class($object);
@@ -188,7 +188,7 @@ class hook extends p_base {
 
 		if ($recursive) {
 			foreach ($object as $cur_name => &$cur_property) {
-				if (is_object($cur_property))
+				if ((object) $cur_property === $cur_property)
 					$this->hook_object($cur_property, $prefix.$cur_name.'->');
 			}
 		}
@@ -233,7 +233,7 @@ class hook extends p_base {
 				$code .= "\tif (\$arguments !== false) {\n";
 				$code .= "\t\t\$return = call_user_func_array(\$function, \$arguments);\n";
 				$code .= "\t\t\$return = \$pines->hook->run_callbacks(\$this->_p_prefix.'$fname', array(\$return), 'after', \$this->_p_object, \$function);\n";
-				$code .= "\t\tif (is_array(\$return))\n";
+				$code .= "\t\tif ((array) \$return === \$return)\n";
 				$code .= "\t\t\treturn \$return[0];\n";
 				$code .= "\t}\n";
 				$code .= "}\n\n";
@@ -304,7 +304,7 @@ class hook extends p_base {
 /*
 
 	function hook_object(&$object, $prefix = '', $recursive = true) {
-		if (!is_object($object)) return false;
+		if ((object) $object !== $object) return false;
 		// Make sure we don't take over the hook object, or we'll end up
 		// recursively calling ourself.
 		$class_name = get_class($object);
@@ -312,7 +312,7 @@ class hook extends p_base {
 
 		if ($recursive) {
 			foreach ($object as $cur_name => &$cur_property) {
-				if (is_object($cur_property))
+				if ((object) $cur_property === $cur_property)
 					$this->hook_object($cur_property, $prefix.$cur_name.'->');
 			}
 		}
@@ -356,7 +356,7 @@ class hook extends p_base {
 				$code .= "\tif (\$arguments !== false) {\n";
 				$code .= "\t\t\$return = call_user_func_array(array(\$this->_p_object, '$fname'), \$arguments);\n";
 				$code .= "\t\t\$return = \$pines->hook->run_callbacks(\$this->_p_prefix.'$fname', array(\$return), 'after', \$this->_p_object);\n";
-				$code .= "\t\tif (is_array(\$return))\n";
+				$code .= "\t\tif ((array) \$return === \$return)\n";
 				$code .= "\t\t\treturn \$return[0];\n";
 				$code .= "\t}\n";
 				$code .= "}\n\n";

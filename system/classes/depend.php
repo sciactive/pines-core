@@ -446,7 +446,7 @@ class depend extends p_base {
 	public function simple_parse($value, $callback) {
 		// ex: !val1&(val2|!val3|(val2&val4))
 		// Check whether there are parts, and fill an array with them.
-		if (preg_match_all('/[^!&|()]+/', $value, $matches)) {
+		if (preg_match_all('/[^!&|()]+/S', $value, $matches)) {
 			$search = $replace = array();
 			// For every match, check it and save the result.
 			usort($matches[0], array($this, 'sort_by_length'));
