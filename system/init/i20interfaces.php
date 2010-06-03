@@ -238,6 +238,8 @@ interface group_interface extends able_object_interface {
 	/**
 	 * Gets an array of users in the group.
 	 *
+	 * Some user managers may return only enabled users.
+	 *
 	 * @param bool $descendents Include users in all descendent groups too.
 	 * @return array An array of users.
 	 */
@@ -847,11 +849,15 @@ interface user_manager_interface extends component_interface {
 	/**
 	 * Gets all groups.
 	 *
+	 * Some user managers may return only enabled groups.
+	 *
 	 * @return array An array of groups.
 	 */
 	public function get_groups();
 	/**
 	 * Gets all users.
+	 *
+	 * Some user managers may return only enabled users.
 	 *
 	 * @return array An array of users.
 	 */
