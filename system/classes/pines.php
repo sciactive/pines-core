@@ -169,25 +169,36 @@ class pines extends p_base {
 		// URL Rewriting Engine (Simple, eh?)
 		// The values from URL rewriting override any post or get vars, so don't submit
 		// forms to a url you shouldn't.
-		// /index.php/user/edituser/id-35/ -> /index.php?option=com_user&action=edituser&id=35
+		// /index.php/user/group/edit/id-35/ -> /index.php?option=com_user&action=group/edit&id=35
 		if ( $this->config->url_rewriting ) {
+			$request_string = $_SERVER['REQUEST_URI'];
+			// If there's a query part, remove it.
+			if (strlen($_SERVER['QUERY_STRING']))
+				$request_string = substr($request_string, 0, (strlen($_SERVER['QUERY_STRING']) * -1) - 1);
+			// Remove the path to Pines.
+			$request_string = substr($request_string, strlen($this->config->rela_location));
+			// Get rid of index.php/ at the beginning.
+			if (strpos($request_string, P_INDEX.'/') === 0)
+				$request_string = substr($request_string, strlen(P_INDEX)+1);
+			// And / at the end.
+			if (substr($request_string, -1) == '/')
+				$request_string = substr($request_string, 0, -1);
 			// Get an array of the pseudo directories from the URI.
-			$args_array = explode('/',
-				// Get rid of index.php/ at the beginning, and / at the end.
-				preg_replace('/(^'.preg_quote(P_INDEX).'\/?)|(\/$)/', '', substr(
-					substr($_SERVER['REQUEST_URI'], 0,
-						// Use the whole string, or if there's a query part, subtract that.
-						strlen($_SERVER['REQUEST_URI']) - (strlen($_SERVER['QUERY_STRING']) ? strlen($_SERVER['QUERY_STRING']) + 1 : 0)
-					),
-					// This takes off the path to Pines.
-					strlen($this->config->rela_location)
-				))
-			);
+			$args_array = explode('/', $request_string);
 			if ( !empty($args_array[0]) ) $this->request_component = ($args_array[0] == 'system' ? $args_array[0] : 'com_'.$args_array[0]);
 			if ( !empty($args_array[1]) ) $this->request_action = $args_array[1];
 			$arg_count = count($args_array);
+			// Check for subdir actions. Note that they can't have dashes.
 			for ($i = 2; $i < $arg_count; $i++) {
-				$_REQUEST[preg_replace('/-.*$/', '', $args_array[$i])] = preg_replace('/^[^-]*-/', '', $args_array[$i]);
+				if (strpos($args_array[$i], '-') !== false)
+					break;
+				$this->request_action .= "/{$args_array[$i]}";
+			}
+			// Any other args are parsed as query data.
+			if ($i < $arg_count) {
+				for (; $i < $arg_count; $i++) {
+					$_REQUEST[preg_replace('/-.*$/', '', $args_array[$i])] = preg_replace('/^[^-]*-/', '', $args_array[$i]);
+				}
 			}
 		}
 
