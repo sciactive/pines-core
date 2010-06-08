@@ -465,7 +465,7 @@ class depend extends p_base {
 		}
 
 		// Use PHP to evaluate the string.
-		eval('return ('.$parsable.');');
+		return eval('return ('.$parsable.');');
 	}
 
 	/**
