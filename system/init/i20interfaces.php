@@ -231,10 +231,10 @@ interface group_interface extends able_object_interface {
 	/**
 	 * Find the location of the group's current logo image.
 	 *
-	 * @param bool $rela_location Return a relative URL, instead of a full one.
+	 * @param bool $full Return a full URL, instead of a relative one.
 	 * @return string The URL of the logo image.
 	 */
-	public function get_logo($rela_location = false);
+	public function get_logo($full = false);
 	/**
 	 * Gets an array of users in the group.
 	 *
