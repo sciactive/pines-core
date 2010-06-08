@@ -11,7 +11,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 /**
- * An object used to replace another object, so it can be successfully hooked.
+ * An object used to replace another object, so it can be hooked.
  * 
  * This class is dynamically edited during the takeover of an object for
  * hooking.

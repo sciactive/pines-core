@@ -30,9 +30,7 @@ function __autoload($class_name) {
 		}
 		if (P_SCRIPT_TIMING) pines_print_time("Preparing Class [$class_name]");
 		$new_class = substr($class_name, 14);
-		$new_object = new $new_class;
-		$pines->hook->hook_object($new_object, get_class($new_object).'->', false);
-		unset($new_object);
+		$pines->hook->hook_object($new_class, "{$new_class}->", false);
 		if (P_SCRIPT_TIMING) pines_print_time("Preparing Class [$class_name]");
 		return;
 	}

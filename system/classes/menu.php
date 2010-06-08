@@ -114,7 +114,7 @@ class menu extends p_base {
 					continue;
 			}
 			// Transform URL arrays into actual URLs.
-			if ((array) $cur_entry['href'] === $cur_entry['href'])
+			if (isset($cur_entry['href']) && (array) $cur_entry['href'] === $cur_entry['href'])
 				$cur_entry['href'] = call_user_func_array(array($pines->template, 'url'), $cur_entry['href']);
 			$tmp_path = explode('/', $cur_entry['path']);
 			unset($cur_entry['path']);

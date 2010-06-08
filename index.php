@@ -51,9 +51,6 @@ define('P_BASE_PATH', dirname(__FILE__));
 define('P_INDEX', basename($_SERVER['SCRIPT_FILENAME']));
 /**
  * When this is set to true, the times between script stages will be displayed.
- *
- * Note that the times can be misleading if a lot of processing happens before
- * an event is logged.
  */
 define('P_SCRIPT_TIMING', false);
 

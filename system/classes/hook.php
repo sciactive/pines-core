@@ -88,8 +88,8 @@ class hook extends p_base {
 	 * A hook is the name of whatever method it should hook onto. You can also
 	 * give a hook an arbitrary name, but be wary that it may already exist and
 	 * it may result in your callback being falsely called. In order to reduce
-	 * the chance of this, always use a plus sign (+) in front of arbitrary hook
-	 * names.
+	 * the chance of this, always use a plus sign (+) and your component's name
+	 * to begin arbitrary hook names.
 	 *
 	 * @param string $name The name of the hook.
 	 * @return int The ID of the new hook, or the ID of a hook which already exists and has the same name.
@@ -180,13 +180,17 @@ class hook extends p_base {
 	 * @return bool True on success, false on failure.
 	 */
 	function hook_object(&$object, $prefix = '', $recursive = true) {
-		if ((object) $object !== $object) return false;
+		if ((object) $object === $object) {
+			$is_string = false;
+		} else {
+			$is_string = true;
+		}
 		// Make sure we don't take over the hook object, or we'll end up
-		// recursively calling ourself.
-		$class_name = get_class($object);
-		if ($class_name == 'hook') return false;
+		// recursively calling ourself. Some system classes shouldn't be hooked.
+		$class_name = $is_string ? $object : get_class($object);
+		if (in_array($class_name, array('hook', 'depend', 'config', 'info'))) return false;
 
-		if ($recursive) {
+		if ($recursive && !$is_string) {
 			foreach ($object as $cur_name => &$cur_property) {
 				if ((object) $cur_property === $cur_property)
 					$this->hook_object($cur_property, $prefix.$cur_name.'->');
@@ -194,8 +198,15 @@ class hook extends p_base {
 		}
 
 		if (!class_exists("hook_override_$class_name")) {
-
-			$reflection = new ReflectionObject($object);
+			// This can make it faster, but might introduce security problems.
+			//if (isset($_SESSION['hook_cache']["hook_override_$class_name"])) {
+			//	eval($_SESSION['hook_cache']["hook_override_$class_name"]);
+			//} else {
+			if ($is_string) {
+				$reflection = new ReflectionClass($object);
+			} else {
+				$reflection = new ReflectionObject($object);
+			}
 			$methods = $reflection->getMethods();
 
 			$code = '';
@@ -224,23 +235,27 @@ class hook extends p_base {
 					$param_array[] = $param_prefix.'$'.$param_name.$param_suffix;
 					$param_call_array[] = '$'.$param_name;
 				}
-				$code .= $fprefix."function $fname(".implode(', ', $param_array).") {\n";
-				$code .= "\tglobal \$pines;\n";
-				$code .= "\t\$arguments = debug_backtrace(false);\n";
-				$code .= "\t\$arguments = \$arguments[0]['args'];\n";
-				$code .= "\t\$function = array(\$this->_p_object, '$fname');\n";
-				$code .= "\t\$arguments = \$pines->hook->run_callbacks(\$this->_p_prefix.'$fname', \$arguments, 'before', \$this->_p_object, \$function);\n";
-				$code .= "\tif (\$arguments !== false) {\n";
-				$code .= "\t\t\$return = call_user_func_array(\$function, \$arguments);\n";
-				$code .= "\t\t\$return = \$pines->hook->run_callbacks(\$this->_p_prefix.'$fname', array(\$return), 'after', \$this->_p_object, \$function);\n";
-				$code .= "\t\tif ((array) \$return === \$return)\n";
-				$code .= "\t\t\treturn \$return[0];\n";
-				$code .= "\t}\n";
-				$code .= "}\n\n";
+				$code .= $fprefix."function $fname(".implode(', ', $param_array).") {\n"
+				."\tglobal \$pines;\n"
+				."\t\$arguments = debug_backtrace(false);\n"
+				."\t\$arguments = \$arguments[0]['args'];\n"
+				."\t\$function = array(\$this->_p_object, '$fname');\n"
+				."\t\$arguments = \$pines->hook->run_callbacks(\$this->_p_prefix.'$fname', \$arguments, 'before', \$this->_p_object, \$function);\n"
+				."\tif (\$arguments !== false) {\n"
+				."\t\t\$return = call_user_func_array(\$function, \$arguments);\n"
+				."\t\t\$return = \$pines->hook->run_callbacks(\$this->_p_prefix.'$fname', array(\$return), 'after', \$this->_p_object, \$function);\n"
+				."\t\tif ((array) \$return === \$return)\n"
+				."\t\t\treturn \$return[0];\n"
+				."\t}\n"
+				."}\n\n";
 			}
 			// Build a hook_override class.
 			$include = str_replace(array('_NAMEHERE_', '//#CODEHERE#', '<?php', '?>'), array($class_name, $code, '', ''), $this->hook_file);
 			eval ($include);
+			//	if (!$_SESSION['hook_cache'])
+			//		$_SESSION['hook_cache'] = array();
+			//	$_SESSION['hook_cache']["hook_override_$class_name"] = $include;
+			//}
 		}
 
 		eval ('$object = new hook_override_'.$class_name.' ($object, $prefix);');
@@ -300,74 +315,4 @@ class hook extends p_base {
 		return ($a[0] < $b[0]) ? -1 : 1;
 	}
 }
-
-/*
-
-	function hook_object(&$object, $prefix = '', $recursive = true) {
-		if ((object) $object !== $object) return false;
-		// Make sure we don't take over the hook object, or we'll end up
-		// recursively calling ourself.
-		$class_name = get_class($object);
-		if ($class_name == 'hook') return false;
-
-		if ($recursive) {
-			foreach ($object as $cur_name => &$cur_property) {
-				if ((object) $cur_property === $cur_property)
-					$this->hook_object($cur_property, $prefix.$cur_name.'->');
-			}
-		}
-
-		if (!class_exists("hook_override_$class_name")) {
-
-			$reflection = new ReflectionObject($object);
-			$methods = $reflection->getMethods();
-
-			$code = '';
-			foreach ($methods as $cur_method) {
-				if (!$cur_method->isPublic())
-					continue;
-				$fname = $cur_method->getName();
-				if (in_array($fname, array('__construct', '__destruct', '__get', '__set', '__isset', '__unset', '__toString', '__invoke', '__set_state', '__clone', '__sleep')))
-					continue;
-				// Create a hook for this method.
-				$this->add_hook($prefix.$fname);
-
-				//$fprefix = $cur_method->isFinal() ? 'final ' : '';
-				$fprefix = $cur_method->isStatic() ? 'static ' : '';
-				$params = $cur_method->getParameters();
-				$param_array = array();
-				$param_call_array = array();
-				foreach ($params as $cur_param) {
-					$param_name = $cur_param->getName();
-					$param_prefix = $cur_param->isPassedByReference() ? '&' : '';
-					if ($cur_param->isDefaultValueAvailable()) {
-						$param_suffix = ' = '.var_export($cur_param->getDefaultValue(), true);
-					} else {
-						$param_suffix = '';
-					}
-					$param_array[] = $param_prefix.'$'.$param_name.$param_suffix;
-					$param_call_array[] = '$'.$param_name;
-				}
-				$code .= $fprefix."function $fname(".implode(', ', $param_array).") {\n";
-				$code .= "\tglobal \$pines;\n";
-				$code .= "\t\$arguments = debug_backtrace(false);\n";
-				$code .= "\t\$arguments = \$arguments[0]['args'];\n";
-				$code .= "\t\$arguments = \$pines->hook->run_callbacks(\$this->_p_prefix.'$fname', \$arguments, 'before', \$this->_p_object);\n";
-				$code .= "\tif (\$arguments !== false) {\n";
-				$code .= "\t\t\$return = call_user_func_array(array(\$this->_p_object, '$fname'), \$arguments);\n";
-				$code .= "\t\t\$return = \$pines->hook->run_callbacks(\$this->_p_prefix.'$fname', array(\$return), 'after', \$this->_p_object);\n";
-				$code .= "\t\tif ((array) \$return === \$return)\n";
-				$code .= "\t\t\treturn \$return[0];\n";
-				$code .= "\t}\n";
-				$code .= "}\n\n";
-			}
-			// Build a hook_override class.
-			$include = str_replace(array('_NAMEHERE_', '//#CODEHERE#', '<?php', '?>'), array($class_name, $code, '', ''), $this->hook_file);
-			eval ($include);
-		}
-
-		eval ('$object = new hook_override_'.$class_name.' ($object, $prefix);');
-		return true;
-	}
- */
 ?>

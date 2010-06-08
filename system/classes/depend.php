@@ -447,25 +447,25 @@ class depend extends p_base {
 		// ex: !val1&(val2|!val3|(val2&val4))
 		// Check whether there are parts, and fill an array with them.
 		if (preg_match_all('/[^!&|()]+/S', $value, $matches)) {
-			$search = $replace = array();
-			// For every match, check it and save the result.
+			// Replace shorthand with long PHP versions.
+			$search = array('&', '|');
+			$replace = array('&&', '||');
+			// For every match, replace it with a call to the callback.
 			usort($matches[0], array($this, 'sort_by_length'));
 			foreach ($matches[0] as $cur_match) {
 				$search[] = $cur_match;
-				$replace[] = call_user_func($callback, $cur_match) ? 'true' : 'false';
+				//$replace[] = call_user_func($callback, $cur_match) ? 'true' : 'false';
+				// Let PHP call the callback, so it knows when it can stop.
+				$replace[] = 'call_user_func($callback, \''.addslashes($cur_match).'\')';
 			}
-			// Replace each part with its result.
+			// Replace each part with its callback.
 			$parsable = str_replace($search, $replace, $value);
 		} else {
 			$parsable = call_user_func($callback, $value);
 		}
 
-		// If any illegal characters exist, return false.
-		if (preg_match('/[^!&|()truefals]/', $parsable))
-			return false;
-
 		// Use PHP to evaluate the string.
-		return eval('return '.$parsable.';');
+		eval('return ('.$parsable.');');
 	}
 
 	/**
