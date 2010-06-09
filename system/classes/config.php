@@ -124,7 +124,7 @@ class config extends p_base {
 	public function get_default_components() {
 		global $pines;
 		$return = array();
-		foreach ($pines->components as $cur_component) {
+		foreach (pines_scandir('components/') as $cur_component) {
 			if ( file_exists("components/{$cur_component}/actions/default.php") )
 				$return[] = $cur_component;
 		}

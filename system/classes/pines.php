@@ -112,8 +112,8 @@ class pines extends p_base {
 	 */
 	public function __construct() {
 		if (P_SCRIPT_TIMING) pines_print_time('Load the Pines base system services.');
-		$this->info = new info;
 		$this->config = new config;
+		$this->info = new info;
 		$this->hook = new hook;
 		$this->depend = new depend;
 		$this->menu = new menu;
@@ -201,10 +201,6 @@ class pines extends p_base {
 				}
 			}
 		}
-
-		// Fill in any empty request vars.
-		if ( empty($this->request_component) ) $this->request_component = $this->config->default_component;
-		if ( empty($this->request_action) ) $this->request_action = 'default';
 		if (P_SCRIPT_TIMING) pines_print_time('Get Requested Action');
 
 		if (P_SCRIPT_TIMING) pines_print_time('Display Pending Notices');
@@ -301,12 +297,17 @@ class pines extends p_base {
 	/**
 	 * Load and run an action.
 	 *
+	 * If no component/action is specified, the default component is loaded.
+	 *
 	 * @param string $component The component in which the action resides.
 	 * @param string $action The action to run.
 	 * @return mixed The value returned by the action, or 'error_404' if it doesn't exist.
 	 */
-	public function action($component, $action) {
+	public function action($component = null, $action = null) {
 		global $pines;
+		// Fill in any empty vars.
+		if ( empty($component) ) $component = $this->config->default_component;
+		if ( empty($action) ) $action = 'default';
 		$component = str_replace('..', 'fail-danger-dont-use-hack-attempt', $component);
 		$action = str_replace('..', 'fail-danger-dont-use-hack-attempt', $action);
 		$action_file = ($component == 'system' ? $component : "components/$component")."/actions/$action.php";

@@ -70,7 +70,7 @@ if (!function_exists('is_clean_filename')) {
  * @param string $action The action to run.
  * @return mixed The value returned by the action, or 'error_404' if it doesn't exist.
  */
-function action($component, $action) {
+function action($component = null, $action = null) {
 	global $pines;
 	return $pines->action($component, $action);
 }

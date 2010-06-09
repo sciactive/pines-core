@@ -93,9 +93,10 @@ return array(
 	array(
 		'name' => 'default_component',
 		'cname' => 'Default Component',
-		'description' => 'This component should have a "default" action. That action will be called when the user first accesses Pines. If an action is specified, but no component, this one will be used.',
+		'description' => 'This component should have a "default" action. That action will be called when the user first accesses the system. If an action is specified, but no component, this one will be used.',
 		'value' => 'com_user',
-		'options' => pines_scandir('components/'),
+		'options' => is_callable(array($this, 'get_default_components')) ? $this->get_default_components() : $pines->config->get_default_components(),
+		'peruser' => true,
 	),
 	array(
 		'name' => 'timezone',
