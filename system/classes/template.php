@@ -85,9 +85,9 @@ class template extends p_base implements template_interface {
 		} else {
 			$return .= ($pines->config->use_htaccess) ? '?' : P_INDEX.'?';
 			if ( isset($component) ) {
-				$param_return = "option=$component";
+				$param_return = 'option='.urlencode($component);
 				if (isset($action))
-					$param_return .= "&action=$action";
+					$param_return .= '&action='.urlencode($action);
 			}
 			if ( $params ) {
 				foreach ($params as $key => $value) {
