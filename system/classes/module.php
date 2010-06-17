@@ -19,6 +19,17 @@ defined('P_RUN') or die('Direct access prohibited');
  */
 class module extends p_base {
 	/**
+	 * The module's unique ID.
+	 *
+	 * This unique ID is generated using mt_rand(). The random number is
+	 * prefixed with "p_". It can be used to provide unique IDs for HTML and
+	 * CSS, in order to prevent naming conflicts. See the content() function for
+	 * information on using it.
+	 *
+	 * @var string
+	 */
+	public $muid;
+	/**
 	 * The module's title.
 	 * @var string
 	 */
@@ -93,6 +104,7 @@ class module extends p_base {
 	public function __construct($component, $view, $position = null, $order = null) {
 		$this->component = $component;
 		$this->view = $view;
+		$this->muid = 'p_'.mt_rand();
 		if ( isset($position) )
 			return $this->attach($position, $order);
 	}
@@ -185,13 +197,17 @@ class module extends p_base {
 	/**
 	 * Append content to the module.
 	 *
-	 * Note that this may be appended before the view is called, thus being
-	 * placed before the content from the view.
+	 * Any instance of the string "p_muid" will be replaced by the module's
+	 * unique ID. You can use this to prevent naming collisions in HTML IDs and
+	 * CSS classes.
+	 *
+	 * Note that the content may be appended before the view is called, thus
+	 * being placed before the content from the view.
 	 *
 	 * @param string $add_content Content to append.
 	 */
 	public function content($add_content) {
-		$this->content .= $add_content;
+		$this->content .= str_replace('p_muid', $this->muid, $add_content);
 	}
 
 	/**
@@ -226,6 +242,9 @@ class module extends p_base {
 	 *
 	 * The component 'system' has views in system/views/. The view 'null' in
 	 * 'system' can be used as a blank view.
+	 *
+	 * Once the view is found, the module will require it. Its output will be
+	 * passed to the content() function.
 	 *
 	 * @return string The module's rendered content.
 	 */
