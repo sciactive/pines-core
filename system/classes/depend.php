@@ -148,7 +148,7 @@ class depend extends p_base {
 	/**
 	 * Check the client's IP address.
 	 *
-	 * The syntax is split into three parts:
+	 * The syntax is as follows:
 	 *
 	 * IP - Only matches one IP address.
 	 *
@@ -167,7 +167,8 @@ class depend extends p_base {
 	 * <pre>0.0.0.0-0.0.0.255</pre>
 	 *
 	 * The string "{server_addr}" (without quotes) will be replaced by the
-	 * server's IP address. (From $_SERVER['SERVER_ADDR'])
+	 * server's IP address (from $_SERVER['SERVER_ADDR']). Be aware that it may
+	 * be IPv6, which will not work with this function.
 	 *
 	 * Examples
 	 *
@@ -197,9 +198,9 @@ class depend extends p_base {
 			)
 			return $this->simple_parse($value, array($this, 'check_clientip'));
 		$client_ip = $_SERVER['REMOTE_ADDR'];
-		if (preg_match('/^\d{1,3}(\.\d{1,3}){3}$/', $value)) {
+		if ($client_ip == $value) {
 			// IP
-			return ($client_ip == $value);
+			return true;
 		} elseif (preg_match('/^\d{1,3}(\.\d{1,3}){0,3}\/\d{1,2}$/', $value)) {
 			// CIDR
 			return $pines->check_ip_cidr($client_ip, $value);
@@ -211,10 +212,9 @@ class depend extends p_base {
 			// IP Range
 			$params = explode('-', $value);
 			return $pines->check_ip_range($client_ip, $params[0], $params[1]);
-		} else {
-			// Not formatted correctly.
-			return false;
 		}
+		// Not formatted correctly. May be IPv6 though.
+		return false;
 	}
 
 	/**
