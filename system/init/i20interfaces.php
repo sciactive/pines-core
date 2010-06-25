@@ -223,6 +223,12 @@ interface group_interface extends able_object_interface {
 	 */
 	public function is_descendent($group = null);
 	/**
+	 * Gets an array of the group's child groups.
+	 *
+	 * @return array An array of groups.
+	 */
+	public function get_children();
+	/**
 	 * Gets an array of the group's descendent groups.
 	 *
 	 * @return array An array of groups.
