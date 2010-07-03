@@ -135,12 +135,6 @@ interface user_interface extends able_object_interface {
 	 */
 	public static function factory($id = 0);
 	/**
-	 * Print a form to edit the user.
-	 *
-	 * @return module The form's module.
-	 */
-	public function print_form();
-	/**
 	 * Add the user to a (secondary) group.
 	 *
 	 * @param group $group The group.
@@ -163,6 +157,13 @@ interface user_interface extends able_object_interface {
 	 */
 	public function del_group($group);
 	/**
+	 * Return the user's timezone.
+	 *
+	 * @param bool $return_date_time_zone_object Whether to return an object of the DateTimeZone class, instead of an identifier string.
+	 * @return string|DateTimeZone The timezone identifier or the DateTimeZone object.
+	 */
+	public function get_timezone($return_date_time_zone_object = false);
+	/**
 	 * Check whether the user is in a (primary or secondary) group.
 	 *
 	 * @param mixed $group The group, or the group's GUID.
@@ -184,12 +185,11 @@ interface user_interface extends able_object_interface {
 	 */
 	public function password($password);
 	/**
-	 * Return the user's timezone.
+	 * Print a form to edit the user.
 	 *
-	 * @param bool $return_date_time_zone_object Whether to return an object of the DateTimeZone class, instead of an identifier string.
-	 * @return string|DateTimeZone The timezone identifier or the DateTimeZone object.
+	 * @return module The form's module.
 	 */
-	public function get_timezone($return_date_time_zone_object = false);
+	public function print_form();
 }
 
 /**
@@ -234,6 +234,16 @@ interface group_interface extends able_object_interface {
 	 * @return array An array of groups.
 	 */
 	public function get_descendents();
+	/**
+	 * Get the number of parents the group has.
+	 * 
+	 * If the group is a top level group, this will return 0. If it is a child
+	 * of a top level group, this will return 1. If it is a grandchild of a top
+	 * level group, this will return 2, and so on.
+	 * 
+	 * @return int The level of the group.
+	 */
+	public function get_level();
 	/**
 	 * Find the location of the group's current logo image.
 	 *
@@ -868,6 +878,17 @@ interface user_manager_interface extends component_interface {
 	 * @return array An array of users.
 	 */
 	public function get_users();
+	/**
+	 * Sort an array of groups hierarchically.
+	 *
+	 * An additional property of the groups can be used to sort them under their
+	 * parents.
+	 * 
+	 * @param array &$array The array of groups.
+	 * @param string|null $property The name of the property to sort groups by. Null for no additional sorting.
+	 * @param bool $reverse Reverse the sort order.
+	 */
+	public function group_sort(&$array, $property = null, $reverse = false);
 	/**
 	 * Logs the given user into the system.
 	 *
