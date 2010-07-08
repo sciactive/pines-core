@@ -19,17 +19,13 @@ in the following file:
 
 components/com_mysql/defaults.php
 
-Once Pines is configured for your database, you need to create an admin user. To
-do this, point your browser to your Pines URL, then add this to the end:
+Once Pines is configured for your database, you need to create an admin user. Go
+to your Pines installation, select the "I'm new." option, and fill in your new
+user credentials. The system will detect that there are no other users and grant
+your new user all abilities.
 
-?option=com_user&action=createadmin&secret=874jdiv8
-
-This will create an administrator user with the credentials:
-Username: admin
-Password: password
-
-Now you should log in and disable this "Create Admin" feature. You can use the
-built in configurator. From the main menu go to
+Now you should disable the "Create Admin" feature. You can use the built in
+configurator. From the main menu go to
 
 System->Configuration->Components->User Manager->Configure
 
