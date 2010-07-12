@@ -11,20 +11,18 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 /* Experimental code.
-function test_conf_save_override($args, $hook, $object) {
+function test_conf_save_override(&$args, $hook, &$object) {
 	var_dump($object->config);
 	var_dump($object->defaults);
 	var_dump($object->info);
 	exit;
-	return $args;
 }
 
-function test_configure_override($args) {
+function test_configure_override(&$args) {
 	if ($args[0] == 'com_configure' && $args[1] == 'save') {
 		global $pines;
 		$pines->hook->add_callback('configurator_component->save_config', -1, 'test_conf_save_override');
 	}
-	return $args;
 }
 $pines->hook->add_callback('$pines->action', -1, 'test_configure_override');
 */

@@ -14,22 +14,21 @@ defined('P_RUN') or die('Direct access prohibited');
  * An object method hooking system.
  *
  * Hooks are used to call a callback when a method is called and optionally
- * manipulate the parameters/return values.
+ * manipulate the arguments/function call/return value.
  *
  * @package Pines
  */
 class hook extends p_base {
 	/**
-	 * An array of the available hooks.
-	 * @var array $hooks
+	 * An array of the callbacks for each hook.
+	 * @var array
 	 */
 	protected $hooks = array();
-	/**
-	 * An array of the callbacks.
-	 * @var array $callbacks
-	 */
-	protected $callbacks = array();
 
+	/**
+	 * A copy of the hook_override_extend file.
+	 * @var string
+	 */
 	private $hook_file;
 
 	function __construct() {
@@ -40,32 +39,48 @@ class hook extends p_base {
 	/**
 	 * Add a callback.
 	 *
-	 * A callback is called either before a method runs or after. If the
-	 * callback runs before the method and returns false (or causes an error),
-	 * the method will not be run. The callback is passed an array of arguments
-	 * and is expected to return an array of arguments. Callbacks before a
-	 * method are passed the arguments given when the method was called, while
-	 * callbacks after a method are passed the return value of that method. If
-	 * the callback neglects to return anything, the method being called will
-	 * not receive/return anything. Even if your callback does nothing with the
-	 * arguments, it should still return them.
+	 * A callback is called either before a method runs or after. The callback
+	 * is passed an array of arguments or return value which it can freely
+	 * manipulate. If the callback runs before the method and sets the arguments
+	 * array to false (or causes an error), the method will not be run.
+	 * Callbacks before a method are passed the arguments given when the method
+	 * was called, while callbacks after a method are passed the return value
+	 * (in an array) of that method.
+	 *
+	 * The callback can receive up to 5 arguments, in this order:
+	 *
+	 * - &$arguments - An array of either arguments or a return value.
+	 * - $name - The name of the hook.
+	 * - &$object - The object on which the hook caught a method call.
+	 * - &$function - A callback for the method call which was caught. Altering
+	 *   this will cause a different function/method to run.
+	 * - &$data - An array in which callbacks can store data to communicate with
+	 *   later callbacks.
+	 *
+	 * A hook is the name of whatever method it should catch. A hook can also
+	 * have an arbitrary name, but be wary that it may already exist and it may
+	 * result in your callback being falsely called. In order to reduce the
+	 * chance of this, always use a plus sign (+) and your component's name to
+	 * begin arbitrary hook names. E.g. "+com_games_player_bonus".
 	 *
 	 * If the hook is called explicitly, callbacks defined to run before the
 	 * hook will run immediately followed by callbacks defined to run after.
 	 *
-	 * You can think of the $order as a timeline of functions to call, zero (0)
-	 * being the actual method being hooked.
+	 * A negative $order value means the callback will be run before the method,
+	 * while a positive value means it will be run after. The smaller the order
+	 * number, the sooner the callback will be run. You can think of the $order
+	 * as a timeline of callbacks, zero (0) being the actual method being
+	 * hooked.
 	 *
 	 * Additional identical callbacks can be added in order to have a callback
 	 * called multiple times for one hook.
 	 *
-	 * The hook "all" is a psuedo hook which will run regardless of what hook
-	 * was actually caught. Callbacks attached to the "all" hook will run before
+	 * The hook "all" is a psuedo hook which will run regardless of what was
+	 * actually caught. Callbacks attached to the "all" hook will run before
 	 * callbacks attached to the actual hook.
 	 *
 	 * Note: Be careful to avoid recursive callbacks, as they may result in an
-	 * infinite loop. All methods under $pines are automatically defined as
-	 * hooks.
+	 * infinite loop. All methods under $pines are automatically hooked.
 	 *
 	 * @param string $hook The name of the hook to catch.
 	 * @param int $order The order can be negative, which will run before the method, or positive, which will run after the method. It cannot be zero.
@@ -75,30 +90,11 @@ class hook extends p_base {
 	 */
 	function add_callback($hook, $order, $function) {
 		$callback = array($order, $function);
-		if (!isset($this->callbacks[$hook]))
-			$this->callbacks[$hook] == array();
-		$this->callbacks[$hook][] = $callback;
-		uasort($this->callbacks[$hook], array($this, 'sort_callbacks'));
-		return array_keys($this->callbacks[$hook], $callback);
-	}
-
-	/**
-	 * Add a hook.
-	 *
-	 * A hook is the name of whatever method it should hook onto. You can also
-	 * give a hook an arbitrary name, but be wary that it may already exist and
-	 * it may result in your callback being falsely called. In order to reduce
-	 * the chance of this, always use a plus sign (+) and your component's name
-	 * to begin arbitrary hook names.
-	 *
-	 * @param string $name The name of the hook.
-	 * @return int The ID of the new hook, or the ID of a hook which already exists and has the same name.
-	 */
-	function add_hook($name) {
-		if (array_search($name, $this->hooks) === false)
-			$this->hooks[] = $name;
-		$id = array_keys($this->hooks, $name);
-		return $id[0];
+		if (!isset($this->hooks[$hook]))
+			$this->hooks[$hook] == array();
+		$this->hooks[$hook][] = $callback;
+		uasort($this->hooks[$hook], array($this, 'sort_callbacks'));
+		return array_keys($this->hooks[$hook], $callback);
 	}
 
 	/**
@@ -109,41 +105,8 @@ class hook extends p_base {
 	 * @return int 1 if the callback was deleted, 2 if it didn't exist.
 	 */
 	function del_callback_by_id($hook, $id) {
-		if (!isset($this->callbacks[$hook][$id])) return 2;
-		unset($this->callbacks[$hook][$id]);
-		return 1;
-	}
-
-	/**
-	 * Delete a hook.
-	 *
-	 * Note: This does not delete callbacks associated with the hook, however,
-	 * since the hook is being deleted, they should never be called again
-	 * anyway.
-	 *
-	 * @param string $name The name of the hook.
-	 * @return int 1 if the hook was deleted, 2 if it didn't exist.
-	 */
-	function del_hook($name) {
-		$id = array_search($name, $this->hooks);
-		if ($id === false) return 2;
-		unset($this->hooks[$id]);
-		return 1;
-	}
-
-	/**
-	 * Delete a hook by its ID.
-	 *
-	 * Note: This does not delete callbacks associated with the hook, however,
-	 * since the hook is being deleted, they should never be called again
-	 * anyway.
-	 *
-	 * @param int $id The ID of the hook.
-	 * @return int 1 if the hook was deleted, 2 if it didn't exist.
-	 */
-	function del_hook_by_id($id) {
-		if (!isset($this->hooks[$id])) return 2;
-		unset($this->hooks[$id]);
+		if (!isset($this->hooks[$hook][$id])) return 2;
+		unset($this->hooks[$hook][$id]);
 		return 1;
 	}
 
@@ -157,15 +120,6 @@ class hook extends p_base {
 	 * @return array An array of callbacks.
 	 */
 	function get_callbacks() {
-		return $this->callbacks;
-	}
-
-	/**
-	 * Get the array of hooks.
-	 *
-	 * @return array An array of hooks.
-	 */
-	function get_hooks() {
 		return $this->hooks;
 	}
 
@@ -216,15 +170,12 @@ class hook extends p_base {
 				$fname = $cur_method->getName();
 				if (in_array($fname, array('__construct', '__destruct', '__get', '__set', '__isset', '__unset', '__toString', '__invoke', '__set_state', '__clone', '__sleep')))
 					continue;
-				// Create a hook for this method.
-				$this->add_hook($prefix.$fname);
 
 				//$fprefix = $cur_method->isFinal() ? 'final ' : '';
 				$fprefix = $cur_method->isStatic() ? 'static ' : '';
 				$params = $cur_method->getParameters();
-				$param_array = array();
-				$param_call_array = array();
-				foreach ($params as $cur_param) {
+				$param_array = $param_name_array = array();
+				foreach ($params as &$cur_param) {
 					$param_name = $cur_param->getName();
 					$param_prefix = $cur_param->isPassedByReference() ? '&' : '';
 					if ($cur_param->isDefaultValueAvailable()) {
@@ -232,25 +183,29 @@ class hook extends p_base {
 					} else {
 						$param_suffix = '';
 					}
-					$param_array[] = $param_prefix.'$'.$param_name.$param_suffix;
-					$param_call_array[] = '$'.$param_name;
+					$param_array[] = "{$param_prefix}\${$param_name}{$param_suffix}";
+					$param_name_array[] = "&\${$param_name}";
 				}
+				unset($cur_param);
 				$code .= $fprefix."function $fname(".implode(', ', $param_array).") {\n"
 				."\tglobal \$pines;\n"
 				."\t\$arguments = debug_backtrace(false);\n"
 				."\t\$arguments = \$arguments[0]['args'];\n"
 				."\t\$function = array(\$this->_p_object, '$fname');\n"
-				."\t\$arguments = \$pines->hook->run_callbacks(\$this->_p_prefix.'$fname', \$arguments, 'before', \$this->_p_object, \$function);\n"
+				."\t\$data = array();\n"
+				."\t\$pines->hook->run_callbacks(\$this->_p_prefix.'$fname', \$arguments, 'before', \$this->_p_object, \$function, \$data);\n"
 				."\tif (\$arguments !== false) {\n"
-				."\t\t\$return = call_user_func_array(\$function, \$arguments);\n"
-				."\t\t\$return = \$pines->hook->run_callbacks(\$this->_p_prefix.'$fname', array(\$return), 'after', \$this->_p_object, \$function);\n"
+				."\t\t\$return = array(call_user_func_array(\$function, \$arguments));\n"
+				."\t\t\$pines->hook->run_callbacks(\$this->_p_prefix.'$fname', \$return, 'after', \$this->_p_object, \$function, \$data);\n"
 				."\t\tif ((array) \$return === \$return)\n"
 				."\t\t\treturn \$return[0];\n"
 				."\t}\n"
 				."}\n\n";
 			}
+			unset($cur_method);
 			// Build a hook_override class.
 			$include = str_replace(array('_NAMEHERE_', '//#CODEHERE#', '<?php', '?>'), array($class_name, $code, '', ''), $this->hook_file);
+			//echo $include;
 			eval ($include);
 			//	if (!$_SESSION['hook_cache'])
 			//		$_SESSION['hook_cache'] = array();
@@ -266,36 +221,33 @@ class hook extends p_base {
 	 * Run the callbacks for a given hook.
 	 *
 	 * Each callback is run and passed the array of arguments, and the name of
-	 * the given hook. If any callback returns FALSE, the following callbacks
-	 * will not be called, and FALSE will be returned.
+	 * the given hook. If any callback changes $arguments to FALSE, the
+	 * following callbacks will not be called, and FALSE will be returned.
 	 *
 	 * @param string $name The name of the hook.
-	 * @param array $arguments An array of arguments to be passed to the callbacks.
+	 * @param array &$arguments An array of arguments to be passed to the callbacks.
 	 * @param string $type The type of callbacks to run. 'before', 'after', or 'all'.
 	 * @param mixed &$object The object on which the hook was called.
 	 * @param callback &$function The function which is called at "0". You can change this in the "before" callbacks to effectively takeover a function.
-	 * @return array|bool The array of arguments returned by the last callback or FALSE if a callback returned it.
+	 * @param array &$data A data array for callback communication.
 	 */
-	function run_callbacks($name, $arguments = array(), $type = 'all', &$object = null, &$function = null) {
-		if (!in_array($name, $this->hooks))
-			return $arguments;
-		if (isset($this->callbacks['all'])) {
-			foreach ($this->callbacks['all'] as $cur_callback) {
+	function run_callbacks($name, &$arguments = array(), $type = 'all', &$object = null, &$function = null, &$data = array()) {
+		if (isset($this->hooks['all'])) {
+			foreach ($this->hooks['all'] as $cur_callback) {
 				if (($type == 'all' && $cur_callback[0] != 0) || ($type == 'before' && $cur_callback[0] < 0) || ($type == 'after' && $cur_callback[0] > 0)) {
-					$arguments = call_user_func_array($cur_callback[1], array($arguments, $name, &$object, &$function));
-					if ($arguments === false) return false;
+					call_user_func_array($cur_callback[1], array(&$arguments, $name, &$object, &$function, &$data));
+					if ($arguments === false) return;
 				}
 			}
 		}
-		if (isset($this->callbacks[$name])) {
-			foreach ($this->callbacks[$name] as $cur_callback) {
+		if (isset($this->hooks[$name])) {
+			foreach ($this->hooks[$name] as $cur_callback) {
 				if (($type == 'all' && $cur_callback[0] != 0) || ($type == 'before' && $cur_callback[0] < 0) || ($type == 'after' && $cur_callback[0] > 0)) {
-					$arguments = call_user_func_array($cur_callback[1], array($arguments, $name, &$object, &$function));
-					if ($arguments === false) return false;
+					call_user_func_array($cur_callback[1], array(&$arguments, $name, &$object, &$function, &$data));
+					if ($arguments === false) return;
 				}
 			}
 		}
-		return $arguments;
 	}
 
 	/**
