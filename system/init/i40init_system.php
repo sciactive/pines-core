@@ -51,6 +51,23 @@ if (P_SCRIPT_TIMING) pines_print_time('Start Session');
 // start the session manager. This allows variables to keep their classes over
 // sessions.
 session_start();
+
+if (P_SCRIPT_TIMING) pines_print_time('Display Pending Notices');
+// Check the session for notices and errors awaiting after a redirect.
+if ($_SESSION['p_notices']) {
+	foreach ((array) $_SESSION['p_notices'] as $_p_cur_notice) {
+		$pines->page->notice($_p_cur_notice);
+	}
+	unset($_SESSION['p_notices'], $_p_cur_notice);
+}
+if ($_SESSION['p_errors']) {
+	foreach ((array) $_SESSION['p_errors'] as $_p_cur_error) {
+		$pines->page->error($_p_cur_error);
+	}
+	unset($_SESSION['p_errors'], $_p_cur_error);
+}
+if (P_SCRIPT_TIMING) pines_print_time('Display Pending Notices');
+
 if (P_SCRIPT_TIMING) pines_print_time('Start Session');
 
 ?>

@@ -202,24 +202,6 @@ class pines extends p_base {
 			}
 		}
 		if (P_SCRIPT_TIMING) pines_print_time('Get Requested Action');
-
-		if (P_SCRIPT_TIMING) pines_print_time('Display Pending Notices');
-		// Check the cookies for notices and errors awaiting after a redirect.
-		if ($_COOKIE['p_notices']) {
-			$notices = (array) json_decode($_COOKIE['p_notices']);
-			foreach ($notices as $cur_notice) {
-				$this->page->notice($cur_notice);
-			}
-			setcookie('p_notices', '');
-		}
-		if ($_COOKIE['p_errors']) {
-			$errors = (array) json_decode($_COOKIE['p_errors']);
-			foreach ($errors as $cur_error) {
-				$this->page->error($cur_error);
-			}
-			setcookie('p_errors', '');
-		}
-		if (P_SCRIPT_TIMING) pines_print_time('Display Pending Notices');
 	}
 
 	/**
@@ -512,9 +494,9 @@ class pines extends p_base {
 		$notices = $this->page->get_notice();
 		$errors = $this->page->get_error();
 		if ($notices)
-			setcookie('p_notices', json_encode($notices));
+			$_SESSION['p_notices'] = $notices;
 		if ($errors)
-			setcookie('p_errors', json_encode($errors));
+			$_SESSION['p_errors'] = $errors;
 		header('X', true, (int) $code);
 		header('Location: '.$url);
 		$this->page->override = true;
