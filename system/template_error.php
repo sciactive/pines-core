@@ -15,7 +15,7 @@ defined('P_RUN') or die('Direct access prohibited');
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
 <head>
-	<title><?php echo $this->config->page_title; ?></title>
+	<title><?php echo htmlentities($this->config->page_title); ?></title>
 	<style type="text/css" media="all">
 		/* <![CDATA[ */
 		.wrapper {
@@ -51,8 +51,8 @@ defined('P_RUN') or die('Direct access prohibited');
 <body>
 <div class="wrapper">
 	<fieldset>
-		<legend><?php echo $this->config->system_name; ?></legend>
-		<p>The currently selected template is either missing or is not compatible with <?php echo $this->info->name; ?>.</p>
+		<legend><?php echo htmlentities($this->config->system_name); ?></legend>
+		<p>The currently selected template is either missing or is not compatible with <?php echo htmlentities($this->info->name); ?>.</p>
 	</fieldset>
 </div>
 </body>

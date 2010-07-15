@@ -205,7 +205,6 @@ class hook extends p_base {
 			unset($cur_method);
 			// Build a hook_override class.
 			$include = str_replace(array('_NAMEHERE_', '//#CODEHERE#', '<?php', '?>'), array($class_name, $code, '', ''), $this->hook_file);
-			//echo $include;
 			eval ($include);
 			//	if (!$_SESSION['hook_cache'])
 			//		$_SESSION['hook_cache'] = array();
