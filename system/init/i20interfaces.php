@@ -652,6 +652,23 @@ interface entity_manager_interface extends component_interface {
 	 * @return bool True on success, false on failure.
 	 */
 	public function set_uid($name, $value);
+	/**
+	 * Sort an array of entities by a specified property's value.
+	 *
+	 * If $parent_property is provided, entities will be placed immediately
+	 * after their parents. The property must hold either null, or the entity's
+	 * parent.
+	 *
+	 * If you don't wish to sort heirarchically, simply don't provide
+	 * $parent_property.
+	 *
+	 * @param array &$array The array of entities.
+	 * @param string|null $property The name of the property to sort entities by.
+	 * @param string|null $parent_property The name of the property which holds the parent of the entity.
+	 * @param bool $case_sensitive Sort case sensitively.
+	 * @param bool $reverse Reverse the sort order.
+	 */
+	public function sort(&$array, $property = null, $parent_property = null, $case_sensitive = false, $reverse = false);
 }
 
 /**
@@ -888,9 +905,10 @@ interface user_manager_interface extends component_interface {
 	 * 
 	 * @param array &$array The array of groups.
 	 * @param string|null $property The name of the property to sort groups by. Null for no additional sorting.
+	 * @param bool $case_sensitive Sort case sensitively.
 	 * @param bool $reverse Reverse the sort order.
 	 */
-	public function group_sort(&$array, $property = null, $reverse = false);
+	public function group_sort(&$array, $property = null, $case_sensitive = false, $reverse = false);
 	/**
 	 * Logs the given user into the system.
 	 *
