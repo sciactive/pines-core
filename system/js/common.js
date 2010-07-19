@@ -247,7 +247,7 @@ if (document.attachEvent) { // IE
 		toplevel = window.frameElement == null;
 	} catch(e) {}
 	if (document.documentElement.doScroll && toplevel)
-		doScrollCheck();
+		scroll_check();
 } else if (document.addEventListener) { // Others
 	document.addEventListener("DOMContentLoaded", dom_loaded, false);
 	window.addEventListener("load", function(){_domloaded = true; _ready();}, false);
