@@ -774,6 +774,21 @@ interface entity_interface extends data_object_interface {
 	 */
 	public function get_data();
 	/**
+	 * Used to retrieve the serialized data array.
+	 *
+	 * This should only be used by the entity manager to save the data array
+	 * into storage.
+	 *
+	 * This method can be used by entity managers to avoid unserializing data
+	 * that hasn't been requested yet.
+	 *
+	 * It should always be called after get_data().
+	 *
+	 * @return array The entity's serialized data array.
+	 * @access protected
+	 */
+	public function get_sdata();
+	/**
 	 * Check that the entity has all of the given tags.
 	 *
 	 * @param mixed $tag,... List or array of tags.
@@ -786,11 +801,13 @@ interface entity_interface extends data_object_interface {
 	 * This should only be used by the entity manager to push the data array
 	 * from storage.
 	 *
+	 * $sdata be used by entity managers to avoid unserializing data that hasn't
+	 * been requested yet.
+	 *
 	 * @param array $data The data array.
-	 * @return array The data array.
-	 * @access protected
+	 * @param array $sdata The serialized data array.
 	 */
-	public function put_data($data);
+	public function put_data($data, $sdata = array());
 	/**
 	 * Remove one or more tags.
 	 *
