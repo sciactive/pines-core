@@ -191,6 +191,9 @@ class menu extends p_base {
 			// If the menu requires children and has none, return false.
 			if ($array[0]['depend']['children'] && ($array === array($array[0])))
 				return false;
+			// If the menu should be sorted, sort by its keys.
+			if ($array[0]['sort'])
+				ksort($array);
 		} else {
 			// It has no children.
 			if ($array[0]['depend']['children'])

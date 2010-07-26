@@ -10,6 +10,7 @@
 		{
 			"path": "main_menu/accessories",
 			"text": "Accessories",
+			"sort": true,
 			"depend": {
 				"children": true
 			}
@@ -17,6 +18,7 @@
 		{
 			"path": "main_menu/business",
 			"text": "Business",
+			"sort": true,
 			"depend": {
 				"children": true
 			}
@@ -24,6 +26,7 @@
 		{
 			"path": "main_menu/education",
 			"text": "Education",
+			"sort": true,
 			"depend": {
 				"children": true
 			}
@@ -31,6 +34,7 @@
 		{
 			"path": "main_menu/games",
 			"text": "Games",
+			"sort": true,
 			"depend": {
 				"children": true
 			}
@@ -38,6 +42,7 @@
 		{
 			"path": "main_menu/graphics",
 			"text": "Graphics",
+			"sort": true,
 			"depend": {
 				"children": true
 			}
@@ -45,6 +50,7 @@
 		{
 			"path": "main_menu/other",
 			"text": "Other",
+			"sort": true,
 			"depend": {
 				"children": true
 			}
@@ -52,6 +58,7 @@
 		{
 			"path": "main_menu/programming",
 			"text": "Programming",
+			"sort": true,
 			"depend": {
 				"children": true
 			}
@@ -59,6 +66,7 @@
 		{
 			"path": "main_menu/science",
 			"text": "Science",
+			"sort": true,
 			"depend": {
 				"children": true
 			}
@@ -66,6 +74,7 @@
 		{
 			"path": "main_menu/soundandvideo",
 			"text": "Sound and Video",
+			"sort": true,
 			"depend": {
 				"children": true
 			}
@@ -73,6 +82,7 @@
 		{
 			"path": "main_menu/website",
 			"text": "Website",
+			"sort": true,
 			"depend": {
 				"children": true
 			}
@@ -80,6 +90,7 @@
 		{
 			"path": "main_menu/system",
 			"text": "System",
+			"sort": true,
 			"depend": {
 				"children": true
 			}
@@ -87,6 +98,7 @@
 		{
 			"path": "main_menu/account",
 			"text": "Account",
+			"sort": true,
 			"depend": {
 				"children": true
 			}
