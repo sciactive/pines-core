@@ -98,7 +98,6 @@
 		{
 			"path": "main_menu/account",
 			"text": "Account",
-			"sort": true,
 			"depend": {
 				"children": true
 			}
