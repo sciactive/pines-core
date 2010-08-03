@@ -941,9 +941,10 @@ interface user_manager_interface extends component_interface {
 	 * Creates and attaches a module which let's the user log in.
 	 *
 	 * @param string $position The position in which to place the module.
+	 * @param string $url An optional url to redirect to after login.
 	 * @return module The new module.
 	 */
-	public function print_login($position = 'content');
+	public function print_login($position = 'content', $url = null);
 	/**
 	 * Kick the user out of the current page.
 	 *
