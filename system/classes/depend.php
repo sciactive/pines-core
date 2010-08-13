@@ -39,6 +39,7 @@ class depend extends p_base {
 	 * - class (Class exists.)
 	 * - component (Installed enabled components and version.)
 	 * - function (Function exists.)
+	 * - host (Server hostname.)
 	 * - option (Current or requested component.)
 	 * - php (PHP version.)
 	 * - pines (Pines version.)
@@ -53,6 +54,7 @@ class depend extends p_base {
 			'clientip' => array($this, 'check_clientip'),
 			'component' => array($this, 'check_component'),
 			'function' => array($this, 'check_function'),
+			'host' => array($this, 'check_host'),
 			'option' => array($this, 'check_option'),
 			'php' => array($this, 'check_php'),
 			'pines' => array($this, 'check_pines'),
@@ -283,6 +285,28 @@ class depend extends p_base {
 			)
 			return $this->simple_parse($value, array($this, 'check_function'));
 		return function_exists($value);
+	}
+
+	/**
+	 * Check the hostname of the server.
+	 *
+	 * Uses simple_parse() to provide simple logic.
+	 *
+	 * @access private
+	 * @param string $value The value to check.
+	 * @return bool The result of the host check.
+	 */
+	private function check_host($value) {
+		global $pines;
+		if (
+				strpos($value, '&') !== false ||
+				strpos($value, '|') !== false ||
+				strpos($value, '!') !== false ||
+				strpos($value, '(') !== false ||
+				strpos($value, ')') !== false
+			)
+			return $this->simple_parse($value, array($this, 'check_host'));
+		return $value == $_SERVER['SERVER_NAME'];
 	}
 
 	/**
