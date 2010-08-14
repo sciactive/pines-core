@@ -120,16 +120,7 @@ class pines extends p_base {
 		$this->page = new page;
 		if (P_SCRIPT_TIMING) pines_print_time('Load the Pines base system services.');
 
-		if (P_SCRIPT_TIMING) pines_print_time('Load System Config');
-		$this->current_template = ( !empty($_REQUEST['template']) && $this->config->template_override ) ?
-			$_REQUEST['template'] : $this->config->default_template;
-		$this->template = $this->current_template;
-		date_default_timezone_set($this->config->timezone);
-
-		// Check the offline mode, and load the offline page if enabled.
-		if ($this->config->offline_mode)
-			require('system/offline.php');
-		if (P_SCRIPT_TIMING) pines_print_time('Load System Config');
+		$this->load_system_config();
 
 		if (P_SCRIPT_TIMING) pines_print_time('Find Component Classes');
 		// Fill the lists of components.
@@ -154,11 +145,6 @@ class pines extends p_base {
 			$cur_name = substr($cur_name, 1, strlen($cur_name) -5);
 			$this->class_files[$cur_name] = $cur_class;
 		}
-		// If the current template is missing its class, display the template error page.
-		$template_class_file = "templates/{$this->current_template}/classes/{$this->current_template}.php";
-		if ( !file_exists($template_class_file) )
-			require('system/template_error.php');
-		$this->class_files[$this->current_template] = $template_class_file;
 		if (P_SCRIPT_TIMING) pines_print_time('Find Component Classes');
 		
 		if (P_SCRIPT_TIMING) pines_print_time('Get Requested Action');
@@ -472,6 +458,28 @@ class pines extends p_base {
 			return '';
 		$return = preg_replace('/\D*0?1?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d)?\D*(\d*)\D*/', '($1$2$3) $4$5$6-$7$8$9$10 x$11', (string) $number);
 		return preg_replace('/\D*$/', '', $return);
+	}
+
+	/**
+	 * Load the system configuration settings.
+	 */
+	public function load_system_config() {
+		if (P_SCRIPT_TIMING) pines_print_time('Load System Config');
+		$this->current_template = ( !empty($_REQUEST['template']) && $this->config->template_override ) ?
+			$_REQUEST['template'] : $this->config->default_template;
+		$this->template = $this->current_template;
+		date_default_timezone_set($this->config->timezone);
+
+		// Check the offline mode, and load the offline page if enabled.
+		if ($this->config->offline_mode)
+			require('system/offline.php');
+
+		// If the current template is missing its class, display the template error page.
+		$template_class_file = "templates/{$this->current_template}/classes/{$this->current_template}.php";
+		if ( !file_exists($template_class_file) )
+			require('system/template_error.php');
+		$this->class_files[$this->current_template] = $template_class_file;
+		if (P_SCRIPT_TIMING) pines_print_time('Load System Config');
 	}
 
 	/**

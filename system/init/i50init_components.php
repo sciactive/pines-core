@@ -26,6 +26,8 @@ foreach ($_p_cominit as $_p_cur_cominit) {
 	if (P_SCRIPT_TIMING) pines_print_time("Init Script: $_p_cur_cominit");
 }
 unset ($_p_cominit, $_p_cur_cominit);
+// Since a configuration component could have changed system config, load again.
+$pines->load_system_config();
 if (P_SCRIPT_TIMING) pines_print_time('Init Components');
 
 ?>
