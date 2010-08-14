@@ -59,6 +59,8 @@ if (console.log) {
 		printf(str_pad('Time Spent Timing', 70).'%F\n', $subtract_time);
 		printf(str_pad('Script Run', 70).'%F\n', $run_time);
 		printf(str_pad('Total Time', 70).'%F\n', $total_time);
+		printf(str_pad('Peak Mem', 70).'%u\n', memory_get_peak_usage());
+		printf(str_pad('Peak Real Mem', 70).'%u\n', memory_get_peak_usage(true));
 		echo '");</script>';
 	}
 	pines_print_time('Script Timing Start');
