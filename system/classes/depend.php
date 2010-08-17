@@ -470,38 +470,34 @@ class depend extends p_base {
 	public function simple_parse($value, $callback) {
 		// ex: !val1&(val2|!val3|(val2&val4))
 		// Check whether there are parts, and fill an array with them.
-		if (preg_match_all('/[^!&|()]+/S', $value, $matches)) {
-			// Replace shorthand with long PHP versions.
-			$search = array('&', '|');
-			$replace = array('&&', '||');
-			// For every match, replace it with a call to the callback.
-			usort($matches[0], array($this, 'sort_by_length'));
-			foreach ($matches[0] as $cur_match) {
-				$search[] = $cur_match;
-				//$replace[] = call_user_func($callback, $cur_match) ? 'true' : 'false';
-				// Let PHP call the callback, so it knows when it can stop.
-				$replace[] = 'call_user_func($callback, \''.addslashes($cur_match).'\')';
+		$words = preg_split('/([!&|()]+)/S', $value, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
+		if (count($words) == 1)
+			return call_user_func($callback, $value);
+
+		// For every match, replace it with a call to the callback.
+		$parsable = '';
+		foreach ($words as $cur_word) {
+			switch ($cur_word) {
+				case '!':
+				case '(':
+				case ')':
+					$parsable .= $cur_word;
+					break;
+				case '&':
+					$parsable .= '&&';
+					break;
+				case '|':
+					$parsable .= '||';
+					break;
+				default:
+					// Let PHP call the callback, so it knows when it can stop.
+					$parsable .= 'call_user_func($callback, \''.addslashes($cur_word).'\')';
+					break;
 			}
-			// Replace each part with its callback.
-			$parsable = str_replace($search, $replace, $value);
-		} else {
-			$parsable = call_user_func($callback, $value);
 		}
 
 		// Use PHP to evaluate the string.
 		return eval('return ('.$parsable.');');
-	}
-
-	/**
-	 * Sort strings from longest to shortest.
-	 *
-	 * @access private
-	 * @param string $a String 1.
-	 * @param string $b String 2.
-	 * @return int Result.
-	 */
-	private function sort_by_length($a, $b) {
-		return (strlen($b) - strlen($a));
 	}
 }
 
