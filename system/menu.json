@@ -3,6 +3,7 @@
 		"path": "main_menu",
 		"text": "Main Menu",
 		"position": "main_menu",
+		"sort": true,
 		"depend": {
 			"children": true
 		}
@@ -80,14 +81,6 @@
 			}
 		},
 		{
-			"path": "main_menu/website",
-			"text": "Website",
-			"sort": true,
-			"depend": {
-				"children": true
-			}
-		},
-		{
 			"path": "main_menu/system",
 			"text": "System",
 			"sort": true,
@@ -96,7 +89,15 @@
 			}
 		},
 		{
-			"path": "main_menu/account",
+			"path": "main_menu/website",
+			"text": "Website",
+			"sort": true,
+			"depend": {
+				"children": true
+			}
+		},
+		{
+			"path": "main_menu/~account",
 			"text": "Account",
 			"depend": {
 				"children": true
