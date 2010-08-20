@@ -505,8 +505,8 @@ class pines extends p_base {
 			$_SESSION['p_notices'] = $notices;
 		if ($errors)
 			$_SESSION['p_errors'] = $errors;
-		header('X', true, (int) $code);
 		header('Location: '.$url);
+		header('X', true, (int) $code);
 		$this->page->override = true;
 	}
 }
