@@ -40,7 +40,7 @@ if (P_SCRIPT_TIMING) {
 		$total_time = $microtime - P_EXEC_TIME;
 		$run_time = $total_time - $subtract_time;
 		foreach($time_array as $message => $times) {
-			$prefix = str_repeat('>', $times['level']);
+			$prefix = str_repeat('>', ($times['level'] < 0 ? 0 : $times['level']));
 			$time = $times[count($times)-2] - $times[0];
 			$percent = $time / $total_time * 100;
 			$time_output .= sprintf(str_pad($prefix.$message, 70).'%.6F (% 5.2F%%)\n', $time, $percent);

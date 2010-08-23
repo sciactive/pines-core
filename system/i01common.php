@@ -88,6 +88,18 @@ function redirect($url, $code = 303) {
 }
 
 /**
+ * Shortcut to $pines->format_content().
+ *
+ * @uses pines::format_content() Forwards parameters and returns the result.
+ * @param string $content The content to format.
+ * @return string The formatted content.
+ */
+function format_content($content) {
+	global $pines;
+	return $pines->format_content($content);
+}
+
+/**
  * Shortcut to $pines->format_date().
  *
  * @uses pines::format_date() Forwards parameters and returns the result.

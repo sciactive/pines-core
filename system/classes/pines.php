@@ -360,6 +360,19 @@ class pines extends p_base {
 	}
 
 	/**
+	 * Format content to display to the user.
+	 *
+	 * This function only exists to provide hooking functionality for components
+	 * that alter content before displaying to the user.
+	 *
+	 * @param string $content The content to format.
+	 * @return string The formatted content.
+	 */
+	public function format_content($content) {
+		return $content;
+	}
+
+	/**
 	 * Formats a date using the DateTime class.
 	 * 
 	 * $type can be any of the following:
