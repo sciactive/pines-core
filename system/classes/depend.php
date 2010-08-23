@@ -122,7 +122,7 @@ class depend extends p_base {
 				strpos($value, ')') !== false
 			)
 			return $this->simple_parse($value, array($this, 'check_action'));
-		return $pines->action == $value || $pines->request_action == $value;
+		return $pines->request_action == $value || (isset($pines->action) && $pines->action == $value);
 	}
 
 	/**
@@ -330,7 +330,7 @@ class depend extends p_base {
 				strpos($value, ')') !== false
 			)
 			return $this->simple_parse($value, array($this, 'check_option'));
-		return $pines->component == $value || $pines->request_component == $value;
+		return $pines->request_component == $value || (isset($pines->component) && $pines->component == $value);
 	}
 
 	/**
