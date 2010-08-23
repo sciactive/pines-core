@@ -90,6 +90,8 @@ class depend extends p_base {
 	 */
 	private function check_ability($value) {
 		global $pines;
+		if ($value == '!')
+			return !gatekeeper();
 		if (
 				strpos($value, '&') !== false ||
 				strpos($value, '|') !== false ||
