@@ -213,7 +213,9 @@ class page extends p_base {
 	 * render() will return the result of get_override_doc() if
 	 * $pines->page->override is true.
 	 *
-	 * @global mixed Declare all globals in the function so they are available in the template.
+	 * Declares the global $pines in the function so it is available in the
+	 * template.
+	 *
 	 * @uses page::$override
 	 * @return string The page's rendered content.
 	 */

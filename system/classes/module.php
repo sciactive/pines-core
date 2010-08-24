@@ -168,10 +168,9 @@ class module extends p_base {
 	/**
 	 * Attach the module to a position on the page.
 	 *
-	 * @global page Used to attach a module.
-	 * @param string $position
+	 * @param string $position The position to place the module.
 	 * @uses module::$position
-	 * @param int $order
+	 * @param int $order The order in which to place the module.
 	 * @uses module::$order
 	 * @uses page::attach_module()
 	 * @return int The order in which the module was placed.
@@ -228,7 +227,7 @@ class module extends p_base {
 	 * render() will first try to find the view in a folder named as the format
 	 * defined in the template, then will remove text after and including the
 	 * last dash in the format until it finds a view. If nothing is found after
-	 * the last dash is removed, it will require() the view from the directory
+	 * the last dash is removed, it will include() the view from the directory
 	 * 'all'.
 	 *
 	 * For example, if the component is 'com_game' and the view is 'stats', and
@@ -243,7 +242,7 @@ class module extends p_base {
 	 * The component 'system' has views in system/views/. The view 'null' in
 	 * 'system' can be used as a blank view.
 	 *
-	 * Once the view is found, the module will require it. Its output will be
+	 * Once the view is found, the module will include() it. Its output will be
 	 * passed to the content() function.
 	 *
 	 * @return string The module's rendered content.
@@ -266,7 +265,7 @@ class module extends p_base {
 				/**
 				 * This file should print the content of the module.
 				 */
-				require $filename;
+				include $filename;
 				break;
 			} else {
 				if (strrpos($format, '-') === false) {
@@ -290,8 +289,8 @@ class module extends p_base {
 	 *
 	 * The module's template is found in the 'models' directory of the current
 	 * template. If $model is set, it will look for a file by that name (with
-	 * .php appended) and require it. If not, or the file doesn't exist,
-	 * render() will require module.php.
+	 * .php appended) and include() it. If not, or the file doesn't exist,
+	 * render_model() will include() module.php.
 	 *
 	 * @param string $model The model to use.
 	 * @return string The module's rendered content.
@@ -309,14 +308,14 @@ class module extends p_base {
 			/**
 			 * This file should print the module's content.
 			 */
-			require "templates/{$pines->current_template}/models/$model.php";
+			include "templates/{$pines->current_template}/models/$model.php";
 		} else {
 			/**
 			 * This file should print the module's content.
 			 *
 			 * It should always exist, in every template.
 			 */
-			require "templates/{$pines->current_template}/models/module.php";
+			include "templates/{$pines->current_template}/models/module.php";
 		}
 		$content = ob_get_clean();
 		return $content;
