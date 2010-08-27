@@ -1,0 +1,4 @@
+orion-nebula.jpg;The Orion Nebula.;http://en.wikipedia.org/wiki/Orion_Nebula
+buzz-aldrin-boot.jpg;;http://en.wikipedia.org/wiki/Buzz_Aldrin
+pinwheel-galaxy.jpg
+saturn.jpg;Saturn has <strong>rings</strong>.
