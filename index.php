@@ -10,7 +10,7 @@
  */
 
 /*
- * Pines - a Lightweight PHP Application Framework
+ * Pines - an Enterprise PHP Application Framework
  * Copyright (C) 2008-2009  Hunter Perrin.
  *
  * This program is free software: you can redistribute it and/or modify
