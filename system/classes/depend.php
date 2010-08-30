@@ -472,7 +472,7 @@ class depend extends p_base {
 	public function simple_parse($value, $callback) {
 		// ex: !val1&(val2|!val3|(val2&val4))
 		// Check whether there are parts, and fill an array with them.
-		$words = preg_split('/([!&|()]+)/S', $value, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
+		$words = preg_split('/([!&|()])/S', $value, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
 		if (count($words) == 1)
 			return call_user_func($callback, $value);
 
