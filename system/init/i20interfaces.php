@@ -659,7 +659,7 @@ interface entity_manager_interface extends component_interface {
 	 * after their parents. The property must hold either null, or the entity's
 	 * parent.
 	 *
-	 * If you don't wish to sort heirarchically, simply don't provide
+	 * If you don't wish to sort hierarchically, simply don't provide
 	 * $parent_property.
 	 *
 	 * @param array &$array The array of entities.
