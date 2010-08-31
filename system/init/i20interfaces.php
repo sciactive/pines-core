@@ -591,6 +591,19 @@ interface entity_manager_interface extends component_interface {
 	 */
 	public function get_uid($name);
 	/**
+	 * Sort an array of entities hierarchically by a specified property's value.
+	 *
+	 * Entities will be placed immediately after their parents. The
+	 * $parent_property property must hold either null, or the entity's parent.
+	 *
+	 * @param array &$array The array of entities.
+	 * @param string|null $property The name of the property to sort entities by.
+	 * @param string|null $parent_property The name of the property which holds the parent of the entity.
+	 * @param bool $case_sensitive Sort case sensitively.
+	 * @param bool $reverse Reverse the sort order.
+	 */
+	public function hsort(&$array, $property = null, $parent_property = null, $case_sensitive = false, $reverse = false);
+	/**
 	 * Import entities from a file.
 	 *
 	 * @param string $filename The file to import from.
@@ -624,6 +637,19 @@ interface entity_manager_interface extends component_interface {
 	 */
 	public function new_uid($name);
 	/**
+	 * Sort an array of entities by parent and a specified property's value.
+	 *
+	 * Entities' will be sorted by their parents' properties, then the entities'
+	 * properties.
+	 *
+	 * @param array &$array The array of entities.
+	 * @param string|null $property The name of the property to sort entities by.
+	 * @param string|null $parent_property The name of the property which holds the parent of the entity.
+	 * @param bool $case_sensitive Sort case sensitively.
+	 * @param bool $reverse Reverse the sort order.
+	 */
+	public function psort(&$array, $property = null, $parent_property = null, $case_sensitive = false, $reverse = false);
+	/**
 	 * Rename a unique ID.
 	 *
 	 * @param string $old_name The old name.
@@ -655,20 +681,12 @@ interface entity_manager_interface extends component_interface {
 	/**
 	 * Sort an array of entities by a specified property's value.
 	 *
-	 * If $parent_property is provided, entities will be placed immediately
-	 * after their parents. The property must hold either null, or the entity's
-	 * parent.
-	 *
-	 * If you don't wish to sort hierarchically, simply don't provide
-	 * $parent_property.
-	 *
 	 * @param array &$array The array of entities.
 	 * @param string|null $property The name of the property to sort entities by.
-	 * @param string|null $parent_property The name of the property which holds the parent of the entity.
 	 * @param bool $case_sensitive Sort case sensitively.
 	 * @param bool $reverse Reverse the sort order.
 	 */
-	public function sort(&$array, $property = null, $parent_property = null, $case_sensitive = false, $reverse = false);
+	public function sort(&$array, $property = null, $case_sensitive = false, $reverse = false);
 }
 
 /**
