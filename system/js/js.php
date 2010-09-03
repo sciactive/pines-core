@@ -15,9 +15,15 @@
 header('Content-Type: text/javascript');
 
 $mod_date = filemtime('common.js');
+$etag = dechex(crc32($mod_date));
 
-if (array_key_exists('HTTP_IF_MODIFIED_SINCE', $_SERVER) && $mod_date <= strtotime(preg_replace('/;.*$/', '', $_SERVER['HTTP_IF_MODIFIED_SINCE']))) {
-	header('x', TRUE, 304);
+if (
+		(array_key_exists('HTTP_IF_NONE_MATCH', $_SERVER) && strpos($_SERVER['HTTP_IF_NONE_MATCH'], $etag) !== false ) ||
+		(array_key_exists('HTTP_IF_MODIFIED_SINCE', $_SERVER) && $mod_date <= strtotime(preg_replace('/;.*$/', '', $_SERVER['HTTP_IF_MODIFIED_SINCE'])))
+	) {
+	header('Content-Type: ');
+	header('ETag: "'.$etag.'"');
+	header('X', true, 304);
 	exit;
 }
 
@@ -28,10 +34,8 @@ file_get_contents('common.js')."\n".
 "if(!this.JSON){pines.loadjs(pines.rela_location+\"system/js/json2.js\");}\n";
 
 header('Content-Length: '.strlen($output));
-header('Cache-Control: public');
-header('Pragma:');
-header('Expires: '.date('r', strtotime('+3 days')));
 header('Last-Modified: '.date('r', $mod_date));
+header('ETag: "'.$etag.'"');
 
 echo $output;
 
