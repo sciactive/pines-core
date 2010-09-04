@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS `pin_com_myentity_data` (
   `name` text NOT NULL,
   `value` longtext NOT NULL,
   PRIMARY KEY (`guid`,`name`(330))
-) ;
+) DEFAULT CHARSET=utf8 ;
 
 CREATE TABLE IF NOT EXISTS `pin_com_myentity_entities` (
   `guid` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
@@ -31,10 +31,10 @@ CREATE TABLE IF NOT EXISTS `pin_com_myentity_entities` (
   PRIMARY KEY (`guid`),
   KEY `id_tags` (`tags`(1000)),
   KEY `id_varlist` (`varlist`(1000))
-) AUTO_INCREMENT=1 ;
+) DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `pin_com_myentity_uids` (
   `name` text NOT NULL,
   `cur_uid` bigint(20) unsigned NOT NULL,
   PRIMARY KEY (`name`(100))
-) ;
+) DEFAULT CHARSET=utf8 ;

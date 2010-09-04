@@ -71,9 +71,17 @@ function pines_sort_by_filename($a, $b) {
 	$str1 = strrchr($a, '/');
 	$str2 = strrchr($b, '/');
 	if ($str1 == $str2) {
-		return strcmp($a, $b);
+		if ($a < $b)
+			return -1;
+		if ($a > $b)
+			return 1;
+		return 0;
 	} else {
-		return strcmp($str1, $str2);
+		if ($str1 < $str2)
+			return -1;
+		if ($str1 > $str2)
+			return 1;
+		return 0;
 	}
 }
 

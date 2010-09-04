@@ -26,7 +26,7 @@ if (P_SCRIPT_TIMING) {
 		static $time_array = array();
 		static $subtract_time = 0;
 		$microtime = microtime(true);
-		if (!isset($time_array[$message])) {
+		if (!isset($time_array[$message]) || $time_array[$message]['level'] > $message_level) {
 			$time_array[$message] = array('level' => $message_level);
 			$message_level++;
 		} else {
