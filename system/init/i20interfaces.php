@@ -969,7 +969,10 @@ interface user_manager_interface extends component_interface {
 	 * Note that this method completely terminates execution of the script when
 	 * it is called. Code after this method is called will not run.
 	 *
-	 * @param string $message An optional message to display to the user.
+	 * Though not required, the user manager should give the user an opportunity
+	 * to log in and return to the page.
+	 *
+	 * @param string $message An optional message to display to the user. For no message, provide an empty string. If left null, a default message will be displayed.
 	 * @param string $url An optional URL to return to. (E.g. if the user logs in.)
 	 */
 	public function punt_user($message = null, $url = null);

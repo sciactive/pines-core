@@ -11,7 +11,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if (!gatekeeper())
-	punt_user('You don\'t have necessary permission.');
+	punt_user();
 
 $pines->page->override = true;
 

@@ -11,7 +11,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if (!gatekeeper())
-	punt_user('You don\'t have necessary permission.');
+	punt_user();
 
 $pines->page->override = true;
 $pines->page->override_doc(format_date(!is_numeric($_REQUEST['timestamp']) ? time() : (int) $_REQUEST['timestamp'], empty($_REQUEST['type']) ? 'full_sort' : $_REQUEST['type'], empty($_REQUEST['format']) ? '' : $_REQUEST['format'],  empty($_REQUEST['timezone']) ? null : new DateTimeZone($_REQUEST['timezone'])));

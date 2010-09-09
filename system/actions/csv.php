@@ -11,7 +11,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 if (!gatekeeper())
-	punt_user('You don\'t have necessary permission.');
+	punt_user();
 
 header('Content-Type: text/csv');
 header('Content-Disposition: attachment; filename="'.$_REQUEST['filename'].'.csv" size='.strlen($_REQUEST['content']));
