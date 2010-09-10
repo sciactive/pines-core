@@ -59,7 +59,7 @@ class template extends p_base implements template_interface {
 	public function url($component = null, $action = null, $params = array(), $full_location = false) {
 		global $pines;
 		if ( !$params ) $params = array();
-		if ( $pines->config->template_override && isset($_REQUEST['template']) )
+		if ( !isset($params['template']) && isset($_REQUEST['template']) && $pines->config->template_override )
 			$params['template'] = $_REQUEST['template'];
 		$return = ($full_location) ? $pines->config->full_location : $pines->config->rela_location;
 		if ( !isset($component) && !$params )
