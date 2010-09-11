@@ -496,6 +496,7 @@ interface entity_manager_interface extends component_interface {
 	 *
 	 * - guid - A GUID. True if the entity's GUID is equal.
 	 * - tag - A tag. True if the entity has the tag.
+	 * - isset - A name. True if the named variable exists and is not null.
 	 * - data - An array with a name, then value. True if the named variable is
 	 *   equal.
 	 * - strict - An array with a name, then value. True if the named variable
@@ -518,6 +519,7 @@ interface entity_manager_interface extends component_interface {
 	 * This example will retrieve the last two entities where:
 	 * 
 	 * - It has 'person' tag.
+	 * - spouse exists and is not null.
 	 * - gender is male and lname is Smith.
 	 * - It has either 'employee' or 'manager' tag.
 	 * - name is either Clark, James, Chris, Christopher, Jake, or Jacob.
@@ -530,6 +532,7 @@ interface entity_manager_interface extends component_interface {
 	 *	array(
 	 *		'&', // all must be true
 	 *		'tag' => 'person',
+	 *		'isset' => 'spouse',
 	 *		'data' => array(
 	 *			array('gender', 'male'),
 	 *			array('lname', 'Smith')
