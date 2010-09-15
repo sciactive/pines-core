@@ -24,6 +24,12 @@ defined('P_RUN') or die('Direct access prohibited');
  */
 class config extends p_base {
 	/**
+	 * The location that components should use to access static content.
+	 * @var string $location
+	 */
+	public $location = '';
+
+	/**
 	 * Fill this object with system configuration.
 	 */
 	public function __construct() {
@@ -33,6 +39,14 @@ class config extends p_base {
 			$config_array = require('system/config.php');
 			$this->fill_object($config_array, $this);
 		}
+		if ($this->full_location === '')
+			$this->full_location = 'http'.(($_SERVER['HTTPS'] == "on") ? 's://' : '://').$_SERVER['HTTP_HOST'].substr($_SERVER['PHP_SELF'], 0, strripos($_SERVER['PHP_SELF'], P_INDEX));
+		if ($this->rela_location === '')
+			$this->rela_location = substr($_SERVER['PHP_SELF'], 0, strripos($_SERVER['PHP_SELF'], P_INDEX));
+		if ($this->static_location === '')
+			$this->location = $this->rela_location;
+		else
+			$this->location = $this->static_location;
 	}
 
 	/**
