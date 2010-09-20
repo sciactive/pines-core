@@ -22,6 +22,12 @@ class page extends p_base {
 	 */
 	protected $title = '';
 	/**
+	 * Whether the default title has been loaded.
+	 * @var bool $title_loaded
+	 * @access private
+	 */
+	private $title_loaded = false;
+	/**
 	 * The content of the page.
 	 * @var string $content
 	 * @access protected
@@ -58,12 +64,20 @@ class page extends p_base {
 	 */
 	public $override = false;
 
+	private function title_load() {
+		global $pines;
+		$this->title = $pines->config->page_title;
+		$this->title_loaded = true;
+	}
+
 	/**
 	 * Append text to the title of the page.
 	 *
 	 * @param string $add_title Text to append.
 	 */
 	public function title($add_title) {
+		if (!$this->title_loaded)
+			$this->title_load();
 		$this->title .= $add_title;
 	}
 
@@ -73,6 +87,8 @@ class page extends p_base {
 	 * @param string $new_title Title of the page.
 	 */
 	public function title_set($new_title) {
+		if (!$this->title_loaded)
+			$this->title_load();
 		$this->title = $new_title;
 	}
 
@@ -82,6 +98,8 @@ class page extends p_base {
 	 * @param string $add_title Text to prepend.
 	 */
 	public function title_pre($add_title) {
+		if (!$this->title_loaded)
+			$this->title_load();
 		$this->title = $add_title.$this->title;
 	}
 	
@@ -94,12 +112,9 @@ class page extends p_base {
 	 * @return string The title.
 	 */
 	public function get_title() {
-		global $pines;
-		if ( !empty($this->title) ) {
-			return $this->title;
-		} else {
-			return $pines->config->page_title;
-		}
+		if (!$this->title_loaded)
+			$this->title_load();
+		return $this->title;
 	}
 	
 	/**
