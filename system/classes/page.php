@@ -57,7 +57,7 @@ class page extends p_base {
 	 * @var bool $override
 	 */
 	public $override = false;
-	
+
 	/**
 	 * Append text to the title of the page.
 	 *
@@ -65,6 +65,24 @@ class page extends p_base {
 	 */
 	public function title($add_title) {
 		$this->title .= $add_title;
+	}
+
+	/**
+	 * Set the title of the page.
+	 *
+	 * @param string $new_title Title of the page.
+	 */
+	public function title_set($new_title) {
+		$this->title = $new_title;
+	}
+
+	/**
+	 * Prepend text to the title of the page.
+	 *
+	 * @param string $add_title Text to prepend.
+	 */
+	public function title_pre($add_title) {
+		$this->title = $add_title.$this->title;
 	}
 	
 	/**
