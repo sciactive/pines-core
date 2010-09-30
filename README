@@ -7,8 +7,6 @@ Planned features for versions <=1.0:
 --------------------------------------------------------------------------------
 +Installer/Package Manager.
 +Fix and improve com_newsletter.
-+Full SAWASC A implementation for better security.
-	(http://sawasc.sciactive.com/)
 +More log entries.
 --------------------------------------------------------------------------------
 

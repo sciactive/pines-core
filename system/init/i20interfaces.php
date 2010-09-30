@@ -142,11 +142,10 @@ interface user_interface extends able_object_interface {
 	 */
 	public function add_group($group);
 	/**
-	 * Check if the password given is the correct password for the user's
-	 * account.
+	 * Check the given password against the user's.
 	 *
 	 * @param string $password The password in question.
-	 * @return bool True or false.
+	 * @return bool True if the passwords match, otherwise false.
 	 */
 	public function check_password($password);
 	/**
