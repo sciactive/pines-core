@@ -379,6 +379,11 @@ interface configurator_component_interface extends p_base_interface {
 	 * @return bool True on success, false on failure.
 	 */
 	public function save_config();
+	/**
+	 * Set the current config by providing an array of key => values.
+	 * @param array $config_keys An array of configuration values.
+	 */
+	public function set_config($config_keys);
 }
 
 /**
