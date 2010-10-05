@@ -11,7 +11,7 @@
 
 /*
  * Pines - an Enterprise PHP Application Framework
- * Copyright (C) 2008-2009  Hunter Perrin.
+ * Copyright (C) 2008-2010  Hunter Perrin.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
