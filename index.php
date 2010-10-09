@@ -44,7 +44,7 @@ define('P_RUN', true);
 /**
  * The installation's base path.
  */
-define('P_BASE_PATH', dirname(__FILE__));
+define('P_BASE_PATH', dirname(__FILE__).'/');
 /**
  * The name of our index file.
  */
