@@ -706,7 +706,7 @@ interface entity_manager_interface extends component_interface {
  * even after deletion. It's the job of the entity manager to make sure no two
  * entities ever have the same GUID.
  * 
- * Tags are used to classify entities. Though not sctrictly necessary, it is
+ * Tags are used to classify entities. Though not strictly necessary, it is
  * *HIGHLY RECOMMENDED* to give every entity your component creates a tag
  * indentical to your component's name, such as 'com_xmlparser'. You don't want
  * to accidentally get another component's entities.
