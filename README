@@ -1,12 +1,11 @@
-This version of Pines is incomplete and many changes are coming, possibly even
-major structural changes. This file is a feature plan.
+This version of Pines is incomplete and minor changes are coming. This file is a
+feature plan.
 
 Read the INSTALL file for installation instructions.
 
 Planned features for versions <=1.0:
 --------------------------------------------------------------------------------
-+Installer/Package Manager.
-+Fix and improve com_newsletter.
++Fix com_newsletter.
 +More log entries.
 --------------------------------------------------------------------------------
 
