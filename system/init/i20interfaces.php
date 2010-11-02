@@ -230,9 +230,10 @@ interface group_interface extends able_object_interface {
 	/**
 	 * Gets an array of the group's descendent groups.
 	 *
+	 * @param bool $and_self Include this group in the returned array.
 	 * @return array An array of groups.
 	 */
-	public function get_descendents();
+	public function get_descendents($and_self = false);
 	/**
 	 * Get the number of parents the group has.
 	 * 
