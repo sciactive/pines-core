@@ -156,6 +156,14 @@ interface user_interface extends able_object_interface {
 	 */
 	public function del_group($group);
 	/**
+	 * Disable the user.
+	 */
+	public function disable();
+	/**
+	 * Enable the user.
+	 */
+	public function enable();
+	/**
 	 * Return the user's timezone.
 	 *
 	 * @param bool $return_date_time_zone_object Whether to return an object of the DateTimeZone class, instead of an identifier string.
@@ -214,6 +222,14 @@ interface group_interface extends able_object_interface {
 	 * @return group A group instance.
 	 */
 	public static function factory($id = 0);
+	/**
+	 * Disable the group.
+	 */
+	public function disable();
+	/**
+	 * Enable the group.
+	 */
+	public function enable();
 	/**
 	 * Check whether the group is a descendent of a group.
 	 *
@@ -927,19 +943,17 @@ interface user_manager_interface extends component_interface {
 	/**
 	 * Gets all groups.
 	 *
-	 * Some user managers may return only enabled groups.
-	 *
+	 * @param bool $all Include disabled groups in addition to enabled groups.
 	 * @return array An array of groups.
 	 */
-	public function get_groups();
+	public function get_groups($all = false);
 	/**
 	 * Gets all users.
 	 *
-	 * Some user managers may return only enabled users.
-	 *
+	 * @param bool $all Include disabled users in addition to enabled users.
 	 * @return array An array of users.
 	 */
-	public function get_users();
+	public function get_users($all = false);
 	/**
 	 * Sort an array of groups hierarchically.
 	 *
