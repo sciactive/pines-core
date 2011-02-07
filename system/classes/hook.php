@@ -68,14 +68,14 @@ class hook extends p_base {
 	 *
 	 * A negative $order value means the callback will be run before the method,
 	 * while a positive value means it will be run after. The smaller the order
-	 * number, the sooner the callback will be run. You can think of the $order
-	 * as a timeline of callbacks, zero (0) being the actual method being
+	 * number, the sooner the callback will be run. You can think of the order
+	 * value as a timeline of callbacks, zero (0) being the actual method being
 	 * hooked.
 	 *
 	 * Additional identical callbacks can be added in order to have a callback
 	 * called multiple times for one hook.
 	 *
-	 * The hook "all" is a psuedo hook which will run regardless of what was
+	 * The hook "all" is a pseudo hook which will run regardless of what was
 	 * actually caught. Callbacks attached to the "all" hook will run before
 	 * callbacks attached to the actual hook.
 	 *
