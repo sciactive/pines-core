@@ -519,9 +519,9 @@ interface entity_manager_interface extends component_interface {
 	 * - tag - A tag. True if the entity has the tag.
 	 * - isset - A name. True if the named variable exists and is not null.
 	 * - data - An array with a name, then value. True if the named variable is
-	 *   equal.
+	 *   defined and equal.
 	 * - strict - An array with a name, then value. True if the named variable
-	 *   is identical.
+	 *   is defined and identical.
 	 * - array - An array with a name, then value. True if the named variable is
 	 *   an array containing the value. Uses in_array().
 	 * - match - An array with a name, then regular expression. True if the

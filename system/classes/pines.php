@@ -479,7 +479,7 @@ class pines extends p_base {
 	public function load_system_config() {
 		if (P_SCRIPT_TIMING) pines_print_time('Load System Config');
 		$this->current_template = ( !empty($_REQUEST['template']) && $this->config->template_override ) ?
-			$_REQUEST['template'] : $this->config->default_template;
+			str_replace('..', 'fail-danger-dont-use-hack-attempt', $_REQUEST['template']) : $this->config->default_template;
 		$this->template = $this->current_template;
 		date_default_timezone_set($this->config->timezone);
 
