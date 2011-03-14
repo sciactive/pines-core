@@ -1,10 +1,6 @@
 /*
-	http://www.JSON.org/json2.js
-	2009-09-29
-
-	Public Domain.
-
-	NO WARRANTY EXPRESSED OR IMPLIED. USE AT YOUR OWN RISK.
+http://www.JSON.org/json2.js
+2009-09-29
 */
 if(!this.JSON){this.JSON={};}
 (function(){function f(n){return n<10?'0'+n:n;}

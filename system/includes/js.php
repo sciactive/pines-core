@@ -14,7 +14,7 @@
 
 header('Content-Type: text/javascript');
 
-$mod_date = filemtime('common.js');
+$mod_date = filemtime('pines.min.js');
 $etag = dechex(crc32($mod_date));
 
 if (
@@ -28,10 +28,10 @@ if (
 }
 
 $output =
-file_get_contents('common.js')."\n".
-'pines.full_location = "http'.(($_SERVER['HTTPS'] == 'on') ? 's://' : '://').$_SERVER['HTTP_HOST'].substr($_SERVER['PHP_SELF'], 0, strripos($_SERVER['PHP_SELF'], 'system/js/js.php'))."\"\n".
-'pines.rela_location = "'.substr($_SERVER['PHP_SELF'], 0, strripos($_SERVER['PHP_SELF'], 'system/js/js.php'))."\"\n".
-"if(!this.JSON){pines.loadjs(pines.rela_location+\"system/js/json2.js\");}\n";
+file_get_contents('pines.min.js')."\n".
+'pines.full_location = "http'.(($_SERVER['HTTPS'] == 'on') ? 's://' : '://').$_SERVER['HTTP_HOST'].substr($_SERVER['PHP_SELF'], 0, strripos($_SERVER['PHP_SELF'], 'system/includes/js.php'))."\"\n".
+'pines.rela_location = "'.substr($_SERVER['PHP_SELF'], 0, strripos($_SERVER['PHP_SELF'], 'system/includes/js.php'))."\"\n".
+"if(!this.JSON){pines.loadjs(pines.rela_location+\"system/includes/json2.js\");}\n";
 
 header('Content-Length: '.strlen($output));
 header('Last-Modified: '.date('r', $mod_date));

@@ -1,12 +1,10 @@
-/* 
- * Pines Common JavaScript
- * http://sciactive.com/
- * 
- * Copyright 2010 SciActive.com
- * Hunter Perrin <hunter@sciactive.com>
+/*
+ * Pines JavaScript Object
  *
- * Licensed GNU AGPL
- * http://www.gnu.org/licenses/agpl-3.0.html
+ * Copyright (c) 2010-2011 Hunter Perrin
+ *
+ * Licensed under the GNU Affero GPL:
+ *	  http://www.gnu.org/licenses/agpl.html
  */
 // Make sure arrays have an indexOf method.
 if (!Array.prototype.indexOf) {
