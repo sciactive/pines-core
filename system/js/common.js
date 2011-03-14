@@ -35,7 +35,7 @@ var pines = function(fn){pines.ready(fn)};
 pines.full_location="";
 pines.rela_location="";
 // Cause the browser to go to a URL. (Just like the user clicked a link.)
-pines.get=function(url, params){
+pines.get=function(url, params, target){
 	if (params) {
 		url += (url.indexOf("?") == -1) ? "?" : "&";
 		var parray = [];
@@ -49,13 +49,24 @@ pines.get=function(url, params){
 		}
 		url += parray.join("&");
 	}
-	window.location = url;
+	if (!target || target == "_self")
+		window.location = url;
+	else if (target == "_top")
+		window.top.location = url;
+	else if (target == "_parent")
+		window.parent.location = url;
+	else if (target == "_blank")
+		window.open(url);
+	else
+		window.open(url, target);
 };
 // Cause the browser to POST data. (Just like the user submitted a form.)
-pines.post=function(url, params){
+pines.post=function(url, params, target){
 	var form = document.createElement("form");
 	form.action = url;
 	form.method = "POST";
+	if (target)
+		form.target = target;
 	for (var i in params) {
 		if (params.hasOwnProperty(i)) {
 			var input = document.createElement("input");
@@ -67,6 +78,7 @@ pines.post=function(url, params){
 	}
 	document.body.appendChild(form);
 	form.submit();
+	document.body.removeChild(form);
 };
 // Determine whether JavaScript loading is paused.
 pines.paused=function(){
