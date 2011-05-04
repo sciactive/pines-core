@@ -231,6 +231,17 @@ function pines_log() {
 }
 
 /**
+ * Shortcut to $pines->session().
+ *
+ * @uses pines::session() Forwards parameters and returns the result.
+ * @param string $option The type of access or action requested.
+ */
+function pines_session($option = 'read') {
+	global $pines;
+	return $pines->session($option);
+}
+
+/**
  * Shortcut to $pines->template->url().
  *
  * @uses template_interface::url() Forwards parameters and returns the result.

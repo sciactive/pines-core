@@ -153,6 +153,7 @@ class hook extends p_base {
 
 		if (!class_exists("hook_override_$class_name")) {
 			// This can make it faster, but might introduce security problems.
+			//pines_session();
 			//if (isset($_SESSION['hook_cache']["hook_override_$class_name"])) {
 			//	eval($_SESSION['hook_cache']["hook_override_$class_name"]);
 			//} else {

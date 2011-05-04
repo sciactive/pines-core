@@ -514,13 +514,67 @@ class pines extends p_base {
 	public function redirect($url, $code = 303) {
 		$notices = $this->page->get_notice();
 		$errors = $this->page->get_error();
-		if ($notices)
-			$_SESSION['p_notices'] = $notices;
-		if ($errors)
-			$_SESSION['p_errors'] = $errors;
+		if ($notices || $errors) {
+			pines_session('write');
+			if ($notices)
+				$_SESSION['p_notices'] = $notices;
+			if ($errors)
+				$_SESSION['p_errors'] = $errors;
+			pines_session('close');
+		}
 		header('Location: '.$url);
 		header('X', true, (int) $code);
 		$this->page->override = true;
+	}
+
+	/**
+	 * Open, close, or destroy sessions.
+	 *
+	 * Using this method, you can access an existing session for reading or
+	 * writing, and close or destroy it.
+	 *
+	 * Providing a method to open a session for reading allows asynchronous
+	 * calls to Pines to work efficiently. PHP will not block during page
+	 * requests, so one page taking forever to load doesn't grind a whole user's
+	 * session to a halt.
+	 *
+	 * This method should be the only method sessions are accessed in Pines.
+	 * This will allow maximum compatibility between components.
+	 *
+	 * $option can be one of the following:
+	 *
+	 * - "read" - Open the session for reading.
+	 * - "write" - Open the session for writing. Remember to close it when you
+	 *   no longer need write access.
+	 * - "close" - Close the session for writing. The session is still readable
+	 *   afterward.
+	 * - "destroy" - Unset and destroy the session.
+	 *
+	 * @param string $option The type of access or action requested.
+	 */
+	public function session($option = 'read') {
+		switch ($option) {
+			case 'read':
+			default:
+				if (isset($_SESSION['p_session_access']))
+					return;
+				if ( @session_start() ) {
+					$_SESSION['p_session_access'] = true;
+					@session_write_close();
+				}
+				break;
+			case 'write':
+				@session_start();
+				$_SESSION['p_session_access'] = true;
+				break;
+			case 'close':
+				@session_write_close();
+				break;
+			case 'destroy':
+				@session_unset();
+				@session_destroy();
+				break;
+		}
 	}
 }
 
