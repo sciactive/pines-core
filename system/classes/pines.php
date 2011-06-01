@@ -20,7 +20,7 @@ defined('P_RUN') or die('Direct access prohibited');
  *
  * @package Pines
  */
-class pines extends p_base {
+class pines {
 	/**
 	 * Pines' and components' info.
 	 * @var info

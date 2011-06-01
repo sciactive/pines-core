@@ -14,6 +14,6 @@ defined('P_RUN') or die('Direct access prohibited');
  * Base class for components.
  * @package Pines
  */
-class component extends p_base implements component_interface { }
+class component implements component_interface { }
 
 ?>

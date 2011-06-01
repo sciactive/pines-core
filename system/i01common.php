@@ -70,7 +70,7 @@ if (!function_exists('is_clean_filename')) {
  * @param string $action The action to run.
  * @return mixed The value returned by the action, or 'error_404' if it doesn't exist.
  */
-function action($component = null, $action = null) {
+function pines_action($component = null, $action = null) {
 	global $pines;
 	return $pines->action($component, $action);
 }
@@ -82,7 +82,7 @@ function action($component = null, $action = null) {
  * @param string $url The URL to send the user to.
  * @param int $code The HTTP code to send to the browser.
  */
-function redirect($url, $code = 303) {
+function pines_redirect($url, $code = 303) {
 	global $pines;
 	$pines->redirect($url, $code);
 }

@@ -17,7 +17,7 @@ defined('P_RUN') or die('Direct access prohibited');
  * 
  * @package Pines
  */
-class template extends p_base implements template_interface {
+class template implements template_interface {
 	/**
 	 * The template format.
 	 * @var string $format

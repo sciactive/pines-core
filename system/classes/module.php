@@ -17,7 +17,7 @@ defined('P_RUN') or die('Direct access prohibited');
  *
  * @package Pines
  */
-class module extends p_base {
+class module {
 	/**
 	 * The module's unique ID.
 	 *

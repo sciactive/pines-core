@@ -22,7 +22,7 @@ defined('P_RUN') or die('Direct access prohibited');
  *
  * @package Pines
  */
-class info extends p_base {
+class info {
 	/**
 	 * Fill this object with system info.
 	 */
@@ -56,7 +56,7 @@ class info extends p_base {
 			if ( file_exists("components/$name/info.php") ) {
 				$info_array = include("components/$name/info.php");
 				if ((array) $info_array === $info_array) {
-					$this->$name = new p_base;
+					$this->$name = (object) array();
 					foreach ($info_array as $key => $value) {
 						$this->$name->$key = $value;
 					}
@@ -67,7 +67,7 @@ class info extends p_base {
 			if ( file_exists("templates/$name/info.php") ) {
 				$info_array = include("templates/$name/info.php");
 				if ((array) $info_array === $info_array) {
-					$this->$name = new p_base;
+					$this->$name = (object) array();
 					foreach ($info_array as $key => $value) {
 						$this->$name->$key = $value;
 					}

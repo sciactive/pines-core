@@ -24,7 +24,7 @@ defined('P_RUN') or die('Direct access prohibited');
  *
  * @package Pines
  */
-class depend extends p_base {
+class depend {
 	/**
 	 * An array of dependency checker callbacks.
 	 * @var array $checkers

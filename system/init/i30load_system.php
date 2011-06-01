@@ -22,10 +22,6 @@ if (get_magic_quotes_gpc()) {
 
 if (P_SCRIPT_TIMING) pines_print_time('Load System Classes');
 /**
- * Base Class
- */
-include('system/classes/p_base.php');
-/**
  * Component Class
  */
 include('system/classes/component.php');

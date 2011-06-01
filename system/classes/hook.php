@@ -18,7 +18,7 @@ defined('P_RUN') or die('Direct access prohibited');
  *
  * @package Pines
  */
-class hook extends p_base {
+class hook {
 	/**
 	 * An array of the callbacks for each hook.
 	 * @var array

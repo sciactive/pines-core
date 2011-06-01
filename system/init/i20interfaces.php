@@ -13,22 +13,16 @@ defined('P_RUN') or die('Direct access prohibited');
 if (P_SCRIPT_TIMING) pines_print_time('Define Service Interfaces');
 
 /**
- * A base for all interfaces in Pines.
- * @package Pines
- */
-interface p_base_interface { }
-
-/**
  * A base interface for all components.
  * @package Pines
  */
-interface component_interface extends p_base_interface { }
+interface component_interface { }
 
 /**
  * Objects which hold data from some type of storage.
  * @package Pines
  */
-interface data_object_interface extends p_base_interface {
+interface data_object_interface {
 	/**
 	 * Search the array for this object and return the corresponding key.
 	 *
@@ -288,7 +282,7 @@ interface group_interface extends able_object_interface {
  * A Pines template.
  * @package Pines
  */
-interface template_interface extends p_base_interface {
+interface template_interface {
 	/**
 	 * Format a menu.
 	 *
@@ -354,7 +348,7 @@ interface configurator_interface extends component_interface {
  * @property array $info The info object of the component.
  * @property string $name The component.
  */
-interface configurator_component_interface extends p_base_interface {
+interface configurator_component_interface {
 	/**
 	 * Load a component's configuration and info.
 	 * @param string $component The component to load.

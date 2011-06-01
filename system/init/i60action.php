@@ -29,7 +29,7 @@ $pines->hook->add_callback('$pines->action', -1, 'test_configure_override');
 
 if (P_SCRIPT_TIMING) pines_print_time('Run Requested Action');
 // Call the action specified.
-if ( action($pines->request_component, $pines->request_action) === 'error_404' ) {
+if ( $pines->action($pines->request_component, $pines->request_action) === 'error_404' ) {
 	header('HTTP/1.0 404 Not Found', true, 404);
 	$error_page = new module('system', 'error_404', 'content');
 }

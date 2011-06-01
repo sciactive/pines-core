@@ -22,7 +22,7 @@ defined('P_RUN') or die('Direct access prohibited');
  *
  * @package Pines
  */
-class config extends p_base {
+class config {
 	/**
 	 * The location that components should use to access static content.
 	 * @var string $location
@@ -72,7 +72,7 @@ class config extends p_base {
 			if ( file_exists("components/$name/defaults.php") ) {
 				$config_array = include("components/$name/defaults.php");
 				if ((array) $config_array === $config_array) {
-					$this->$name = new p_base;
+					$this->$name = (object) array();
 					$this->fill_object($config_array, $this->$name);
 					if ( file_exists("components/$name/config.php") ) {
 						$config_array = include("components/$name/config.php");
@@ -85,7 +85,7 @@ class config extends p_base {
 			if ( file_exists("templates/$name/defaults.php") ) {
 				$config_array = include("templates/$name/defaults.php");
 				if ((array) $config_array === $config_array) {
-					$this->$name = new p_base;
+					$this->$name = (object) array();
 					$this->fill_object($config_array, $this->$name);
 					if ( file_exists("templates/$name/config.php") ) {
 						$config_array = include("templates/$name/config.php");
