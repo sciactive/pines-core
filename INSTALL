@@ -9,6 +9,8 @@ installed in a production environment.
 ## Current Requirements ##
 	* PHP (v5.2.10 and up)
 	* MySQL (v5.0 and up)
+	  or
+	* PostgreSQL (v8.4 and up)
 
 ## Installation Steps ##
 	1. Extract Pines to your server.

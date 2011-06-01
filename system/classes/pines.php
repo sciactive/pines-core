@@ -535,7 +535,7 @@ class pines {
 	 *
 	 * Providing a method to open a session for reading allows asynchronous
 	 * calls to Pines to work efficiently. PHP will not block during page
-	 * requests, so one page taking forever to load doesn't grind a whole user's
+	 * requests, so one page taking forever to load doesn't grind a user's whole
 	 * session to a halt.
 	 *
 	 * This method should be the only method sessions are accessed in Pines.
