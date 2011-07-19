@@ -632,10 +632,12 @@ interface entity_manager_interface extends component_interface {
 	 * Increment or create a unique ID and return the new value.
 	 *
 	 * Unique IDs, or UIDs, are ID numbers, similar to GUIDs, but without any
-	 * constraints on how they are used. UIDs can be named anything, however a
-	 * good naming convention, in order to avoid conflicts, is to use your
-	 * component's name, a slash, then a descriptive name of the objects being
-	 * identified. E.g. "com_example/widget" or "com_hrm/employee".
+	 * constraints on how they are used. UIDs can be named anything. A good
+	 * naming convention, in order to avoid conflicts, is to use your
+	 * component's name, a slash, then a descriptive name of the sequence being
+	 * identified for non-entity sequences, and the name of the entity's class
+	 * for entity sequences. E.g. "com_example/widget_hits" or
+	 * "com_hrm_employee".
 	 *
 	 * A UID can be used to identify an object when the GUID doesn't suffice. On
 	 * a system where a new entity is created many times per second, referring
@@ -972,7 +974,7 @@ interface user_manager_interface extends component_interface {
 	 */
 	public function logout();
 	/**
-	 * Creates and attaches a module which let's the user log in.
+	 * Creates and attaches a module which lets the user log in.
 	 *
 	 * @param string $position The position in which to place the module.
 	 * @param string $url An optional url to redirect to after login.
