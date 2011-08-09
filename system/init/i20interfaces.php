@@ -907,7 +907,8 @@ interface user_manager_interface extends component_interface {
 	 * - Its "user" is the user. (It is owned by the user.) (Check user AC.)
 	 * - Its "group" is the user's primary group. (Check group AC.)
 	 * - Its "group" is one of the user's secondary groups. (Check group AC.)
-	 * - Its "group" is a child of one of the user's groups. (Check group AC.)
+	 * - Its "group" is a descendent of one of the user's groups. (Check group
+	 *   AC.)
 	 * - None of the above. (Check other AC.)
 	 *
 	 * @param object &$entity The entity to check.
@@ -920,7 +921,7 @@ interface user_manager_interface extends component_interface {
 	 *
 	 * Also sets the default timezone to the user's timezone.
 	 *
-	 * This must be called by at least i40 in the init script processing.
+	 * This must be called at the i11 position in the init script processing.
 	 */
 	public function fill_session();
 	/**
