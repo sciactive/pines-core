@@ -24,14 +24,13 @@ class hook {
 	 * @var array
 	 */
 	protected $hooks = array();
-
 	/**
 	 * A copy of the hook_override_extend file.
 	 * @var string
 	 */
 	private $hook_file;
 
-	function __construct() {
+	public function __construct() {
 		include_once('system/classes/hook_override.php');
 		$this->hook_file = file_get_contents('system/classes/hook_override_extend.php');
 	}
@@ -88,7 +87,7 @@ class hook {
 	 * @return array An array containing the IDs of the new callback and all matching callbacks.
 	 * @uses hook::sort_callbacks() To resort the callback array in the correct order.
 	 */
-	function add_callback($hook, $order, $function) {
+	public function add_callback($hook, $order, $function) {
 		$callback = array($order, $function);
 		if (!isset($this->hooks[$hook]))
 			$this->hooks[$hook] == array();
@@ -104,7 +103,7 @@ class hook {
 	 * @param int $id The ID of the callback.
 	 * @return int 1 if the callback was deleted, 2 if it didn't exist.
 	 */
-	function del_callback_by_id($hook, $id) {
+	public function del_callback_by_id($hook, $id) {
 		if (!isset($this->hooks[$hook][$id])) return 2;
 		unset($this->hooks[$hook][$id]);
 		return 1;
@@ -119,7 +118,7 @@ class hook {
 	 *
 	 * @return array An array of callbacks.
 	 */
-	function get_callbacks() {
+	public function get_callbacks() {
 		return $this->hooks;
 	}
 
@@ -133,16 +132,17 @@ class hook {
 	 * @param bool $recursive Whether to hook objects recursively.
 	 * @return bool True on success, false on failure.
 	 */
-	function hook_object(&$object, $prefix = '', $recursive = true) {
-		if ((object) $object === $object) {
+	public function hook_object(&$object, $prefix = '', $recursive = true) {
+		if ((object) $object === $object)
 			$is_string = false;
-		} else {
+		else
 			$is_string = true;
-		}
+
 		// Make sure we don't take over the hook object, or we'll end up
 		// recursively calling ourself. Some system classes shouldn't be hooked.
 		$class_name = $is_string ? $object : get_class($object);
-		if (in_array($class_name, array('hook', 'depend', 'config', 'info'))) return false;
+		if (in_array($class_name, array('hook', 'depend', 'config', 'info')))
+			return false;
 
 		if ($recursive && !$is_string) {
 			foreach ($object as $cur_name => &$cur_property) {
@@ -157,17 +157,14 @@ class hook {
 			//if (isset($_SESSION['hook_cache']["hook_override_$class_name"])) {
 			//	eval($_SESSION['hook_cache']["hook_override_$class_name"]);
 			//} else {
-			if ($is_string) {
+			if ($is_string)
 				$reflection = new ReflectionClass($object);
-			} else {
+			else
 				$reflection = new ReflectionObject($object);
-			}
-			$methods = $reflection->getMethods();
+			$methods = $reflection->getMethods(ReflectionMethod::IS_PUBLIC);
 
 			$code = '';
 			foreach ($methods as &$cur_method) {
-				if (!$cur_method->isPublic())
-					continue;
 				$fname = $cur_method->getName();
 				if (in_array($fname, array('__construct', '__destruct', '__get', '__set', '__isset', '__unset', '__toString', '__invoke', '__set_state', '__clone', '__sleep')))
 					continue;
@@ -175,23 +172,36 @@ class hook {
 				//$fprefix = $cur_method->isFinal() ? 'final ' : '';
 				$fprefix = $cur_method->isStatic() ? 'static ' : '';
 				$params = $cur_method->getParameters();
-				$param_array = $param_name_array = array();
+				$param_array = array(); //$param_name_array
 				foreach ($params as &$cur_param) {
 					$param_name = $cur_param->getName();
 					$param_prefix = $cur_param->isPassedByReference() ? '&' : '';
-					if ($cur_param->isDefaultValueAvailable()) {
+					if ($cur_param->isDefaultValueAvailable())
 						$param_suffix = ' = '.var_export($cur_param->getDefaultValue(), true);
-					} else {
+					else
 						$param_suffix = '';
-					}
 					$param_array[] = "{$param_prefix}\${$param_name}{$param_suffix}";
-					$param_name_array[] = "&\${$param_name}";
+					//$param_name_array[] = "{$param_prefix}\${$param_name}";
 				}
 				unset($cur_param);
 				$code .= $fprefix."function $fname(".implode(', ', $param_array).") {\n"
 				."\tglobal \$pines;\n"
-				."\t\$arguments = debug_backtrace(false);\n"
+				// We must use a debug_backtrace, because that's the best way to
+				// get all the passed arguments, by reference. 5.4 and up lets
+				// us limit it to 1 frame.
+				.(version_compare(PHP_VERSION, '5.4.0') >= 0 ?
+					"\t\$arguments = debug_backtrace(false, 1);\n" :
+					"\t\$arguments = debug_backtrace(false);\n"
+				)
 				."\t\$arguments = \$arguments[0]['args'];\n"
+				// This method works, but isn't faster, and might introduce bugs.
+				//."\t\$arguments = array(".implode(', ', $param_name_array).");\n"
+				//."\t\$real_arg_count = func_num_args();\n"
+				//."\t\$arg_count = count(\$arguments);\n"
+				//."\tif (\$real_arg_count > \$arg_count) {\n"
+				//."\t\tfor (\$i = \$arg_count; \$i < \$real_arg_count; \$i++)\n"
+				//."\t\t\t\$arguments[] = func_get_arg(\$i);\n"
+				//."\t}\n"
 				."\t\$function = array(\$this->_p_object, '$fname');\n"
 				."\t\$data = array();\n"
 				."\t\$pines->hook->run_callbacks(\$this->_p_prefix.'$fname', \$arguments, 'before', \$this->_p_object, \$function, \$data);\n"
@@ -231,7 +241,7 @@ class hook {
 	 * @param callback &$function The function which is called at "0". You can change this in the "before" callbacks to effectively takeover a function.
 	 * @param array &$data A data array for callback communication.
 	 */
-	function run_callbacks($name, &$arguments = array(), $type = 'all', &$object = null, &$function = null, &$data = array()) {
+	public function run_callbacks($name, &$arguments = array(), $type = 'all', &$object = null, &$function = null, &$data = array()) {
 		if (isset($this->hooks['all'])) {
 			foreach ($this->hooks['all'] as $cur_callback) {
 				if (($type == 'all' && $cur_callback[0] != 0) || ($type == 'before' && $cur_callback[0] < 0) || ($type == 'after' && $cur_callback[0] > 0)) {
