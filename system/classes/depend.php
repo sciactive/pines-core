@@ -300,7 +300,7 @@ class depend {
 				strpos($value, '(') !== false ||
 				strpos($value, ')') !== false
 			)
-			return $this->simple_parse($value, array($this, 'check_component'));
+			return $this->simple_parse($value, array($this, 'check_extension'));
 		$extension = preg_replace('/([^<>=]+)([<>=]{1,2})(.+)/S', '$1', $value);
 		if ($extension == $value) {
 			return (phpversion($extension) !== false);
