@@ -38,6 +38,7 @@ class depend {
 	 * - action (Current or requested action.)
 	 * - class (Class exists.)
 	 * - component (Installed enabled components and version.)
+	 * - extension (PHP extension version.)
 	 * - function (Function exists.)
 	 * - host (Server hostname.)
 	 * - option (Current or requested component.)
@@ -53,6 +54,7 @@ class depend {
 			'class' => array($this, 'check_class'),
 			'clientip' => array($this, 'check_clientip'),
 			'component' => array($this, 'check_component'),
+			'extension' => array($this, 'check_extension'),
 			'function' => array($this, 'check_function'),
 			'host' => array($this, 'check_host'),
 			'option' => array($this, 'check_option'),
@@ -227,7 +229,7 @@ class depend {
 	 * You can either check only that the component is installed, by using its
 	 * name, or that the component's version matches a certain version/range.
 	 *
-	 * Operators should be placed betwen the component name and the version
+	 * Operators should be placed between the component name and the version
 	 * number to test. Such as, "com_xmlparser>=1.1.0". The available operators
 	 * are:
 	 *
@@ -264,6 +266,50 @@ class depend {
 			$compare = preg_replace('/([a-z0-9_]+)([<>=]{1,2})(.+)/S', '$2', $value);
 			$required = preg_replace(' /([a-z0-9_]+)([<>=]{1,2})(.+)/S', '$3', $value);
 			return version_compare($pines->info->$component->version, $required, $compare);
+		}
+	}
+
+	/**
+	 * Check if a PHP extension is installed and check its version.
+	 *
+	 * You can either check only that the extension is installed, by using its
+	 * name, or that the extension's version matches a certain version/range.
+	 *
+	 * Operators should be placed between the extension name and the version
+	 * number to test. Such as, "tidy>=2.0". The available operators are:
+	 *
+	 * - =
+	 * - <
+	 * - >
+	 * - <=
+	 * - >=
+	 * - <>
+	 *
+	 * Uses simple_parse() to provide simple logic.
+	 *
+	 * @access private
+	 * @param string $value The value to check.
+	 * @return bool The result of the extension check.
+	 */
+	private function check_extension($value) {
+		global $pines;
+		if (
+				strpos($value, '&') !== false ||
+				strpos($value, '|') !== false ||
+				strpos($value, '!') !== false ||
+				strpos($value, '(') !== false ||
+				strpos($value, ')') !== false
+			)
+			return $this->simple_parse($value, array($this, 'check_component'));
+		$extension = preg_replace('/([^<>=]+)([<>=]{1,2})(.+)/S', '$1', $value);
+		if ($extension == $value) {
+			return (phpversion($extension) !== false);
+		} else {
+			if (phpversion($extension) === false)
+				return false;
+			$compare = preg_replace('/([^<>=]+)([<>=]{1,2})(.+)/S', '$2', $value);
+			$required = preg_replace(' /([^<>=]+)([<>=]{1,2})(.+)/S', '$3', $value);
+			return version_compare(phpversion($extension), $required, $compare);
 		}
 	}
 
