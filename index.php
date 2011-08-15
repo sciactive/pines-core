@@ -2,16 +2,8 @@
 /**
  * The controller for Pines' architecture.
  *
- * @package Pines
- * @license http://www.gnu.org/licenses/agpl-3.0.html
- * @author Hunter Perrin <hunter@sciactive.com>
- * @copyright SciActive.com
- * @link http://sciactive.com/
- */
-
-/*
  * Pines - an Enterprise PHP Application Framework
- * Copyright (C) 2008-2010  Hunter Perrin.
+ * Copyright (C) 2008-2011  Hunter Perrin.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -28,9 +20,14 @@
  *
  * Hunter can be contacted at hunter@sciactive.com
  *
+ * @package Pines
+ * @license http://www.gnu.org/licenses/agpl-3.0.html
+ * @author Hunter Perrin <hunter@sciactive.com>
+ * @copyright SciActive.com
+ * @link http://sciactive.com/
  */
 
-/**
+/*
  * Constants
  */
 /**
@@ -55,13 +52,8 @@ define('P_INDEX', basename($_SERVER['SCRIPT_FILENAME']));
 define('P_SCRIPT_TIMING', false);
 
 // Run the system init scripts.
-$_p_sysinit = glob('system/init/i*.php');
-foreach ($_p_sysinit as $_p_cur_sysinit) {
+foreach (glob('system/init/i*.php') as $_p_cur_sysinit) {
 	require($_p_cur_sysinit);
 }
-// Use this for serious testing.
-//file_put_contents('trace '.getmypid(), print_r($GLOBALS, true));
-
-//echo microtime(true) - P_EXEC_TIME;
 
 ?>

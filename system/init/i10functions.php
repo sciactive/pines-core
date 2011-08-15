@@ -46,13 +46,13 @@ function pines_scandir($directory, $sorting_order = 0, $context = null, $hide_do
  * @return bool True on success, false on failure.
  */
 function pines_stripslashes_array_recursive(&$array) {
-	if ((array) $array !== $array) return false;
+	if ((array) $array !== $array)
+		return false;
 	foreach ($array as &$cur_item) {
-		if ((array) $cur_item === $cur_item) {
+		if ((array) $cur_item === $cur_item)
 			pines_stripslashes_array_recursive($cur_item);
-		} elseif (is_string($cur_item)) {
+		elseif (is_string($cur_item))
 			$cur_item = stripslashes($cur_item);
-		}
 	}
 	return true;
 }

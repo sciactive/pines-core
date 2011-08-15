@@ -66,7 +66,7 @@ return array(
 		'name' => 'copyright_notice',
 		'cname' => 'Copyright Notice',
 		'description' => 'The copyright notice at the bottom of each page.',
-		'value' => '&copy; 2010 SciActive.com. All Rights Reserved. Powered by Pines.',
+		'value' => '&copy; 2011 SciActive.com. All Rights Reserved. Powered by Pines.',
 		'peruser' => true,
 	),
 	array(

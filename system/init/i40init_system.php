@@ -20,7 +20,10 @@ function __autoload($class_name) {
 	// When session_start() tries to recover hooked objects, we need to make
 	// sure their equivalent hooked classes exist.
 	if (strpos($class_name, 'hook_override_') === 0) {
-		$trace = debug_backtrace();
+		if (defined(DEBUG_BACKTRACE_IGNORE_ARGS))
+			$trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+		else
+			$trace = debug_backtrace(false);
 		// But the hook object will check if a hooked class exists before
 		// hooking it, so we don't want to create an extra object each time.
 		if ($trace[1]['function'] == 'class_exists') {
