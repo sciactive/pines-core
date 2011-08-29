@@ -50,7 +50,7 @@ header('Content-Type: text/html');
 <body>
 <div class="wrapper">
 	<fieldset>
-		<legend><?php echo htmlspecialchars($this->config->page_title); ?></legend>
+		<legend><?php echo htmlspecialchars($this->config->system_name); ?></legend>
 		<p><?php echo $this->config->offline_message; ?></p>
 	</fieldset>
 </div>
