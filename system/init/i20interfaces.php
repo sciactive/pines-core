@@ -1012,6 +1012,15 @@ interface editor_interface extends component_interface {
 	 * implementation.
 	 */
 	public function load();
+	/**
+	 * Add a custom CSS file to style the editor's page.
+	 * 
+	 * The file, along with the template's editor CSS, will style WYSIWYG editor
+	 * content.
+	 * 
+	 * @param string $url The URL of the stylesheet.
+	 */
+	public function add_css($url);
 }
 
 /**
