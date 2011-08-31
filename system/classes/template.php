@@ -73,6 +73,14 @@ class template implements template_interface {
 				if (isset($action))
 					$return .= "$action/";
 			}
+			if (isset($params['a'])) {
+				$return .= 'a-'.urlencode($params['a']).'/';
+				unset($params['a']);
+			}
+			if (isset($params['id'])) {
+				$return .= 'id-'.urlencode($params['id']).'/';
+				unset($params['id']);
+			}
 			if ( $params ) {
 				$return .= '?';
 				foreach ($params as $key => $value) {

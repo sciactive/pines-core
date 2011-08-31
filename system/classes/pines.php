@@ -171,8 +171,8 @@ class pines {
 				$request_string = substr($request_string, 0, -1);
 			// Get an array of the pseudo directories from the URI.
 			$args_array = explode('/', $request_string);
-			if ( !empty($args_array[0]) ) $this->request_component = ($args_array[0] == 'system' ? $args_array[0] : 'com_'.$args_array[0]);
-			if ( !empty($args_array[1]) ) $this->request_action = $args_array[1];
+			if ( !empty($args_array[0]) && strpos($args_array[0], '-') === false ) $this->request_component = ($args_array[0] == 'system' ? $args_array[0] : 'com_'.$args_array[0]);
+			if ( !empty($args_array[1]) && strpos($args_array[1], '-') === false ) $this->request_action = $args_array[1];
 			$arg_count = count($args_array);
 			// Check for subdir actions. Note that they can't have dashes.
 			for ($i = 2; $i < $arg_count; $i++) {
@@ -183,7 +183,9 @@ class pines {
 			// Any other args are parsed as query data.
 			if ($i < $arg_count) {
 				for (; $i < $arg_count; $i++) {
-					$_REQUEST[preg_replace('/-.*$/', '', $args_array[$i])] = preg_replace('/^[^-]*-/', '', $args_array[$i]);
+					list ($key, $value) = explode('-', $args_array[$i], 2);
+					$_GET[$key] = $value;
+					$_REQUEST[$key] = $value;
 				}
 			}
 		}
