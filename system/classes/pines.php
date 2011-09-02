@@ -525,7 +525,18 @@ class pines {
 			pines_session('close');
 		}
 		header('Location: '.$url);
-		header('X', true, (int) $code);
+		$code_strings = array(
+			300 => '300 Multiple Choices',
+			301 => '301 Moved Permanently',
+			302 => '302 Found',
+			303 => '303 See Other',
+			304 => '304 Not Modified',
+			305 => '305 Use Proxy',
+			306 => '306 Switch Proxy',
+			307 => '307 Temporary Redirect',
+			308 => '308 Resume Incomplete',
+		);
+		header('HTTP/1.1 '.$code_strings[(int) $code]);
 		$this->page->override = true;
 	}
 

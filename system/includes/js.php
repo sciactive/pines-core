@@ -23,7 +23,7 @@ if (
 	) {
 	header('Content-Type: ');
 	header('ETag: "'.$etag.'"');
-	header('X', true, 304);
+	header('HTTP/1.1 304 Not Modified');
 	exit;
 }
 
