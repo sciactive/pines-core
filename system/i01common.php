@@ -115,6 +115,21 @@ function format_date($timestamp, $type = 'full_sort', $format = '', $timezone = 
 }
 
 /**
+ * Shortcut to $pines->format_date_range().
+ *
+ * @uses pines::format_date_range() Forwards parameters and returns the result.
+ * @param int $start_timestamp The timestamp of the beginning of the date range.
+ * @param int $end_timestamp The timestamp of the end of the date range.
+ * @param string $format The format to use. See the function description for details on the format.
+ * @param DateTimeZone|string|null $timezone The timezone to use for formatting. Defaults to date_default_timezone_get().
+ * @return string The formatted date range.
+ */
+function format_date_range($start_timestamp, $end_timestamp, $format = null, $timezone = null) {
+	global $pines;
+	return $pines->format_date_range($start_timestamp, $end_timestamp, $format, $timezone);
+}
+
+/**
  * Shortcut to $pines->format_phone().
  *
  * @uses pines::format_phone() Forwards parameters and returns the result.
