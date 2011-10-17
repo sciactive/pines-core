@@ -146,7 +146,7 @@ class pines {
 			$this->class_files[$cur_name] = $cur_class;
 		}
 		if (P_SCRIPT_TIMING) pines_print_time('Find Component Classes');
-		
+
 		if (P_SCRIPT_TIMING) pines_print_time('Get Requested Action');
 		// Load any post or get vars for our component/action.
 		$this->request_component = str_replace('..', 'fail-danger-dont-use-hack-attempt', $_REQUEST['option']);
@@ -375,7 +375,7 @@ class pines {
 	}
 
 	/**
-	 * Formats a date using the DateTime class.
+	 * Format a date using the DateTime class.
 	 * 
 	 * $type can be any of the following:
 	 * 
@@ -458,7 +458,254 @@ class pines {
 	}
 
 	/**
-	 * Formats a phone number.
+	 * Format a date range into a human understandable phrase.
+	 * 
+	 * $format is built using macros, which are substrings replaced by the
+	 * corresponding number of units. There are singular macros, such as #year#,
+	 * which are used if the number of that unit is 1. For example, if the range
+	 * is 1 year and both #year# and #years# are present, #year# will be used
+	 * and #years# will be ignored. This allows you to use a different
+	 * description for each one. You accomplish this by surrounding the macro
+	 * and its description in curly brackets. If the unit is 0, everything in
+	 * that curly bracket will be removed. This allows you to place both #year#
+	 * and #years# and always end up with the right one.
+	 * 
+	 * Since the units in curly brackets that equal 0 are removed, you can
+	 * include as many as you want and only the relevant ones will be used. If
+	 * you choose not to include one, such as year, then the next available one
+	 * will include the time that would have been placed in it. For example, if
+	 * the time range is 2 years, but you only include months, then months will
+	 * be set to 24.
+	 * 
+	 * After formatting, any leading and trailing whitespace is trimmed before
+	 * the result is returned.
+	 * 
+	 * $format can contain the following macros:
+	 * 
+	 * - #years# - The number of years.
+	 * - #year# - The number 1 if applicable.
+	 * - #months# - The number of months.
+	 * - #month# - The number 1 if applicable.
+	 * - #weeks# - The number of weeks.
+	 * - #week# - The number 1 if applicable.
+	 * - #days# - The number of days.
+	 * - #day# - The number 1 if applicable.
+	 * - #hours# - The number of hours.
+	 * - #hour# - The number 1 if applicable.
+	 * - #minutes# - The number of minutes.
+	 * - #minute# - The number 1 if applicable.
+	 * - #seconds# - The number of seconds.
+	 * - #second# - The number 1 if applicable.
+	 * 
+	 * If $format is left null, it defaults to the following:
+	 * 
+	 * "{#years# years}{#year# year} {#months# months}{#month# month} {#days# days}{#day# day} {#hours# hours}{#hour# hour} {#minutes# minutes}{#minute# minute} {#seconds# seconds}{#second# second}"
+	 * 
+	 * Here are some examples of formats and what would be outputted given a
+	 * time range of 2 years 5 months 1 day and 4 hours. (These values were
+	 * calculated on Fri Oct 14 2011 in San Diego, which has DST. 2012 is a leap
+	 * year.)
+	 * 
+	 * - "#years# years {#days# days}{#day# day}" - 2 years 152 days
+	 * - "{#months# months}{#month# month} {#days# days}{#day# day}" - 29 months 1 day
+	 * - "{#weeks# weeks}{#week# week} {#days# days}{#day# day}" - 126 weeks 1 day
+	 * - "#days# days #hours# hours #minutes# minutes" - 883 days 4 hours 0 minutes
+	 * - "{#minutes#min} {#seconds#sec}" - 1271760min
+	 * - "#seconds#" - 76305600
+	 *
+	 * A component can hook this function and redirect the call to its own
+	 * function in order to provide localization.
+	 * 
+	 * @param int $start_timestamp The timestamp of the beginning of the date range.
+	 * @param int $end_timestamp The timestamp of the end of the date range.
+	 * @param string $format The format to use. See the function description for details on the format.
+	 * @param DateTimeZone|string|null $timezone The timezone to use for formatting. Defaults to date_default_timezone_get().
+	 * @return string The formatted date range.
+	 */
+	public function format_date_range($start_timestamp, $end_timestamp, $format = null, $timezone = null) {
+		if (!$format)
+			$format = '{#years# years}{#year# year} {#months# months}{#month# month} {#days# days}{#day# day} {#hours# hours}{#hour# hour} {#minutes# minutes}{#minute# minute} {#seconds# seconds}{#second# second}';
+		// If it's a negative range, flip the values.
+		$negative = ($end_timestamp < $start_timestamp) ? '-' : '';
+		if ($negative == '-') {
+			$tmp = $end_timestamp;
+			$end_timestamp = $start_timestamp;
+			$start_timestamp = $tmp;
+		}
+		// Create a date object from the timestamp.
+		$start_date = new DateTime(gmdate('c', (int) $start_timestamp));
+		$end_date = new DateTime(gmdate('c', (int) $end_timestamp));
+		if (isset($timezone)) {
+			if ((object) $timezone !== $timezone)
+				$timezone = new DateTimeZone($timezone);
+			$start_date->setTimezone($timezone);
+			$end_date->setTimezone($timezone);
+		} else {
+			$start_date->setTimezone(new DateTimeZone(date_default_timezone_get()));
+			$end_date->setTimezone(new DateTimeZone(date_default_timezone_get()));
+		}
+
+		if (strpos($format, '#year#') !== false || strpos($format, '#years#') !== false) {
+			// Calculate number of years between the two dates.
+			$years = (int) $end_date->format('Y') - (int) $start_date->format('Y');
+			// Be sure we didn't go too far.
+			$test_date = clone $start_date;
+			$test_date->modify('+'.$years.' years');
+			$test_timestamp = (int) $test_date->format('U');
+			if ($test_timestamp > $end_timestamp)
+				$years--;
+			if (strpos($format, '#year#') !== false && $years == 1) {
+				$format = preg_replace('/\{?([^{}]*)#year#([^{}]*)\}?/s', '${1}'.$negative.$years.'${2}', $format);
+				$format = preg_replace('/\{([^{}]*)#years#([^{}]*)\}/s', '', $format);
+			} elseif (strpos($format, '#years#') !== false) {
+				if ($years <> 0)
+					$format = preg_replace('/\{?([^{}]*)#years#([^{}]*)\}?/s', '${1}'.$negative.$years.'${2}', $format);
+				else
+					$format = preg_replace(array('/\{([^{}]*)#years#([^{}]*)\}/s', '/#years#/'), array('', '0'), $format);
+				$format = preg_replace('/\{([^{}]*)#year#([^{}]*)\}/s', '', $format);
+			}
+			$start_date->modify('+'.$years.' years');
+			$start_timestamp = (int) $start_date->format('U');
+		}
+
+		if (strpos($format, '#month#') !== false || strpos($format, '#months#') !== false) {
+			// Calculate number of months.
+			$years = (int) $end_date->format('Y') - (int) $start_date->format('Y');
+			$months = ($years * 12) + ((int) $end_date->format('n') - (int) $start_date->format('n'));
+			if (strpos($format, '#month#') !== false && $months == 1) {
+				$format = preg_replace('/\{?([^{}]*)#month#([^{}]*)\}?/s', '${1}'.$negative.$months.'${2}', $format);
+				$format = preg_replace('/\{([^{}]*)#months#([^{}]*)\}/s', '', $format);
+			} elseif (strpos($format, '#months#') !== false) {
+				if ($months <> 0)
+					$format = preg_replace('/\{?([^{}]*)#months#([^{}]*)\}?/s', '${1}'.$negative.$months.'${2}', $format);
+				else
+					$format = preg_replace(array('/\{([^{}]*)#months#([^{}]*)\}/s', '/#months#/'), array('', '0'), $format);
+				$format = preg_replace('/\{([^{}]*)#month#([^{}]*)\}/s', '', $format);
+			}
+			$start_date->modify('+'.$months.' months');
+			$start_timestamp = (int) $start_date->format('U');
+		}
+
+		if (strpos($format, '#week#') !== false || strpos($format, '#weeks#') !== false) {
+			// Calculate number of weeks.
+			$weeks = floor(($end_timestamp - $start_timestamp) / 604800);
+			// Be sure we didn't go too far.
+			$test_date = clone $start_date;
+			$test_date->modify('+'.$weeks.' weeks');
+			$test_timestamp = (int) $test_date->format('U');
+			if ($test_timestamp > $end_timestamp)
+				$weeks--;
+			if (strpos($format, '#week#') !== false && $weeks == 1) {
+				$format = preg_replace('/\{?([^{}]*)#week#([^{}]*)\}?/s', '${1}'.$negative.$weeks.'${2}', $format);
+				$format = preg_replace('/\{([^{}]*)#weeks#([^{}]*)\}/s', '', $format);
+			} elseif (strpos($format, '#weeks#') !== false) {
+				if ($weeks <> 0)
+					$format = preg_replace('/\{?([^{}]*)#weeks#([^{}]*)\}?/s', '${1}'.$negative.$weeks.'${2}', $format);
+				else
+					$format = preg_replace(array('/\{([^{}]*)#weeks#([^{}]*)\}/s', '/#weeks#/'), array('', '0'), $format);
+				$format = preg_replace('/\{([^{}]*)#week#([^{}]*)\}/s', '', $format);
+			}
+			$start_date->modify('+'.$weeks.' weeks');
+			$start_timestamp = (int) $start_date->format('U');
+		}
+
+		if (strpos($format, '#day#') !== false || strpos($format, '#days#') !== false) {
+			// Calculate number of days.
+			$days = floor(($end_timestamp - $start_timestamp) / 86400);
+			// Be sure we didn't go too far.
+			$test_date = clone $start_date;
+			$test_date->modify('+'.$days.' days');
+			$test_timestamp = (int) $test_date->format('U');
+			if ($test_timestamp > $end_timestamp)
+				$days--;
+			if (strpos($format, '#day#') !== false && $days == 1) {
+				$format = preg_replace('/\{?([^{}]*)#day#([^{}]*)\}?/s', '${1}'.$negative.$days.'${2}', $format);
+				$format = preg_replace('/\{([^{}]*)#days#([^{}]*)\}/s', '', $format);
+			} elseif (strpos($format, '#days#') !== false) {
+				if ($days <> 0)
+					$format = preg_replace('/\{?([^{}]*)#days#([^{}]*)\}?/s', '${1}'.$negative.$days.'${2}', $format);
+				else
+					$format = preg_replace(array('/\{([^{}]*)#days#([^{}]*)\}/s', '/#days#/'), array('', '0'), $format);
+				$format = preg_replace('/\{([^{}]*)#day#([^{}]*)\}/s', '', $format);
+			}
+			$start_date->modify('+'.$days.' days');
+			$start_timestamp = (int) $start_date->format('U');
+		}
+
+		if (strpos($format, '#hour#') !== false || strpos($format, '#hours#') !== false) {
+			// Calculate number of hours.
+			$hours = floor(($end_timestamp - $start_timestamp) / 3600);
+			// Hours are constant, so we didn't go too far.
+			if (strpos($format, '#hour#') !== false && $hours == 1) {
+				$format = preg_replace('/\{?([^{}]*)#hour#([^{}]*)\}?/s', '${1}'.$negative.$hours.'${2}', $format);
+				$format = preg_replace('/\{([^{}]*)#hours#([^{}]*)\}/s', '', $format);
+			} elseif (strpos($format, '#hours#') !== false) {
+				if ($hours <> 0)
+					$format = preg_replace('/\{?([^{}]*)#hours#([^{}]*)\}?/s', '${1}'.$negative.$hours.'${2}', $format);
+				else
+					$format = preg_replace(array('/\{([^{}]*)#hours#([^{}]*)\}/s', '/#hours#/'), array('', '0'), $format);
+				$format = preg_replace('/\{([^{}]*)#hour#([^{}]*)\}/s', '', $format);
+			}
+			// Because hours are affected by DST, we need to add to the timestamp, and not the date object.
+			$start_timestamp += $hours * 3600;
+			// Create a date object from the timestamp.
+			$start_date = new DateTime(gmdate('c', (int) $start_timestamp));
+			if (isset($timezone)) {
+				if ((object) $timezone !== $timezone)
+					$timezone = new DateTimeZone($timezone);
+				$start_date->setTimezone($timezone);
+			} else {
+				$start_date->setTimezone(new DateTimeZone(date_default_timezone_get()));
+			}
+		}
+
+		if (strpos($format, '#minute#') !== false || strpos($format, '#minutes#') !== false) {
+			// Calculate number of minutes.
+			$minutes = floor(($end_timestamp - $start_timestamp) / 60);
+			// Minutes are constant, so we didn't go too far.
+			if (strpos($format, '#minute#') !== false && $minutes == 1) {
+				$format = preg_replace('/\{?([^{}]*)#minute#([^{}]*)\}?/s', '${1}'.$negative.$minutes.'${2}', $format);
+				$format = preg_replace('/\{([^{}]*)#minutes#([^{}]*)\}/s', '', $format);
+			} elseif (strpos($format, '#minutes#') !== false) {
+				if ($minutes <> 0)
+					$format = preg_replace('/\{?([^{}]*)#minutes#([^{}]*)\}?/s', '${1}'.$negative.$minutes.'${2}', $format);
+				else
+					$format = preg_replace(array('/\{([^{}]*)#minutes#([^{}]*)\}/s', '/#minutes#/'), array('', '0'), $format);
+				$format = preg_replace('/\{([^{}]*)#minute#([^{}]*)\}/s', '', $format);
+			}
+			// Because minutes are affected by DST, we need to add to the timestamp, and not the date object.
+			$start_timestamp += $minutes * 60;
+			// Create a date object from the timestamp.
+			$start_date = new DateTime(gmdate('c', (int) $start_timestamp));
+			if (isset($timezone)) {
+				if ((object) $timezone !== $timezone)
+					$timezone = new DateTimeZone($timezone);
+				$start_date->setTimezone($timezone);
+			} else {
+				$start_date->setTimezone(new DateTimeZone(date_default_timezone_get()));
+			}
+		}
+
+		if (strpos($format, '#second#') !== false || strpos($format, '#seconds#') !== false) {
+			// Calculate number of seconds.
+			$seconds = (int) $end_timestamp - (int) $start_timestamp;
+			if (strpos($format, '#second#') !== false && $seconds == 1) {
+				$format = preg_replace('/\{?([^{}]*)#second#([^{}]*)\}?/s', '${1}'.$negative.$seconds.'${2}', $format);
+				$format = preg_replace('/\{([^{}]*)#seconds#([^{}]*)\}/s', '', $format);
+			} elseif (strpos($format, '#seconds#') !== false) {
+				if ($seconds <> 0)
+					$format = preg_replace('/\{?([^{}]*)#seconds#([^{}]*)\}?/s', '${1}'.$negative.$seconds.'${2}', $format);
+				else
+					$format = preg_replace(array('/\{([^{}]*)#seconds#([^{}]*)\}/s', '/#seconds#/'), array('', '0'), $format);
+				$format = preg_replace('/\{([^{}]*)#second#([^{}]*)\}/s', '', $format);
+			}
+		}
+
+		return trim($format);
+	}
+
+	/**
+	 * Format a phone number.
 	 *
 	 * Uses US phone number format. E.g. "(800) 555-1234 x56".
 	 *

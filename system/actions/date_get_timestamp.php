@@ -14,6 +14,7 @@ if (!gatekeeper())
 	punt_user();
 
 $pines->page->override = true;
+header('Content-Type: text/plain');
 
 try {
 	if (empty($_REQUEST['timezone'])) {
