@@ -66,6 +66,10 @@ class config {
 		if ($name == 'template') {
 			$name = $pines->current_template;
 			$is_template = true;
+			if (isset($this->$name)) {
+				$this->template =& $this->$name;
+				return $this->template;
+			}
 		}
 		if (substr($name, 0, 4) == 'com_') {
 			// Load the config for a component.
