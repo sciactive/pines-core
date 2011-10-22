@@ -19,6 +19,14 @@ defined('P_RUN') or die('Direct access prohibited');
  * then be hooked by the hook manager.
  *
  * @package Pines
+ * @property configurator_interface $configurator The configurator service.
+ * @property editor_interface $editor The editor service.
+ * @property entity_manager_interface $entity_manager The entity manager service.
+ * @property icons_interface $icons The icons service.
+ * @property log_manager_interface $log_manager The log manager service.
+ * @property template_interface $template The template service.
+ * @property uploader_interface $uploader The uploader service.
+ * @property user_manager_interface $user_manager The user manager service.
  */
 class pines {
 	/**

@@ -112,7 +112,25 @@ interface able_object_interface extends data_object_interface {
 /**
  * Pines system users.
  * @package Pines
- * @property int $guid The UID of the user.
+ * @property int $guid The GUID of the user.
+ * @property string $username The user's username.
+ * @property string $name_first The user's first name.
+ * @property string $name_middle The user's middle name.
+ * @property string $name_last The user's last name.
+ * @property string $name The user's full name.
+ * @property string $email The user's email address.
+ * @property string $phone The user's telephone number.
+ * @property string $address_type The user's address type. "us" or "international".
+ * @property string $address_1 The user's address line 1 for US addresses.
+ * @property string $address_2 The user's address line 2 for US addresses.
+ * @property string $city The user's city for US addresses.
+ * @property string $state The user's state abbreviation for US addresses.
+ * @property string $zip The user's ZIP code for US addresses.
+ * @property string $address_international The user's full address for international addresses.
+ * @property string $pin The user's PIN.
+ * @property group $group The user's primary group.
+ * @property array $groups The user's secondary groups.
+ * @property bool $inherit_abilities Whether the user should inherit the abilities of his groups.
  */
 interface user_interface extends able_object_interface {
 	/**
@@ -200,7 +218,19 @@ interface user_interface extends able_object_interface {
  * deleted.
  *
  * @package Pines
- * @property int $guid The GID of the group.
+ * @property int $guid The GUID of the group.
+ * @property string $groupname The group's groupname.
+ * @property string $name The group's name.
+ * @property string $email The group's email address.
+ * @property string $phone The group's telephone number.
+ * @property string $address_type The group's address type. "us" or "international".
+ * @property string $address_1 The group's address line 1 for US addresses.
+ * @property string $address_2 The group's address line 2 for US addresses.
+ * @property string $city The group's city for US addresses.
+ * @property string $state The group's state abbreviation for US addresses.
+ * @property string $zip The group's ZIP code for US addresses.
+ * @property string $address_international The group's full address for international addresses.
+ * @property group $parent The group's parent.
  */
 interface group_interface extends able_object_interface {
 	/**
@@ -281,6 +311,8 @@ interface group_interface extends able_object_interface {
 /**
  * A Pines template.
  * @package Pines
+ * @property-read string $format The template's format.
+ * @property-read string $editor_css The filename of a CSS file to use for editing content.
  */
 interface template_interface {
 	/**
@@ -598,7 +630,7 @@ interface entity_manager_interface extends component_interface {
 	 *
 	 * @param mixed $options The options to search for, or just a GUID.
 	 * @param mixed $selectors,... The optional selectors to search for, or nothing if $options is a GUID.
-	 * @return mixed An entity, or null on failure and nothing found.
+	 * @return entity|null An entity, or null on failure and nothing found.
 	 */
 	public function get_entity();
 	/**
@@ -775,6 +807,7 @@ interface entity_manager_interface extends component_interface {
  * @package Pines
  * @property int $guid The GUID of the entity.
  * @property array $tags Array of the entity's tags.
+ * @property bool $_p_use_skip_ac Whether to use the skip_ac option when retrieving referenced entities.
  */
 interface entity_interface extends data_object_interface {
 	/**

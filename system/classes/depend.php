@@ -93,7 +93,7 @@ class depend {
 	private function check_ability($value) {
 		global $pines;
 		if ($value == '!')
-			return !gatekeeper();
+			return (isset($pines->user_manager) ? !$pines->user_manager->gatekeeper() : false);
 		if (
 				strpos($value, '&') !== false ||
 				strpos($value, '|') !== false ||
@@ -102,7 +102,7 @@ class depend {
 				strpos($value, ')') !== false
 			)
 			return $this->simple_parse($value, array($this, 'check_ability'));
-		return gatekeeper($value);
+		return (isset($pines->user_manager) ? $pines->user_manager->gatekeeper($value) : true);
 	}
 
 	/**
