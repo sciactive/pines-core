@@ -8,7 +8,11 @@
  * @copyright SciActive.com
  * @link http://sciactive.com/
  */
+/* @var $pines pines */
 defined('P_RUN') or die('Direct access prohibited');
+
+/* @var user */
+$hello = user::factory();
 
 return array(
 	'name' => 'Pines',
