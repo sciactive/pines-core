@@ -32,6 +32,12 @@ var pines = function(fn){pines.ready(fn)};
 
 pines.full_location="";
 pines.rela_location="";
+// Escape some text to put in HTML.
+pines.safe=function(unsafe){
+	var elem = document.createElement("div");
+	elem.appendChild(document.createTextNode(unsafe+""));
+	return elem.innerHTML;
+}
 // Cause the browser to go to a URL. (Just like the user clicked a link.)
 pines.get=function(url, params, target){
 	if (params) {
