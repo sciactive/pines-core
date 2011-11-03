@@ -13,6 +13,9 @@
  */
 
 header('Content-Type: text/javascript');
+header('Vary: Accept-Encoding');
+header('Pragma: ');
+header('X-Powered-By: ');
 
 $mod_date = filemtime('pines.min.js');
 $etag = dechex(crc32($mod_date));
@@ -34,7 +37,9 @@ file_get_contents('pines.min.js')."\n".
 "if(!this.JSON){pines.loadjs(pines.rela_location+\"system/includes/json2.js\");}\n";
 
 header('Content-Length: '.strlen($output));
-header('Last-Modified: '.date('r', $mod_date));
+header('Last-Modified: '.gmdate('r', $mod_date));
+header('Cache-Control: max-age=604800, public');
+header('Expires: '.gmdate('r', time()+604800));
 header('ETag: "'.$etag.'"');
 
 echo $output;
