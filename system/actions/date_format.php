@@ -16,6 +16,6 @@ if (!gatekeeper())
 
 $pines->page->override = true;
 header('Content-Type: text/plain');
-$pines->page->override_doc(format_date(!is_numeric($_REQUEST['timestamp']) ? time() : (int) $_REQUEST['timestamp'], empty($_REQUEST['type']) ? 'full_sort' : $_REQUEST['type'], empty($_REQUEST['format']) ? '' : $_REQUEST['format'],  empty($_REQUEST['timezone']) ? null : new DateTimeZone($_REQUEST['timezone'])));
+$pines->page->override_doc(format_date(!is_numeric($_REQUEST['timestamp']) ? time() : (int) $_REQUEST['timestamp'], empty($_REQUEST['type']) ? 'full_sort' : $_REQUEST['type'], empty($_REQUEST['format']) ? '' : $_REQUEST['format'], empty($_REQUEST['timezone']) ? null : new DateTimeZone($_REQUEST['timezone'])));
 
 ?>
