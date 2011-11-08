@@ -34,9 +34,17 @@ pines.full_location="";
 pines.rela_location="";
 // Escape some text to put in HTML.
 pines.safe=function(unsafe){
-	var elem = document.createElement("div");
-	elem.appendChild(document.createTextNode(unsafe+""));
-	return elem.innerHTML;
+	var find = [/&/g, /\"/g, /\'/g, /</g, />/g], repl = ["&amp;", '&quot;', "&#039;", "&lt;", "&gt;"], r = unsafe;
+	for (var i=0,l=find.length; i<l; i++)
+		r = r.replace(find[i], repl[i]);
+	return r;
+}
+// Unescape some text.
+pines.unsafe=function(safe){
+	var find = [/&amp;/g, /&quot;/g, /&#039;/g, /&lt;/g, /&gt;/g], repl = ["&", '"', "'", "<", ">"], r = safe;
+	for (var i=0,l=find.length; i<l; i++)
+		r = r.replace(find[i], repl[i]);
+	return r;
 }
 // Cause the browser to go to a URL. (Just like the user clicked a link.)
 pines.get=function(url, params, target){

@@ -1,6 +1,6 @@
 <?php
 /**
- * Provide the default JavaScript files, concatenated.
+ * Provide the default JavaScript files.
  *
  * This file also fills in the full_location and rela_location variables in the
  * JavaScript pines object and includes a JSON object, if one is not available.
@@ -34,7 +34,7 @@ $output =
 file_get_contents('pines.min.js')."\n".
 'pines.full_location = "http'.(($_SERVER['HTTPS'] == 'on') ? 's://' : '://').$_SERVER['HTTP_HOST'].substr($_SERVER['PHP_SELF'], 0, strripos($_SERVER['PHP_SELF'], 'system/includes/js.php'))."\"\n".
 'pines.rela_location = "'.substr($_SERVER['PHP_SELF'], 0, strripos($_SERVER['PHP_SELF'], 'system/includes/js.php'))."\"\n".
-"if(!this.JSON){pines.loadjs(pines.rela_location+\"system/includes/json2.js\");}\n";
+"var JSON;JSON||pines.loadjs(pines.rela_location+\"system/includes/json2.min.js\");\n";
 
 header('Content-Length: '.strlen($output));
 header('Last-Modified: '.gmdate('r', $mod_date));
