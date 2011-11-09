@@ -6,11 +6,13 @@ Read the INSTALL file for installation instructions.
 Planned features for versions <=1.0:
 --------------------------------------------------------------------------------
 +Fix com_newsletter.
-+More log entries.
++Fix XSS vulnerabilities.
++Make repository better and more robust.
 --------------------------------------------------------------------------------
 
 Planned features for versions >1.0:
 --------------------------------------------------------------------------------
++More log entries.
 +Install alternative services for icons and editor.
 +Entity locking.
 +Pines Grid caption and summary support.
