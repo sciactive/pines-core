@@ -34,14 +34,14 @@ pines.full_location="";
 pines.rela_location="";
 // Escape some text to put in HTML.
 pines.safe=function(unsafe){
-	var find = [/&/g, /\"/g, /\'/g, /</g, />/g], repl = ["&amp;", '&quot;', "&#039;", "&lt;", "&gt;"], r = unsafe;
+	var find = [/&/g, /\"/g, /\'/g, /</g, />/g], repl = ["&amp;", '&quot;', "&#039;", "&lt;", "&gt;"], r = String(unsafe);
 	for (var i=0,l=find.length; i<l; i++)
 		r = r.replace(find[i], repl[i]);
 	return r;
 }
 // Unescape some text.
 pines.unsafe=function(safe){
-	var find = [/&amp;/g, /&quot;/g, /&#039;/g, /&lt;/g, /&gt;/g], repl = ["&", '"', "'", "<", ">"], r = safe;
+	var find = [/&amp;/g, /&quot;/g, /&#039;/g, /&lt;/g, /&gt;/g], repl = ["&", '"', "'", "<", ">"], r = String(safe);
 	for (var i=0,l=find.length; i<l; i++)
 		r = r.replace(find[i], repl[i]);
 	return r;
