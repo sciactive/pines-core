@@ -5,7 +5,6 @@ Read the INSTALL file for installation instructions.
 
 Planned features for versions <=1.0:
 --------------------------------------------------------------------------------
-+Fix com_newsletter.
 +Make repository better and more robust.
 --------------------------------------------------------------------------------
 
@@ -18,4 +17,5 @@ Planned features for versions >1.0:
 +New templates / Improve Pines template. (Maybe use XSL instead of PHP.)
 +A backup creator, using the metadata of a Slim archive to hold an entity
 	export, allowing for a complete backup of a Pines installation.
++Fix com_newsletter.
 --------------------------------------------------------------------------------
