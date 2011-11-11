@@ -6,7 +6,6 @@ Read the INSTALL file for installation instructions.
 Planned features for versions <=1.0:
 --------------------------------------------------------------------------------
 +Fix com_newsletter.
-+Fix XSS vulnerabilities.
 +Make repository better and more robust.
 --------------------------------------------------------------------------------
 
