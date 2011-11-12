@@ -1,24 +1,23 @@
                  -- Installation Instructions --
 
-           ** These instructions are preliminary and **
-         ** may not apply to future releases of Pines. **
-
 This release of Pines is stable and can be installed in a production
 environment.
 
-## Current Requirements ##
+## Requirements for Pines ##
 	* PHP (v5.2.10 and up)
+
+## Requirements for the Database Backends ##
 	* MySQL (v5.0 and up)
-	  or
-	* PostgreSQL (v8.4 and up)
+	or
+	* PostgreSQL (v8.4 and up) (Installing the PL/Perl extension will
+	  significantly improve performance in most scenarios.)
 
 ## Installation Steps ##
 	1. Extract Pines to your server.
 	2. Go to its address in a browser.
 	3. Follow the steps to setup your database.
-	4. Register a new user, by selecting the "I'm new." option. *
-
-* The system will detect that there are no other users and grant the new user
-  all abilities.
+	4. Register a new user, by selecting the "I'm new." option. The system will
+	   detect that there are no other users and grant the new user all
+	   abilities.
 
 Good luck. ;)
