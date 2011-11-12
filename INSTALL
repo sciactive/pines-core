@@ -3,8 +3,8 @@
            ** These instructions are preliminary and **
          ** may not apply to future releases of Pines. **
 
-This release of Pines is in the Beta stage of development, and should not be
-installed in a production environment.
+This release of Pines is stable and can be installed in a production
+environment.
 
 ## Current Requirements ##
 	* PHP (v5.2.10 and up)
