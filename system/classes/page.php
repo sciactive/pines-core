@@ -53,11 +53,10 @@ class page {
 	 */
 	protected $error = array();
 	/**
-	 * The moduels to display.
+	 * The modules to display.
 	 * @var array $modules
-	 * @access protected
 	 */
-	protected $modules = array();
+	public $modules = array();
 	/**
 	 * Wether to override the output of the page and display custom content.
 	 *
