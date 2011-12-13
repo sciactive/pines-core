@@ -455,13 +455,19 @@ class pines {
 				break;
 		}
 		// Create a date object from the timestamp.
-		$date = new DateTime(gmdate('c', (int) $timestamp));
-		if (isset($timezone)) {
-			if ((object) $timezone !== $timezone)
-				$timezone = new DateTimeZone($timezone);
-			$date->setTimezone($timezone);
-		} else {
-			$date->setTimezone(new DateTimeZone(date_default_timezone_get()));
+		try {
+			$date = new DateTime(gmdate('c', (int) $timestamp));
+			if (isset($timezone)) {
+				if ((object) $timezone !== $timezone)
+					$timezone = new DateTimeZone($timezone);
+				$date->setTimezone($timezone);
+			} else {
+				$date->setTimezone(new DateTimeZone(date_default_timezone_get()));
+			}
+		} catch (Exception $e) {
+			if (function_exists('pines_log'))
+				pines_log("Error formatting date: $e", 'error');
+			return '';
 		}
 		return $date->format($format);
 	}
@@ -542,16 +548,22 @@ class pines {
 			$start_timestamp = $tmp;
 		}
 		// Create a date object from the timestamp.
-		$start_date = new DateTime(gmdate('c', (int) $start_timestamp));
-		$end_date = new DateTime(gmdate('c', (int) $end_timestamp));
-		if (isset($timezone)) {
-			if ((object) $timezone !== $timezone)
-				$timezone = new DateTimeZone($timezone);
-			$start_date->setTimezone($timezone);
-			$end_date->setTimezone($timezone);
-		} else {
-			$start_date->setTimezone(new DateTimeZone(date_default_timezone_get()));
-			$end_date->setTimezone(new DateTimeZone(date_default_timezone_get()));
+		try {
+			$start_date = new DateTime(gmdate('c', (int) $start_timestamp));
+			$end_date = new DateTime(gmdate('c', (int) $end_timestamp));
+			if (isset($timezone)) {
+				if ((object) $timezone !== $timezone)
+					$timezone = new DateTimeZone($timezone);
+				$start_date->setTimezone($timezone);
+				$end_date->setTimezone($timezone);
+			} else {
+				$start_date->setTimezone(new DateTimeZone(date_default_timezone_get()));
+				$end_date->setTimezone(new DateTimeZone(date_default_timezone_get()));
+			}
+		} catch (Exception $e) {
+			if (function_exists('pines_log'))
+				pines_log("Error formatting date range: $e", 'error');
+			return '';
 		}
 
 		if (strpos($format, '#year#') !== false || strpos($format, '#years#') !== false) {

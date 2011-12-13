@@ -58,7 +58,7 @@ class page {
 	 */
 	public $modules = array();
 	/**
-	 * Wether to override the output of the page and display custom content.
+	 * Whether to override the output of the page and display custom content.
 	 *
 	 * @var bool $override
 	 */
