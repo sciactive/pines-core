@@ -262,12 +262,12 @@ class page {
 			foreach ($this->modules as &$cur_pos) {
 				if (!$cur_pos || (array) $cur_pos !== $cur_pos)
 					continue;
-				// Use reset and next in case a module places another module in
+				// Use reset and each in case a module places another module in
 				// the same position while running this.
-				$cur_module = reset($cur_pos);
-				do {
+				reset($cur_pos);
+				while (list($cur_key, $cur_module) = each($cur_pos)) {
 					$cur_module->render();
-				} while ($cur_module = next($cur_pos));
+				}
 			}
 			unset($cur_pos);
 			/**
@@ -290,12 +290,12 @@ class page {
 	public function render_modules($position, $model = null) {
 		$return = '';
 		if (!empty($this->modules[$position])) {
-			// Use reset and next in case a module places another module in the
+			// Use reset and each in case a module places another module in the
 			// same position while running this.
-			$cur_module = reset($this->modules[$position]);
-			do {
+			reset($this->modules[$position]);
+			while (list($cur_key, $cur_module) = each($this->modules[$position])) {
 				$return .= $cur_module->render_model($model);
-			} while ($cur_module = next($this->modules[$position]));
+			}
 		}
 		return $return;
 	}
