@@ -96,6 +96,9 @@ class menu {
 	 */
 	public function render() {
 		global $pines;
+		// Remember if we've found a URL match.
+		$found_exact_match = false;
+		$found_close_match = false;
 		// Go through each entry and organize them into a multidimensional
 		// array.
 		foreach ($this->menu_arrays as &$cur_entry) {
@@ -117,12 +120,26 @@ class menu {
 			// Transform URL arrays into actual URLs.
 			if (isset($cur_entry['href']) && (array) $cur_entry['href'] === $cur_entry['href'])
 				$cur_entry['href'] = call_user_func_array(array($pines->template, 'url'), $cur_entry['href']);
+			// Now determine if this item is the current page.
+			if (!$found_exact_match && $cur_entry['href'] === $_SERVER['REQUEST_URI']) {
+				// This is an exact match URL.
+				$found_exact_match = true;
+				$cur_entry['current_page'] = true;
+			} elseif (!$found_exact_match && !$found_close_match && $_SERVER["QUERY_STRING"] && $cur_entry['href'] === (substr($_SERVER['REQUEST_URI'], 0, -1 * (strlen($_SERVER["QUERY_STRING"]) + 1)))) {
+				// This page matches, but has query data.
+				$found_close_match = true;
+				$cur_entry['close_page'] = true;
+			}
 			$tmp_path = explode('/', $cur_entry['path']);
 			unset($cur_entry['path']);
 			$cur_menus =& $this->menus;
 			foreach ($tmp_path as $cur_path) {
 				if (!isset($cur_menus[$cur_path]))
 					$cur_menus[$cur_path] = array();
+				if ($cur_entry['current_page'])
+					$cur_menus[0]['current_page_parent'] = true;
+				if ($cur_entry['close_page'])
+					$cur_menus[0]['close_page_parent'] = true;
 				$cur_menus =& $cur_menus[$cur_path];
 			}
 			/* which way is faster?
@@ -139,7 +156,7 @@ class menu {
 		$this->menu_arrays = array();
 
 		// Clean up the full menu.
-		$this->cleanup($this->menus);
+		$this->cleanup($this->menus, $found_exact_match);
 
 		foreach ($this->menus as &$cur_menu) {
 			$module = new module('system', 'null', $cur_menu[0]['position']);
@@ -158,10 +175,11 @@ class menu {
 	 *
 	 * @access private
 	 * @param array $array The menu array.
+	 * @param bool $found_exact_match If we found an exact match, remove close page, else make them current page.
 	 * @param bool $is_top_menu Allow an array without a menu entry item.
 	 * @return bool True if the entry passes all tests, false otherwise.
 	 */
-	private function cleanup(&$array, $is_top_menu = true) {
+	private function cleanup(&$array, $found_exact_match, $is_top_menu = true) {
 		// If this isn't a top menu, and has no menu entry, return false.
 		if (!$is_top_menu && !$array[0])
 			return false;
@@ -186,7 +204,7 @@ class menu {
 			foreach ($array as $key => &$value) {
 				if ($key === 0)
 					continue;
-				if (!$this->cleanup($value, false))
+				if (!$this->cleanup($value, $found_exact_match, false))
 					unset($array[$key]);
 			}
 			// If the menu requires children and has none, return false.
@@ -201,6 +219,17 @@ class menu {
 				return false;
 		}
 		unset($array[0]['depend']);
+		if ($array[0]['close_page'] || $array[0]['close_page_parent']) {
+			if ($found_exact_match) {
+				unset($array[0]['close_page']);
+				unset($array[0]['close_page_parent']);
+			} else {
+				if ($array[0]['close_page'])
+					$array[0]['current_page'] = true;
+				if ($array[0]['close_page_parent'])
+					$array[0]['current_page_parent'] = true;
+			}
+		}
 		return true;
 	}
 }
