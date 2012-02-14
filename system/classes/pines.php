@@ -748,9 +748,13 @@ class pines {
 	 */
 	public function load_system_config() {
 		if (P_SCRIPT_TIMING) pines_print_time('Load System Config');
+		$old_template = $this->current_template;
 		$this->current_template = ( !empty($_REQUEST['template']) && $this->config->template_override ) ?
 			str_replace('..', 'fail-danger-dont-use-hack-attempt', $_REQUEST['template']) : $this->config->default_template;
-		$this->template = $this->current_template;
+		if ($old_template !== $this->current_template) {
+			unset($this->template);
+			$this->template = $this->current_template;
+		}
 		date_default_timezone_set($this->config->timezone);
 
 		// Check the offline mode, and load the offline page if enabled.
