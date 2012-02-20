@@ -22,13 +22,13 @@ return array(
 	array(
 		'name' => 'full_location',
 		'cname' => 'Full Location',
-		'description' => 'The URL of this Pines installation. End this path with a slash!',
+		'description' => 'The URL of this Pines installation. If you leave this blank, it will be discovered for you. End this path with a slash!',
 		'value' => '',
 	),
 	array(
 		'name' => 'rela_location',
 		'cname' => 'Relative Location',
-		'description' => 'The URL location of Pines relative to your server root. If it is in the root of the server, just put a slash (/). End this path with a slash!',
+		'description' => 'The URL location of Pines relative to your server root. If it is in the root of the server, just put a slash (/). If you leave this blank, it will be discovered for you. End this path with a slash!',
 		'value' => '',
 	),
 	array(
@@ -67,7 +67,7 @@ return array(
 		'name' => 'copyright_notice',
 		'cname' => 'Copyright Notice',
 		'description' => 'The copyright notice at the bottom of each page.',
-		'value' => '&copy; 2011 SciActive.com. All Rights Reserved. Powered by Pines.',
+		'value' => '&copy; 2011-2012 SciActive.com. All Rights Reserved. Powered by Pines.',
 		'peruser' => true,
 	),
 	array(
