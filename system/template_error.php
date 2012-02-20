@@ -17,7 +17,6 @@ header('Content-Type: text/html');
 	<meta charset="utf-8" />
 	<title><?php echo htmlspecialchars($this->config->page_title); ?></title>
 	<style type="text/css" media="all">
-		/* <![CDATA[ */
 		.wrapper {
 			margin: 3em;
 			font-family: sans;
@@ -45,7 +44,6 @@ header('Content-Type: text/html');
 		.wrapper .buttons {
 			text-align: right;
 		}
-		/* ]]> */
 	</style>
 </head>
 <body>
