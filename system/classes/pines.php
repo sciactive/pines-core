@@ -331,6 +331,24 @@ class pines {
 	}
 
 	/**
+	 * Check if an IP address falls within a range of IP addresses.
+	 *
+	 * @param string $ip The IP address to check.
+	 * @param string $from_ip The first IP address of the range.
+	 * @param string $to_ip The last IP address of the range.
+	 * @return bool True or false.
+	 */
+	public function check_ip_range($ip, $from_ip, $to_ip) {
+		// Turn the addresses into long format.
+		$from_ip_long = ip2long($from_ip);
+		$to_ip_long = ip2long($to_ip);
+		$ip_long = ip2long($ip);
+
+		// If the IP is between the two addresses, return true.
+		return ($ip_long >= $from_ip_long && $ip_long <= $to_ip_long);
+	}
+
+	/**
 	 * Check if an IP address is on a network using a subnet mask.
 	 *
 	 * @param string $ip The IP address to check.
@@ -350,24 +368,6 @@ class pines {
 
 		// If the network parts are equal, return true.
 		return ($network_net_long === $ip_net_long);
-	}
-
-	/**
-	 * Check if an IP address falls within a range of IP addresses.
-	 *
-	 * @param string $ip The IP address to check.
-	 * @param string $from_ip The first IP address of the range.
-	 * @param string $to_ip The last IP address of the range.
-	 * @return bool True or false.
-	 */
-	public function check_ip_range($ip, $from_ip, $to_ip) {
-		// Turn the addresses into long format.
-		$from_ip_long = ip2long($from_ip);
-		$to_ip_long = ip2long($to_ip);
-		$ip_long = ip2long($ip);
-
-		// If the IP is between the two addresses, return true.
-		return ($ip_long >= $from_ip_long && $ip_long <= $to_ip_long);
 	}
 
 	/**
@@ -723,6 +723,119 @@ class pines {
 		}
 
 		return trim($format);
+	}
+
+	/**
+	 * Get a fuzzy time string.
+	 * 
+	 * Converts a timestamp from the past into a human readable estimation of
+	 * the time that has passed.
+	 * 
+	 * Ex: a few minutes ago
+	 * 
+	 * Credit: http://www.byteinn.com/res/426/Fuzzy_Time_function/
+	 * 
+	 * @param int $timestamp The timestamp to format.
+	 * @return string Fuzzy time string.
+	 */
+	public function format_fuzzy_time($timestamp) {
+		$now = time();
+		$one_minute = 60;
+		$one_hour = 3600;
+		$one_day = 86400;
+		$one_week = $one_day * 7;
+		$one_month = $one_day * 30.42;
+		$one_year = $one_day * 365;
+
+		// sod = start of day :)
+		$sod = mktime(0, 0, 0, date('m', $timestamp), date('d', $timestamp), date('Y', $timestamp));
+		$sod_now = mktime(0, 0, 0, date('m', $now), date('d', $now), date('Y', $now));
+
+		// used to convert numbers to strings
+		$convert = array(
+			1 => 'one',
+			2 => 'two',
+			3 => 'three',
+			4 => 'four',
+			5 => 'five',
+			6 => 'six',
+			7 => 'seven',
+			8 => 'eight',
+			9 => 'nine',
+			10 => 'ten',
+			11 => 'eleven',
+			12 => 'twelve',
+			13 => 'thirteen',
+			14 => 'fourteen',
+			15 => 'fifteen',
+			16 => 'sixteen',
+			17 => 'seventeen',
+			18 => 'eighteen',
+			19 => 'nineteen',
+			20 => 'twenty',
+		);
+
+		// today (or yesterday, but less than 1 hour ago)
+		if ($sod_now == $sod || $timestamp > $now - $one_hour) {
+			if ($timestamp > $now - $one_minute)
+				return 'just now';
+			elseif ($timestamp > $now - ($one_minute * 3))
+				return 'just a moment ago';
+			elseif ($timestamp > $now - ($one_minute * 7))
+				return 'a few minutes ago';
+			elseif ($timestamp > $now - $one_hour)
+				return 'less than an hour ago';
+			return 'today at ' . date('g:ia', $timestamp);
+		}
+
+		// yesterday
+		if (($sod_now - $sod) <= $one_day) {
+			if (date('i', $timestamp) > ($one_minute + 30))
+				$timestamp += $one_hour / 2;
+			return 'yesterday around ' . date('ga', $timestamp);
+		}
+
+		// within the last 5 days
+		if (($sod_now - $sod) <= ($one_day * 5)) {
+			$str = date('l', $timestamp);
+			$hour = date('G', $timestamp);
+			if ($hour < 12)
+				$str .= ' morning';
+			elseif ($hour < 17)
+				$str .= ' afternoon';
+			elseif ($hour < 20)
+				$str .= ' evening';
+			else
+				$str .= ' night';
+			return $str;
+		}
+
+		// number of weeks (between 1 and 3)...
+		if (($sod_now - $sod) < ($one_week * 3.5)) {
+			if (($sod_now - $sod) < ($one_week * 1.5))
+				return 'about a week ago';
+			elseif (($sod_now - $sod) < ($one_day * 2.5))
+				return 'about two weeks ago';
+			else
+				return 'about three weeks ago';
+		}
+
+		// number of months (between 1 and 11)...
+		if (($sod_now - $sod) < ($one_month * 11.5)) {
+			for ($i = ($one_week * 3.5), $m = 0; $i < $one_year; $i += $one_month, $m++) {
+				if (($sod_now - $sod) <= $i)
+					return 'about ' . $convert[$m] . ' month' . (($m > 1) ? 's' : '') . ' ago';
+			}
+		}
+
+		// number of years...
+		for ($i = ($one_month * 11.5), $y = 0; $i < ($one_year * 21); $i += $one_year, $y++) {
+			if (($sod_now - $sod) <= $i)
+				return 'about ' . $convert[$y] . ' year' . (($y > 1) ? 's' : '') . ' ago';
+		}
+
+		// more than twenty years...
+		return 'more than twenty years ago';
 	}
 
 	/**

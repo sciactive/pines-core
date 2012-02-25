@@ -131,6 +131,18 @@ function format_date_range($start_timestamp, $end_timestamp, $format = null, $ti
 }
 
 /**
+ * Shortcut to $pines->format_fuzzy_time().
+ *
+ * @uses pines::format_fuzzy_time() Forwards parameters and returns the result.
+ * @param int $timestamp The timestamp to format.
+ * @return string Fuzzy time string.
+ */
+function format_fuzzy_time($timestamp) {
+	global $pines;
+	return $pines->format_fuzzy_time($timestamp);
+}
+
+/**
  * Shortcut to $pines->format_phone().
  *
  * @uses pines::format_phone() Forwards parameters and returns the result.
