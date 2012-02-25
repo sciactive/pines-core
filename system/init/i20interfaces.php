@@ -191,10 +191,18 @@ interface user_interface extends able_object_interface {
 	 */
 	public function in_group($group = null);
 	/**
-	 * Check whether the user is a descendent of a group.
+	 * Check whether the user is a descendant of a group.
 	 *
 	 * @param mixed $group The group, or the group's GUID.
 	 * @return bool True or false.
+	 */
+	public function is_descendant($group = null);
+	/**
+	 * Alias of is_descendant.
+	 *
+	 * @param mixed $group The group, or the group's GUID.
+	 * @return bool True or false.
+	 * @deprecated
 	 */
 	public function is_descendent($group = null);
 	/**
@@ -256,10 +264,18 @@ interface group_interface extends able_object_interface {
 	 */
 	public function enable();
 	/**
-	 * Check whether the group is a descendent of a group.
+	 * Check whether the group is a descendant of a group.
 	 *
 	 * @param mixed $group The group, or the group's GUID.
 	 * @return bool True or false.
+	 */
+	public function is_descendant($group = null);
+	/**
+	 * Alias of is_descendant.
+	 *
+	 * @param mixed $group The group, or the group's GUID.
+	 * @return bool True or false.
+	 * @deprecated
 	 */
 	public function is_descendent($group = null);
 	/**
@@ -269,10 +285,18 @@ interface group_interface extends able_object_interface {
 	 */
 	public function get_children();
 	/**
-	 * Gets an array of the group's descendent groups.
+	 * Gets an array of the group's descendant groups.
 	 *
 	 * @param bool $and_self Include this group in the returned array.
 	 * @return array An array of groups.
+	 */
+	public function get_descendants($and_self = false);
+	/**
+	 * Alias of get_descendants.
+	 *
+	 * @param bool $and_self Include this group in the returned array.
+	 * @return array An array of groups.
+	 * @deprecated
 	 */
 	public function get_descendents($and_self = false);
 	/**
@@ -297,10 +321,10 @@ interface group_interface extends able_object_interface {
 	 *
 	 * Some user managers may return only enabled users.
 	 *
-	 * @param bool $descendents Include users in all descendent groups too.
+	 * @param bool $descendants Include users in all descendant groups too.
 	 * @return array An array of users.
 	 */
-	public function get_users($descendents = false);
+	public function get_users($descendants = false);
 	/**
 	 * Print a form to edit the group.
 	 *
@@ -941,7 +965,7 @@ interface user_manager_interface extends component_interface {
 	 * - Its "user" is the user. (It is owned by the user.) (Check user AC.)
 	 * - Its "group" is the user's primary group. (Check group AC.)
 	 * - Its "group" is one of the user's secondary groups. (Check group AC.)
-	 * - Its "group" is a descendent of one of the user's groups. (Check group
+	 * - Its "group" is a descendant of one of the user's groups. (Check group
 	 *   AC.)
 	 * - None of the above. (Check other AC.)
 	 *
