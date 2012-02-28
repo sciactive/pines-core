@@ -1,7 +1,7 @@
 /*
  * Pines JavaScript Object
  *
- * Copyright (c) 2010-2011 Hunter Perrin
+ * Copyright (c) 2010-2012 Hunter Perrin
  *
  * Licensed under the GNU Affero GPL:
  *	  http://www.gnu.org/licenses/agpl.html
@@ -128,11 +128,17 @@ pines.load=function(fn){
 		_loadnext();
 };
 // Loads JavaScript files in turn.
-pines.loadjs=function(url, multiple){
+pines.loadjs=function(url, multiple, attrs){
 	if (_loadedjs.indexOf(url) > -1 && !multiple) return;
 	// Mark that the JS is loading.
 	_jsloaded = false;
 	var n=document.createElement("script");
+	if (attrs) {
+		for (var prop in attrs) {
+			if (attrs.hasOwnProperty(prop))
+				n.setAttribute(prop, attrs[prop]);
+		}
+	}
 	n.setAttribute("type","text/javascript");
 	n.setAttribute("src",url);
 	_pendingjs.push(n);
@@ -141,11 +147,17 @@ pines.loadjs=function(url, multiple){
 	_loadedjs[_loadedjs.length]=url;
 };
 // Loads CSS files immediately.
-pines.loadcss=function(url, multiple){
+pines.loadcss=function(url, multiple, attrs){
 	if (_loadedcss.indexOf(url) > -1 && !multiple) return;
 	var n=document.createElement("link");
-	n.setAttribute("type","text/css");
 	n.setAttribute("rel","stylesheet");
+	if (attrs) {
+		for (var prop in attrs) {
+			if (attrs.hasOwnProperty(prop))
+				n.setAttribute(prop, attrs[prop]);
+		}
+	}
+	n.setAttribute("type","text/css");
 	n.setAttribute("href",url);
 	if (typeof n!="undefined")
 		document.getElementsByTagName("head")[0].appendChild(n);
@@ -267,7 +279,7 @@ if (document.attachEvent) { // IE
 	// maybe late but safe also for iframes
 	document.attachEvent("onreadystatechange", dom_loaded);
 	// A fallback to window.onload, that will always work
-	window.attachEvent("onload", function(){_domloaded = true; _ready();});
+	window.attachEvent("onload", function(){_domloaded = true;_ready();});
 	// If IE and not a frame
 	// continually check to see if the document is ready
 	var toplevel = false;
@@ -278,7 +290,7 @@ if (document.attachEvent) { // IE
 		scroll_check();
 } else if (document.addEventListener) { // Others
 	document.addEventListener("DOMContentLoaded", dom_loaded, false);
-	window.addEventListener("load", function(){_domloaded = true; _ready();}, false);
+	window.addEventListener("load", function(){_domloaded = true;_ready();}, false);
 }
 
 window.pines = pines;
