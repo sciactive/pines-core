@@ -1091,6 +1091,12 @@ interface uploader_interface extends component_interface {
 	 *
 	 * This will transform any text inputs with the "puploader" class into file
 	 * uploaders. The uploader will contain the URL of the selected file.
+	 * 
+	 * Add the class "puploader-folders" to be able to select folders, and the
+	 * class "puploader-multiple" to be able to select multiple files/folders.
+	 * 
+	 * When selecting multiple files, they will be separated by two forward
+	 * slashes "//".
 	 */
 	public function load();
 	/**
