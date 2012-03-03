@@ -1097,6 +1097,10 @@ interface uploader_interface extends component_interface {
 	 * 
 	 * When selecting multiple files, they will be separated by two forward
 	 * slashes "//".
+	 * 
+	 * Add the class "puploader-temp" to emulate a single file upload. Only one
+	 * fill will be allowed, and it will be placed into a temporary directory.
+	 * Note that the check method is not needed when you are using a temp file.
 	 */
 	public function load();
 	/**
@@ -1119,6 +1123,16 @@ interface uploader_interface extends component_interface {
 	 * @return string The real path to the file.
 	 */
 	public function real($url);
+	/**
+	 * Get the real path to a temp file.
+	 * 
+	 * When you use "puploader-temp" to receive a single file upload, pass the
+	 * string you receive on to this function to get the real file path.
+	 * 
+	 * @param string $temp_string The string submitted by the form.
+	 * @return string The real path to the file, located in a temp folder.
+	 */
+	public function temp($temp_string);
 	/**
 	 * Get the URL to a file.
 	 * 
