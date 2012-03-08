@@ -172,36 +172,38 @@ class pines {
 				$request_string = substr($request_string, 0, (strlen($_SERVER['QUERY_STRING']) * -1) - 1);
 			// Remove the path to Pines.
 			$request_string = substr($request_string, strlen($this->config->rela_location));
-			// Get rid of index.php/ at the beginning.
-			if (strpos($request_string, P_INDEX.'/') === 0)
-				$request_string = substr($request_string, strlen(P_INDEX)+1);
-			// And / at the end.
-			if (substr($request_string, -1) == '/')
-				$request_string = substr($request_string, 0, -1);
-			// Get an array of the pseudo directories from the URI.
-			$args_array = explode('/', $request_string);
-			if ( !empty($args_array[0]) && strpos($args_array[0], '-') === false ) {
-				$this->request_component = ($args_array[0] == 'system' ? $args_array[0] : 'com_'.$args_array[0]);
-				unset($args_array[0]);
-			}
-			if ( !empty($args_array[1]) && strpos($args_array[1], '-') === false ) {
-				$this->request_action = $args_array[1];
-				unset($args_array[1]);
-			}
-			$args_array = array_values($args_array);
-			$arg_count = count($args_array);
-			// Check for subdir actions. Note that they can't have dashes.
-			for ($i = 0; $i < $arg_count; $i++) {
-				if (strpos($args_array[$i], '-') !== false)
-					break;
-				$this->request_action .= "/{$args_array[$i]}";
-			}
-			// Any other args are parsed as query data.
-			if ($i < $arg_count) {
-				for (; $i < $arg_count; $i++) {
-					list ($key, $value) = explode('-', $args_array[$i], 2);
-					$_GET[$key] = $value;
-					$_REQUEST[$key] = $value;
+			if ($request_string !== false) {
+				// Get rid of index.php/ at the beginning.
+				if (strpos($request_string, P_INDEX.'/') === 0)
+					$request_string = substr($request_string, strlen(P_INDEX)+1);
+				// And / at the end.
+				if (substr($request_string, -1) == '/')
+					$request_string = substr($request_string, 0, -1);
+				// Get an array of the pseudo directories from the URI.
+				$args_array = explode('/', $request_string);
+				if ( !empty($args_array[0]) && strpos($args_array[0], '-') === false ) {
+					$this->request_component = ($args_array[0] == 'system' ? $args_array[0] : 'com_'.$args_array[0]);
+					unset($args_array[0]);
+				}
+				if ( !empty($args_array[1]) && strpos($args_array[1], '-') === false ) {
+					$this->request_action = $args_array[1];
+					unset($args_array[1]);
+				}
+				$args_array = array_values($args_array);
+				$arg_count = count($args_array);
+				// Check for subdir actions. Note that they can't have dashes.
+				for ($i = 0; $i < $arg_count; $i++) {
+					if (strpos($args_array[$i], '-') !== false)
+						break;
+					$this->request_action .= "/{$args_array[$i]}";
+				}
+				// Any other args are parsed as query data.
+				if ($i < $arg_count) {
+					for (; $i < $arg_count; $i++) {
+						list ($key, $value) = explode('-', $args_array[$i], 2);
+						$_GET[$key] = $value;
+						$_REQUEST[$key] = $value;
+					}
 				}
 			}
 		}
