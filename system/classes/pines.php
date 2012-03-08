@@ -180,11 +180,18 @@ class pines {
 				$request_string = substr($request_string, 0, -1);
 			// Get an array of the pseudo directories from the URI.
 			$args_array = explode('/', $request_string);
-			if ( !empty($args_array[0]) && strpos($args_array[0], '-') === false ) $this->request_component = ($args_array[0] == 'system' ? $args_array[0] : 'com_'.$args_array[0]);
-			if ( !empty($args_array[1]) && strpos($args_array[1], '-') === false ) $this->request_action = $args_array[1];
+			if ( !empty($args_array[0]) && strpos($args_array[0], '-') === false ) {
+				$this->request_component = ($args_array[0] == 'system' ? $args_array[0] : 'com_'.$args_array[0]);
+				unset($args_array[0]);
+			}
+			if ( !empty($args_array[1]) && strpos($args_array[1], '-') === false ) {
+				$this->request_action = $args_array[1];
+				unset($args_array[1]);
+			}
+			$args_array = array_values($args_array);
 			$arg_count = count($args_array);
 			// Check for subdir actions. Note that they can't have dashes.
-			for ($i = 2; $i < $arg_count; $i++) {
+			for ($i = 0; $i < $arg_count; $i++) {
 				if (strpos($args_array[$i], '-') !== false)
 					break;
 				$this->request_action .= "/{$args_array[$i]}";
