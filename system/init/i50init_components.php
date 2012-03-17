@@ -23,7 +23,15 @@ foreach ($_p_cominit as $_p_cur_cominit) {
 	 * Include each component init script in the correct order.
 	 */
 	if (P_SCRIPT_TIMING) pines_print_time("Init Script: $_p_cur_cominit");
-	include($_p_cur_cominit);
+	try {
+		include($_p_cur_cominit);
+	} catch (HttpClientException $e) {
+		$_p_error_module = new module('system', 'error', 'content');
+		$_p_error_module->exception = $e;
+	} catch (HttpServerException $e) {
+		$_p_error_module = new module('system', 'error', 'content');
+		$_p_error_module->exception = $e;
+	}
 	if (P_SCRIPT_TIMING) pines_print_time("Init Script: $_p_cur_cominit");
 }
 unset ($_p_cominit, $_p_cur_cominit);

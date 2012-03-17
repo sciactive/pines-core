@@ -7,6 +7,7 @@
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
  * @link http://sciactive.com/
+ * @deprecated Replaced by error.php
  */
 /* @var $pines pines *//* @var $this module */
 defined('P_RUN') or die('Direct access prohibited');

@@ -23,6 +23,10 @@ if (get_magic_quotes_gpc()) {
 
 if (P_SCRIPT_TIMING) pines_print_time('Load System Classes');
 /**
+ * Exception Classes
+ */
+include('system/classes/exceptions.php');
+/**
  * Component Class
  */
 include('system/classes/component.php');

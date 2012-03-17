@@ -10,36 +10,52 @@
  */
 /* @var $pines pines */
 defined('P_RUN') or die('Direct access prohibited');
+header('HTTP/1.1 503 Service Unavailable');
 header('Content-Type: text/html');
 ?><!DOCTYPE html>
 <html>
 <head>
 	<meta charset="utf-8" />
 	<title><?php echo htmlspecialchars($this->config->page_title); ?></title>
+	<link href='http://fonts.googleapis.com/css?family=EB+Garamond' rel='stylesheet' type='text/css'>
 	<style type="text/css" media="all">
+		html {
+			font-size: 100%;
+			-webkit-text-size-adjust: 100%;
+			-ms-text-size-adjust: 100%;
+		}
+		body {
+			margin: 0;
+			font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+			font-size: 18px;
+			line-height: 22px;
+			color: #333;
+			background-color: #fff;
+			text-rendering: optimizelegibility;
+		}
 		.wrapper {
-			margin: 3em;
-			font-family: sans;
-			font-size: 80%;
+			margin: 2em;
 		}
 		.wrapper fieldset {
-			border: 1px solid #040;
-			-moz-border-radius: 10px;
+			border: 1px dashed rgba(82, 168, 236, 0.8);
+			padding: 0 1em 1em;
 		}
 		.wrapper legend {
-			padding: 0.5em 0.8em;
-			border: 2px solid #040;
-			color: #040;
-			font-size: 120%;
-			-moz-border-radius: 10px;
+			font-family: 'EB Garamond', serif;
+			padding: 0 .2em;
+			font-size: 72px;
+			line-height: 1;
+			border: none;
+		}
+		.wrapper p {
+			margin: 1em 0 0;
+			padding: 0;
 		}
 		.wrapper label {
+			margin: 1em 0 0;
 			display: block;
 			text-align: right;
 			margin-right: 60%;
-		}
-		.wrapper input {
-			color: #040;
 		}
 		.wrapper .buttons {
 			text-align: right;

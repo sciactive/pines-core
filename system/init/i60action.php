@@ -11,28 +11,19 @@
 /* @var $pines pines */
 defined('P_RUN') or die('Direct access prohibited');
 
-/* Experimental code.
-function test_conf_save_override(&$args, $hook, &$object) {
-	var_dump($object->config);
-	var_dump($object->defaults);
-	var_dump($object->info);
-	exit;
-}
-
-function test_configure_override(&$args) {
-	if ($args[0] == 'com_configure' && $args[1] == 'save') {
-		global $pines;
-		$pines->hook->add_callback('configurator_component->save_config', -1, 'test_conf_save_override');
-	}
-}
-$pines->hook->add_callback('$pines->action', -1, 'test_configure_override');
-*/
-
 if (P_SCRIPT_TIMING) pines_print_time('Run Requested Action');
 // Call the action specified.
-if ( $pines->action($pines->request_component, $pines->request_action) === 'error_404' ) {
-	header('HTTP/1.1 404 Not Found');
-	$error_page = new module('system', 'error_404', 'content');
+if (!$_p_error_module) {
+	try {
+		if ( $pines->action($pines->request_component, $pines->request_action) === 'error_404' )
+			throw new HttpClientException(null, 404);
+	} catch (HttpClientException $e) {
+		$_p_error_module = new module('system', 'error', 'content');
+		$_p_error_module->exception = $e;
+	} catch (HttpServerException $e) {
+		$_p_error_module = new module('system', 'error', 'content');
+		$_p_error_module->exception = $e;
+	}
 }
 if (P_SCRIPT_TIMING) pines_print_time('Run Requested Action');
 

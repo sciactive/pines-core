@@ -289,7 +289,8 @@ class pines {
 	 *
 	 * @param string $component The component in which the action resides.
 	 * @param string $action The action to run.
-	 * @return mixed The value returned by the action, or 'error_404' if it doesn't exist.
+	 * @return mixed The value returned by the action.
+	 * @throws HttpClientException Throws a 404 error if the action doesn't exist.
 	 */
 	public function action($component = null, $action = null) {
 		global $pines;
@@ -308,9 +309,8 @@ class pines {
 			 * Run the action's file.
 			 */
 			return require($action_file);
-		} else {
-			return 'error_404';
-		}
+		} else
+			throw new HttpClientException(null, 404);
 	}
 
 	/**

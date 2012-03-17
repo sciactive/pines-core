@@ -69,7 +69,7 @@ if (!function_exists('is_clean_filename')) {
  * @uses pines::action() Forwards parameters and returns the result.
  * @param string $component The component in which the action resides.
  * @param string $action The action to run.
- * @return mixed The value returned by the action, or 'error_404' if it doesn't exist.
+ * @return mixed The value returned by the action.
  */
 function pines_action($component = null, $action = null) {
 	global $pines;

@@ -21,7 +21,15 @@ foreach ($_p_comkill as $_p_cur_comkill) {
 	 * Include each component kill script in the correct order.
 	 */
 	if (P_SCRIPT_TIMING) pines_print_time("Kill Script: $_p_cur_comkill");
-	include($_p_cur_comkill);
+	try {
+		include($_p_cur_comkill);
+	} catch (HttpClientException $e) {
+		$_p_error_module = new module('system', 'error', 'content');
+		$_p_error_module->exception = $e;
+	} catch (HttpServerException $e) {
+		$_p_error_module = new module('system', 'error', 'content');
+		$_p_error_module->exception = $e;
+	}
 	if (P_SCRIPT_TIMING) pines_print_time("Kill Script: $_p_cur_comkill");
 }
 unset ($_p_comkill, $_p_cur_comkill);
