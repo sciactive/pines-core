@@ -3,7 +3,7 @@
  * The controller for Pines' architecture.
  *
  * Pines - an Enterprise PHP Application Framework
- * Copyright (C) 2008-2012  Hunter Perrin.
+ * Copyright (C) 2008-2012  SciActive.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
