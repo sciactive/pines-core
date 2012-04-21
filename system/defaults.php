@@ -11,6 +11,7 @@
 /* @var $pines pines */
 defined('P_RUN') or die('Direct access prohibited');
 
+$templates = pines_scandir('templates/');
 return array(
 	array(
 		'name' => 'system_name',
@@ -93,8 +94,16 @@ return array(
 		'name' => 'default_template',
 		'cname' => 'Default Template',
 		'description' => 'The default template.',
+		'value' => 'tpl_pinescms',
+		'options' => $templates,
+		'peruser' => true,
+	),
+	array(
+		'name' => 'admin_template',
+		'cname' => 'Admin Template',
+		'description' => 'The default template for administrators. (Users who have the system/all ability.)',
 		'value' => 'tpl_pines',
-		'options' => pines_scandir('templates/'),
+		'options' => $templates,
 		'peruser' => true,
 	),
 	array(

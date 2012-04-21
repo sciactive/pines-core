@@ -871,8 +871,12 @@ class pines {
 	public function load_system_config() {
 		if (P_SCRIPT_TIMING) pines_print_time('Load System Config');
 		$old_template = $this->current_template;
+		// Is user an admin?
+		$admin = ($this->user_manager) ? $this->user_manager->gatekeeper('system/all') : false;
+		// Get the default template.
+		$default_template = $admin ? $this->config->admin_template : $this->config->default_template;
 		$this->current_template = ( !empty($_REQUEST['template']) && $this->config->template_override ) ?
-			str_replace('..', 'fail-danger-dont-use-hack-attempt', $_REQUEST['template']) : $this->config->default_template;
+			str_replace('..', 'fail-danger-dont-use-hack-attempt', $_REQUEST['template']) : $default_template;
 		if ($old_template !== $this->current_template) {
 			unset($this->template);
 			$this->template = $this->current_template;
