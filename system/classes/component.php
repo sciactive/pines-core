@@ -2,7 +2,7 @@
 /**
  * component class.
  *
- * @package Pines
+ * @package Core
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -13,7 +13,7 @@ defined('P_RUN') or die('Direct access prohibited');
 
 /**
  * Base class for components.
- * @package Pines
+ * @package Core
  */
 class component implements component_interface { }
 

@@ -2,7 +2,7 @@
 /**
  * depend class.
  *
- * @package Pines
+ * @package Core
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -23,7 +23,7 @@ defined('P_RUN') or die('Direct access prohibited');
  * Your checker callback should return true if the dependency is satisfied, or
  * false if it is not.
  *
- * @package Pines
+ * @package Core
  */
 class depend {
 	/**

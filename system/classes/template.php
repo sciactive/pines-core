@@ -2,7 +2,7 @@
 /**
  * template class.
  *
- * @package Pines
+ * @package Core
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -16,7 +16,7 @@ defined('P_RUN') or die('Direct access prohibited');
  *
  * Templates should extend this class.
  * 
- * @package Pines
+ * @package Core
  */
 class template implements template_interface {
 	/**

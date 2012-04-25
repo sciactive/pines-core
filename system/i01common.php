@@ -5,7 +5,7 @@
  * These can be overriden by components, which is why this file starts with i01.
  * It's loaded along with the components' init files.
  *
- * @package Pines
+ * @package Core
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

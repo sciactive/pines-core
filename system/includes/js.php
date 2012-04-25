@@ -5,7 +5,7 @@
  * This file also fills in the full_location and rela_location variables in the
  * JavaScript pines object and includes a JSON object, if one is not available.
  *
- * @package Pines
+ * @package Core
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

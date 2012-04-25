@@ -2,7 +2,7 @@
 /**
  * pines class.
  *
- * @package Pines
+ * @package Core
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -19,7 +19,7 @@ defined('P_RUN') or die('Direct access prohibited');
  * is empty, the com_xmlparser class will attempt to be loaded into it. It will
  * then be hooked by the hook manager.
  *
- * @package Pines
+ * @package Core
  * @property configurator_interface $configurator The configurator service.
  * @property editor_interface $editor The editor service.
  * @property entity_manager_interface $entity_manager The entity manager service.

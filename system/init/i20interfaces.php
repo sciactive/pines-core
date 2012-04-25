@@ -2,7 +2,7 @@
 /**
  * Define system service interfaces.
  *
- * @package Pines
+ * @package Core
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -15,13 +15,13 @@ if (P_SCRIPT_TIMING) pines_print_time('Define Service Interfaces');
 
 /**
  * A base interface for all components.
- * @package Pines
+ * @package Core
  */
 interface component_interface { }
 
 /**
  * Objects which hold data from some type of storage.
- * @package Pines
+ * @package Core
  */
 interface data_object_interface {
 	/**
@@ -85,7 +85,7 @@ interface data_object_interface {
 
 /**
  * Objects which support abilities, such as users and groups.
- * @package Pines
+ * @package Core
  */
 interface able_object_interface extends data_object_interface {
 	/**
@@ -112,7 +112,7 @@ interface able_object_interface extends data_object_interface {
 
 /**
  * Pines system users.
- * @package Pines
+ * @package Core
  * @property int $guid The GUID of the user.
  * @property string $username The user's username.
  * @property string $name_first The user's first name.
@@ -226,7 +226,7 @@ interface user_interface extends able_object_interface {
  * Note: When delete() is called all descendants of this group will also be
  * deleted.
  *
- * @package Pines
+ * @package Core
  * @property int $guid The GUID of the group.
  * @property string $groupname The group's groupname.
  * @property string $name The group's name.
@@ -335,7 +335,7 @@ interface group_interface extends able_object_interface {
 
 /**
  * A Pines template.
- * @package Pines
+ * @package Core
  * @property-read string $format The template's format.
  * @property-read string $editor_css The filename of a CSS file to use for editing content.
  */
@@ -366,7 +366,7 @@ interface template_interface {
 
 /**
  * Manages Pines configuration.
- * @package Pines
+ * @package Core
  */
 interface configurator_interface extends component_interface {
 	/**
@@ -398,7 +398,7 @@ interface configurator_interface extends component_interface {
 
 /**
  * A configurable component.
- * @package Pines
+ * @package Core
  * @property array $defaults The configuration defaults.
  * @property array $config The current configuration.
  * @property array $config_keys The current configuration in an array with key => values.
@@ -456,7 +456,7 @@ interface configurator_component_interface {
 
 /**
  * Logs activity within the framework.
- * @package Pines
+ * @package Core
  */
 interface log_manager_interface extends component_interface {
 	/**
@@ -471,7 +471,7 @@ interface log_manager_interface extends component_interface {
 
 /**
  * Database abstraction layer.
- * @package Pines
+ * @package Core
  */
 interface entity_manager_interface extends component_interface {
 	/**
@@ -829,7 +829,7 @@ interface entity_manager_interface extends component_interface {
  * later in the code execution (after some other processing occurs), it's
  * recommended to call clear_cache().
  *
- * @package Pines
+ * @package Core
  * @property int $guid The GUID of the entity.
  * @property array $tags Array of the entity's tags.
  * @property bool $_p_use_skip_ac Whether to use the skip_ac option when retrieving referenced entities.
@@ -924,7 +924,7 @@ interface entity_interface extends data_object_interface {
  * User managers need to hook entity transactions and filter certain
  * functionality based on an access control variable.
  *
- * @package Pines
+ * @package Core
  * @todo Finish describing user manager's entity obligations.
  */
 interface user_manager_interface extends component_interface {
@@ -1057,7 +1057,7 @@ interface user_manager_interface extends component_interface {
 
 /**
  * Content editor.
- * @package Pines
+ * @package Core
  */
 interface editor_interface extends component_interface {
 	/**
@@ -1083,7 +1083,7 @@ interface editor_interface extends component_interface {
 
 /**
  * File uploader.
- * @package Pines
+ * @package Core
  */
 interface uploader_interface extends component_interface {
 	/**
@@ -1147,7 +1147,7 @@ interface uploader_interface extends component_interface {
 
 /**
  * Pines Icon theme.
- * @package Pines
+ * @package Core
  */
 interface icons_interface extends component_interface {
 	/**

@@ -2,7 +2,7 @@
 /**
  * module class.
  *
- * @package Pines
+ * @package Core
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -16,7 +16,7 @@ defined('P_RUN') or die('Direct access prohibited');
  *
  * Modules are blocks of code or data to be placed on the page.
  *
- * @package Pines
+ * @package Core
  */
 class module {
 	/**

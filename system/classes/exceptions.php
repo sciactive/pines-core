@@ -2,7 +2,7 @@
 /**
  * Exception classes.
  *
- * @package Pines
+ * @package Core
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -16,7 +16,7 @@ defined('P_RUN') or die('Direct access prohibited');
  * 
  * Used to send a HTTP client error to the user.
  *
- * @package Pines
+ * @package Core
  */
 class HttpClientException extends Exception {
 	public function __construct($message = null, $code = 0, Exception $previous = null) {
@@ -129,7 +129,7 @@ class HttpClientException extends Exception {
  * 
  * Used to send a HTTP server error to the user.
  *
- * @package Pines
+ * @package Core
  */
 class HttpServerException extends Exception {
 	public function __construct($message = null, $code = 0, Exception $previous = null) {

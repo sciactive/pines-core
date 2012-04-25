@@ -3,7 +3,7 @@
  * An empty view for modules whose ouput is generated dynamically, or require no
  * output.
  *
- * @package Pines
+ * @package Core
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com

@@ -2,7 +2,7 @@
 /**
  * Dynamic hook_override class.
  *
- * @package Pines
+ * @package Core
  * @license http://www.gnu.org/licenses/agpl-3.0.html
  * @author Hunter Perrin <hunter@sciactive.com>
  * @copyright SciActive.com
@@ -17,7 +17,7 @@ defined('P_RUN') or die('Direct access prohibited');
  * This class is dynamically edited during the takeover of an object for
  * hooking.
  * 
- * @package Pines
+ * @package Core
  * @todo Include the generated code for system classes so hook doesn't have to scan them every time the system is started.
  */
 class hook_override__NAMEHERE_ extends hook_override {
