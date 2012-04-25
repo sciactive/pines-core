@@ -32,24 +32,29 @@
  */
 /**
  * The microtime when the script started executing.
+ * @package Core
  */
 define('P_EXEC_TIME', microtime(true));
 /**
  * Declare that the program is running through the index, as it should.
+ * @package Core
  */
 define('P_RUN', true);
 /**
  * The installation's base path.
+ * @package Core
  */
 define('P_BASE_PATH', dirname(__FILE__).'/');
 /**
  * The name of our index file.
+ * @package Core
  */
 define('P_INDEX', basename($_SERVER['SCRIPT_FILENAME']));
 /**
  * When this is set to true, the times between script stages will be displayed.
  * 
  * Use a JavaScript console (like Firebug) to view the times.
+ * @package Core
  */
 define('P_SCRIPT_TIMING', false);
 
