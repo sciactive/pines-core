@@ -60,6 +60,30 @@ interface data_object_interface {
 	 */
 	public function in_array($array, $strict = false);
 	/**
+	 * Get info about an object.
+	 * 
+	 * This function is meant to provide a way to represent an object even when
+	 * nothing is know about it.
+	 * 
+	 * There are a few common types that most entities should provide.
+	 * - name - The name of the object.
+	 * - type - The type of data this object represents. (E.g., "user",
+	 *   "customer", "page".) This can be localized.
+	 * - types - The same as above, but pluralized. (E.g., "users".)
+	 * - url_view - The URL where this object can be viewed. If the currently
+	 *   logged in user doesn't have the ability to view it, or there is no URL
+	 *   to view it, this should return null.
+	 * - url_edit - The same as above, but for editing.
+	 * - url_list - The URL where this object, and others like it, can be found.
+	 *   (E.g., to a list of users.)
+	 * - icon - The class to apply for a Pines Icon representing this object.
+	 * - image - The URL to an image representing this object.
+	 * 
+	 * @param string $type The type of information being requested.
+	 * @return mixed The information.
+	 */
+	public function info($type);
+	/**
 	 * Perform a less strict comparison of this object to another.
 	 *
 	 * @param mixed &$object The object to compare.
