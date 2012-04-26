@@ -63,9 +63,9 @@ interface data_object_interface {
 	 * Get info about an object.
 	 * 
 	 * This function is meant to provide a way to represent an object even when
-	 * nothing is know about it.
+	 * nothing is known about it.
 	 * 
-	 * There are a few common types that most entities should provide.
+	 * There are a few common types that most entities/objects should provide.
 	 * - name - The name of the object.
 	 * - type - The type of data this object represents. (E.g., "user",
 	 *   "customer", "page".) This can be localized.
@@ -80,7 +80,7 @@ interface data_object_interface {
 	 * - image - The URL to an image representing this object.
 	 * 
 	 * @param string $type The type of information being requested.
-	 * @return mixed The information.
+	 * @return mixed The information, or null if the information doesn't exist or can't be returned.
 	 */
 	public function info($type);
 	/**
