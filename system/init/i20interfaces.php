@@ -571,6 +571,8 @@ interface entity_manager_interface extends component_interface {
 	 *   retrieving.
 	 * - reverse - (bool) If true, entities will be retrieved from newest to
 	 *   oldest. Therefore, offset will be from the newest entity.
+	 * - sort - (string) How to sort the entities. Accepts "guid", "cdate", and
+	 *   "mdate". Defaults to "guid".
 	 * - skip_ac - (bool) If true, the user manager will not filter returned
 	 *   entities according to access controls.
 	 *

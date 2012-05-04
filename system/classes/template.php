@@ -82,6 +82,10 @@ class template implements template_interface {
 				$return .= 'id-'.urlencode($params['id']).'/';
 				unset($params['id']);
 			}
+			if (isset($params['page'])) {
+				$return .= 'page-'.urlencode($params['page']).'/';
+				unset($params['page']);
+			}
 			if ( $params ) {
 				$return .= '?';
 				foreach ($params as $key => $value) {
