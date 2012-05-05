@@ -44,9 +44,9 @@ class module {
 	 * A list of additional classes to be added to the module.
 	 *
 	 * Applies to HTML modules.
-	 * @var string
+	 * @var array
 	 */
-	public $classes = '';
+	public $classes = array();
 	/**
 	 * The module's content.
 	 *
