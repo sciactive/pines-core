@@ -602,6 +602,12 @@ class pines {
 			// Calculate number of months.
 			$years = (int) $end_date->format('Y') - (int) $start_date->format('Y');
 			$months = ($years * 12) + ((int) $end_date->format('n') - (int) $start_date->format('n'));
+			// Be sure we didn't go too far.
+			$test_date = clone $start_date;
+			$test_date->modify('+'.$months.' months');
+			$test_timestamp = (int) $test_date->format('U');
+			if ($test_timestamp > $end_timestamp)
+				$months--;
 			if (strpos($format, '#month#') !== false && $months == 1) {
 				$format = preg_replace('/\{?([^{}]*)#month#([^{}]*)\}?/s', '${1}'.$negative.$months.'${2}', $format);
 				$format = preg_replace('/\{([^{}]*)#months#([^{}]*)\}/s', '', $format);
