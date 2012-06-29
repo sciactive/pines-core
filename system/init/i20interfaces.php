@@ -1089,11 +1089,15 @@ interface editor_interface extends component_interface {
 	/**
 	 * Load the editor.
 	 *
-	 * This will transform any textareas with the "peditor" class into editors
-	 * and any textareas with the "peditor-simple" class into simple editors.
+	 * This will transform textareas with the "peditor" class into editors,
+	 * textareas with the "peditor-simple" class into simple editors, and
+	 * textareas with the "peditor-email" class into email editors.
 	 *
 	 * Simple editors may be the same as editors, depending on the
 	 * implementation.
+	 *
+	 * Email editors should format content for emails. This includes full URLs
+	 * for links and images, no stylesheets, etc.
 	 */
 	public function load();
 	/**
