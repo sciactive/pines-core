@@ -123,7 +123,7 @@ class depend {
 	private function check_action($value) {
 		global $pines;
 		if ($value == '!')
-			return (empty($pines->request_action));
+			return (!empty($pines->request_action));
 		if (
 				strpos($value, '&') !== false ||
 				strpos($value, '|') !== false ||
@@ -380,7 +380,7 @@ class depend {
 	private function check_option($value) {
 		global $pines;
 		if ($value == '!')
-			return (empty($pines->request_component));
+			return (!empty($pines->request_component));
 		if (
 				strpos($value, '&') !== false ||
 				strpos($value, '|') !== false ||
