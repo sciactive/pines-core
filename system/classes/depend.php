@@ -108,6 +108,9 @@ class depend {
 
 	/**
 	 * Check against the current or requested action.
+	 * 
+	 * If value is only a '!', then only the requested action is checked. This
+	 * is because action will never be empty.
 	 *
 	 * Uses simple_parse() to provide simple logic.
 	 *
@@ -119,6 +122,8 @@ class depend {
 	 */
 	private function check_action($value) {
 		global $pines;
+		if ($value == '!')
+			return (empty($pines->request_action));
 		if (
 				strpos($value, '&') !== false ||
 				strpos($value, '|') !== false ||
@@ -361,6 +366,9 @@ class depend {
 	/**
 	 * Check against the current or requested component.
 	 *
+	 * If value is only a '!', then only the requested component is checked.
+	 * This is because component will never be empty.
+	 * 
 	 * Uses simple_parse() to provide simple logic.
 	 *
 	 * @access private
@@ -371,6 +379,8 @@ class depend {
 	 */
 	private function check_option($value) {
 		global $pines;
+		if ($value == '!')
+			return (empty($pines->request_component));
 		if (
 				strpos($value, '&') !== false ||
 				strpos($value, '|') !== false ||
