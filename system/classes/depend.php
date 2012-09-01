@@ -21,7 +21,8 @@ defined('P_RUN') or die('Direct access prohibited');
  * </code>
  *
  * Your checker callback should return true if the dependency is satisfied, or
- * false if it is not.
+ * false if it is not. It should also provide a help array if the help argument
+ * is true.
  *
  * @package Core
  */
@@ -45,10 +46,10 @@ class depend {
 	 * - option (Current or requested component.)
 	 * - php (PHP version.)
 	 * - pines (Pines version.)
+	 * - request (Requested component + action.)
 	 * - service (Available services.)
 	 */
 	public function __construct() {
-		global $pines;
 		$this->checkers = array(
 			'ability' => array($this, 'check_ability'),
 			'action' => array($this, 'check_action'),
@@ -61,6 +62,7 @@ class depend {
 			'option' => array($this, 'check_option'),
 			'php' => array($this, 'check_php'),
 			'pines' => array($this, 'check_pines'),
+			'request' => array($this, 'check_request'),
 			'service' => array($this, 'check_service')
 		);
 	}
@@ -82,6 +84,26 @@ class depend {
 	}
 
 	/**
+	 * Get a dependency checker's help documentation.
+	 * 
+	 * The help array is an associative array with the following values:
+	 * 
+	 * - cname - A common name (title) for the checker.
+	 * - description - A description of the checker.
+	 * - syntax - A guide for the syntax of the checker.
+	 * - simple_parse - A true/false; whether the checker uses simple_parse to
+	 *   provide simple logic processing.
+	 *
+	 * @param string $type The type of dependency to get help for.
+	 * @return array The help array.
+	 */
+	public function help($type) {
+		if (!isset($this->checkers[$type]))
+			return array();
+		return call_user_func($this->checkers[$type], '', true);
+	}
+
+	/**
 	 * Check whether the user has the given ability.
 	 *
 	 * Uses simple_parse() to provide simple logic.
@@ -89,10 +111,42 @@ class depend {
 	 * @access private
 	 * @uses gatekeeper()
 	 * @param string $value The value to check.
-	 * @return bool The result of the ability check.
+	 * @param bool $help Whether to return the help for this checker.
+	 * @return bool|array The result of the ability check, or the help array.
 	 */
-	private function check_ability($value) {
+	private function check_ability($value, $help = false) {
 		global $pines;
+		if ($help) {
+			$return = array();
+			$return['cname'] = 'Ability Checker';
+			$return['description'] = <<<EOF
+Check against the current user's abilities.
+
+An ability begins with the name of the component, then a slash and the name of
+the ability, such as com_example/editfoobar. You can find a list of all
+abilities on the new user form under the Abilities tab. Hover over an ability's
+label to see the name of the ability.
+EOF;
+			$return['syntax'] = <<<EOF
+Providing the name of the ability will check whether the user has the ability.
+Put an exclamation point before the ability to check if they don't have the
+ability. Leave blank to check that the user is logged in, or put only an
+exclamation point to check that the user is not logged in.
+
+com_user/login&com_example/editfoobar
+:	Check that the user has both abilities.
+
+com_user/login&!com_user/edituser
+:	Check that the user has the login ability, but not the edituser ability.
+
+com_user/login&(com_user/edituser|com_user/editgroup)
+:	Check that the user has the login ability, and either the edituser ability
+	or the editgroup ability.
+	
+EOF;
+			$return['simple_parse'] = true;
+			return $return;
+		}
 		if ($value == '!')
 			return (isset($pines->user_manager) ? !$pines->user_manager->gatekeeper() : false);
 		if (
@@ -145,7 +199,6 @@ class depend {
 	 * @return bool The result of the class check.
 	 */
 	private function check_class($value) {
-		global $pines;
 		if (
 				strpos($value, '&') !== false ||
 				strpos($value, '|') !== false ||
@@ -298,7 +351,6 @@ class depend {
 	 * @return bool The result of the extension check.
 	 */
 	private function check_extension($value) {
-		global $pines;
 		if (
 				strpos($value, '&') !== false ||
 				strpos($value, '|') !== false ||
@@ -329,7 +381,6 @@ class depend {
 	 * @return bool The result of the function check.
 	 */
 	private function check_function($value) {
-		global $pines;
 		if (
 				strpos($value, '&') !== false ||
 				strpos($value, '|') !== false ||
@@ -351,7 +402,6 @@ class depend {
 	 * @return bool The result of the host check.
 	 */
 	private function check_host($value) {
-		global $pines;
 		if (
 				strpos($value, '&') !== false ||
 				strpos($value, '|') !== false ||
@@ -412,7 +462,6 @@ class depend {
 	 * @return bool The result of the version comparison.
 	 */
 	private function check_php($value) {
-		global $pines;
 		if (
 				strpos($value, '&') !== false ||
 				strpos($value, '|') !== false ||
@@ -460,6 +509,32 @@ class depend {
 		$compare = preg_replace('/([<>=]{1,2})(.+)/S', '$1', $value);
 		$required = preg_replace('/([<>=]{1,2})(.+)/S', '$2', $value);
 		return version_compare($pines->info->version, $required, $compare);
+	}
+
+	/**
+	 * Check against the requested component and action.
+	 *
+	 * Uses simple_parse() to provide simple logic.
+	 *
+	 * @access private
+	 * @uses pines::request_component
+	 * @uses pines::request_action
+	 * @param string $value The value to check.
+	 * @return bool The result of the component + action check.
+	 */
+	private function check_request($value) {
+		global $pines;
+		if ($value == '!')
+			return (!empty($pines->request_component) || !empty($pines->request_action));
+		if (
+				strpos($value, '&') !== false ||
+				strpos($value, '|') !== false ||
+				strpos($value, '!') !== false ||
+				strpos($value, '(') !== false ||
+				strpos($value, ')') !== false
+			)
+			return $this->simple_parse($value, array($this, 'check_action'));
+		return $pines->request_component == $value || ("{$pines->request_component}/{$pines->request_action}" == $value);
 	}
 
 	// Is this safe? Consider that users can use dependencies to discover things...
