@@ -30,14 +30,13 @@ if (P_SCRIPT_TIMING) {
 		if (!isset($time_array[$message]) || $time_array[$message]['level'] > $message_level) {
 			$time_array[$message] = array('level' => $message_level);
 			$message_level++;
-		} else {
+		} else
 			$message_level--;
-		}
 		$time_array[$message][] = $microtime;
 		$subtract_time += microtime(true) - $microtime;
 		if (!$print_now)
 			return;
-		
+
 		$total_time = $microtime - P_EXEC_TIME;
 		$run_time = $total_time - $subtract_time;
 		foreach($time_array as $message => $times) {
@@ -48,11 +47,10 @@ if (P_SCRIPT_TIMING) {
 		}
 		echo '<script type="text/javascript">
 (function(message){
-if (console.log) {
+if (console.log)
 	console.log(message);
-} else {
+else
 	alert(message);
-}
 })("';
 		echo 'Pines Script Timing\n\nTimes are measured in seconds.\n';
 		echo $time_output;

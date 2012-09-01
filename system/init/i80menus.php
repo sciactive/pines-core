@@ -18,9 +18,8 @@ if (!$pines->page->override) {
 	$pines->menu->add_json_file('system/menu.json');
 	// Get the component menus.
 	$_p_commenus = glob('components/com_*/menu.json');
-	foreach ($_p_commenus as $_p_cur_commenus) {
+	foreach ($_p_commenus as $_p_cur_commenus)
 		$pines->menu->add_json_file($_p_cur_commenus);
-	}
 	unset ($_p_commenus, $_p_cur_commenus);
 	if (P_SCRIPT_TIMING) pines_print_time('Load Menus');
 	if (P_SCRIPT_TIMING) pines_print_time('Render Menus');

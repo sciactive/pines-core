@@ -15,7 +15,7 @@ if (P_SCRIPT_TIMING) pines_print_time('Run Requested Action');
 // Call the action specified.
 if (!$_p_error_module) {
 	try {
-		if ( $pines->action($pines->request_component, $pines->request_action) === 'error_404' )
+		if ($pines->action($pines->request_component, $pines->request_action) === 'error_404')
 			throw new HttpClientException(null, 404);
 	} catch (HttpClientException $e) {
 		$_p_error_module = new module('system', 'error', 'content');

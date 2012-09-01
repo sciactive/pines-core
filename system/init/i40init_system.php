@@ -28,8 +28,10 @@ function __autoload($class_name) {
 		// But the hook object will check if a hooked class exists before
 		// hooking it, so we don't want to create an extra object each time.
 		if ($trace[1]['function'] == 'class_exists') {
-			if (P_SCRIPT_TIMING) pines_print_time("Checking Class [$class_name]");
-			if (P_SCRIPT_TIMING) pines_print_time("Checking Class [$class_name]");
+			if (P_SCRIPT_TIMING) {
+				pines_print_time("Checking Class [$class_name]");
+				pines_print_time("Checking Class [$class_name]");
+			}
 			return;
 		}
 		if (P_SCRIPT_TIMING) pines_print_time("Preparing Class [$class_name]");

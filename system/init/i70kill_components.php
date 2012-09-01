@@ -17,11 +17,11 @@ $_p_comkill = glob('components/com_*/init/k*.php');
 // Sort by just the filename.
 usort($_p_comkill, 'pines_sort_by_filename');
 foreach ($_p_comkill as $_p_cur_comkill) {
-	/**
-	 * Include each component kill script in the correct order.
-	 */
 	if (P_SCRIPT_TIMING) pines_print_time("Kill Script: $_p_cur_comkill");
 	try {
+		/**
+		 * Include each component kill script in the correct order.
+		 */
 		include($_p_cur_comkill);
 	} catch (HttpClientException $e) {
 		$_p_error_module = new module('system', 'error', 'content');
