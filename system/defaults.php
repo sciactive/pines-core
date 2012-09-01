@@ -55,7 +55,13 @@ return array(
 		'name' => 'offline_message',
 		'cname' => 'Offline Message',
 		'description' => 'The message to display when in offline mode.',
-		'value' => 'We are currently offline for maintenance. Please try back shortly.',
+		'value' => 'We are currently offline for maintenance. Please try back shortly.<br /><br />In the meantime, you can watch our Twitter feed to the right for updates.',
+	),
+	array(
+		'name' => 'offline_twitter_feed',
+		'cname' => 'Offline Twitter Feed',
+		'description' => 'An optional Twitter username to display tweets from while offline.',
+		'value' => 'pinesframework',
 	),
 	array(
 		'name' => 'page_title',
