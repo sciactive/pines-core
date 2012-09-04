@@ -112,7 +112,7 @@ class depend {
 	 * @uses gatekeeper()
 	 * @param string $value The value to check.
 	 * @param bool $help Whether to return the help for this checker.
-	 * @return bool|array The result of the ability check, or the help array.
+	 * @return bool|array The result of the check, or the help array.
 	 */
 	private function check_ability($value, $help = false) {
 		global $pines;
@@ -142,7 +142,7 @@ com_user/login&!com_user/edituser
 com_user/login&(com_user/edituser|com_user/editgroup)
 :	Check that the user has the login ability, and either the edituser ability
 	or the editgroup ability.
-	
+
 EOF;
 			$return['simple_parse'] = true;
 			return $return;
@@ -172,12 +172,54 @@ EOF;
 	 * @uses pines::action
 	 * @uses pines::request_action
 	 * @param string $value The value to check.
-	 * @return bool The result of the action check.
+	 * @param bool $help Whether to return the help for this checker.
+	 * @return bool|array The result of the check, or the help array.
 	 */
-	private function check_action($value) {
+	private function check_action($value, $help = false) {
 		global $pines;
+		if ($help) {
+			$return = array();
+			$return['cname'] = 'Action Checker';
+			$return['description'] = <<<EOF
+Check against the current or requested action.
+
+The requested action is what appears in the URL following "action=". If you have
+URL rewriting turned on, it will be the portion of the URL following the
+component (option) portion. This check will check both the requested action
+and/or the currently running action.
+
+Note that "%2F" in an action in the URL should be replaced with a forward
+slash (/) here.
+EOF;
+			$return['syntax'] = <<<EOF
+Providing the name of the action will check whether the requested action or the
+current action matches. Put an exclamation point before the action to check if
+neither match. Leave blank to check that an action was requested, or put only an
+exclamation point to check that no action was requested. Put a caret (^) before
+the action to only check the requested action, and put a greater-than sign (>)
+before it to only check the current action.
+
+\!
+:	Check that no action was requested.
+
+sale/edit|return/edit
+:	Check that either the sale/edit action or the return/edit action was
+	requested or is currently running.
+
+^sale/edit
+:	Check that the sale/edit action was requested.
+
+>recoverpassword
+:	Check that the recoverpassword action is currently running.
+
+EOF;
+			$return['simple_parse'] = true;
+			return $return;
+		}
 		if ($value == '!')
 			return (!empty($pines->request_action));
+		elseif ($value == '')
+			return (empty($pines->request_action));
 		if (
 				strpos($value, '&') !== false ||
 				strpos($value, '|') !== false ||
@@ -186,7 +228,11 @@ EOF;
 				strpos($value, ')') !== false
 			)
 			return $this->simple_parse($value, array($this, 'check_action'));
-		return $pines->request_action == $value || (isset($pines->action) && $pines->action == $value);
+		if (substr($value, 0, 1) == '^')
+			return ($pines->request_action == substr($value, 1));
+		elseif (substr($value, 0, 1) == '>')
+			return ($pines->action == substr($value, 1));
+		return $pines->request_action == $value || $pines->action == $value;
 	}
 
 	/**
@@ -196,9 +242,30 @@ EOF;
 	 *
 	 * @access private
 	 * @param string $value The value to check for.
-	 * @return bool The result of the class check.
+	 * @param bool $help Whether to return the help for this checker.
+	 * @return bool|array The result of the check, or the help array.
 	 */
-	private function check_class($value) {
+	private function check_class($value, $help = false) {
+		if ($help) {
+			$return = array();
+			$return['cname'] = 'Class Checker';
+			$return['description'] = <<<EOF
+Check that a class exists using the PHP class_exists function.
+EOF;
+			$return['syntax'] = <<<EOF
+Providing the name of the class will check whether the class exists. Put an
+exclamation point before the name to check if the class doesn't exist.
+
+Imagick
+:	Check that the ImageMagick class "Imagick" exists.
+
+!Phar
+:	Check that the Phar class does not exist.
+
+EOF;
+			$return['simple_parse'] = true;
+			return $return;
+		}
 		if (
 				strpos($value, '&') !== false ||
 				strpos($value, '|') !== false ||
@@ -237,8 +304,8 @@ EOF;
 	 *
 	 * Examples
 	 *
-	 * - 192.168/24 = 192.168.0.0/255.255.255.0 = The request is on the 192.168.0.X network.
-	 * - 128.64/16 = 128.64.0.0/255.255.0.0 = The request is on the 128.64.X.X network.
+	 * - 192.168/24 = 192.168.0.0/255.255.255.0 = The client is on the 192.168.0.X network.
+	 * - 128.64/16 = 128.64.0.0/255.255.0.0 = The client is on the 128.64.X.X network.
 	 * - {server_addr} = The request is coming from localhost.
 	 * - {server_addr}/24 = {server_addr}/255.255.255.0 = The client is on the same 255.255.255.0 subnet as the server.
 	 *
@@ -249,10 +316,58 @@ EOF;
 	 * @uses pines::check_ip_subnet()
 	 * @uses pines::check_ip_range()
 	 * @param string $value The value to check.
-	 * @return bool The result of the action check.
+	 * @param bool $help Whether to return the help for this checker.
+	 * @return bool|array The result of the check, or the help array.
 	 */
-	private function check_clientip($value) {
+	private function check_clientip($value, $help = false) {
 		global $pines;
+		if ($help) {
+			$return = array();
+			$return['cname'] = 'Client IP Checker';
+			$return['description'] = <<<EOF
+Check the client's IP address.
+
+Check that the client's IP address (or the IP address of the proxy they are
+connecting with) matches a given IP or range of IPs.
+EOF;
+			$return['syntax'] = <<<'EOF'
+Providing an IP or IP range/network will check that the client's IP matches. Put
+an exclamation point before it to negate the check. There are four different
+syntaxes available:
+
+* IP - Only matches one IP address.
+  
+  <pre>0.0.0.0</pre>
+* CIDR - Matches a network using CIDR notation.
+  
+  <pre>0.0.0.0/24</pre>
+* Subnet Mask - Matches a network using a subnet mask.
+  
+  <pre>0.0.0.0/255.255.255.0</pre>
+* IP Range - Matches a range of IP addresses.
+  
+  <pre>0.0.0.0-0.0.0.255</pre>
+
+The string "{server_addr}" (without quotes) will be replaced by the server's IP
+address (from $_SERVER['SERVER_ADDR']). Be aware that it may be IPv6, which will
+not work with this checker.
+
+192.168/24 or 192.168.0.0/255.255.255.0
+:	The client is on the 192.168.0.X network.
+
+128.64/16 or 128.64.0.0/255.255.0.0
+:	The client is on the 128.64.X.X network.
+
+{server_addr}
+:	The request is coming from localhost.
+
+{server_addr}/24 or {server_addr}/255.255.255.0
+:	The client is on the same 255.255.255.0 subnet as the server.
+
+EOF;
+			$return['simple_parse'] = true;
+			return $return;
+		}
 		$value = str_replace('{server_addr}', $_SERVER['SERVER_ADDR'], $value);
 		if (
 				strpos($value, '&') !== false ||
@@ -304,9 +419,10 @@ EOF;
 	 * @access private
 	 * @uses pines::components
 	 * @param string $value The value to check.
-	 * @return bool The result of the component check.
+	 * @param bool $help Whether to return the help for this checker.
+	 * @return bool|array The result of the check, or the help array.
 	 */
-	private function check_component($value) {
+	private function check_component($value, $help = false) {
 		global $pines;
 		if (
 				strpos($value, '&') !== false ||
@@ -348,9 +464,10 @@ EOF;
 	 *
 	 * @access private
 	 * @param string $value The value to check.
-	 * @return bool The result of the extension check.
+	 * @param bool $help Whether to return the help for this checker.
+	 * @return bool|array The result of the check, or the help array.
 	 */
-	private function check_extension($value) {
+	private function check_extension($value, $help = false) {
 		if (
 				strpos($value, '&') !== false ||
 				strpos($value, '|') !== false ||
@@ -378,9 +495,30 @@ EOF;
 	 *
 	 * @access private
 	 * @param string $value The value to check.
-	 * @return bool The result of the function check.
+	 * @param bool $help Whether to return the help for this checker.
+	 * @return bool|array The result of the check, or the help array.
 	 */
-	private function check_function($value) {
+	private function check_function($value, $help = false) {
+		if ($help) {
+			$return = array();
+			$return['cname'] = 'Function Checker';
+			$return['description'] = <<<EOF
+Check that a function exists using the PHP function_exists function.
+EOF;
+			$return['syntax'] = <<<EOF
+Providing the name of the function will check whether the function exists. Put an
+exclamation point before the name to check if the function doesn't exist.
+
+imagecreate
+:	Check that the Graphics Draw function "imagecreate" exists.
+
+!gmp_init
+:	Check that the GMP function "gmp_init" does not exist.
+
+EOF;
+			$return['simple_parse'] = true;
+			return $return;
+		}
 		if (
 				strpos($value, '&') !== false ||
 				strpos($value, '|') !== false ||
@@ -399,9 +537,10 @@ EOF;
 	 *
 	 * @access private
 	 * @param string $value The value to check.
-	 * @return bool The result of the host check.
+	 * @param bool $help Whether to return the help for this checker.
+	 * @return bool|array The result of the check, or the help array.
 	 */
-	private function check_host($value) {
+	private function check_host($value, $help = false) {
 		if (
 				strpos($value, '&') !== false ||
 				strpos($value, '|') !== false ||
@@ -425,12 +564,51 @@ EOF;
 	 * @uses pines::component
 	 * @uses pines::request_component
 	 * @param string $value The value to check.
-	 * @return bool The result of the component check.
+	 * @param bool $help Whether to return the help for this checker.
+	 * @return bool|array The result of the check, or the help array.
 	 */
-	private function check_option($value) {
+	private function check_option($value, $help = false) {
 		global $pines;
+		if ($help) {
+			$return = array();
+			$return['cname'] = 'Component (Option) Checker';
+			$return['description'] = <<<EOF
+Check against the current or requested component.
+
+The requested component is what appears in the URL following "option=". If you
+have URL rewriting turned on, it will be the portion of the URL following the
+Pines location, but will be missing the "com_". This check will check both the
+requested component and/or the currently running action's component.
+EOF;
+			$return['syntax'] = <<<EOF
+Providing the name of the component will check whether the requested component
+or the current component matches. Put an exclamation point before the component
+to check if neither match. Leave blank to check that a component was requested,
+or put only an exclamation point to check that no component was requested. Put a
+caret (^) before the component to only check the requested component, and put a
+greater-than sign (>) before it to only check the current component.
+
+\!
+:	Check that no component was requested.
+
+com_sales|com_storefront
+:	Check that either a com_sales action or a com_storefront action was
+	requested or is currently running.
+
+^com_sales
+:	Check that a com_sales action was requested.
+
+>com_user
+:	Check that a com_user action is currently running.
+
+EOF;
+			$return['simple_parse'] = true;
+			return $return;
+		}
 		if ($value == '!')
 			return (!empty($pines->request_component));
+		elseif ($value == '')
+			return (empty($pines->request_component));
 		if (
 				strpos($value, '&') !== false ||
 				strpos($value, '|') !== false ||
@@ -439,7 +617,11 @@ EOF;
 				strpos($value, ')') !== false
 			)
 			return $this->simple_parse($value, array($this, 'check_option'));
-		return $pines->request_component == $value || (isset($pines->component) && $pines->component == $value);
+		if (substr($value, 0, 1) == '^')
+			return ($pines->request_component == substr($value, 1));
+		elseif (substr($value, 0, 1) == '>')
+			return ($pines->component == substr($value, 1));
+		return $pines->request_component == $value || $pines->component == $value;
 	}
 
 	/**
@@ -459,9 +641,10 @@ EOF;
 	 *
 	 * @access private
 	 * @param string $value The value to check.
-	 * @return bool The result of the version comparison.
+	 * @param bool $help Whether to return the help for this checker.
+	 * @return bool|array The result of the check, or the help array.
 	 */
-	private function check_php($value) {
+	private function check_php($value, $help = false) {
 		if (
 				strpos($value, '&') !== false ||
 				strpos($value, '|') !== false ||
@@ -493,9 +676,10 @@ EOF;
 	 *
 	 * @access private
 	 * @param string $value The value to check.
-	 * @return bool The result of the version comparison.
+	 * @param bool $help Whether to return the help for this checker.
+	 * @return bool|array The result of the check, or the help array.
 	 */
-	private function check_pines($value) {
+	private function check_pines($value, $help = false) {
 		global $pines;
 		if (
 				strpos($value, '&') !== false ||
@@ -520,10 +704,42 @@ EOF;
 	 * @uses pines::request_component
 	 * @uses pines::request_action
 	 * @param string $value The value to check.
-	 * @return bool The result of the component + action check.
+	 * @param bool $help Whether to return the help for this checker.
+	 * @return bool|array The result of the check, or the help array.
 	 */
-	private function check_request($value) {
+	private function check_request($value, $help = false) {
 		global $pines;
+		if ($help) {
+			$return = array();
+			$return['cname'] = 'Request Component/Action Checker';
+			$return['description'] = <<<EOF
+Check against the requested component and action.
+
+See the descriptions of the component (option) and action checkers for
+information on how to decipher URLs.
+EOF;
+			$return['syntax'] = <<<EOF
+Providing the name of the component/action will check whether the requested
+component and action match. Put an exclamation point before the value to check
+if they don't match. Leave blank to check that a component and action were
+requested (in this case, a component request with no action passes), or put only
+an exclamation point to check that no component and action were requested.
+
+\!
+:	Check that no component and action were requested. This is how you check
+	that the user is on the homepage.
+
+com_storefront/category/browse|com_storefront/product
+:	Check that the user requested either a category page or a product page in
+	the storefront component.
+
+!com_user/recover
+:	Check that the user did not request the account recovery page.
+
+EOF;
+			$return['simple_parse'] = true;
+			return $return;
+		}
 		if ($value == '!')
 			return (!empty($pines->request_component) || !empty($pines->request_action));
 		if (
@@ -567,9 +783,10 @@ EOF;
 	 * @access private
 	 * @uses pines::services
 	 * @param string $value The value to check.
-	 * @return bool The result of the service check.
+	 * @param bool $help Whether to return the help for this checker.
+	 * @return bool|array The result of the check, or the help array.
 	 */
-	private function check_service($value) {
+	private function check_service($value, $help = false) {
 		global $pines;
 		if (
 				strpos($value, '&') !== false ||
