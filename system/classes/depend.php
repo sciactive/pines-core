@@ -89,18 +89,21 @@ class depend {
 	 * The help array is an associative array with the following values:
 	 * 
 	 * - cname - A common name (title) for the checker.
-	 * - description - A description of the checker.
-	 * - syntax - A guide for the syntax of the checker.
+	 * - description - A markdown formatted description of the checker.
+	 * - syntax - A markdown formatted guide for the syntax of the checker.
 	 * - simple_parse - A true/false; whether the checker uses simple_parse to
 	 *   provide simple logic processing.
 	 *
 	 * @param string $type The type of dependency to get help for.
-	 * @return array The help array.
+	 * @return array|null The help array, or null if the checker doesn't provide one.
 	 */
 	public function help($type) {
 		if (!isset($this->checkers[$type]))
 			return array();
-		return call_user_func($this->checkers[$type], '', true);
+		$return = call_user_func($this->checkers[$type], '', true);
+		if ((array) $return === $return)
+			return $return;
+		return null;
 	}
 
 	/**
@@ -119,7 +122,7 @@ class depend {
 		if ($help) {
 			$return = array();
 			$return['cname'] = 'Ability Checker';
-			$return['description'] = <<<EOF
+			$return['description'] = <<<'EOF'
 Check against the current user's abilities.
 
 An ability begins with the name of the component, then a slash and the name of
@@ -127,7 +130,7 @@ the ability, such as com_example/editfoobar. You can find a list of all
 abilities on the new user form under the Abilities tab. Hover over an ability's
 label to see the name of the ability.
 EOF;
-			$return['syntax'] = <<<EOF
+			$return['syntax'] = <<<'EOF'
 Providing the name of the ability will check whether the user has the ability.
 Put an exclamation point before the ability to check if they don't have the
 ability. Leave blank to check that the user is logged in, or put only an
@@ -142,7 +145,6 @@ com_user/login&!com_user/edituser
 com_user/login&(com_user/edituser|com_user/editgroup)
 :	Check that the user has the login ability, and either the edituser ability
 	or the editgroup ability.
-
 EOF;
 			$return['simple_parse'] = true;
 			return $return;
@@ -180,7 +182,7 @@ EOF;
 		if ($help) {
 			$return = array();
 			$return['cname'] = 'Action Checker';
-			$return['description'] = <<<EOF
+			$return['description'] = <<<'EOF'
 Check against the current or requested action.
 
 The requested action is what appears in the URL following "action=". If you have
@@ -191,7 +193,7 @@ and/or the currently running action.
 Note that "%2F" in an action in the URL should be replaced with a forward
 slash (/) here.
 EOF;
-			$return['syntax'] = <<<EOF
+			$return['syntax'] = <<<'EOF'
 Providing the name of the action will check whether the requested action or the
 current action matches. Put an exclamation point before the action to check if
 neither match. Leave blank to check that an action was requested, or put only an
@@ -211,7 +213,6 @@ sale/edit|return/edit
 
 >recoverpassword
 :	Check that the recoverpassword action is currently running.
-
 EOF;
 			$return['simple_parse'] = true;
 			return $return;
@@ -249,10 +250,10 @@ EOF;
 		if ($help) {
 			$return = array();
 			$return['cname'] = 'Class Checker';
-			$return['description'] = <<<EOF
+			$return['description'] = <<<'EOF'
 Check that a class exists using the PHP class_exists function.
 EOF;
-			$return['syntax'] = <<<EOF
+			$return['syntax'] = <<<'EOF'
 Providing the name of the class will check whether the class exists. Put an
 exclamation point before the name to check if the class doesn't exist.
 
@@ -261,7 +262,6 @@ Imagick
 
 !Phar
 :	Check that the Phar class does not exist.
-
 EOF;
 			$return['simple_parse'] = true;
 			return $return;
@@ -324,7 +324,7 @@ EOF;
 		if ($help) {
 			$return = array();
 			$return['cname'] = 'Client IP Checker';
-			$return['description'] = <<<EOF
+			$return['description'] = <<<'EOF'
 Check the client's IP address.
 
 Check that the client's IP address (or the IP address of the proxy they are
@@ -335,35 +335,37 @@ Providing an IP or IP range/network will check that the client's IP matches. Put
 an exclamation point before it to negate the check. There are four different
 syntaxes available:
 
-* IP - Only matches one IP address.
-  
-  <pre>0.0.0.0</pre>
-* CIDR - Matches a network using CIDR notation.
-  
-  <pre>0.0.0.0/24</pre>
-* Subnet Mask - Matches a network using a subnet mask.
-  
-  <pre>0.0.0.0/255.255.255.0</pre>
-* IP Range - Matches a range of IP addresses.
-  
-  <pre>0.0.0.0-0.0.0.255</pre>
+*	IP - Only matches one IP address.
+	
+	<pre>0.0.0.0</pre>
+*	CIDR - Matches a network using CIDR notation.
+	
+	<pre>0.0.0.0/24</pre>
+*	Subnet Mask - Matches a network using a subnet mask.
+	
+	<pre>0.0.0.0/255.255.255.0</pre>
+*	IP Range - Matches a range of IP addresses.
+	
+	<pre>0.0.0.0-0.0.0.255</pre>
 
 The string "{server_addr}" (without quotes) will be replaced by the server's IP
 address (from $_SERVER['SERVER_ADDR']). Be aware that it may be IPv6, which will
 not work with this checker.
 
-192.168/24 or 192.168.0.0/255.255.255.0
+192.168/24
+192.168.0.0/255.255.255.0
 :	The client is on the 192.168.0.X network.
 
-128.64/16 or 128.64.0.0/255.255.0.0
+128.64/16
+128.64.0.0/255.255.0.0
 :	The client is on the 128.64.X.X network.
 
 {server_addr}
 :	The request is coming from localhost.
 
-{server_addr}/24 or {server_addr}/255.255.255.0
+{server_addr}/24
+{server_addr}/255.255.255.0
 :	The client is on the same 255.255.255.0 subnet as the server.
-
 EOF;
 			$return['simple_parse'] = true;
 			return $return;
@@ -400,7 +402,7 @@ EOF;
 	/**
 	 * Check if a component is installed and check its version.
 	 *
-	 * You can either check only that the component is installed, by using its
+	 * You can either check only that the component is installed by using its
 	 * name, or that the component's version matches a certain version/range.
 	 *
 	 * Operators should be placed between the component name and the version
@@ -424,6 +426,41 @@ EOF;
 	 */
 	private function check_component($value, $help = false) {
 		global $pines;
+		if ($help) {
+			$return = array();
+			$return['cname'] = 'Component Checker';
+			$return['description'] = <<<'EOF'
+Check if a component is installed and check its version.
+EOF;
+			$return['syntax'] = <<<'EOF'
+You can either check only that the component is installed (and enabled) by using
+its name, or that the component's version matches a certain version/range.
+
+Operators should be placed between the component name and the version number to
+test. Such as, "com_xmlparser>=1.1.0". The available operators are:
+
+* `=`
+* `<`
+* `>`
+* `<=`
+* `>=`
+* `<>`
+
+com_user
+:	Check that com_user is installed and enabled.
+
+com_sales>=1.0.1
+:	Check that com_sales is installed and enabled, and that it is at least
+	version 1.0.1.
+
+com_customer<>1.0.0|(com_customer=1.0.0&com_sales)
+:	Check that either a version of com_customer other than 1.0.0 is installed
+	and enabled, or that com_customer version 1.0.0 and com_sales are both
+	installed and enabled.
+EOF;
+			$return['simple_parse'] = true;
+			return $return;
+		}
 		if (
 				strpos($value, '&') !== false ||
 				strpos($value, '|') !== false ||
@@ -447,7 +484,7 @@ EOF;
 	/**
 	 * Check if a PHP extension is installed and check its version.
 	 *
-	 * You can either check only that the extension is installed, by using its
+	 * You can either check only that the extension is installed by using its
 	 * name, or that the extension's version matches a certain version/range.
 	 *
 	 * Operators should be placed between the extension name and the version
@@ -468,6 +505,39 @@ EOF;
 	 * @return bool|array The result of the check, or the help array.
 	 */
 	private function check_extension($value, $help = false) {
+		if ($help) {
+			$return = array();
+			$return['cname'] = 'Extension Checker';
+			$return['description'] = <<<'EOF'
+Check if a PHP extension is installed and check its version.
+EOF;
+			$return['syntax'] = <<<'EOF'
+You can either check only that the extension is installed by using its name, or
+that the extension's version matches a certain version/range.
+
+Operators should be placed between the extension name and the version number to
+test. Such as, "tidy>=2.0". The available operators are:
+
+* `=`
+* `<`
+* `>`
+* `<=`
+* `>=`
+* `<>`
+
+xdebug
+:	Check that Xdebug is installed.
+
+curl>=7.0.0
+:	Check that cURL is installed, and that it is at least version 7.
+
+imagick>3.0|gd>=2
+:	Check that either ImageMagick greater than version 3 is installed, or GD
+	version 2 or greater is installed.
+EOF;
+			$return['simple_parse'] = true;
+			return $return;
+		}
 		if (
 				strpos($value, '&') !== false ||
 				strpos($value, '|') !== false ||
@@ -502,19 +572,18 @@ EOF;
 		if ($help) {
 			$return = array();
 			$return['cname'] = 'Function Checker';
-			$return['description'] = <<<EOF
+			$return['description'] = <<<'EOF'
 Check that a function exists using the PHP function_exists function.
 EOF;
-			$return['syntax'] = <<<EOF
-Providing the name of the function will check whether the function exists. Put an
-exclamation point before the name to check if the function doesn't exist.
+			$return['syntax'] = <<<'EOF'
+Providing the name of the function will check whether the function exists. Put
+an exclamation point before the name to check if the function doesn't exist.
 
 imagecreate
 :	Check that the Graphics Draw function "imagecreate" exists.
 
 !gmp_init
 :	Check that the GMP function "gmp_init" does not exist.
-
 EOF;
 			$return['simple_parse'] = true;
 			return $return;
@@ -541,6 +610,27 @@ EOF;
 	 * @return bool|array The result of the check, or the help array.
 	 */
 	private function check_host($value, $help = false) {
+		if ($help) {
+			$return = array();
+			$return['cname'] = 'Hostname Checker';
+			$return['description'] = <<<'EOF'
+Check the hostname of the server.
+EOF;
+			$return['syntax'] = <<<'EOF'
+When you use Pines to host multiple websites, you can use this checker to
+determine which website is being requested. If Pines is running on a virtual
+host, this will check the value defined for that virtual host.
+
+sciactive.com|www.sciactive.com
+:	Check that the client is requesting sciactive.com (or www.sciactive.com).
+
+!(bigbobsvalueshack.com|www.bigbobsvalueshack.com)
+!bigbobsvalueshack.com&!www.bigbobsvalueshack.com
+:	Check that the client is not requesting bigbobsvalueshack.com.
+EOF;
+			$return['simple_parse'] = true;
+			return $return;
+		}
 		if (
 				strpos($value, '&') !== false ||
 				strpos($value, '|') !== false ||
@@ -572,7 +662,7 @@ EOF;
 		if ($help) {
 			$return = array();
 			$return['cname'] = 'Component (Option) Checker';
-			$return['description'] = <<<EOF
+			$return['description'] = <<<'EOF'
 Check against the current or requested component.
 
 The requested component is what appears in the URL following "option=". If you
@@ -580,7 +670,7 @@ have URL rewriting turned on, it will be the portion of the URL following the
 Pines location, but will be missing the "com_". This check will check both the
 requested component and/or the currently running action's component.
 EOF;
-			$return['syntax'] = <<<EOF
+			$return['syntax'] = <<<'EOF'
 Providing the name of the component will check whether the requested component
 or the current component matches. Put an exclamation point before the component
 to check if neither match. Leave blank to check that a component was requested,
@@ -600,7 +690,6 @@ com_sales|com_storefront
 
 >com_user
 :	Check that a com_user action is currently running.
-
 EOF;
 			$return['simple_parse'] = true;
 			return $return;
@@ -645,6 +734,32 @@ EOF;
 	 * @return bool|array The result of the check, or the help array.
 	 */
 	private function check_php($value, $help = false) {
+		if ($help) {
+			$return = array();
+			$return['cname'] = 'PHP Version Checker';
+			$return['description'] = <<<'EOF'
+Check the version of PHP running.
+EOF;
+			$return['syntax'] = <<<'EOF'
+Operators should be placed before the version number to test. Such as,
+">=5.2.10". The available operators are:
+
+* `=`
+* `<`
+* `>`
+* `<=`
+* `>=`
+* `<>`
+
+>=5
+:	Check that PHP is at least version 5.
+
+<5.4
+:	Check that PHP is less than version 5.4.
+EOF;
+			$return['simple_parse'] = true;
+			return $return;
+		}
 		if (
 				strpos($value, '&') !== false ||
 				strpos($value, '|') !== false ||
@@ -681,6 +796,32 @@ EOF;
 	 */
 	private function check_pines($value, $help = false) {
 		global $pines;
+		if ($help) {
+			$return = array();
+			$return['cname'] = 'Pines Version Checker';
+			$return['description'] = <<<'EOF'
+Check the version of Pines running.
+EOF;
+			$return['syntax'] = <<<'EOF'
+Operators should be placed before the version number to test. Such as,
+">=1.0.0". The available operators are:
+
+* `=`
+* `<`
+* `>`
+* `<=`
+* `>=`
+* `<>`
+
+>=1.0.0
+:	Check that Pines is at least version 1.0.0.
+
+<2
+:	Check that Pines is less than version 2.
+EOF;
+			$return['simple_parse'] = true;
+			return $return;
+		}
 		if (
 				strpos($value, '&') !== false ||
 				strpos($value, '|') !== false ||
@@ -712,13 +853,13 @@ EOF;
 		if ($help) {
 			$return = array();
 			$return['cname'] = 'Request Component/Action Checker';
-			$return['description'] = <<<EOF
+			$return['description'] = <<<'EOF'
 Check against the requested component and action.
 
 See the descriptions of the component (option) and action checkers for
 information on how to decipher URLs.
 EOF;
-			$return['syntax'] = <<<EOF
+			$return['syntax'] = <<<'EOF'
 Providing the name of the component/action will check whether the requested
 component and action match. Put an exclamation point before the value to check
 if they don't match. Leave blank to check that a component and action were
@@ -735,7 +876,6 @@ com_storefront/category/browse|com_storefront/product
 
 !com_user/recover
 :	Check that the user did not request the account recovery page.
-
 EOF;
 			$return['simple_parse'] = true;
 			return $return;
@@ -776,7 +916,7 @@ EOF;
 	//}
 
 	/**
-	 * Check if a service is available.
+	 * Check if a service is installed and enabled.
 	 *
 	 * Uses simple_parse() to provide simple logic.
 	 *
@@ -788,6 +928,25 @@ EOF;
 	 */
 	private function check_service($value, $help = false) {
 		global $pines;
+		if ($help) {
+			$return = array();
+			$return['cname'] = 'Service Checker';
+			$return['description'] = <<<'EOF'
+Check if a service is installed and enabled.
+EOF;
+			$return['syntax'] = <<<'EOF'
+Provide the name of a service to check that it is installed and enabled.
+
+editor
+:	Check that an editor is installed and enabled.
+
+entity_manager&user_manager
+:	Check that an entity manager and a user manager are both installed and
+	enabled.
+EOF;
+			$return['simple_parse'] = true;
+			return $return;
+		}
 		if (
 				strpos($value, '&') !== false ||
 				strpos($value, '|') !== false ||
