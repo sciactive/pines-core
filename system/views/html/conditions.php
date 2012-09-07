@@ -162,17 +162,21 @@ $pines->com_pgrid->load();
 			<h3 style="background-position: left center; background-repeat: no-repeat; min-height: 32px; padding-left: 36px; line-height: 32px;" class="picon-32 picon-help-contents"><?php echo htmlspecialchars($help['cname']); ?></h3>
 		</div>
 		<div class="modal-body">
-			<div class="page-header">
-				<h4>Description</h4>
-			</div>
+			<?php if (!empty($help['description'])) { ?>
 			<div><?php echo $pines->com_markdown->transform($help['description']); ?></div>
+			<?php } if (!empty($help['syntax'])) { ?>
 			<div class="page-header">
-				<h4>Syntax</h4>
+				<h3>Syntax</h3>
 			</div>
 			<div><?php echo $pines->com_markdown->transform($help['syntax']); ?></div>
-			<?php if ($help['simple_parse']) { ?>
+			<?php } if (!empty($help['examples'])) { ?>
 			<div class="page-header">
-				<h4>Simple Logic</h4>
+				<h3>Examples</h3>
+			</div>
+			<div><?php echo $pines->com_markdown->transform($help['examples']); ?></div>
+			<?php } if ($help['simple_parse']) { ?>
+			<div class="page-header">
+				<h3>Simple Logic</h3>
 			</div>
 			<div>
 				<p>This checker supports simple logic using the following
@@ -199,16 +203,18 @@ $pines->com_pgrid->load();
 		<div class="pf-form">
 			<div class="pf-element">
 				<span class="pf-label">Detected Types</span>
-				<span class="pf-field">These types were detected on this system.</span>
-				<br />
+				<div class="pf-group">
+					<div class="pf-field">These types were detected on this system. Click on a type to use it.</div>
+				</div>
 				<div class="btn-toolbar"><?php
 				$checker_links = array();
 				foreach (array_keys($pines->depend->checkers) as $cur_checker) {
 					$checker_html = htmlspecialchars($cur_checker);
 					$checker_js = htmlspecialchars(json_encode($cur_checker));
 					$help = $pines->depend->help($cur_checker);
+					$title = htmlspecialchars($help['cname']);
 					if ($help)
-						$checker_links[] = "<a href=\"javascript:void(0);\" onclick=\"\$('#p_muid_cur_condition_type').val($checker_js);\">$checker_html</a> <a href=\"#p_muid_checker_$checker_html\" data-toggle=\"modal\"><i class=\"icon-info-sign\"></i></a>";
+						$checker_links[] = "<a title=\"$title\" href=\"javascript:void(0);\" onclick=\"\$('#p_muid_cur_condition_type').val($checker_js);\">$checker_html</a> <a href=\"#p_muid_checker_$checker_html\" data-toggle=\"modal\"><i class=\"icon-info-sign\"></i></a>";
 					else
 						$checker_links[] = "<a href=\"javascript:void(0);\" onclick=\"\$('#p_muid_cur_condition_type').val($checker_js);\">$checker_html</a>";
 				}

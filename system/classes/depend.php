@@ -91,6 +91,7 @@ class depend {
 	 * - cname - A common name (title) for the checker.
 	 * - description - A markdown formatted description of the checker.
 	 * - syntax - A markdown formatted guide for the syntax of the checker.
+	 * - examples - A markdown formatted set of examples.
 	 * - simple_parse - A true/false; whether the checker uses simple_parse to
 	 *   provide simple logic processing.
 	 *
@@ -135,7 +136,8 @@ Providing the name of the ability will check whether the user has the ability.
 Put an exclamation point before the ability to check if they don't have the
 ability. Leave blank to check that the user is logged in, or put only an
 exclamation point to check that the user is not logged in.
-
+EOF;
+			$return['examples'] = <<<'EOF'
 com_user/login&com_example/editfoobar
 :	Check that the user has both abilities.
 
@@ -200,7 +202,8 @@ neither match. Leave blank to check that an action was requested, or put only an
 exclamation point to check that no action was requested. Put a caret (^) before
 the action to only check the requested action, and put a greater-than sign (>)
 before it to only check the current action.
-
+EOF;
+			$return['examples'] = <<<'EOF'
 \!
 :	Check that no action was requested.
 
@@ -256,7 +259,8 @@ EOF;
 			$return['syntax'] = <<<'EOF'
 Providing the name of the class will check whether the class exists. Put an
 exclamation point before the name to check if the class doesn't exist.
-
+EOF;
+			$return['examples'] = <<<'EOF'
 Imagick
 :	Check that the ImageMagick class "Imagick" exists.
 
@@ -351,7 +355,8 @@ syntaxes available:
 The string "{server_addr}" (without quotes) will be replaced by the server's IP
 address (from $_SERVER['SERVER_ADDR']). Be aware that it may be IPv6, which will
 not work with this checker.
-
+EOF;
+			$return['examples'] = <<<'EOF'
 192.168/24
 192.168.0.0/255.255.255.0
 :	The client is on the 192.168.0.X network.
@@ -445,7 +450,8 @@ test. Such as, "com_xmlparser>=1.1.0". The available operators are:
 * `<=`
 * `>=`
 * `<>`
-
+EOF;
+			$return['examples'] = <<<'EOF'
 com_user
 :	Check that com_user is installed and enabled.
 
@@ -524,7 +530,8 @@ test. Such as, "tidy>=2.0". The available operators are:
 * `<=`
 * `>=`
 * `<>`
-
+EOF;
+			$return['examples'] = <<<'EOF'
 xdebug
 :	Check that Xdebug is installed.
 
@@ -578,7 +585,8 @@ EOF;
 			$return['syntax'] = <<<'EOF'
 Providing the name of the function will check whether the function exists. Put
 an exclamation point before the name to check if the function doesn't exist.
-
+EOF;
+			$return['examples'] = <<<'EOF'
 imagecreate
 :	Check that the Graphics Draw function "imagecreate" exists.
 
@@ -620,7 +628,8 @@ EOF;
 When you use Pines to host multiple websites, you can use this checker to
 determine which website is being requested. If Pines is running on a virtual
 host, this will check the value defined for that virtual host.
-
+EOF;
+			$return['examples'] = <<<'EOF'
 sciactive.com|www.sciactive.com
 :	Check that the client is requesting sciactive.com (or www.sciactive.com).
 
@@ -677,7 +686,8 @@ to check if neither match. Leave blank to check that a component was requested,
 or put only an exclamation point to check that no component was requested. Put a
 caret (^) before the component to only check the requested component, and put a
 greater-than sign (>) before it to only check the current component.
-
+EOF;
+			$return['examples'] = <<<'EOF'
 \!
 :	Check that no component was requested.
 
@@ -750,7 +760,8 @@ Operators should be placed before the version number to test. Such as,
 * `<=`
 * `>=`
 * `<>`
-
+EOF;
+			$return['examples'] = <<<'EOF'
 >=5
 :	Check that PHP is at least version 5.
 
@@ -812,7 +823,8 @@ Operators should be placed before the version number to test. Such as,
 * `<=`
 * `>=`
 * `<>`
-
+EOF;
+			$return['examples'] = <<<'EOF'
 >=1.0.0
 :	Check that Pines is at least version 1.0.0.
 
@@ -865,7 +877,8 @@ component and action match. Put an exclamation point before the value to check
 if they don't match. Leave blank to check that a component and action were
 requested (in this case, a component request with no action passes), or put only
 an exclamation point to check that no component and action were requested.
-
+EOF;
+			$return['examples'] = <<<'EOF'
 \!
 :	Check that no component and action were requested. This is how you check
 	that the user is on the homepage.
@@ -936,7 +949,8 @@ Check if a service is installed and enabled.
 EOF;
 			$return['syntax'] = <<<'EOF'
 Provide the name of a service to check that it is installed and enabled.
-
+EOF;
+			$return['examples'] = <<<'EOF'
 editor
 :	Check that an editor is installed and enabled.
 
@@ -969,9 +983,9 @@ EOF;
 	 * They can be grouped using parentheses.
 	 *
 	 * For example:
-	 * <code>
+	 * <pre>
 	 * simple_parse('!val1&(val2|!val3|(val2&!val4))', array($pines->com_mycomponent, 'my_checking_method'));
-	 * </code>
+	 * </pre>
 	 *
 	 * @param string $value The logic statement.
 	 * @param callback $callback The callback with which to check each part.
