@@ -580,16 +580,17 @@ interface entity_manager_interface extends component_interface {
 	 * returns a new instance.
 	 *
 	 * Selectors are also associative arrays. Any amount of selectors can be
-	 * provided. The first member of a selector must be a "type" string. The
-	 * type string can be:
+	 * provided. Empty selectors will be ignored. The first member of a selector
+	 * must be a "type" string. The type string can be:
 	 *
 	 * - & - (and) All values in the selector must be true.
 	 * - | - (or) At least one value in the selector must be true.
 	 * - !& - (not and) All values in the selector must be false.
 	 * - !| - (not or) At least one value in the selector must be false.
 	 *
-	 * The rest of the entries in the selector are associative entries, which
-	 * can be any of the following (in the form $selector['name'] = value, or
+	 * The rest of the entries in the selector are associative entries called
+	 * selector clauses, which can be any of the following (in the form
+	 * $selector['name'] = value, or
 	 * $selector['name'] = array(value1, value2,...)):
 	 *
 	 * - guid - A GUID. True if the entity's GUID is equal.
@@ -614,17 +615,20 @@ interface entity_manager_interface extends component_interface {
 	 * - ref - An array with a name, then either a entity, or a GUID. True if
 	 *   the named variable is the entity or an array containing the entity.
 	 * 
+	 * These clauses can all be negated, by prefixing them with an exclamation
+	 * point, such as "!isset".
+	 * 
 	 * This example will retrieve the last two entities where:
 	 * 
 	 * - It has 'person' tag.
 	 * - spouse exists and is not null.
 	 * - gender is male and lname is Smith.
+	 * - warnings is not an integer 0.
 	 * - It has either 'employee' or 'manager' tag.
 	 * - name is either Clark, James, Chris, Christopher, Jake, or Jacob.
-	 * - warnings is not an integer 0.
 	 * - If age is 22 or more, then pay is not greater than 8.
 	 * 
-	 * <code>
+	 * <pre>
 	 * $entities = $pines->entity_manager->get_entities(
 	 *	array('reverse' => true, 'limit' => 2),
 	 *	array(
@@ -634,7 +638,8 @@ interface entity_manager_interface extends component_interface {
 	 *		'data' => array(
 	 *			array('gender', 'male'),
 	 *			array('lname', 'Smith')
-	 *		)
+	 *		),
+	 *		'!strict' => array('warnings', 0)
 	 *	),
 	 *	array(
 	 *		'|', // at least one must be true
@@ -652,16 +657,12 @@ interface entity_manager_interface extends component_interface {
 	 *		)
 	 *	),
 	 *	array(
-	 *		'!&', // all must be false
-	 *		'strict' => array('warnings', 0)
-	 *	),
-	 *	array(
 	 *		'!|', // at least one must be false
 	 *		'gte' => array('age', 22),
 	 *		'gt' => array('pay', 8)
 	 *	)
 	 * );
-	 * </code>
+	 * </pre>
 	 *
 	 * @param array $options The options.
 	 * @param array $selectors,... The optional selectors to search for. If none are given, all entities are retrieved.

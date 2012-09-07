@@ -14,7 +14,7 @@ defined('P_RUN') or die('Direct access prohibited');
 return array(
 	'name' => 'Pines',
 	'author' => 'SciActive',
-	'version' => '1.1.0beta2',
+	'version' => '2.0.0beta',
 	'license' => 'http://www.gnu.org/licenses/agpl-3.0.html',
 	'website' => 'http://pinesframework.org/',
 	'short_description' => 'Pines framework core system.',
