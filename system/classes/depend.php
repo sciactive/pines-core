@@ -220,9 +220,9 @@ EOF;
 			$return['simple_parse'] = true;
 			return $return;
 		}
-		if ($value == '!')
+		if ($value == '')
 			return (!empty($pines->request_action));
-		elseif ($value == '')
+		elseif ($value == '!')
 			return (empty($pines->request_action));
 		if (
 				strpos($value, '&') !== false ||
@@ -704,9 +704,9 @@ EOF;
 			$return['simple_parse'] = true;
 			return $return;
 		}
-		if ($value == '!')
+		if ($value == '')
 			return (!empty($pines->request_component));
-		elseif ($value == '')
+		elseif ($value == '!')
 			return (empty($pines->request_component));
 		if (
 				strpos($value, '&') !== false ||
@@ -893,8 +893,10 @@ EOF;
 			$return['simple_parse'] = true;
 			return $return;
 		}
-		if ($value == '!')
+		if ($value == '')
 			return (!empty($pines->request_component) || !empty($pines->request_action));
+		elseif ($value == '!')
+			return (empty($pines->request_component) && empty($pines->request_action));
 		if (
 				strpos($value, '&') !== false ||
 				strpos($value, '|') !== false ||
@@ -902,7 +904,7 @@ EOF;
 				strpos($value, '(') !== false ||
 				strpos($value, ')') !== false
 			)
-			return $this->simple_parse($value, array($this, 'check_action'));
+			return $this->simple_parse($value, array($this, 'check_request'));
 		return $pines->request_component == $value || ("{$pines->request_component}/{$pines->request_action}" == $value);
 	}
 
