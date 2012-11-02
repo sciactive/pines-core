@@ -4,7 +4,7 @@ This release of Pines is stable and can be installed in a production
 environment.
 
 ## Requirements for Pines ##
-	* PHP (v5.2.10 and up)
+	* PHP (v5.3 and up)
 
 ## Requirements for the Database Backends ##
 	* MySQL (v5.0 and up)
