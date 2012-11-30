@@ -1130,7 +1130,7 @@ interface uploader_interface extends component_interface {
 	 * slashes "//".
 	 * 
 	 * Add the class "puploader-temp" to emulate a single file upload. Only one
-	 * fill will be allowed, and it will be placed into a temporary directory.
+	 * file will be allowed, and it will be placed into a temporary directory.
 	 * Note that the check method is not needed when you are using a temp file.
 	 */
 	public function load();
