@@ -206,7 +206,7 @@ $pines->com_pgrid->load();
 				<div class="pf-group">
 					<div class="pf-field">These types were detected on this system. Click on a type to use it.</div>
 				</div>
-				<div class="btn-toolbar"><?php
+				<div><?php
 				$checker_links = array();
 				foreach (array_keys($pines->depend->checkers) as $cur_checker) {
 					$checker_html = htmlspecialchars($cur_checker);
