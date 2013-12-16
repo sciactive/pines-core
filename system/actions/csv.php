@@ -15,7 +15,8 @@ if (!gatekeeper())
 	punt_user();
 
 header('Content-Type: text/csv');
-header('Content-Disposition: attachment; filename="'.$_REQUEST['filename'].'.csv" size='.strlen($_REQUEST['content']));
+header('Content-Disposition: attachment; filename="'.$_REQUEST['filename'].'.csv"');
+header('Content-Length: '.strlen($_REQUEST['content']));
 
 $pines->page->override = true;
 $pines->page->override_doc($_REQUEST['content']);
