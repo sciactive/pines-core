@@ -133,6 +133,20 @@ return array(
 		'value' => false,
 		'peruser' => true,
 	),
+        array(
+		'name' => 'compress_cssjs',
+		'cname' => 'Compress CSS/JS on template AND components',
+		'description' => 'Bootstrap, jquery, pnotify, pform, icons, etc will be compressed when this option and compatible template is used.',
+		'value' => false,
+		'peruser' => true,
+	),
+        array(
+		'name' => 'compressed_url_root',
+		'cname' => 'URL root for compressed CSS/JS',
+		'description' => 'Best practice to use alternate domain to serve compressed files. Also depending on template, the url to build the styles could be changed to use another site.',
+		'value' => $_SERVER['DOCUMENT_ROOT'],
+		'peruser' => true,
+	),
 );
 
 ?>
