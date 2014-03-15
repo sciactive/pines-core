@@ -143,8 +143,8 @@ return array(
         array(
 		'name' => 'compressed_url_root',
 		'cname' => 'URL root for compressed CSS/JS',
-		'description' => 'Best practice to use alternate domain to serve compressed files. Also depending on template, the url to build the styles could be changed to use another site.',
-		'value' => $_SERVER['DOCUMENT_ROOT'],
+		'description' => 'Best practice to use alternate domain to serve compressed files. Issues can arise without proper "cdn" headers though. Also depending on template, the url to build the styles could be changed to use another site.',
+		'value' => '',
 		'peruser' => true,
 	),
 );
