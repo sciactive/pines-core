@@ -12,6 +12,7 @@
 defined('P_RUN') or die('Direct access prohibited');
 
 $templates = pines_scandir('templates/');
+$pines_location = 'http'.(($_SERVER['HTTPS'] == "on") ? 's://' : '://').$_SERVER['HTTP_HOST'].substr($_SERVER['PHP_SELF'], 0, strripos($_SERVER['PHP_SELF'], P_INDEX));
 return array(
 	array(
 		'name' => 'system_name',
@@ -144,7 +145,7 @@ return array(
 		'name' => 'compressed_url_root',
 		'cname' => 'URL root for compressed CSS/JS',
 		'description' => 'Best practice to use alternate domain to serve compressed files. Issues can arise without proper "cdn" headers though. Also depending on template, the url to build the styles could be changed to use another site.',
-		'value' => '',
+		'value' => $pines_location,
 		'peruser' => true,
 	),
 );
