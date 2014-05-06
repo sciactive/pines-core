@@ -276,6 +276,9 @@ class page {
 			require "templates/{$pines->current_template}/template.php";
 		}
 		$this->content = ob_get_clean();
+		if (WRITECACHEFILE) {
+			file_put_contents(WRITECACHEPATH, $this->content);
+		}
 		return $this->content;
 	}
 	

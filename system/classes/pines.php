@@ -132,27 +132,38 @@ class pines {
 		$this->load_system_config();
 
 		if (P_SCRIPT_TIMING) pines_print_time('Find Component Classes');
-		// Fill the lists of components.
-		if ( file_exists('components/') && file_exists('templates/') ) {
-			$this->components = array();
-			$this->all_components = array_merge(pines_scandir('components/', 0, null, false), pines_scandir('templates/', 0, null, false));
-			foreach ($this->all_components as &$cur_value) {
-				if (substr($cur_value, 0, 1) == '.') {
-					$cur_value = substr($cur_value, 1);
-				} else {
-					$this->components[] = $cur_value;
+		
+		if (file_exists('system/component_classes.php')) {
+			$component_classes = include('system/component_classes.php');
+			$this->components = $component_classes['components'];
+			$this->all_components = $component_classes['all'];
+			if (!empty($this->class_files))
+				$this->class_files = array_merge($this->class_files, $component_classes['classes']);
+			else
+				$this->class_files = $component_classes['classes'];
+		} else {
+			// Fill the lists of components.
+			if ( file_exists('components/') && file_exists('templates/') ) {
+				$this->components = array();
+				$this->all_components = array_merge(pines_scandir('components/', 0, null, false), pines_scandir('templates/', 0, null, false));
+				foreach ($this->all_components as &$cur_value) {
+					if (substr($cur_value, 0, 1) == '.') {
+						$cur_value = substr($cur_value, 1);
+					} else {
+						$this->components[] = $cur_value;
+					}
 				}
+				sort($this->components);
+				sort($this->all_components);
 			}
-			sort($this->components);
-			sort($this->all_components);
-		}
 
-		// Fill the list of component classes.
-		$temp_classes = glob('components/com_*/classes/*.php');
-		foreach ($temp_classes as $cur_class) {
-			$cur_name = strrchr($cur_class, '/');
-			$cur_name = substr($cur_name, 1, strlen($cur_name) -5);
-			$this->class_files[$cur_name] = $cur_class;
+			// Fill the list of component classes.
+			$temp_classes = glob('components/com_*/classes/*.php');
+			foreach ($temp_classes as $cur_class) {
+				$cur_name = strrchr($cur_class, '/');
+				$cur_name = substr($cur_name, 1, strlen($cur_name) -5);
+				$this->class_files[$cur_name] = $cur_class;
+			}
 		}
 		if (P_SCRIPT_TIMING) pines_print_time('Find Component Classes');
 

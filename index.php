@@ -58,6 +58,17 @@ define('P_INDEX', basename($_SERVER['SCRIPT_FILENAME']));
  */
 define('P_SCRIPT_TIMING', false);
 
+// Leverage Pines' PHP caching
+include('system/phpcache.php');
+
+/*
+ * If Ajax - do not run all inits (like menus) because it's useless and
+ * time consuming.
+ */
+$headers = apache_request_headers();
+$is_ajax = ($headers['X-Requested-With'] == 'XMLHttpRequest');
+define('XMLREQUEST', $is_ajax);
+
 // Run the system init scripts.
 foreach (glob('system/init/i*.php') as $_p_cur_sysinit) {
 	require($_p_cur_sysinit);
