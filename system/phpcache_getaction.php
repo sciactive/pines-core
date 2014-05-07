@@ -33,46 +33,45 @@ if (count($requested_vars) == 0)
 if (empty($request_component)) {
 	// We are either on the "home" or we have URL rewriting on.
 	$script_name = $_SERVER['SCRIPT_NAME'];
-	$root = preg_replace('/index\.php/', '', $script_name);
-	$request_uri = $_SERVER['REQUEST_URI'];
-	$request_uri = substr($request_uri, 0, (strlen($_SERVER['QUERY_STRING']) * -1) - 1);
+	// get rid of index and get the install location. ie /pines/ or /
+	$root = preg_replace('#(.*)index\.php#', '$1', $script_name);
+	$root = preg_replace('#/$#', '', $root); // '/pines' or ''
+	$request_uri = preg_replace('#/$#', '', $_SERVER['REQUEST_URI']);
+	// No install location or index.php or definite query
+	$cleaned_uri = preg_replace('#'.$root.'(index\.php)?(.*)'.$_SERVER['QUERY_STRING'].'#', '$2', $request_uri);
+	$cleaned_uri = preg_replace('#\?$#', '', $cleaned_uri);
 	
-	if ($request_uri.'/' == $root) {
+	if ($cleaned_uri == '') {
 		// Home page (url rewriting or not)
 		$request_component = '';
 		$request_action = '';
 	} else {
 		// Url Rewrite - We need an option, action
-		
 		// Get DEFINITE query string
 		if (strlen($_SERVER['QUERY_STRING']))
-			$definite_query = preg_replace("#$request_uri#", '', $_SERVER['QUERY_STRING']);
-		
-		// No index.php
-		$cleaned_uri = preg_replace('/index\.php/', '', $request_uri);
-		
+			$definite_query = preg_replace("#.*$request_uri#", '', $_SERVER['QUERY_STRING']);
 		// Get option
-		// Check for no action 
-		if (preg_match('#'.$root.'([^/]*)(/$|$|/\?.*|/[^/]*-.*)#', $cleaned_uri)) {
+		// Check for no action
+		$component = preg_replace('#([^/]*).*#', '$1', $cleaned_uri);
+		$request_component = 'com_'.$component;
+		$possible_action = preg_replace('#^'.$component.'#', '', $cleaned_uri).'/';
+		$matched_action = preg_match('#(\/[^-]*\/)#', $possible_action, $matches);
+		if (empty($matches[0])) {
 			// This grabs the component from uris with no action,
 			// possibly definite query data, or possibly url rewritten query data.
-			$component = preg_replace('#'.$root.'([^/]*)(/$|$|/\?.*|/[^/]*-.*)#', '$1', $cleaned_uri);
-			$action = '';
-			$request_action = '';
+			$action = $request_action = '';
 			// Get remaining query
-			$possible_query = preg_replace('#'.$root.$component.'/?#', '', $cleaned_uri);
+			$possible_query = preg_replace('#(\/[^-]*\/)#', '', $possible_action);
 		} else {
-			$component = preg_replace('#^'.$root.'(.*?)/.*#', '$1', $cleaned_uri);
-			
 			// Get action
-			$removed_option = preg_replace('#'.$root.$component.'#', '', $cleaned_uri);
-			$action = preg_replace('#^/(.*)/.*?-.*#', '$1', $removed_option);
-			$request_action = preg_replace('#^/(.*)/?$#', '$1', $action);
-			
+			//$action = preg_replace('#^/(.*)/.*?-.*#', '$1', $possible_action);
+			$request_action = preg_replace('#(\/[^-]*\/).*#', '$1', $possible_action);
 			// Get remaining query
-			$possible_query = preg_replace('#'.$root.$component.'/'.$request_action.'/?'.'#', '', $request_uri);
+			$possible_query = preg_replace('#(\/[^-]*\/)#', '', $possible_action);
 		}
-		$request_component = 'com_'.$component;
+		$possible_query = preg_replace('#\/$#', '', $possible_query);
+		$request_action = preg_replace('#\/$#', '', $request_action);
+		$request_action = preg_replace('#^\/#', '', $request_action);
 		
 		// Combine + hash query?
 		if (!empty($possible_query) || !empty($definite_query)) {
