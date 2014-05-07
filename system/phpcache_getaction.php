@@ -40,6 +40,7 @@ if (empty($request_component)) {
 	// No install location or index.php or definite query
 	$cleaned_uri = preg_replace('#'.$root.'(index\.php)?(.*)'.$_SERVER['QUERY_STRING'].'#', '$2', $request_uri);
 	$cleaned_uri = preg_replace('#\?$#', '', $cleaned_uri);
+	$cleaned_uri = preg_replace('#^/#', '', $cleaned_uri);
 	
 	if ($cleaned_uri == '') {
 		// Home page (url rewriting or not)
