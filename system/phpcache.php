@@ -190,6 +190,10 @@ if (!$refresh_cache && file_exists($path) && ((time() - $cachelist[$request_comp
 	$content_notices = preg_replace("#pines.notice\(\"\s.*\);#", "$pnotices", file_get_contents($path));
 	// Clean content for errors.
 	$content = preg_replace("#pines.error\(\"\s.*\);#", "$perrors", $content_notices);
+	
+	// Clean content for https links
+	$replace_http = 'http'.(($_SERVER['HTTPS'] == 'on') ? 's://' : '://');
+	$content = preg_replace('#http://'.$_SERVER['SERVER_NAME'].'#', $replace_http.$_SERVER['SERVER_NAME'], $content);
 	echo $content;
 	exit;
 } else {
