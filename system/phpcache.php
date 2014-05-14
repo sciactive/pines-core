@@ -165,14 +165,23 @@ if (!empty($query_string) && $cachelist[$request_component][$request_action][$us
 $final_directory = $directory_set;
 $path = $final_directory.$file_name.'.html';
 
+@session_start();
+// What if the time is already not set or outdated.
+// Update the access time for time outs:
+if ($hash) {
+	// We need to check if they should be logged out.
+	$calc_timeout = $_SESSION['com_timeoutnotice__timeout'];
+	if ( isset($_SESSION['com_timeoutnotice__last_access']) && (time() - $_SESSION['com_timeoutnotice__last_access'] >= $calc_timeout) ) {
+		@session_write_close();
+		return; // Go through inits which will log the user out.
+	} else {
+		// Set the access time
+		$_SESSION['com_timeoutnotice__last_access'] = time();
+	}
+}
+
 // If the refresh cache is true, it will force it to regenerate.
 if (!$refresh_cache && file_exists($path) && ((time() - $cachelist[$request_component][$request_action][$use_domain]['time']) < filemtime($path))) {
-	// Update the access time for time outs:
-	if ($hash) {
-		@session_start();
-		$_SESSION['com_timeoutnotice__last_access'] = time();
-		@session_write_close();
-	}
 	$pnotices = '';
 	$perrors = '';
 	// Get notices and errors
@@ -194,6 +203,7 @@ if (!$refresh_cache && file_exists($path) && ((time() - $cachelist[$request_comp
 	// Clean content for https links
 	$replace_http = 'http'.(($_SERVER['HTTPS'] == 'on') ? 's://' : '://');
 	$content = preg_replace('#http://'.$_SERVER['SERVER_NAME'].'#', $replace_http.$_SERVER['SERVER_NAME'], $content);
+	@session_write_close();
 	echo $content;
 	exit;
 } else {
@@ -201,8 +211,7 @@ if (!$refresh_cache && file_exists($path) && ((time() - $cachelist[$request_comp
 	define('WRITECACHEPATH', $path);
 }
 
-
-
+@session_write_close();
 
 
 
