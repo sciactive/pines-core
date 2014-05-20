@@ -52,6 +52,17 @@ if (isset($_SESSION['user_id'])) {
 	$hash = 'a'.md5(serialize($abilities));
 	$pnotice = $_SESSION['p_notices'];
 	$perror = $_SESSION['p_errors'];
+	
+//	$cache_access = 'The timeout is: '.$_SESSION['com_timeoutnotice__timeout']."\n";
+//	$cache_access .= 'The last access is: '.$_SESSION['com_timeoutnotice__last_access']."\n";
+//	$cache_access .= 'The time minus access is: '.(time() - $_SESSION['com_timeoutnotice__last_access'])."\n";
+	
+	// We need to override ini session timeouts here, 
+	// because we no longer hit timeout calls every 2 minutes to prevent timing out.
+	// We could set this forever, but we'll max it out from PHP's side of things to the user's max time out.
+	// Without this, the default ini settings were timing out users instead of letting us manage it.
+	ini_set("session.gc_maxlifetime", (int) $_SESSION['com_timeoutnotice__timeout']);
+	
 	@session_write_close();
 } else {
 	@session_unset();
@@ -184,6 +195,8 @@ if ($hash) {
 if (!$refresh_cache && file_exists($path) && ((time() - $cachelist[$request_component][$request_action][$use_domain]['time']) < filemtime($path))) {
 	$pnotices = '';
 	$perrors = '';
+	
+//	file_put_contents("/tmp/pines.log", $cache_access, FILE_APPEND);
 	// Get notices and errors
 	if (!empty($pnotice)) {
 		foreach ($pnotice as $cur_notice) {
