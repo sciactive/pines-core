@@ -47,7 +47,9 @@ if (get_magic_quotes_gpc()) {
 // Without this, the default ini settings were timing out users instead of letting us manage it.
 ini_set("session.gc_maxlifetime", 86400);
 
-// Present the Opportunity for PHP Caching.
+// Present the Opportunity for PHP Caching. 
+// Remember that the user in session will be incomplete because
+// the user classes have not been included yet.
 @session_start();
 if (isset($_SESSION['user_id'])) {
 	//var_dump($_SESSION);
@@ -60,10 +62,11 @@ if (isset($_SESSION['user_id'])) {
 	$pnotice = $_SESSION['p_notices'];
 	$perror = $_SESSION['p_errors'];
 	
+	$groups = $_SESSION['groups'];
+	$username = $_SESSION['username'];
 //	$cache_access = 'The timeout is: '.$_SESSION['com_timeoutnotice__timeout']."\n";
 //	$cache_access .= 'The last access is: '.$_SESSION['com_timeoutnotice__last_access']."\n";
 //	$cache_access .= 'The time minus access is: '.(time() - $_SESSION['com_timeoutnotice__last_access'])."\n";
-	
 	@session_write_close();
 } else {
 	@session_unset();
@@ -91,6 +94,31 @@ $cachelist = $cacheoptions['cachelist'];
 if ($request_component == 'com_cache')
 	return;
 
+
+// Manage Global Exceptions for users and groups.
+$blacklist_users = $cacheoptions['global_exceptions']['users'];
+$blacklist_groups = $cacheoptions['global_exceptions']['groups'];
+
+$blacklist_users = array_map('md5', $blacklist_users);
+$blacklist_groups = array_map('strtoupper', $blacklist_groups);
+$blacklist_groups = array_map('md5', $blacklist_groups);
+
+// If we have a session user, blacklist_users is not empty, and the user is found in the list, return.
+if (isset($hash) && !empty($blacklist_users) && in_array($username, $blacklist_users)) {
+	return;
+}
+
+// If we have a session user, blacklist_users is not empty, and the user is found in the list, return.
+if (isset($hash) && !empty($blacklist_groups)) {
+	// Find matching groups, if not empty there's a match, so return
+	$check_array = array_intersect($blacklist_groups, $groups);
+	file_put_contents("/tmp/pines.log", "Blacklist groups:".json_encode($blacklist_groups)."\n", FILE_APPEND); // Use this to print to log for debugging.
+	file_put_contents("/tmp/pines.log", "Cur groups:".json_encode($groups)."\n", FILE_APPEND); // Use this to print to log for debugging.
+	if (!empty($check_array)) {
+		return;
+	}
+}
+
 // Find the option/action combo in the cachelist - leave if no result.
 if (isset($cachelist[$request_component][$request_action])) {
 	$cur_domain = $_SERVER['SERVER_NAME'];
@@ -109,7 +137,6 @@ if (isset($cachelist[$request_component][$request_action])) {
 		return; // We have query string, but we should NOT cache it.
 	// If cachequery is set to true, it will cache the file if we have query data
 	// or even if we do not. They will be retrieved from different directories though.
-	
 	// Check if caching queries on, and exceptions is not empty - important not to use 
 	// query string only as a test because we have to check post data too.
 	if (!empty($cachelist[$request_component][$request_action][$use_domain]['exceptions']) && $cachelist[$request_component][$request_action][$use_domain]['cachequery']) {
@@ -196,8 +223,7 @@ if ($hash) {
 if (!$refresh_cache && file_exists($path) && ((time() - $cachelist[$request_component][$request_action][$use_domain]['time']) < filemtime($path))) {
 	$pnotices = '';
 	$perrors = '';
-	
-//	file_put_contents("/tmp/pines.log", $cache_access, FILE_APPEND);
+//	file_put_contents("/tmp/pines.log", "Something...\n", FILE_APPEND); // Use this to print to log for debugging.
 	// Get notices and errors
 	if (!empty($pnotice)) {
 		foreach ($pnotice as $cur_notice) {

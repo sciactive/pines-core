@@ -42,7 +42,8 @@
 
 return array(
 	'cache_on' => false,
-	'parent_directory' => $_SERVER['DOCUMENT_ROOT'].'/pinescache/', // change this to some nicer default value.
+	'parent_directory' => $_SERVER['DOCUMENT_ROOT'].'/pinescache/',
+	'global_exceptions' => array('users' => array(), 'groups' => array()),
 	'cachelist' => array(
 		'' => array(
 			'' => array(
@@ -51,7 +52,7 @@ return array(
 		),
 		'com_calendar' => array(
 			'editcalendar' => array(
-				'all' => array('time' => 18000, 'cachequery' => true, 'cacheloggedin' => true, 'disabled' => false)
+				'all' => array('time' => 18000, 'cachequery' => true, 'cacheloggedin' => true, 'disabled' => true)
 				)
 		),
 		'com_content' => array(
@@ -130,7 +131,7 @@ return array(
 		),
 		'com_sales' => array(
 			'sale/edit' => array(
-				'all' => array('time' => 18000, 'cachequery' => false, 'cacheloggedin' => true, 'disabled' => false)
+				'all' => array('time' => 18000, 'cachequery' => false, 'cacheloggedin' => true, 'disabled' => true)
 				),
 			'return/edit' => array(
 				'all' => array('time' => 18000, 'cachequery' => false, 'cacheloggedin' => true, 'disabled' => false)
