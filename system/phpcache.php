@@ -112,8 +112,8 @@ if (isset($hash) && !empty($blacklist_users) && in_array($username, $blacklist_u
 if (isset($hash) && !empty($blacklist_groups)) {
 	// Find matching groups, if not empty there's a match, so return
 	$check_array = array_intersect($blacklist_groups, $groups);
-	file_put_contents("/tmp/pines.log", "Blacklist groups:".json_encode($blacklist_groups)."\n", FILE_APPEND); // Use this to print to log for debugging.
-	file_put_contents("/tmp/pines.log", "Cur groups:".json_encode($groups)."\n", FILE_APPEND); // Use this to print to log for debugging.
+//	file_put_contents("/tmp/pines.log", "Blacklist groups:".json_encode($blacklist_groups)."\n", FILE_APPEND); // Use this to print to log for debugging.
+//	file_put_contents("/tmp/pines.log", "Cur groups:".json_encode($groups)."\n", FILE_APPEND); // Use this to print to log for debugging.
 	if (!empty($check_array)) {
 		return;
 	}
