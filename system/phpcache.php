@@ -40,6 +40,13 @@ if (get_magic_quotes_gpc()) {
 	stripslashes_array_recursive($_COOKIE);
 }
 
+// Before session is started:
+// We need to override ini session timeouts here, 
+// because we no longer hit timeout calls every 2 minutes to prevent timing out.
+// We could set this forever, but we'll max it out from PHP's side of things to the user's max time out.
+// Without this, the default ini settings were timing out users instead of letting us manage it.
+ini_set("session.gc_maxlifetime", 86400);
+
 // Present the Opportunity for PHP Caching.
 @session_start();
 if (isset($_SESSION['user_id'])) {
@@ -56,12 +63,6 @@ if (isset($_SESSION['user_id'])) {
 //	$cache_access = 'The timeout is: '.$_SESSION['com_timeoutnotice__timeout']."\n";
 //	$cache_access .= 'The last access is: '.$_SESSION['com_timeoutnotice__last_access']."\n";
 //	$cache_access .= 'The time minus access is: '.(time() - $_SESSION['com_timeoutnotice__last_access'])."\n";
-	
-	// We need to override ini session timeouts here, 
-	// because we no longer hit timeout calls every 2 minutes to prevent timing out.
-	// We could set this forever, but we'll max it out from PHP's side of things to the user's max time out.
-	// Without this, the default ini settings were timing out users instead of letting us manage it.
-	ini_set("session.gc_maxlifetime", (int) $_SESSION['com_timeoutnotice__timeout']);
 	
 	@session_write_close();
 } else {
