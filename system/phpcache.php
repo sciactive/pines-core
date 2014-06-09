@@ -187,6 +187,21 @@ $directory_set = $domain_directory;
 	
 // If abilities hash, Check directory
 if (isset($hash)) {
+	// If the current directive has this user in the unique_users, fix
+	// the hash
+	$unique_users = $cachelist[$request_component][$request_action][$use_domain]['unique_users'];
+	$all_unique = $cachelist[$request_component][$request_action][$use_domain]['all_unique'];
+	if (!empty($unique_users) && !$all_unique) {
+		$md5_unique_users = array_map('md5', $unique_users);
+		if (in_array($username, $md5_unique_users)) {
+			$hash = 'a'.md5(preg_replace('#a{1}(.*)#', '$1', $hash).$username);
+		}
+	}
+	
+	if ($all_unique) {
+		$hash = 'a'.md5(preg_replace('#a{1}(.*)#', '$1', $hash).$username);
+	}
+	
 	$abil_hash_directory = $directory_set.$hash.'/';
 		if (!is_dir($abil_hash_directory))
 			mkdir($abil_hash_directory, 0700, true);
