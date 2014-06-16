@@ -99,9 +99,9 @@ if ($request_component == 'com_cache')
 $blacklist_users = $cacheoptions['global_exceptions']['users'];
 $blacklist_groups = $cacheoptions['global_exceptions']['groups'];
 
-$blacklist_users = array_map('md5', $blacklist_users);
-$blacklist_groups = array_map('strtoupper', $blacklist_groups);
-$blacklist_groups = array_map('md5', $blacklist_groups);
+$blacklist_users = (!empty($blacklist_users)) ? array_map('md5', $blacklist_users) : array();
+$blacklist_groups = (!empty($blacklist_groups)) ? array_map('strtoupper', $blacklist_groups) : array();
+$blacklist_groups = (!empty($blacklist_groups)) ? array_map('md5', $blacklist_groups) : array();
 
 // If we have a session user, blacklist_users is not empty, and the user is found in the list, return.
 if (isset($hash) && !empty($blacklist_users) && in_array($username, $blacklist_users)) {
